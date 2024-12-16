@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
+set(CMAKE_CXX_STANDARD 17)
 
 if (NOT DEFINED PROCESSOR_COUNT)
     set(PROCESSOR_COUNT 1)
