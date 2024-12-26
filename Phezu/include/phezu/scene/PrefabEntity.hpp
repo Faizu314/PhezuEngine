@@ -36,7 +36,7 @@ namespace Phezu {
                 return std::weak_ptr<T>();
             }
             
-            uint8_t componentID = static_cast<uint8_t>(m_BehaviourComponents.size()); //TODO: This should be the count of other BehaviourComponentPrefab that are of the same type as T
+            uint8_t componentID = static_cast<uint8_t>(m_BehaviourComponents.size());
             
             std::unique_ptr<size_t[]> path = std::make_unique<size_t[]>(m_PathSize);
             for (int i = 0; i < m_PathSize; i++)
@@ -49,9 +49,9 @@ namespace Phezu {
             return component;
         }
     public:
-        PrefabEntity& CreateChildEntity();
         size_t GetComponentPrefabsCount() const;
         std::weak_ptr<BehaviourComponentPrefabBase> GetComponentPrefab(size_t index) const;
+        PrefabEntity& CreateChildEntity();
         size_t GetChildCount() const;
         const PrefabEntity* GetChild(size_t childIndex) const;
     private:
