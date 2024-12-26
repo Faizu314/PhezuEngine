@@ -1,14 +1,22 @@
 #pragma once
 
 #include <vector>
-#include "scene/PrefabEntity.hpp"
+#include "scene/EntityBlueprint.hpp"
 
 namespace Phezu {
     
     class Prefab {
     public:
-        uint64_t GetPrefabID() { return RootEntity.GetPrefabEntityID(); }
-        PrefabEntity RootEntity;
+        Prefab() {
+            m_PrefabID = s_PrefabCount;
+            s_PrefabCount++;
+        }
+    public:
+        uint64_t GetPrefabID() { return m_PrefabID; }
+        EntityBlueprint RootEntity;
+    private:
+        static uint64_t s_PrefabCount;
+        uint64_t m_PrefabID;
     };
     
 }

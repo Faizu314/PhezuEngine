@@ -14,17 +14,15 @@ namespace Phezu {
     class BehaviourComponentPrefabBase {
     public:
         BehaviourComponentPrefabBase() = delete;
-        BehaviourComponentPrefabBase(uint64_t prefabID, std::unique_ptr<size_t[]> pathToPrefabEntity, size_t pathSize, uint8_t componentPrefabID);
-        uint64_t GetEntityPrefabID() const;
+        BehaviourComponentPrefabBase(std::unique_ptr<size_t[]> pathToEntityInBlueprint, size_t pathSize, uint8_t componentPrefabID);
         uint8_t GetComponentID() const;
         virtual std::weak_ptr<BehaviourComponent> CreateComponent(std::weak_ptr<Entity> entity) const = 0;
         virtual void InitRuntimeComponentInternal(std::weak_ptr<Scene> scene, std::shared_ptr<BehaviourComponent> component) const = 0;
         virtual std::weak_ptr<BehaviourComponent> GetRuntimeComponent(std::weak_ptr<Scene> scene, std::shared_ptr<Entity> entity) const = 0;
     protected:
-        const uint64_t m_PrefabID;
         const uint8_t m_ComponentPrefabID;
         const size_t m_PathSize;
-        std::unique_ptr<size_t[]> m_PathToPrefabEntity;
+        std::unique_ptr<size_t[]> m_PathToEntityInBlueprint;
     };
     
     template <typename T>

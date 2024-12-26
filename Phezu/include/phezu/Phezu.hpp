@@ -10,7 +10,7 @@
 #include "scene/Prefab.hpp"
 #include "scene/Scene.hpp"
 #include "scene/SceneManager.hpp"
-#include "scene/PrefabEntity.hpp"
+#include "scene/EntityBlueprint.hpp"
 #include "scene/EntityTemplate.hpp"
 #include "scene/Entity.hpp"
 #include "scene/components/DataComponent.hpp"

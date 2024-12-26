@@ -1,21 +1,18 @@
 #include "scene/EntityTemplate.hpp"
+#include "scene/Scene.hpp"
 
 namespace Phezu {
     
-    EntityTemplate::EntityTemplate(ConstructionToken token, std::weak_ptr<Scene> scene, uint64_t prefabID)
-    : m_Scene(scene), m_PrefabID(prefabID), OverridePosition(false) {
-        
+    EntityTemplate::EntityTemplate(ConstructionToken token, std::weak_ptr<Scene> scene, const EntityBlueprint& blueprint)
+    : m_Scene(scene), m_RootEntity(blueprint) {}
+    
+    std::shared_ptr<EntityTemplate> EntityTemplate::MakeShared(std::weak_ptr<Scene> scene, const EntityBlueprint& blueprint) {
+        ConstructionToken token;
+        return std::make_shared<EntityTemplate>(token, scene, blueprint);
     }
     
-    uint64_t EntityTemplate::GetPrefabID() const { return m_PrefabID; }
-    
-    std::shared_ptr<EntityTemplate> EntityTemplate::MakeShared(std::weak_ptr<Scene> scene, uint64_t prefabID) {
+    std::unique_ptr<EntityTemplate> EntityTemplate::MakeUnique(std::weak_ptr<Scene> scene, const EntityBlueprint& blueprint) {
         ConstructionToken token;
-        return std::make_shared<EntityTemplate>(token, scene, prefabID);
-    }
-    
-    std::unique_ptr<EntityTemplate> EntityTemplate::MakeUnique(std::weak_ptr<Scene> scene, uint64_t prefabID) {
-        ConstructionToken token;
-        return std::make_unique<EntityTemplate>(token, scene, prefabID);
+        return std::make_unique<EntityTemplate>(token, scene, blueprint);
     }
 }
