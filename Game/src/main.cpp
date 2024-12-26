@@ -1,4 +1,5 @@
 #include "Phezu.hpp"
+#include "Game.hpp"
 
 Phezu::Engine& engine = Phezu::CreateEngine();
 
