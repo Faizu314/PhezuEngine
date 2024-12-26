@@ -11,11 +11,11 @@ namespace Phezu {
     class ShapeData;
     class BehaviourComponentPrefabBase;
     
-    class PrefabEntity {
+    class EntityBlueprint {
     public:
-        PrefabEntity();
-        ~PrefabEntity();
-        uint64_t GetPrefabEntityID() const;
+        EntityBlueprint();
+        EntityBlueprint(const EntityBlueprint& other);
+        ~EntityBlueprint();
     public:
         std::string TagOverride;
         Vector2 PositionOverride;
@@ -23,6 +23,7 @@ namespace Phezu {
         bool IsRenderable;
         bool IsCollidable;
         bool IsStatic;
+        Vector2 VelocityOverride;
         Vector2 ShapePivotOverride;
         Vector2 ShapeSizeOverride;
         std::weak_ptr<Texture> TextureOverride;
@@ -42,7 +43,7 @@ namespace Phezu {
             for (int i = 0; i < m_PathSize; i++)
                 path[i] = m_Path[i];
             
-            std::shared_ptr<T> component = std::make_shared<T>(m_PrefabEntityID, std::move(path), m_PathSize, componentID);
+            std::shared_ptr<T> component = std::make_shared<T>(std::move(path), m_PathSize, componentID);
             
             m_BehaviourComponents.push_back(std::static_pointer_cast<BehaviourComponentPrefabBase>(component));
             
@@ -51,20 +52,17 @@ namespace Phezu {
     public:
         size_t GetComponentPrefabsCount() const;
         std::weak_ptr<BehaviourComponentPrefabBase> GetComponentPrefab(size_t index) const;
-        PrefabEntity& CreateChildEntity();
+        EntityBlueprint& CreateChildEntity();
         size_t GetChildCount() const;
-        const PrefabEntity* GetChild(size_t childIndex) const;
+        const EntityBlueprint* GetChild(size_t childIndex) const;
     private:
-        PrefabEntity(uint64_t root, std::unique_ptr<size_t[]> path, size_t pathSize);
+        EntityBlueprint(std::unique_ptr<size_t[]> path, size_t pathSize);
     private:
-        static uint64_t s_PrefabEntityCount;
-        const uint64_t m_PrefabEntityID;
         const bool m_IsRoot;
-        const uint64_t m_Root;
         const std::unique_ptr<size_t[]> m_Path;
         const size_t m_PathSize;
     private:
         std::vector<std::shared_ptr<BehaviourComponentPrefabBase>> m_BehaviourComponents;
-        std::vector<PrefabEntity*> m_Children;
+        std::vector<EntityBlueprint*> m_Children;
     };
 }

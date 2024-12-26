@@ -13,7 +13,7 @@
 
 namespace Phezu {
     
-    Scene::Scene(Engine* engine, const std::string& name) : m_Engine(engine), m_Name(name), m_IsLoaded(false), m_IsSceneToRuntimeMappingValid(false) { }
+    Scene::Scene(Engine* engine, const std::string& name) : m_Engine(engine), m_Name(name), m_IsLoaded(false) { }
     
     std::weak_ptr<Entity> Scene::CreateEntity() {
         std::shared_ptr<Entity> entity = std::make_shared<Entity>(shared_from_this());
@@ -31,9 +31,9 @@ namespace Phezu {
         }
         
         auto entity = CreateEntity().lock();
-        BuildEntityFromPrefabEntity(entity, &prefab->RootEntity);
-        ApplyPrefabOverridesToEntity(entity, &prefab->RootEntity);
         
+        BuildEntityFromBlueprint(entity, &prefab->RootEntity);
+        InitEntityComponentsFromBlueprint(entity, &prefab->RootEntity);
         CallStartOnEntity(entity);
         
         return entity;
@@ -84,68 +84,48 @@ namespace Phezu {
         m_RuntimeEntities.erase(it);
     }
     
-    void Scene::CreateSceneEntity(uint64_t prefabEntityID, Vector2 positionOverride, std::string tag) {
-        m_SceneEntities.push_back(EntityTemplate::MakeUnique(shared_from_this(), prefabEntityID));
-        m_SceneEntities[m_SceneEntities.size() - 1]->OverrideTag = tag.compare("Default") != 0;
-        m_SceneEntities[m_SceneEntities.size() - 1]->TagOverride = tag;
-        m_SceneEntities[m_SceneEntities.size() - 1]->OverridePosition = true;
-        m_SceneEntities[m_SceneEntities.size() - 1]->PositionOverride = positionOverride;
+    EntityBlueprint& Scene::CreateSceneEntity(uint64_t prefabID) {
+        auto prefab = m_Engine->GetPrefab(prefabID).lock();
+        m_SceneEntities.push_back(EntityTemplate::MakeUnique(shared_from_this(), prefab->RootEntity));
+        
+        return m_SceneEntities[m_SceneEntities.size() - 1]->m_RootEntity;
     }
     
-    void Scene::BuildEntityFromTemplate(std::shared_ptr<Entity> entity, std::unique_ptr<EntityTemplate>& entityTemplate) {
-        std::shared_ptr<const Prefab> prefab = m_Engine->GetPrefab(entityTemplate->GetPrefabID()).lock();
+    void Scene::BuildEntityFromBlueprint(std::shared_ptr<Entity> entity, const EntityBlueprint* blueprint) {
+        entity->SetTag(blueprint->TagOverride);
+        entity->GetTransformData()->SetLocalPosition(blueprint->PositionOverride);
+        entity->GetTransformData()->SetLocalScale(blueprint->ScaleOverride);
         
-        BuildEntityFromPrefabEntity(entity, &prefab->RootEntity);
-        
-        //TODO: Apply all template overrides here
-        if (entityTemplate->OverridePosition)
-            entity->GetTransformData()->SetLocalPosition(entityTemplate->PositionOverride);
-        if (entityTemplate->OverrideTag)
-            entity->SetTag(entityTemplate->TagOverride);
-    }
-    
-    void Scene::BuildEntityFromPrefabEntity(std::shared_ptr<Entity> entity, const PrefabEntity* prefabEntity) {
-        entity->SetTag(prefabEntity->TagOverride);
-        
-        entity->GetTransformData()->SetLocalPosition(prefabEntity->PositionOverride);
-        entity->GetTransformData()->SetLocalScale(prefabEntity->ScaleOverride);
-        
-        if (prefabEntity->IsRenderable || prefabEntity->IsCollidable) {
+        if (blueprint->IsRenderable || blueprint->IsCollidable) {
             ShapeData* shapeData = entity->AddShapeData();
-            shapeData->SetPivot(prefabEntity->ShapePivotOverride);
-            shapeData->SetSize(prefabEntity->ShapeSizeOverride);
+            shapeData->SetPivot(blueprint->ShapePivotOverride);
+            shapeData->SetSize(blueprint->ShapeSizeOverride);
         }
-        if (prefabEntity->IsRenderable) {
-            RenderData* renderData = entity->AddRenderData(prefabEntity->TintOverride);
-            renderData->Sprite = prefabEntity->TextureOverride;
-            renderData->RectUVs = prefabEntity->UVsOverride;
+        if (blueprint->IsRenderable) {
+            RenderData* renderData = entity->AddRenderData(blueprint->TintOverride);
+            renderData->Sprite = blueprint->TextureOverride;
+            renderData->RectUVs = blueprint->UVsOverride;
         }
-        if (prefabEntity->IsCollidable) {
-            std::weak_ptr<PhysicsData> physicsData = entity->AddPhysicsData(prefabEntity->IsStatic);
-        }
-        
-        for (size_t i = 0; i < prefabEntity->GetComponentPrefabsCount(); i++) {
-            prefabEntity->GetComponentPrefab(i).lock()->CreateComponent(entity);
+        if (blueprint->IsCollidable) {
+            std::shared_ptr<PhysicsData> physicsData = entity->AddPhysicsData(blueprint->IsStatic).lock();
+            physicsData->Velocity = blueprint->VelocityOverride;
         }
         
-        for (size_t i = 0; i < prefabEntity->GetChildCount(); i++) {
+        for (size_t i = 0; i < blueprint->GetComponentPrefabsCount(); i++) {
+            blueprint->GetComponentPrefab(i).lock()->CreateComponent(entity);
+        }
+        
+        for (size_t i = 0; i < blueprint->GetChildCount(); i++) {
             std::shared_ptr<Entity> child = CreateEntity().lock();
             child->SetParent(entity);
             
-            BuildEntityFromPrefabEntity(child, prefabEntity->GetChild(i));
+            BuildEntityFromBlueprint(child, blueprint->GetChild(i));
         }
     }
     
-    void Scene::ApplyTemplateOverridesToEntity(std::shared_ptr<Entity> entity, std::unique_ptr<EntityTemplate>& entityTemplate) {
-        std::shared_ptr<const Prefab> prefab = m_Engine->GetPrefab(entityTemplate->GetPrefabID()).lock();
-        
-        ApplyPrefabOverridesToEntity(entity, &prefab->RootEntity);
-        
-    }
-    
-    void Scene::ApplyPrefabOverridesToEntity(std::shared_ptr<Entity> entity, const PrefabEntity* prefabEntity) {
-        for (size_t i = 0; i < prefabEntity->GetComponentPrefabsCount(); i++) {
-            auto componentPrefab = prefabEntity->GetComponentPrefab(i).lock();
+    void Scene::InitEntityComponentsFromBlueprint(std::shared_ptr<Entity> entity, const EntityBlueprint* blueprint) {
+        for (size_t i = 0; i < blueprint->GetComponentPrefabsCount(); i++) {
+            auto componentPrefab = blueprint->GetComponentPrefab(i).lock();
             auto runtimeComponent = componentPrefab->GetRuntimeComponent(shared_from_this(), entity).lock();
             
             if (!runtimeComponent) {
@@ -156,8 +136,8 @@ namespace Phezu {
             componentPrefab->InitRuntimeComponentInternal(shared_from_this(), runtimeComponent);
         }
         
-        for (size_t i = 0; i < prefabEntity->GetChildCount(); i++) {
-            ApplyPrefabOverridesToEntity(entity->GetChild(i).lock(), prefabEntity->GetChild(i));
+        for (size_t i = 0; i < blueprint->GetChildCount(); i++) {
+            InitEntityComponentsFromBlueprint(entity->GetChild(i).lock(), blueprint->GetChild(i));
         }
     }
     
@@ -167,13 +147,11 @@ namespace Phezu {
             
             m_SceneEntities[i]->m_RuntimeRootEntity = entity;
             
-            BuildEntityFromTemplate(entity, m_SceneEntities[i]);
+            BuildEntityFromBlueprint(entity, &m_SceneEntities[i]->m_RootEntity);
         }
         
-        m_IsSceneToRuntimeMappingValid = true;
-        
         for (size_t i = 0; i < m_SceneEntities.size(); i++) {
-            ApplyTemplateOverridesToEntity(m_SceneEntities[i]->m_RuntimeRootEntity.lock(), m_SceneEntities[i]);
+            InitEntityComponentsFromBlueprint(m_SceneEntities[i]->m_RuntimeRootEntity.lock(), &m_SceneEntities[i]->m_RootEntity);
         }
         
         m_IsLoaded = true;
@@ -258,13 +236,11 @@ namespace Phezu {
     
     void Scene::BeginUnload() {
         m_IsLoaded = false;
-        m_IsSceneToRuntimeMappingValid = false;
     }
     
     void Scene::Unload() {
         m_RuntimeEntities.clear();
         m_IsLoaded = false;
-        m_IsSceneToRuntimeMappingValid = false;
     }
     
     long long unsigned int Scene::GetFrameCount() const {
