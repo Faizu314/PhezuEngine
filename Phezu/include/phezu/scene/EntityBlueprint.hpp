@@ -14,8 +14,9 @@ namespace Phezu {
     class EntityBlueprint {
     public:
         EntityBlueprint();
-        EntityBlueprint(const EntityBlueprint& other);
         ~EntityBlueprint();
+    public:
+        EntityBlueprint& operator=(const EntityBlueprint& other) = delete;
     public:
         std::string TagOverride;
         Vector2 PositionOverride;
@@ -56,6 +57,7 @@ namespace Phezu {
         size_t GetChildCount() const;
         const EntityBlueprint* GetChild(size_t childIndex) const;
     private:
+        EntityBlueprint(const EntityBlueprint& other);
         EntityBlueprint(std::unique_ptr<size_t[]> path, size_t pathSize);
     private:
         const bool m_IsRoot;
@@ -64,5 +66,7 @@ namespace Phezu {
     private:
         std::vector<std::shared_ptr<BehaviourComponentPrefabBase>> m_BehaviourComponents;
         std::vector<EntityBlueprint*> m_Children;
+        
+        friend class EntityTemplate;
     };
 }
