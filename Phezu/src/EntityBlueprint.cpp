@@ -1,4 +1,5 @@
 #include "scene/EntityBlueprint.hpp"
+#include "scene/components/BehaviourComponentPrefab.hpp"
 
 namespace Phezu {
     
@@ -13,8 +14,37 @@ namespace Phezu {
             delete child;
     }
 
-    EntityBlueprint::EntityBlueprint(const EntityBlueprint& other) : m_IsRoot(false), m_PathSize(0) {
-        //TODO_
+    EntityBlueprint::EntityBlueprint(const EntityBlueprint& other) :
+        TagOverride(other.TagOverride),
+        PositionOverride(other.PositionOverride),
+        ScaleOverride(other.ScaleOverride),
+        IsRenderable(other.IsRenderable),
+        IsCollidable(other.IsCollidable),
+        IsStatic(other.IsStatic),
+        VelocityOverride(other.VelocityOverride),
+        ShapePivotOverride(other.ShapePivotOverride),
+        ShapeSizeOverride(other.ShapeSizeOverride),
+        TextureOverride(other.TextureOverride),
+        TintOverride(other.TintOverride),
+        UVsOverride(other.UVsOverride),
+        m_IsRoot(other.m_IsRoot),
+        m_Path(std::make_unique<size_t[]>(other.m_PathSize)),
+        m_PathSize(other.m_PathSize)
+    {
+        if (!other.m_IsRoot) {
+            //TODO: Logging
+        }
+        
+        for (size_t i = 0; i < m_PathSize; i++)
+            m_Path[i] = other.m_Path[i];
+        
+        for (size_t i = 0; i < other.m_BehaviourComponents.size(); i++) {
+            m_BehaviourComponents.push_back(other.m_BehaviourComponents[i]->Clone());
+        }
+        
+        for (size_t i = 0; i < other.m_Children.size(); i++) {
+            m_Children.emplace_back(new EntityBlueprint(*other.m_Children[i]));
+        }
     }
     
     EntityBlueprint& EntityBlueprint::CreateChildEntity() {
