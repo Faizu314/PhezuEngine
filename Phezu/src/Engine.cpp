@@ -48,6 +48,15 @@ namespace Phezu {
         return 0;
     }
     
+    std::function<void(std::shared_ptr<Entity>)> Engine::GetComponentConstructor(std::type_index componentType) {
+        if (m_Constructors.find(componentType) == m_Constructors.end()) {
+            //TODO: Logging
+            return nullptr;
+        }
+        
+        return m_Constructors[componentType];
+    }
+    
     std::weak_ptr<Scene> Engine::CreateScene(const std::string& name) {
         if (m_IsRunning) {
             //TODO: Logging;

@@ -66,17 +66,4 @@ namespace Phezu {
     protected:
         virtual void InitRuntimeComponent(std::weak_ptr<Scene> scene, std::shared_ptr<T> component) const {};
     };
-    
-    struct ComponentRef {
-        std::weak_ptr<EntityTemplate> SceneEntity;
-        std::weak_ptr<BehaviourComponentPrefabBase> Component;
-        
-        ComponentRef(std::weak_ptr<EntityTemplate> sceneEntity, std::weak_ptr<BehaviourComponentPrefabBase> component) : SceneEntity(sceneEntity), Component(component) {}
-        
-        std::weak_ptr<BehaviourComponent> GetRef() {
-            auto compL = Component.lock();
-            
-            return compL->GetRuntimeComponentFromRoot(SceneEntity.lock());
-        }
-    };
 }
