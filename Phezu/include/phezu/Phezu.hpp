@@ -41,5 +41,15 @@ namespace Phezu {
         Engine::s_Instance->m_SceneManager.SubscribeToOnSceneLoaded(subscriber, handler);
     }
     
+    template<typename T>
+    void RegisterComponent(std::function<void(std::shared_ptr<Entity>)> constructor) {
+        if (Engine::s_Instance == nullptr) {
+            //TODO: Logging
+            return;
+        }
+        
+        Engine::s_Instance->m_Constructors[typeid(T)] = constructor;
+    }
+    
     void UnsubscribeToOnSceneLoaded(void* subscriber);
 }
