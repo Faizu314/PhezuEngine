@@ -126,7 +126,7 @@ namespace Phezu {
     void Scene::InitEntityComponentsFromBlueprint(std::shared_ptr<Entity> entity, const EntityBlueprint* blueprint) {
         for (size_t i = 0; i < blueprint->GetComponentPrefabsCount(); i++) {
             auto componentPrefab = blueprint->GetComponentPrefab(i).lock();
-            auto runtimeComponent = componentPrefab->GetRuntimeComponent(shared_from_this(), entity).lock();
+            auto runtimeComponent = componentPrefab->GetRuntimeComponent(entity).lock();
             
             if (!runtimeComponent) {
                 //TODO: logging
