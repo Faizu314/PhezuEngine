@@ -30,6 +30,7 @@ namespace Phezu {
         std::weak_ptr<Texture> TextureOverride;
         Color TintOverride;
         QuadUVs UVsOverride;
+        std::string Comp;
     public:
         template<typename T>
         std::weak_ptr<T> AddComponentPrefab() {

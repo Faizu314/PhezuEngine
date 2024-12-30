@@ -29,7 +29,8 @@ namespace Phezu {
         UVsOverride(other.UVsOverride),
         m_IsRoot(other.m_IsRoot),
         m_Path(std::make_unique<size_t[]>(other.m_PathSize)),
-        m_PathSize(other.m_PathSize)
+        m_PathSize(other.m_PathSize),
+        Comp(other.Comp)
     {
         if (!other.m_IsRoot) {
             //TODO: Logging
