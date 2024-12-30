@@ -1,8 +1,6 @@
 #pragma once
 
 #include <unordered_map>
-#include <typeindex>
-#include <functional>
 
 #include "Input.hpp"
 #include "Physics.hpp"
@@ -25,7 +23,6 @@ namespace Phezu {
         std::weak_ptr<Prefab> CreatePrefab();
         std::weak_ptr<const Prefab> GetPrefab(uint64_t prefabID);
     public:
-        std::function<void(std::shared_ptr<Entity>)> GetComponentConstructor(std::string componentName);
         void LoadScene(const std::string& sceneName);
         SceneManager& GetSceneManager();
         std::weak_ptr<Entity> CreateEntity();
@@ -45,7 +42,6 @@ namespace Phezu {
         SceneManager m_SceneManager;
         Physics m_Physics;
     private:
-        std::unordered_map<std::string, std::function<void(std::shared_ptr<Entity>)>> m_Constructors;
         std::unordered_map<uint64_t, std::shared_ptr<Prefab>> m_Prefabs;
         bool m_HasInited;
         bool m_IsRunning;
@@ -57,7 +53,5 @@ namespace Phezu {
         friend Engine& CreateEngine();
         template<typename T>
         friend void SubscribeToOnSceneLoaded(T* subscriber, void (T::*handler)(void));
-        template<typename T>
-        friend bool RegisterComponent(const std::string& typeName, std::function<void(std::shared_ptr<Entity>)> constructor);
     };
 }
