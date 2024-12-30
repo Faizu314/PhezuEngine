@@ -42,13 +42,16 @@ namespace Phezu {
     }
     
     template<typename T>
-    void RegisterComponent(std::function<void(std::shared_ptr<Entity>)> constructor) {
+    bool RegisterComponent(const std::string& typeName, std::function<void(std::shared_ptr<Entity>)> constructor) {
         if (Engine::s_Instance == nullptr) {
             //TODO: Logging
-            return;
+            return false;
         }
         
-        Engine::s_Instance->m_Constructors[typeid(T)] = constructor;
+        DataComponent::RegisterType(typeid(T), typeName);
+        Engine::s_Instance->m_Constructors[typeName] = constructor;
+        
+        return true;
     }
     
     void UnsubscribeToOnSceneLoaded(void* subscriber);

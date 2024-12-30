@@ -1,3 +1,5 @@
+#include <string>
+
 #include "Engine.hpp"
 #include "Window.hpp"
 #include "Renderer.hpp"
@@ -10,10 +12,9 @@
 
 namespace Phezu {
     
-    Engine* Engine::s_Instance = nullptr;
-    
     static const size_t ENTITIES_BUFFER_SIZE = 128;
 
+    Engine* Engine::s_Instance = nullptr;
     uint64_t Prefab::s_PrefabCount = 0;
     
     Engine::Engine() : m_HasInited(false), m_IsRunning(false), m_FrameCount(0), m_SceneManager(this), m_Input(this), m_Physics(this) {}
@@ -48,13 +49,13 @@ namespace Phezu {
         return 0;
     }
     
-    std::function<void(std::shared_ptr<Entity>)> Engine::GetComponentConstructor(std::type_index componentType) {
-        if (m_Constructors.find(componentType) == m_Constructors.end()) {
+    std::function<void(std::shared_ptr<Entity>)> Engine::GetComponentConstructor(std::string componentName) {
+        if (m_Constructors.find(componentName) == m_Constructors.end()) {
             //TODO: Logging
             return nullptr;
         }
         
-        return m_Constructors[componentType];
+        return m_Constructors[componentName];
     }
     
     std::weak_ptr<Scene> Engine::CreateScene(const std::string& name) {
