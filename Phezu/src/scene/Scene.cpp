@@ -1,11 +1,11 @@
 #include "scene/Scene.hpp"
 #include "scene/Entity.hpp"
+#include "scene/components/DataComponent.hpp"
 #include "scene/components/ShapeData.hpp"
 #include "scene/components/RenderData.hpp"
 #include "scene/components/PhysicsData.hpp"
 #include "scene/components/BehaviourComponent.hpp"
 #include "scene/Prefab.hpp"
-#include "scene/components/BehaviourComponentPrefab.hpp"
 #include "scene/EntityTemplate.hpp"
 #include "Engine.hpp"
 
@@ -32,8 +32,8 @@ namespace Phezu {
         
         auto entity = CreateEntity().lock();
         
-        BuildEntityFromBlueprint(entity, &prefab->RootEntity);
-        InitEntityComponentsFromBlueprint(entity, &prefab->RootEntity);
+        //BuildEntityFromBlueprint(entity, &prefab->RootEntity);
+        //InitEntityComponentsFromBlueprint(entity, &prefab->RootEntity);
         CallStartOnEntity(entity);
         
         return entity;
@@ -86,9 +86,9 @@ namespace Phezu {
     
     EntityBlueprint& Scene::CreateSceneEntity(uint64_t prefabID) {
         auto prefab = m_Engine->GetPrefab(prefabID).lock();
-        m_SceneEntities.push_back(EntityTemplate::MakeUnique(shared_from_this(), prefab->RootEntity));
-        
-        return m_SceneEntities[m_SceneEntities.size() - 1]->m_RootEntity;
+        //m_SceneEntities.push_back(EntityTemplate::MakeUnique(shared_from_this(), prefab->RootEntity));
+        EntityBlueprint eb;
+        return eb; //m_SceneEntities[m_SceneEntities.size() - 1]->m_RootEntity;
     }
     
     void Scene::BuildEntityFromBlueprint(std::shared_ptr<Entity> entity, const EntityBlueprint* blueprint) {
@@ -111,9 +111,11 @@ namespace Phezu {
             physicsData->Velocity = blueprint->VelocityOverride;
         }
         
-        for (size_t i = 0; i < blueprint->GetComponentPrefabsCount(); i++) {
-            blueprint->GetComponentPrefab(i).lock()->CreateComponent(entity);
-        }
+        DataComponent::GetComponentConstructor(blueprint->Comp)(entity);
+        
+//        for (size_t i = 0; i < blueprint->GetComponentPrefabsCount(); i++) {
+//            blueprint->GetComponentPrefab(i).lock()->CreateComponent(entity);
+//        }
         
         for (size_t i = 0; i < blueprint->GetChildCount(); i++) {
             std::shared_ptr<Entity> child = CreateEntity().lock();
@@ -124,17 +126,17 @@ namespace Phezu {
     }
     
     void Scene::InitEntityComponentsFromBlueprint(std::shared_ptr<Entity> entity, const EntityBlueprint* blueprint) {
-        for (size_t i = 0; i < blueprint->GetComponentPrefabsCount(); i++) {
-            auto componentPrefab = blueprint->GetComponentPrefab(i).lock();
-            auto runtimeComponent = componentPrefab->GetRuntimeComponent(entity).lock();
-            
-            if (!runtimeComponent) {
-                //TODO: logging
-                continue;
-            }
-            
-            componentPrefab->InitRuntimeComponentInternal(shared_from_this(), runtimeComponent);
-        }
+//        for (size_t i = 0; i < blueprint->GetComponentPrefabsCount(); i++) {
+//            auto componentPrefab = blueprint->GetComponentPrefab(i).lock();
+//            auto runtimeComponent = componentPrefab->GetRuntimeComponent(entity).lock();
+//            
+//            if (!runtimeComponent) {
+//                //TODO: logging
+//                continue;
+//            }
+//            
+//            componentPrefab->InitRuntimeComponentInternal(shared_from_this(), runtimeComponent);
+//        }
         
         for (size_t i = 0; i < blueprint->GetChildCount(); i++) {
             InitEntityComponentsFromBlueprint(entity->GetChild(i).lock(), blueprint->GetChild(i));
@@ -147,11 +149,11 @@ namespace Phezu {
             
             m_SceneEntities[i]->m_RuntimeRootEntity = entity;
             
-            BuildEntityFromBlueprint(entity, &m_SceneEntities[i]->m_RootEntity);
+            //BuildEntityFromBlueprint(entity, &m_SceneEntities[i]->m_RootEntity);
         }
         
         for (size_t i = 0; i < m_SceneEntities.size(); i++) {
-            InitEntityComponentsFromBlueprint(m_SceneEntities[i]->m_RuntimeRootEntity.lock(), &m_SceneEntities[i]->m_RootEntity);
+            //InitEntityComponentsFromBlueprint(m_SceneEntities[i]->m_RuntimeRootEntity.lock(), &m_SceneEntities[i]->m_RootEntity);
         }
         
         m_IsLoaded = true;

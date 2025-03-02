@@ -13,7 +13,7 @@ namespace Phezu {
         }
     public:
         uint64_t GetPrefabID() { return m_PrefabID; }
-        EntityBlueprint RootEntity;
+        //EntityBlueprint RootEntity;
     private:
         static uint64_t s_PrefabCount;
         uint64_t m_PrefabID;

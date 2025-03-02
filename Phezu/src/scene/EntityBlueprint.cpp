@@ -1,5 +1,4 @@
 #include "scene/EntityBlueprint.hpp"
-#include "scene/components/BehaviourComponentPrefab.hpp"
 
 namespace Phezu {
     
@@ -39,10 +38,6 @@ namespace Phezu {
         for (size_t i = 0; i < m_PathSize; i++)
             m_Path[i] = other.m_Path[i];
         
-        for (size_t i = 0; i < other.m_BehaviourComponents.size(); i++) {
-            m_BehaviourComponents.push_back(other.m_BehaviourComponents[i]->Clone());
-        }
-        
         for (size_t i = 0; i < other.m_Children.size(); i++) {
             m_Children.emplace_back(new EntityBlueprint(*other.m_Children[i]));
         }
@@ -69,17 +64,5 @@ namespace Phezu {
             return nullptr;
         
         return m_Children[childIndex];
-    }
-    
-    std::weak_ptr<BehaviourComponentPrefabBase> EntityBlueprint::GetComponentPrefab(size_t index) const {
-        if (index >= m_BehaviourComponents.size()) {
-            //TODO: copy and paste the logging class
-            return std::weak_ptr<BehaviourComponentPrefabBase>();
-        }
-        return m_BehaviourComponents[index];
-    }
-    
-    size_t EntityBlueprint::GetComponentPrefabsCount() const {
-        return m_BehaviourComponents.size();
     }
 }

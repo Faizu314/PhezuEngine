@@ -5,7 +5,7 @@
 #include "Input.hpp"
 #include "Renderer.hpp"
 #include "Physics.hpp"
-#include "Random.hpp"
+#include "maths/Random.hpp"
 #include "maths/Math.hpp"
 #include "scene/Prefab.hpp"
 #include "scene/Scene.hpp"
@@ -19,7 +19,6 @@
 #include "scene/components/RenderData.hpp"
 #include "scene/components/PhysicsData.hpp"
 #include "scene/components/BehaviourComponent.hpp"
-#include "scene/components/BehaviourComponentPrefab.hpp"
 
 namespace Phezu {
     
