@@ -4,9 +4,9 @@ set(CMAKE_CXX_STANDARD 17)
 if (NOT DEFINED PROCESSOR_COUNT)
     set(PROCESSOR_COUNT 1)
 
-    if(WIN32)
-    set(PROCESSOR_COUNT "$ENV{NUMBER_OF_PROCESSORS}")
-    message(STATUS "Cores Found: ${PROCESSOR_COUNT}")
+    if (WIN32)
+        set(PROCESSOR_COUNT "$ENV{NUMBER_OF_PROCESSORS}")
+        message(STATUS "Cores Found: ${PROCESSOR_COUNT}")
     endif()
 endif()
 
