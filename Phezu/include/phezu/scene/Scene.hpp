@@ -19,7 +19,9 @@ namespace Phezu {
         Scene() = delete;
         Scene(Engine* engine, const std::string& name);
     public:
+        // Editor application function
         EntityBlueprint& CreateSceneEntity(uint64_t prefabID = 0);
+    public:
         std::weak_ptr<Entity> CreateEntity();
         std::weak_ptr<Entity> CreateEntity(uint64_t prefabID);
         std::weak_ptr<Entity> GetEntity(uint64_t entityID) const;
@@ -40,9 +42,13 @@ namespace Phezu {
         void DestroyEntityInternal(uint64_t entityID);
     private:
         Engine* const m_Engine;
-        const std::string m_Name;
-        bool m_IsLoaded;
+        
+        //These will get populated in the Deserialize function
         std::vector<std::unique_ptr<EntityTemplate>> m_SceneEntities;
+        const std::string m_Name;
+        //These will get populated in the Deserialize function
+        
+        bool m_IsLoaded;
         std::unordered_map<uint64_t, std::shared_ptr<Entity>> m_RuntimeEntities;
         std::vector<uint64_t> m_EntitiesToDestroy;
     };

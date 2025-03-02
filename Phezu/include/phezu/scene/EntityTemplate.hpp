@@ -22,7 +22,7 @@ namespace Phezu {
     private:
         const std::weak_ptr<Scene> m_Scene;
         std::weak_ptr<Entity> m_RuntimeRootEntity;
-        EntityBlueprint m_RootEntity;
+        //EntityBlueprint m_RootEntity;
         
         friend class Scene;
     };

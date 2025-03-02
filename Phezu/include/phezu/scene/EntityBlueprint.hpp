@@ -9,7 +9,6 @@ namespace Phezu {
     
     class Entity;
     class ShapeData;
-    class BehaviourComponentPrefabBase;
     
     class EntityBlueprint {
     public:
@@ -32,28 +31,6 @@ namespace Phezu {
         QuadUVs UVsOverride;
         std::string Comp;
     public:
-        template<typename T>
-        std::weak_ptr<T> AddComponentPrefab() {
-            if (!std::is_base_of<BehaviourComponentPrefabBase, T>::value) {
-                //TODO: copy and paste the logging class
-                return std::weak_ptr<T>();
-            }
-            
-            uint8_t componentID = static_cast<uint8_t>(m_BehaviourComponents.size());
-            
-            std::unique_ptr<size_t[]> path = std::make_unique<size_t[]>(m_PathSize);
-            for (int i = 0; i < m_PathSize; i++)
-                path[i] = m_Path[i];
-            
-            std::shared_ptr<T> component = std::make_shared<T>(std::move(path), m_PathSize, componentID);
-            
-            m_BehaviourComponents.push_back(std::static_pointer_cast<BehaviourComponentPrefabBase>(component));
-            
-            return component;
-        }
-    public:
-        size_t GetComponentPrefabsCount() const;
-        std::weak_ptr<BehaviourComponentPrefabBase> GetComponentPrefab(size_t index) const;
         EntityBlueprint& CreateChildEntity();
         size_t GetChildCount() const;
         const EntityBlueprint* GetChild(size_t childIndex) const;
@@ -65,7 +42,6 @@ namespace Phezu {
         const std::unique_ptr<size_t[]> m_Path;
         const size_t m_PathSize;
     private:
-        std::vector<std::shared_ptr<BehaviourComponentPrefabBase>> m_BehaviourComponents;
         std::vector<EntityBlueprint*> m_Children;
         
         friend class EntityTemplate;

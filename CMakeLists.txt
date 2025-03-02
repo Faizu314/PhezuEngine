@@ -12,16 +12,47 @@ endif()
 
 project(Tetris)
 
-file(GLOB_RECURSE PHEZU_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/src/*.cpp")
-file(GLOB_RECURSE PHEZU_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/*.hpp")
+file(GLOB PHEZU_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/src/*.cpp")
+file(GLOB PHEZU_MATH_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/src/maths/*.cpp")
+file(GLOB PHEZU_SCENE_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/src/scene/*.cpp")
+file(GLOB PHEZU_COMP_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/src/scene/components/*.cpp")
+
+
+file(GLOB PHEZU_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/*.hpp")
+file(GLOB PHEZU_MATH_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/maths/*.hpp")
+file(GLOB PHEZU_SCENE_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/scene/*.hpp")
+file(GLOB PHEZU_COMP_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/scene/components/*.hpp")
 
 file(GLOB_RECURSE PHEZU_VENDOR_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/vendor/*.cpp")
 
-source_group("Header Files" FILES ${PHEZU_HEADERS})
-source_group("Source Files" FILES ${PHEZU_SOURCES})
-source_group("Vendor\\Source Files" FILES ${PHEZU_VENDOR_SOURCES})
+source_group("Header Files\\Phezu" FILES ${PHEZU_HEADERS})
+source_group("Header Files\\Phezu\\Math" FILES ${PHEZU_MATH_HEADERS})
+source_group("Header Files\\Phezu\\Scene" FILES ${PHEZU_SCENE_HEADERS})
+source_group("Header Files\\Phezu\\Scene\\Components" FILES ${PHEZU_COMP_HEADERS})
 
-add_library(Phezu STATIC ${PHEZU_SOURCES} ${PHEZU_VENDOR_SOURCES} ${PHEZU_HEADERS})
+source_group("Source Files\\Phezu" FILES ${PHEZU_SOURCES})
+source_group("Source Files\\Phezu\\Math" FILES ${PHEZU_MATH_SOURCES})
+source_group("Source Files\\Phezu\\Scene" FILES ${PHEZU_SCENE_SOURCES})
+source_group("Source Files\\Phezu\\Scene\\Components" FILES ${PHEZU_COMP_SOURCES})
+
+source_group("Source Files\\Vendor" FILES ${PHEZU_VENDOR_SOURCES})
+
+set(PHEZU_ALL_SOURCES
+    ${PHEZU_SOURCES}
+    ${PHEZU_MATH_SOURCES}
+    ${PHEZU_SCENE_SOURCES}
+    ${PHEZU_COMP_SOURCES}
+    ${PHEZU_VENDOR_SOURCES}
+)
+
+set (PHEZU_ALL_HEADERS
+    ${PHEZU_HEADERS}
+    ${PHEZU_MATH_HEADERS}
+    ${PHEZU_SCENE_HEADERS}
+    ${PHEZU_COMP_HEADERS}
+)
+
+add_library(Phezu STATIC ${PHEZU_ALL_SOURCES} ${PHEZU_VENDOR_SOURCES} ${PHEZU_ALL_HEADERS})
 set_target_properties(Phezu PROPERTIES OUTPUT_NAME Phezu PREFIX "")
 
 
