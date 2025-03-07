@@ -86,14 +86,4 @@ namespace Phezu {
         
         engine->GetSceneManager().UnsubscribeToOnSceneLoaded(subscriber);
     }
-    
-    bool RegisterComponent(const std::string& typeName, std::type_index typeIndex, std::function<void(std::shared_ptr<Entity>)> constructor) {
-        auto& typeRegistry = DataComponent::GetTypeRegistry();
-        auto& constructorRegistry = DataComponent::GetConstructorRegistry();
-        
-        typeRegistry[typeIndex] = typeName;
-        constructorRegistry[typeName] = constructor;
-        
-        return true;
-    }
 }
