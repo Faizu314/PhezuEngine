@@ -16,6 +16,7 @@ namespace Phezu {
         SceneManager() = delete;
         SceneManager(Engine* engine);
     public:
+        //Editor only function
         std::weak_ptr<Scene> CreateScene(const std::string& name);
         std::weak_ptr<Scene> GetActiveScene() const;
     public:

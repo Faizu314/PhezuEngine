@@ -159,7 +159,7 @@ namespace Phezu {
         }
         
         std::shared_ptr<Prefab> prefab = std::make_shared<Prefab>();
-        m_Prefabs.insert(std::make_pair(prefab->GetPrefabID(), prefab));
+        m_Prefabs.insert(std::make_pair(prefab->GetGuid(), prefab));
         return prefab;
     }
     

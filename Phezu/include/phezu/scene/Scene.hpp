@@ -5,22 +5,18 @@
 #include <memory>
 #include <string>
 #include "maths/Math.hpp"
+#include "scene/Blueprint.hpp"
 
 namespace Phezu {
     
     class Engine;
     class Entity;
     class Prefab;
-    class EntityBlueprint;
-    class EntityTemplate;
     
     class Scene : public std::enable_shared_from_this<Scene> {
     public:
         Scene() = delete;
-        Scene(Engine* engine, const std::string& name);
-    public:
-        // Editor application function
-        EntityBlueprint& CreateSceneEntity(uint64_t prefabID = 0);
+        Scene(Engine* engine, const std::string& name, Blueprint sceneEntities = Blueprint());
     public:
         std::weak_ptr<Entity> CreateEntity();
         std::weak_ptr<Entity> CreateEntity(uint64_t prefabID);
@@ -35,19 +31,11 @@ namespace Phezu {
         void Unload();
         long long unsigned int GetFrameCount() const;
     private:
-        void BuildEntityFromBlueprint(std::shared_ptr<Entity> entity, const EntityBlueprint* blueprint);
-        void InitEntityComponentsFromBlueprint(std::shared_ptr<Entity> entity, const EntityBlueprint* prefabEntity);
-    private:
-        void CallStartOnEntity(std::shared_ptr<Entity> entity);
         void DestroyEntityInternal(uint64_t entityID);
     private:
         Engine* const m_Engine;
-        
-        //These will get populated in the Deserialize function
-        std::vector<std::unique_ptr<EntityTemplate>> m_SceneEntities;
+        Blueprint m_SceneEntities;
         const std::string m_Name;
-        //These will get populated in the Deserialize function
-        
         bool m_IsLoaded;
         std::unordered_map<uint64_t, std::shared_ptr<Entity>> m_RuntimeEntities;
         std::vector<uint64_t> m_EntitiesToDestroy;

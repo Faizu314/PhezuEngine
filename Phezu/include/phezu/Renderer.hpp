@@ -30,10 +30,9 @@ namespace Phezu {
         friend class Renderer;
     };
     
-    class QuadUVs {
-    public:
-        QuadUVs(int x = 0, int y = 0, int w = 1, int h = 1);
-    public:
+    struct Rect {
+        Rect(int x = 0, int y = 0, int w = 1, int h = 1);
+        
         int x, y, w, h;
     };
     

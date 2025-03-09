@@ -12,11 +12,11 @@ namespace Phezu {
     public:
         RenderData(Entity* entity, std::weak_ptr<Texture> texture) : DataComponent(entity), Sprite(texture), Tint(Color::White) {}
         RenderData(Entity* entity, std::weak_ptr<Texture> texture, Color tint) : DataComponent(entity), Sprite(texture), Tint(tint) {}
-        RenderData(Entity* entity, std::weak_ptr<Texture> texture, QuadUVs uvs) : DataComponent(entity), Sprite(texture), RectUVs(uvs), Tint(Color::White) {}
-        RenderData(Entity* entity, std::weak_ptr<Texture> texture, Color tint, QuadUVs uvs) : DataComponent(entity), Sprite(texture), Tint(tint), RectUVs(uvs) {}
+        RenderData(Entity* entity, std::weak_ptr<Texture> texture, Rect uvs) : DataComponent(entity), Sprite(texture), SourceRect(uvs), Tint(Color::White) {}
+        RenderData(Entity* entity, std::weak_ptr<Texture> texture, Color tint, Rect uvs) : DataComponent(entity), Sprite(texture), Tint(tint), SourceRect(uvs) {}
     public:
         std::weak_ptr<Texture> Sprite;
-        QuadUVs RectUVs;
+        Rect SourceRect;
         Color Tint;
     };
 }

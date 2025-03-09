@@ -30,7 +30,6 @@ namespace Phezu {
         void SetTag(const std::string& tag) { m_Tag = tag; }
     public:
         TransformData* GetTransformData();
-        const TransformData& GetTransformData() const { return m_TransformData; }
         ShapeData* GetShapeData() const { return m_ShapeData; }
         RenderData* GetRenderData() const { return m_RenderData; }
         std::weak_ptr<PhysicsData> GetPhysicsData() const { return m_PhysicsData; }
