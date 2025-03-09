@@ -18,7 +18,7 @@ namespace Phezu {
     const Color Color::Black = Color(0, 0, 0, 255);
     
     Texture::Texture(SDL_Texture* texture) : m_Texture(texture) {}
-    QuadUVs::QuadUVs(int x, int y, int w, int h) : x(x), y(y), w(w), h(h) {}
+    Rect::Rect(int x, int y, int w, int h) : x(x), y(y), w(w), h(h) {}
     Color::Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) : r(red), g(green), b(blue), a(alpha) {}
     
     void Color::ConvertToSDLColor(SDL_Color &sdlColor) const {
@@ -130,8 +130,9 @@ namespace Phezu {
         if (auto tex = entityL->GetRenderData()->Sprite.lock())
             texture = *tex.get();
         
+        //TODO: add equality operator in Rect to return SDL_Rect
         SDL_Rect srcRect;
-        QuadUVs uvs = entityL->GetRenderData()->RectUVs;
+        Rect uvs = entityL->GetRenderData()->SourceRect;
         srcRect.x = uvs.x;
         srcRect.y = uvs.y;
         srcRect.w = uvs.w;

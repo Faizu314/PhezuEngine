@@ -22,6 +22,7 @@ file(GLOB PHEZU_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/*.hpp")
 file(GLOB PHEZU_MATH_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/maths/*.hpp")
 file(GLOB PHEZU_SCENE_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/scene/*.hpp")
 file(GLOB PHEZU_COMP_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/scene/components/*.hpp")
+file(GLOB PHEZU_SERIALIZE_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/serialization/*.hpp")
 
 file(GLOB_RECURSE PHEZU_VENDOR_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/vendor/*.cpp")
 
@@ -29,6 +30,7 @@ source_group("Header Files\\Phezu" FILES ${PHEZU_HEADERS})
 source_group("Header Files\\Phezu\\Math" FILES ${PHEZU_MATH_HEADERS})
 source_group("Header Files\\Phezu\\Scene" FILES ${PHEZU_SCENE_HEADERS})
 source_group("Header Files\\Phezu\\Scene\\Components" FILES ${PHEZU_COMP_HEADERS})
+source_group("Header Files\\Phezu\\Serialization" FILES ${PHEZU_SERIALIZE_HEADERS})
 
 source_group("Source Files\\Phezu" FILES ${PHEZU_SOURCES})
 source_group("Source Files\\Phezu\\Math" FILES ${PHEZU_MATH_SOURCES})
@@ -49,6 +51,7 @@ set (PHEZU_ALL_HEADERS
     ${PHEZU_HEADERS}
     ${PHEZU_MATH_HEADERS}
     ${PHEZU_SCENE_HEADERS}
+    ${PHEZU_SERIALIZE_HEADERS}
     ${PHEZU_COMP_HEADERS}
 )
 
