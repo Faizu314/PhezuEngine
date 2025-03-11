@@ -16,7 +16,8 @@ namespace Phezu {
     class Scene : public std::enable_shared_from_this<Scene> {
     public:
         Scene() = delete;
-        Scene(Engine* engine, const std::string& name, Blueprint sceneEntities = Blueprint());
+        Scene(Engine* engine);
+        Scene(Engine* engine, const std::string& name);
     public:
         std::weak_ptr<Entity> CreateEntity();
         std::weak_ptr<Entity> CreateEntity(uint64_t prefabID);
@@ -30,12 +31,15 @@ namespace Phezu {
         void BeginUnload();
         void Unload();
         long long unsigned int GetFrameCount() const;
+    public:
+        std::string Serialize() const;
+        void Deserialize(const std::string& data);
     private:
         void DestroyEntityInternal(uint64_t entityID);
     private:
         Engine* const m_Engine;
         Blueprint m_SceneEntities;
-        const std::string m_Name;
+        std::string m_Name;
         bool m_IsLoaded;
         std::unordered_map<uint64_t, std::shared_ptr<Entity>> m_RuntimeEntities;
         std::vector<uint64_t> m_EntitiesToDestroy;

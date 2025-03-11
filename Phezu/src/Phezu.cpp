@@ -77,13 +77,13 @@ namespace Phezu {
     }
     
     void UnsubscribeToOnSceneLoaded(void* subscriber) {
-        Engine* engine = GetEngine();
+        Engine* instance = GetEngine();
         
-        if (engine == nullptr) {
+        if (instance == nullptr) {
             //TODO: Logging
             return;
         }
         
-        engine->GetSceneManager().UnsubscribeToOnSceneLoaded(subscriber);
+        instance->GetSceneManager().UnsubscribeToOnSceneLoaded(subscriber);
     }
 }

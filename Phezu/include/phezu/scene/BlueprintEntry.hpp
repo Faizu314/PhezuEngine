@@ -2,6 +2,8 @@
 
 #include <unordered_map>
 #include <string>
+#include "GUID.hpp"
+#include "nlohmann/json.hpp"
 
 namespace Phezu {
     
@@ -19,14 +21,18 @@ namespace Phezu {
     
     class BlueprintEntry {
     public:
-        BlueprintEntry(uint64_t guid, uint64_t fileID, EntryType typeID, std::string typeName)
+        BlueprintEntry() = default;
+        BlueprintEntry(GUID guid, uint64_t fileID, EntryType typeID, std::string typeName)
         : Guid(guid), FileID(fileID), TypeID(typeID), TypeName(typeName) {}
     public:
-        uint64_t Guid;
+        GUID Guid;
         uint64_t FileID;
         EntryType TypeID;
         std::string TypeName;
     public:
         std::unordered_map<std::string, std::string> Properties;
+    public:
+        void Serialize(nlohmann::json& j) const;
+        void Deserialize(const nlohmann::json& j);
     };
 }

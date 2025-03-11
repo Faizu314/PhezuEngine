@@ -4,13 +4,30 @@
 #include "scene/components/ShapeData.hpp"
 #include "scene/components/RenderData.hpp"
 #include "scene/components/PhysicsData.hpp"
-#include "serialization/Serializer.hpp"
+#include "nlohmann/json.hpp"
+#include "serialization/CustomSerialization.hpp"
 
 namespace Phezu {
     
-    Blueprint::Blueprint() {}
+    void Blueprint::Serialize(nlohmann::json &j) const {
+        j["Entries"] = nlohmann::json::array();
+        
+        for (const auto& entry : Entries) {
+            nlohmann::json entryJson;
+            entry.Serialize(entryJson);
+            j["Entries"].push_back(entryJson);
+        }
+    }
     
-    Blueprint::~Blueprint() {}
+    void Blueprint::Deserialize(const nlohmann::json& j) {
+        Entries.clear();
+        
+        for (const auto& entryJson : j["Entries"]) {
+            BlueprintEntry entry;
+            entry.Deserialize(entryJson);
+            Entries.push_back(entry);
+        }
+    }
     
     std::vector<std::shared_ptr<Entity>> Blueprint::Instantiate(std::shared_ptr<Scene> scene) const {
         std::unordered_map<uint64_t, std::shared_ptr<Entity>> entities;
@@ -41,11 +58,11 @@ namespace Phezu {
                 {
                     auto entity = entities[entry.FileID];
                     
-                    uint64_t parentFileID = Json::DeserializeRaw<uint64_t>(entry.Properties.at("Parent"));
+                    uint64_t parentFileID = nlohmann::json::parse(entry.Properties.at("Parent")).get<uint64_t>();
                     if (parentFileID == 0)
                         rootEntities.push_back(entity);
                     
-                    std::vector<uint64_t> children = Json::DeserializeArray<uint64_t>(entry.Properties.at("Children"));
+                    std::vector<uint64_t> children = nlohmann::json::parse(entry.Properties.at("Children")).get<std::vector<uint64_t>>();
                     for (size_t j = 0; j < children.size(); j++) {
                         uint64_t childFileID = children[j];
                         entities[childFileID]->SetParent(entity);
@@ -54,9 +71,9 @@ namespace Phezu {
                 }
                 case EntryType::TransformData:
                 {
-                    uint64_t entityFileID = Json::DeserializeRaw<uint64_t>(entry.Properties.at("Entity"));
-                    Vector2 position = Json::DeserializeRaw<Vector2>(entry.Properties.at("Position"));
-                    Vector2 scale = Json::DeserializeRaw<Vector2>(entry.Properties.at("Scale"));
+                    uint64_t entityFileID = nlohmann::json::parse(entry.Properties.at("Entity")).get<uint64_t>();
+                    Vector2 position = nlohmann::json::parse(entry.Properties.at("Position")).get<Vector2>();
+                    Vector2 scale = nlohmann::json::parse(entry.Properties.at("Scale")).get<Vector2>();
                     
                     auto transform = entities[entityFileID]->GetTransformData();
                     transform->SetLocalPosition(position);
@@ -66,9 +83,9 @@ namespace Phezu {
                 }
                 case EntryType::ShapeData:
                 {
-                    uint64_t entityFileID = Json::DeserializeRaw<uint64_t>(entry.Properties.at("Entity"));
-                    Vector2 pivot = Json::DeserializeRaw<Vector2>(entry.Properties.at("Pivot"));
-                    Vector2 size = Json::DeserializeRaw<Vector2>(entry.Properties.at("Size"));
+                    uint64_t entityFileID = nlohmann::json::parse(entry.Properties.at("Entity")).get<uint64_t>();
+                    Vector2 pivot = nlohmann::json::parse(entry.Properties.at("Pivot")).get<Vector2>();
+                    Vector2 size = nlohmann::json::parse(entry.Properties.at("Size")).get<Vector2>();
                     
                     auto shapeData = entities[entityFileID]->AddShapeData();
                     shapeData->Set(pivot, size);
@@ -77,9 +94,9 @@ namespace Phezu {
                 }
                 case EntryType::RenderData:
                 {
-                    uint64_t entityFileID = Json::DeserializeRaw<uint64_t>(entry.Properties.at("Entity"));
-                    Color tint = Json::DeserializeRaw<Color>(entry.Properties.at("Tint"));
-                    Rect sourceRect = Json::DeserializeRaw<Rect>(entry.Properties.at("SourceRect"));
+                    uint64_t entityFileID = nlohmann::json::parse(entry.Properties.at("Entity")).get<uint64_t>();
+                    Color tint = nlohmann::json::parse(entry.Properties.at("Tint")).get<Color>();
+                    Rect sourceRect = nlohmann::json::parse(entry.Properties.at("SourceRect")).get<Rect>();
                     //Texture tex = Json::DeserializeRaw<Vector2>(entry.Properties["Sprite"]);
                     
                     auto renderData = entities[entityFileID]->AddRenderData();
@@ -91,9 +108,9 @@ namespace Phezu {
                 }
                 case EntryType::PhysicsData:
                 {
-                    uint64_t entityFileID = Json::DeserializeRaw<uint64_t>(entry.Properties.at("Entity"));
-                    bool isStatic = Json::DeserializeRaw<bool>(entry.Properties.at("IsStatic"));
-                    Vector2 velocity = Json::DeserializeRaw<Vector2>(entry.Properties.at("Velocity"));
+                    uint64_t entityFileID = nlohmann::json::parse(entry.Properties.at("Entity")).get<uint64_t>();
+                    bool isStatic = nlohmann::json::parse(entry.Properties.at("IsStatic")).get<bool>();
+                    Vector2 velocity = nlohmann::json::parse(entry.Properties.at("Velocity")).get<Vector2>();
                     
                     auto physicsData = entities[entityFileID]->AddPhysicsData(isStatic).lock();
                     physicsData->Velocity = velocity;
