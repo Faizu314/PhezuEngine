@@ -2,17 +2,18 @@
 
 #include <vector>
 #include "scene/Blueprint.hpp"
+#include "GUID.hpp"
 
 namespace Phezu {
     
     class Prefab {
     public:
-        Prefab();
+        Prefab(GUID guid);
     public:
-        uint64_t GetGuid() { return m_Guid; }
+        GUID GetGuid() { return m_Guid; }
     public:
-        void SaveToDisk();
-        void LoadFromDisk();
+        std::string Serialize() const;
+        void Deserialize(const std::string& data);
     public:
         std::vector<std::shared_ptr<Entity>> Instantiate(std::shared_ptr<Scene> scene) const;
         //Maybe a function like SetAsBlueprint(List<Entity>)
@@ -25,8 +26,7 @@ namespace Phezu {
         void AddEntry(const Blueprint& newEntry);
         
     private:
-        static uint64_t s_PrefabCount;
-        uint64_t m_Guid;
+        GUID m_Guid;
         Blueprint m_Blueprint;
     };
     

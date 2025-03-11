@@ -12,7 +12,8 @@
 
 namespace Phezu {
     
-    Scene::Scene(Engine* engine, const std::string& name, Blueprint sceneEntities) : m_Engine(engine), m_Name(name), m_SceneEntities(sceneEntities), m_IsLoaded(false) { }
+    Scene::Scene(Engine* engine) : m_Engine(engine), m_IsLoaded(false) { }
+    Scene::Scene(Engine* engine, const std::string& name) : m_Engine(engine), m_Name(name), m_IsLoaded(false) { }
     
     std::weak_ptr<Entity> Scene::CreateEntity() {
         std::shared_ptr<Entity> entity = std::make_shared<Entity>(shared_from_this());
@@ -166,5 +167,19 @@ namespace Phezu {
     
     long long unsigned int Scene::GetFrameCount() const {
         return m_Engine->GetFrameCount();
+    }
+    
+    std::string Scene::Serialize() const {
+        nlohmann::json j;
+        
+        j["Name"] = m_Name;
+        m_SceneEntities.Serialize(j);
+    }
+    
+    void Scene::Deserialize(const std::string& data) {
+        nlohmann::json j = nlohmann::json::parse(data);
+
+        m_Name = j["Name"].get<std::string>();
+        m_SceneEntities.Deserialize(j);
     }
 }
