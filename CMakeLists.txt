@@ -13,12 +13,14 @@ endif()
 project(Tetris)
 
 file(GLOB PHEZU_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/src/*.cpp")
+file(GLOB PHEZU_ASSET_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/src/AssetManagement/*.cpp")
 file(GLOB PHEZU_MATH_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/src/maths/*.cpp")
 file(GLOB PHEZU_SCENE_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/src/scene/*.cpp")
 file(GLOB PHEZU_COMP_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/src/scene/components/*.cpp")
 
 
 file(GLOB PHEZU_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/*.hpp")
+file(GLOB PHEZU_ASSET_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/AssetManagement/*.hpp")
 file(GLOB PHEZU_MATH_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/maths/*.hpp")
 file(GLOB PHEZU_SCENE_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/scene/*.hpp")
 file(GLOB PHEZU_COMP_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/scene/components/*.hpp")
@@ -27,12 +29,14 @@ file(GLOB PHEZU_SERIALIZE_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/seria
 file(GLOB_RECURSE PHEZU_VENDOR_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/vendor/*.cpp")
 
 source_group("Header Files\\Phezu" FILES ${PHEZU_HEADERS})
+source_group("Header Files\\Phezu\\AssetManagement" FILES ${PHEZU_ASSET_HEADERS})
 source_group("Header Files\\Phezu\\Math" FILES ${PHEZU_MATH_HEADERS})
 source_group("Header Files\\Phezu\\Scene" FILES ${PHEZU_SCENE_HEADERS})
 source_group("Header Files\\Phezu\\Scene\\Components" FILES ${PHEZU_COMP_HEADERS})
 source_group("Header Files\\Phezu\\Serialization" FILES ${PHEZU_SERIALIZE_HEADERS})
 
 source_group("Source Files\\Phezu" FILES ${PHEZU_SOURCES})
+source_group("Source Files\\Phezu\\AssetManagement" FILES ${PHEZU_ASSET_SOURCES})
 source_group("Source Files\\Phezu\\Math" FILES ${PHEZU_MATH_SOURCES})
 source_group("Source Files\\Phezu\\Scene" FILES ${PHEZU_SCENE_SOURCES})
 source_group("Source Files\\Phezu\\Scene\\Components" FILES ${PHEZU_COMP_SOURCES})
@@ -41,6 +45,7 @@ source_group("Source Files\\Vendor" FILES ${PHEZU_VENDOR_SOURCES})
 
 set(PHEZU_ALL_SOURCES
     ${PHEZU_SOURCES}
+    ${PHEZU_ASSET_SOURCES}
     ${PHEZU_MATH_SOURCES}
     ${PHEZU_SCENE_SOURCES}
     ${PHEZU_COMP_SOURCES}
@@ -49,6 +54,7 @@ set(PHEZU_ALL_SOURCES
 
 set (PHEZU_ALL_HEADERS
     ${PHEZU_HEADERS}
+    ${PHEZU_ASSET_HEADERS}
     ${PHEZU_MATH_HEADERS}
     ${PHEZU_SCENE_HEADERS}
     ${PHEZU_SERIALIZE_HEADERS}
