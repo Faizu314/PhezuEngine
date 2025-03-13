@@ -20,7 +20,7 @@ namespace Phezu {
         Scene(Engine* engine, const std::string& name);
     public:
         std::weak_ptr<Entity> CreateEntity();
-        std::weak_ptr<Entity> CreateEntity(uint64_t prefabID);
+        std::weak_ptr<Entity> CreateEntity(GUID prefabGuid);
         std::weak_ptr<Entity> GetEntity(uint64_t entityID) const;
         void DestroyEntity(uint64_t entityID);
         void Load();

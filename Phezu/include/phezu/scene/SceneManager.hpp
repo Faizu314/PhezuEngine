@@ -6,6 +6,8 @@
 #include <functional>
 #include <unordered_map>
 
+#include "AssetManagement/AssetManager.hpp"
+
 namespace Phezu {
     
     class Engine;
@@ -16,8 +18,6 @@ namespace Phezu {
         SceneManager() = delete;
         SceneManager(Engine* engine);
     public:
-        //Editor only function
-        std::weak_ptr<Scene> CreateScene(const std::string& name);
         std::weak_ptr<Scene> GetActiveScene() const;
     public:
         template <typename T>
@@ -35,16 +35,18 @@ namespace Phezu {
     public:
         void OnStartGame();
         void OnEndOfFrame();
+        void LoadScene(size_t buildIndex);
         void LoadScene(const std::string& sceneName);
         std::weak_ptr<Scene> GetMasterScene() const { return m_MasterScene; }
     private:
         Engine* m_Engine;
     private:
+        AssetManager m_AssetManager;
+        BuildScenesConfig m_BuildScenesConfig;
         std::shared_ptr<Scene> m_MasterScene;
-        std::unordered_map<std::string, std::shared_ptr<Scene>> m_AllScenes;
+        std::shared_ptr<Scene> m_ActiveScene;
     private:
-        Scene* m_ActiveScene;
-        std::string m_SceneToLoad;
+        size_t m_SceneToLoad;
         bool m_LoadSceneAfterFrame;
     private:
         std::unordered_map<void*, std::function<void()>> m_OnSceneLoaded;
