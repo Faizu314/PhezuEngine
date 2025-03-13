@@ -16,7 +16,7 @@ namespace Phezu {
 
     Engine* Engine::s_Instance = nullptr;
     
-    Engine::Engine() : m_HasInited(false), m_IsRunning(false), m_FrameCount(0), m_SceneManager(this), m_Input(this), m_Physics(this) {}
+    Engine::Engine() : m_HasInited(false), m_IsRunning(false), m_FrameCount(0), m_SceneManager(this), m_Input(this), m_Physics(this), m_AssetManager(this) {}
     
     int Engine::Init(const std::string name, int width, int height, int renderScale) {
         if (m_HasInited) {
@@ -44,23 +44,6 @@ namespace Phezu {
         m_Renderer = new Renderer(this, *m_Window);
         
         return 0;
-    }
-    
-    std::weak_ptr<Scene> Engine::CreateScene(const std::string& name) {
-        if (m_IsRunning) {
-            //TODO: Logging;
-            return std::weak_ptr<Scene>();
-        }
-        if (!m_HasInited) {
-            
-            return std::weak_ptr<Scene>();
-        }
-        if (name.empty()) {
-            
-            return std::weak_ptr<Scene>();
-        }
-        
-        return m_SceneManager.CreateScene(name);
     }
     
     std::weak_ptr<Scene> Engine::GetMasterScene() {
@@ -149,16 +132,7 @@ namespace Phezu {
         delete m_Window;
     }
     
-    std::weak_ptr<Prefab> Engine::CreatePrefab() {
-//        if (!m_HasInited) {
-//            //TODO: Logging
-//            return std::weak_ptr<Prefab>();
-//        }
-//        
-//        std::shared_ptr<Prefab> prefab = std::make_shared<Prefab>();
-//        m_Prefabs.insert(std::make_pair(prefab->GetGuid(), prefab));
-//        return prefab;
-    }
+    std::weak_ptr<Prefab> Engine::CreatePrefab() {}
     
     std::weak_ptr<Entity> Engine::CreateEntity() {
         auto scene = m_SceneManager.GetActiveScene();
@@ -169,11 +143,11 @@ namespace Phezu {
             return std::weak_ptr<Entity>();
     }
     
-    std::weak_ptr<Entity> Engine::CreateEntity(uint64_t prefabID) {
+    std::weak_ptr<Entity> Engine::CreateEntity(GUID prefabGuid) {
         auto scene = m_SceneManager.GetActiveScene();
         
         if (auto sceneL = scene.lock())
-            return sceneL->CreateEntity(prefabID);
+            return sceneL->CreateEntity(prefabGuid);
         else
             return std::weak_ptr<Entity>();
     }
@@ -186,14 +160,13 @@ namespace Phezu {
         return m_SceneManager;
     }
     
-    std::weak_ptr<const Prefab> Engine::GetPrefab(uint64_t prefabID) {
+    std::weak_ptr<const Prefab> Engine::GetPrefab(GUID guid) {
         if (!m_HasInited) {
             //TODO: Logging
             return std::weak_ptr<const Prefab>();
         }
-        
-        if (m_Prefabs.find(prefabID) == m_Prefabs.end())
-            return std::weak_ptr<const Prefab>();
-        return m_Prefabs[prefabID];
+
+        Asset prefabAsset = m_AssetManager.GetPrefabAsset(guid);
+        return std::static_pointer_cast<const Prefab>(prefabAsset.AssetPtr.lock());
     }
 }

@@ -22,8 +22,8 @@ namespace Phezu {
         return entity;
     }
     
-    std::weak_ptr<Entity> Scene::CreateEntity(uint64_t prefabID) {
-        auto prefab = m_Engine->GetPrefab(prefabID).lock();
+    std::weak_ptr<Entity> Scene::CreateEntity(GUID prefabGuid) {
+        auto prefab = m_Engine->GetPrefab(prefabGuid).lock();
         
         if (!prefab) {
             //TODO: logging
@@ -31,7 +31,6 @@ namespace Phezu {
         }
         
         auto entity = prefab->Instantiate(shared_from_this())[0];
-        m_RuntimeEntities.insert(std::make_pair(entity->GetEntityID(), entity));
         
         return entity;
     }
@@ -73,19 +72,11 @@ namespace Phezu {
     }
     
     void Scene::Load() {
-        auto createdEntities = m_SceneEntities.Instantiate(shared_from_this());
-        
-        for (size_t i = 0; i < createdEntities.size(); i++) {
-            m_RuntimeEntities.insert(std::make_pair(createdEntities[i]->GetEntityID(), createdEntities[i]));
-        }
+        m_SceneEntities.Instantiate(shared_from_this());
         
         m_IsLoaded = true;
         
-        for (auto [id, entity] : m_RuntimeEntities) {
-            if (entity->IsDirty()) {
-                entity->RecalculateSubtreeTransformations();
-            }
-        }
+        UpdateHierarchy();
     }
     
     void Scene::LogicUpdate(float deltaTime) {

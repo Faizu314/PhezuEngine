@@ -42,21 +42,6 @@ namespace Phezu {
         m_BuildScenesConfig.Deserialize(configString);
     }
     
-    Asset AssetManager::GetSceneAsset(size_t buildIndex) {
-        auto& buildScenes = m_BuildScenesConfig.BuildScenes;
-        
-        if (buildIndex < 0 || buildIndex >= buildScenes.size()) {
-            //TODO: assertions
-            return Asset();
-        }
-        
-        return GetSceneAsset(buildScenes[buildIndex]);
-    }
-    
-    Asset AssetManager::GetMasterScene() {
-        return GetSceneAsset(m_BuildScenesConfig.MasterScene);
-    }
-    
     Asset AssetManager::GetSceneAsset(GUID guid) {
         if (m_AssetMap.find(guid) == m_AssetMap.end()) {
             //TODO: assert
@@ -76,10 +61,10 @@ namespace Phezu {
         
         Asset sceneAsset;
         sceneAsset.IsLoaded = true;
-        sceneAsset.Guid = sceneGuid;
+        sceneAsset.Guid = guid;
         sceneAsset.AssetPtr = std::static_pointer_cast<void>(scene);
         
-        m_LoadedAssets[sceneGuid] = sceneAsset;
+        m_LoadedAssets[guid] = sceneAsset;
         
         return sceneAsset;
     }

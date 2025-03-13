@@ -1,10 +1,9 @@
 #pragma once
 
-#include <unordered_map>
-
 #include "Input.hpp"
 #include "Physics.hpp"
 #include "scene/SceneManager.hpp"
+#include "AssetManagement/AssetManager.hpp"
 
 namespace Phezu {
     
@@ -19,14 +18,14 @@ namespace Phezu {
         void Run();
         std::weak_ptr<Scene> GetMasterScene();
         void Destroy();
-        std::weak_ptr<Scene> CreateScene(const std::string& name);
         std::weak_ptr<Prefab> CreatePrefab();
-        std::weak_ptr<const Prefab> GetPrefab(uint64_t prefabID);
+        std::weak_ptr<const Prefab> GetPrefab(GUID guid);
     public:
         void LoadScene(const std::string& sceneName);
         SceneManager& GetSceneManager();
+        AssetManager& GetAssetManager();
         std::weak_ptr<Entity> CreateEntity();
-        std::weak_ptr<Entity> CreateEntity(uint64_t prefabID);
+        std::weak_ptr<Entity> CreateEntity(GUID prefabGuid);
         long long unsigned int GetFrameCount() const { return m_FrameCount; }
         const InputData& GetInput();
     private:
@@ -41,8 +40,8 @@ namespace Phezu {
         Input m_Input;
         SceneManager m_SceneManager;
         Physics m_Physics;
+        AssetManager m_AssetManager;
     private:
-        std::unordered_map<uint64_t, std::shared_ptr<Prefab>> m_Prefabs;
         bool m_HasInited;
         bool m_IsRunning;
         long long unsigned int m_FrameCount;

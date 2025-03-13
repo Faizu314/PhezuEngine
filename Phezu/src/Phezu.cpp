@@ -24,7 +24,7 @@ namespace Phezu {
         return instance->CreateEntity();
     }
     
-    std::weak_ptr<Entity> CreateEntity(uint64_t prefabID) {
+    std::weak_ptr<Entity> CreateEntity(GUID prefabGuid) {
         Engine* instance = GetEngine();
         
         if (instance == nullptr) {
@@ -32,7 +32,7 @@ namespace Phezu {
             return std::weak_ptr<Entity>();
         }
         
-        return instance->CreateEntity(prefabID);
+        return instance->CreateEntity(prefabGuid);
     }
     
     void LoadScene(const std::string& sceneName) {

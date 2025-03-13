@@ -1,36 +1,38 @@
 #include "scene/SceneManager.hpp"
 #include "scene/Scene.hpp"
+#include "Engine.hpp"
 
 namespace Phezu {
     
-    SceneManager::SceneManager(Engine* engine) : m_Engine(engine), m_MasterScene(std::make_shared<Scene>(engine, "Master")), m_LoadSceneAfterFrame(false), m_ActiveScene(nullptr) {}
-    
-    std::weak_ptr<Scene> SceneManager::CreateScene(const std::string& name) {
-        std::shared_ptr<Scene> scene = std::make_shared<Scene>(m_Engine, name);
-        m_AllScenes.insert(std::make_pair(name, scene));
-        return scene;
+    SceneManager::SceneManager(Engine* engine) : m_Engine(engine), m_AssetManager(engine->GetAssetManager()), m_LoadSceneAfterFrame(false), m_ActiveScene(nullptr) {
+        m_BuildScenesConfig = m_AssetManager.GetBuildScenesConfig();
+        auto sceneAsset = m_AssetManager.GetSceneAsset(m_BuildScenesConfig.MasterScene);
+        m_MasterScene = std::static_pointer_cast<Scene>(sceneAsset.AssetPtr.lock());
     }
 
     void SceneManager::OnStartGame() {
         m_MasterScene->Load();
     }
     
-    void SceneManager::LoadScene(const std::string& sceneName) {
-        if (m_AllScenes.find(sceneName) == m_AllScenes.end())
+    void SceneManager::LoadScene(size_t buildIndex) {
+        if (buildIndex < 0 || buildIndex >= m_BuildScenesConfig.BuildScenes.size()) {
+            //TODO: assertions
             return;
+        }
         
-        m_SceneToLoad = sceneName;
+        m_SceneToLoad = buildIndex;
         m_LoadSceneAfterFrame = true;
         
-        if (m_ActiveScene != nullptr)
+        if (m_ActiveScene)
             m_ActiveScene->BeginUnload();
     }
     
-    std::weak_ptr<Scene> SceneManager::GetActiveScene() const {
-        if (m_ActiveScene == nullptr)
-            return std::weak_ptr<Scene>();
+    void LoadScene(const std::string& sceneName) {
         
-        return m_AllScenes.at(m_SceneToLoad);
+    }
+    
+    std::weak_ptr<Scene> SceneManager::GetActiveScene() const {
+        return m_ActiveScene;
     }
     
     void SceneManager::UnsubscribeToOnSceneLoaded(void* subscriber) {
@@ -44,10 +46,11 @@ namespace Phezu {
         if (!m_LoadSceneAfterFrame)
             return;
         
-        if (m_ActiveScene != nullptr)
+        if (m_ActiveScene)
             m_ActiveScene->Unload();
         
-        m_ActiveScene = m_AllScenes[m_SceneToLoad].get();
+        auto sceneAsset = m_AssetManager.GetSceneAsset(m_BuildScenesConfig.BuildScenes[m_SceneToLoad]);
+        m_ActiveScene = std::static_pointer_cast<Scene>(sceneAsset.AssetPtr.lock());
         m_ActiveScene->Load();
         m_LoadSceneAfterFrame = false;
         
