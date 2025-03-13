@@ -27,10 +27,13 @@ namespace Phezu {
         AssetManager(Engine* engine);
     public:
         Asset GetSceneAsset(size_t buildIndex);
+        Asset GetMasterScene();
         Asset GetPrefabAsset(GUID guid);
+        BuildScenesConfig GetBuildScenesConfig() { return m_BuildScenesConfig; }
     private:
-        void ConstructAssetMap(const std::filesystem::path& assetsFolder);
-        void GetBuildSceneGuids(const std::filesystem::path& buildScenesConfigPath);
+        void LoadAssetMap(const std::filesystem::path& assetsFolder);
+        void LoadBuildScenesConfig(const std::filesystem::path& buildScenesConfigPath);
+        Asset GetSceneAsset(GUID guid);
     private:
         std::unordered_map<GUID, AssetRef> m_AssetMap;
         std::unordered_map<GUID, Asset> m_LoadedAssets;
