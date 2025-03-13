@@ -6,6 +6,7 @@
 
 namespace Phezu {
     struct BuildScenesConfig {
+        GUID MasterScene;
         std::vector<GUID> BuildScenes;
         
         BuildScenesConfig() = default;

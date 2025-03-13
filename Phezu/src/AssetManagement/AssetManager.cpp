@@ -12,11 +12,11 @@ namespace Phezu {
         std::filesystem::path assetsFolder;
         std::filesystem::path buildScenesConfigPath;
 
-        ConstructAssetMap(assetsFolder);
-        GetBuildSceneGuids(buildScenesConfigPath);
+        LoadAssetMap(assetsFolder);
+        LoadBuildScenesConfig(buildScenesConfigPath);
     }
     
-    void AssetManager::ConstructAssetMap(const std::filesystem::path& assetsFolder) {
+    void AssetManager::LoadAssetMap(const std::filesystem::path& assetsFolder) {
         for (const auto& entry : std::filesystem::directory_iterator(assetsFolder)) {
             if (entry.is_regular_file() && entry.path().extension() == ".meta") {
                 FileStreamReader reader(entry.path());
@@ -33,7 +33,7 @@ namespace Phezu {
         }
     }
     
-    void AssetManager::GetBuildSceneGuids(const std::filesystem::path& buildScenesConfigPath) {
+    void AssetManager::LoadBuildScenesConfig(const std::filesystem::path& buildScenesConfigPath) {
         FileStreamReader reader(buildScenesConfigPath.string());
         std::string configString;
         configString.reserve(reader.Size());
@@ -50,12 +50,22 @@ namespace Phezu {
             return Asset();
         }
         
-        GUID sceneGuid = buildScenes[buildIndex];
+        return GetSceneAsset(buildScenes[buildIndex]);
+    }
+    
+    Asset AssetManager::GetMasterScene() {
+        return GetSceneAsset(m_BuildScenesConfig.MasterScene);
+    }
+    
+    Asset AssetManager::GetSceneAsset(GUID guid) {
+        if (m_AssetMap.find(guid) == m_AssetMap.end()) {
+            //TODO: assert
+            return Asset();
+        }
+        if (m_LoadedAssets.find(guid) != m_LoadedAssets.end())
+            return m_LoadedAssets[guid];
         
-        if (m_LoadedAssets.find(sceneGuid) != m_LoadedAssets.end())
-            return m_LoadedAssets[sceneGuid];
-        
-        std::string scenePath = m_AssetMap[sceneGuid].Filepaths[0];
+        std::string scenePath = m_AssetMap[guid].Filepaths[0];
         std::shared_ptr<Scene> scene = std::make_shared<Scene>(m_Engine);
         
         FileStreamReader reader(scenePath);
