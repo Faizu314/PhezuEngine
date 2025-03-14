@@ -18,7 +18,7 @@ namespace Phezu {
     
     Engine::Engine() : m_HasInited(false), m_IsRunning(false), m_FrameCount(0), m_AssetManager(this), m_SceneManager(this), m_Input(this), m_Physics(this) {}
     
-    int Engine::Init(const std::string name, int width, int height, int renderScale) {
+    int Engine::Init(std::filesystem::path exePath, const std::string name, int width, int height, int renderScale) {
         if (m_HasInited) {
             //TODO: Logging
             exit(1);
@@ -40,6 +40,7 @@ namespace Phezu {
         }
 
         m_HasInited = true;
+        m_ExePath = exePath;
         m_Window = new Window(name, width, height, renderScale);
         m_Renderer = new Renderer(this, *m_Window);
         

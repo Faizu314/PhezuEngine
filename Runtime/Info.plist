@@ -2,15 +2,15 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFBundleName</key>
-    <string>Breakout</string>
-    <key>CFBundleExecutable</key>
-    <string>Game</string>
-    <key>CFBundleIdentifier</key>
-    <string>com.phezu.breakout</string>
-    <key>CFBundleVersion</key>
-    <string>1.0</string>
-    <key>CFBundlePackageType</key>
-    <string>APPL</string>
+	<key>CFBundleName</key>
+	<string>Runtime</string>
+	<key>CFBundleExecutable</key>
+	<string>Runtime</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.phezu.runtime</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
 </dict>
 </plist>
