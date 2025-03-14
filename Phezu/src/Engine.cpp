@@ -16,7 +16,7 @@ namespace Phezu {
 
     Engine* Engine::s_Instance = nullptr;
     
-    Engine::Engine() : m_HasInited(false), m_IsRunning(false), m_FrameCount(0), m_SceneManager(this), m_Input(this), m_Physics(this), m_AssetManager(this) {}
+    Engine::Engine() : m_HasInited(false), m_IsRunning(false), m_FrameCount(0), m_AssetManager(this), m_SceneManager(this), m_Input(this), m_Physics(this) {}
     
     int Engine::Init(const std::string name, int width, int height, int renderScale) {
         if (m_HasInited) {
@@ -158,6 +158,10 @@ namespace Phezu {
     
     SceneManager& Engine::GetSceneManager() {
         return m_SceneManager;
+    }
+    
+    AssetManager& Engine::GetAssetManager() {
+        return m_AssetManager;
     }
     
     std::weak_ptr<const Prefab> Engine::GetPrefab(GUID guid) {
