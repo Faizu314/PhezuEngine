@@ -27,7 +27,7 @@ namespace Phezu {
             m_ActiveScene->BeginUnload();
     }
     
-    void LoadScene(const std::string& sceneName) {
+    void SceneManager::LoadScene(const std::string& sceneName) {
         
     }
     
