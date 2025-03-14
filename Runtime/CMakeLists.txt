@@ -13,7 +13,7 @@ if (APPLE)
         INSTALL_RPATH "@loader_path/../Frameworks"
         BUILD_WITH_INSTALL_RPATH TRUE
         MACOSX_BUNDLE TRUE
-        MACOSX_BUNDLE_INFO_PLIST "${CMAKE_SOURCE_DIR}/Info.plist"
+        MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist"
     )
 elseif (WIN32)
     add_executable(Runtime WIN32 ${RUNTIME_SOURCES} ${RUNTIME_HEADERS})
