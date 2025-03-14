@@ -6,9 +6,13 @@ file(GLOB_RECURSE RUNTIME_HEADERS "${CMAKE_SOURCE_DIR}/Runtime/include/*.hpp")
 
 if (APPLE)
     add_executable(Runtime ${RUNTIME_SOURCES} ${RUNTIME_HEADERS})
-
+    
+    set(CMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "")
+    set(CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_REQUIRED "NO")
+    set(CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED "NO")
+    
     set(CMAKE_OSX_DEPLOYMENT_TARGET "12.2")
-
+    
     set_target_properties(Runtime PROPERTIES
         INSTALL_RPATH "@loader_path/../Frameworks"
         BUILD_WITH_INSTALL_RPATH TRUE

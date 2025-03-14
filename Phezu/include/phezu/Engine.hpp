@@ -4,6 +4,7 @@
 #include "Physics.hpp"
 #include "scene/SceneManager.hpp"
 #include "AssetManagement/AssetManager.hpp"
+#include <filesystem>
 
 namespace Phezu {
     
@@ -14,7 +15,7 @@ namespace Phezu {
     
     class Engine {
     public:
-        int Init(const std::string name, int width, int height, int renderScale = 1);
+        int Init(std::filesystem::path exePath, const std::string name, int width, int height, int renderScale = 1);
         void Run();
         std::weak_ptr<Scene> GetMasterScene();
         void Destroy();
@@ -28,6 +29,7 @@ namespace Phezu {
         std::weak_ptr<Entity> CreateEntity(GUID prefabGuid);
         long long unsigned int GetFrameCount() const { return m_FrameCount; }
         const InputData& GetInput();
+        std::filesystem::path GetExePath() { return m_ExePath; }
     private:
         Engine();
         Engine(const Engine&) = delete;
@@ -45,6 +47,7 @@ namespace Phezu {
         bool m_HasInited;
         bool m_IsRunning;
         long long unsigned int m_FrameCount;
+        std::filesystem::path m_ExePath;
     private:
         static Engine* s_Instance;
         
