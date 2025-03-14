@@ -1,14 +1,12 @@
-#include "Phezu.hpp"
 #include "Application.hpp"
+#include "Phezu.hpp"
 
 Phezu::Engine& engine = Phezu::CreateEngine();
 
 #ifdef __APPLE__
 
 int main(int argc, const char* argv[]) {
-    engine.Init(PhezuRuntime::GetExePath(argv), "Tetris", 800, 600);
-    
-    //PrepareScenes(engine);
+    engine.Init(PhezuRuntime::GetProjectPath(argv), "PhezuRuntime", 800, 600);
     
     engine.Run();
 }
@@ -18,10 +16,8 @@ int main(int argc, const char* argv[]) {
 #include <windows.h>
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-    engine.Init(PhezuRuntime::GetExePath(argv), "Phezu", 800, 600);
-
-    //PrepareScenes(engine);
-
+    engine.Init(PhezuRuntime::GetProjectPath(argv), "PhezuRuntime", 800, 600);
+    
     engine.Run();
 
     return 0;

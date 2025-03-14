@@ -12,11 +12,13 @@ namespace Phezu {
     static const char* ASSET_RELATIVE_PATH = "Assets";
     static const char* BUILD_SCENE_RELATIVE_PATH = "buildscenes.config";
     
-    AssetManager::AssetManager(Engine* engine) : m_Engine(engine) {
-        std::filesystem::path assetsFolder = engine->GetExePath().parent_path() / ASSET_RELATIVE_PATH;
-        std::filesystem::path buildScenesConfigPath = engine->GetExePath().parent_path() / BUILD_SCENE_RELATIVE_PATH;
+    AssetManager::AssetManager(Engine* engine) : m_Engine(engine) {}
+    
+    void AssetManager::Init(std::filesystem::path projectPath) {
+        std::filesystem::path assetsFolder = projectPath / ASSET_RELATIVE_PATH;
+        std::filesystem::path buildScenesConfigPath = projectPath / BUILD_SCENE_RELATIVE_PATH;
 
-        if (std::filesystem::exists(assetsFolder) && !std::filesystem::exists(buildScenesConfigPath)) {
+        if (std::filesystem::exists(assetsFolder) && std::filesystem::exists(buildScenesConfigPath)) {
             LoadAssetMap(assetsFolder);
             LoadBuildScenesConfig(buildScenesConfigPath);
         }
@@ -27,14 +29,16 @@ namespace Phezu {
             if (entry.is_regular_file() && entry.path().extension() == ".meta") {
                 FileStreamReader reader(entry.path());
                 std::string metaDataString;
-                metaDataString.reserve(reader.Size());
+                metaDataString.resize(reader.Size());
                 reader.Read(metaDataString.data(), reader.Size());
                 
                 MetaData metaData;
                 metaData.Deserialize(metaDataString);
                 
+                std::filesystem::path assetPath = entry.path();
+                assetPath.replace_extension("");
                 AssetRef& assetRef = m_AssetMap[metaData.Guid];
-                assetRef.Filepaths.push_back(entry.path());
+                assetRef.Filepaths.push_back(assetPath);
             }
         }
     }
@@ -42,7 +46,7 @@ namespace Phezu {
     void AssetManager::LoadBuildScenesConfig(const std::filesystem::path& buildScenesConfigPath) {
         FileStreamReader reader(buildScenesConfigPath.string());
         std::string configString;
-        configString.reserve(reader.Size());
+        configString.resize(reader.Size());
         reader.Read(configString.data(), reader.Size());
         
         m_BuildScenesConfig.Deserialize(configString);
@@ -61,6 +65,7 @@ namespace Phezu {
         
         FileStreamReader reader(scenePath);
         std::string fileContent;
+        fileContent.resize(reader.Size());
         reader.Read(fileContent.data(), reader.Size());
         
         scene->Deserialize(fileContent);
@@ -88,6 +93,7 @@ namespace Phezu {
         
         FileStreamReader reader(prefabPath);
         std::string fileContent;
+        fileContent.resize(reader.Size());
         reader.Read(fileContent.data(), reader.Size());
         
         prefab->Deserialize(fileContent);

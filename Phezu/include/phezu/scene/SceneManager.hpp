@@ -18,7 +18,13 @@ namespace Phezu {
         SceneManager() = delete;
         SceneManager(Engine* engine);
     public:
-        std::weak_ptr<Scene> GetActiveScene() const;
+        void Init();
+        void OnStartGame();
+        void OnEndOfFrame();
+        void LoadScene(size_t buildIndex);
+        void LoadScene(const std::string& sceneName);
+        std::weak_ptr<Scene> GetActiveScene() const { return m_ActiveScene; }
+        std::weak_ptr<Scene> GetMasterScene() const { return m_MasterScene; }
     public:
         template <typename T>
         void SubscribeToOnSceneLoaded(T* subscriber, void (T::*handler)(void)) {
@@ -33,15 +39,9 @@ namespace Phezu {
         }
         void UnsubscribeToOnSceneLoaded(void* subscriber);
     public:
-        void OnStartGame();
-        void OnEndOfFrame();
-        void LoadScene(size_t buildIndex);
-        void LoadScene(const std::string& sceneName);
-        std::weak_ptr<Scene> GetMasterScene() const { return m_MasterScene; }
     private:
         Engine* m_Engine;
     private:
-        AssetManager m_AssetManager;
         BuildScenesConfig m_BuildScenesConfig;
         std::shared_ptr<Scene> m_MasterScene;
         std::shared_ptr<Scene> m_ActiveScene;

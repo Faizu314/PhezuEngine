@@ -1,0 +1,27 @@
+{
+    "Name": "SampleScene",
+    "Entries": [
+        {
+            "Guid": 987654321,
+            "FileID": 500,
+            "TypeID": 1,
+            "TypeName": "Entity",
+            "Properties": {
+                "Parent": 0,
+                "Children": [],
+                "Tag": "Untagged"
+            }
+        },
+	{
+            "Guid": 987654321,
+            "FileID": 501,
+            "TypeID": 2,
+            "TypeName": "TransformData",
+            "Properties": {
+                "Entity": 500,
+                "Position": { "x": 1, "y": 2 },
+                "Scale": { "x": 3, "y": 4 }
+            }
+        }
+    ]
+}
