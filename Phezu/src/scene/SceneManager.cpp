@@ -4,10 +4,13 @@
 
 namespace Phezu {
     
-    SceneManager::SceneManager(Engine* engine) : m_Engine(engine), m_AssetManager(engine->GetAssetManager()), m_LoadSceneAfterFrame(false), m_ActiveScene(nullptr) {
-        m_BuildScenesConfig = m_AssetManager.GetBuildScenesConfig();
-        auto sceneAsset = m_AssetManager.GetSceneAsset(m_BuildScenesConfig.MasterScene);
-        m_MasterScene = std::static_pointer_cast<Scene>(sceneAsset.AssetPtr.lock());
+    SceneManager::SceneManager(Engine* engine) : m_Engine(engine), m_LoadSceneAfterFrame(false), m_ActiveScene(nullptr) {}
+    
+    void SceneManager::Init() {
+        AssetManager& assetManager = m_Engine->GetAssetManager();
+        m_BuildScenesConfig = assetManager.GetBuildScenesConfig();
+        auto sceneAsset = assetManager.GetSceneAsset(m_BuildScenesConfig.MasterScene);
+        m_MasterScene = std::static_pointer_cast<Scene>(sceneAsset.AssetPtr);
     }
 
     void SceneManager::OnStartGame() {
@@ -31,10 +34,6 @@ namespace Phezu {
         
     }
     
-    std::weak_ptr<Scene> SceneManager::GetActiveScene() const {
-        return m_ActiveScene;
-    }
-    
     void SceneManager::UnsubscribeToOnSceneLoaded(void* subscriber) {
         if (m_OnSceneLoaded.find(subscriber) == m_OnSceneLoaded.end())
             return;
@@ -49,8 +48,8 @@ namespace Phezu {
         if (m_ActiveScene)
             m_ActiveScene->Unload();
         
-        auto sceneAsset = m_AssetManager.GetSceneAsset(m_BuildScenesConfig.BuildScenes[m_SceneToLoad]);
-        m_ActiveScene = std::static_pointer_cast<Scene>(sceneAsset.AssetPtr.lock());
+        auto sceneAsset = m_Engine->GetAssetManager().GetSceneAsset(m_BuildScenesConfig.BuildScenes[m_SceneToLoad]);
+        m_ActiveScene = std::static_pointer_cast<Scene>(sceneAsset.AssetPtr);
         m_ActiveScene->Load();
         m_LoadSceneAfterFrame = false;
         

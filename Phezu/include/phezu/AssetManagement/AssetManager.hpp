@@ -18,7 +18,7 @@ namespace Phezu {
     struct Asset {
         GUID Guid;
         bool IsLoaded = false;
-        std::weak_ptr<void> AssetPtr;
+        std::shared_ptr<void> AssetPtr;
     };
     
     class AssetManager {
@@ -26,6 +26,7 @@ namespace Phezu {
         AssetManager() = delete;
         AssetManager(Engine* engine);
     public:
+        void Init(std::filesystem::path projectPath);
         Asset GetSceneAsset(GUID guid);
         Asset GetPrefabAsset(GUID guid);
         BuildScenesConfig GetBuildScenesConfig() { return m_BuildScenesConfig; }
