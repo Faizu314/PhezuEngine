@@ -3,14 +3,16 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
-#include "scene/BlueprintEntry.hpp"
+#include <unordered_set>
 #include "nlohmann/json.hpp"
+#include "scene/BlueprintEntry.hpp"
+#include "scene/components/DataComponent.hpp"
+#include "serialization/CustomSerialization.hpp"
 
 namespace Phezu {
     
-    class Entity;
-    class ShapeData;
     class Scene;
+    class Engine;
     
     class Blueprint {
     public:
@@ -24,7 +26,27 @@ namespace Phezu {
         void Serialize(nlohmann::json& j) const;
         void Deserialize(const nlohmann::json& j);
         //How do we ensure a unique file gets created for a unique list of entities
+    private:
+        struct FileRegistry {
+            std::unordered_map<uint64_t, std::shared_ptr<Entity>> Entities;
+            std::unordered_map<uint64_t, DataComponent*> Components;
+        };
+        struct BlueprintRegistry {
+            std::unordered_map<uint64_t, FileRegistry> Files;
+        };
     public:
+        void Initialize(Engine* engine, GUID guid);
         std::vector<std::shared_ptr<Entity>> Instantiate(std::shared_ptr<Scene> scene) const;
+    private:
+        std::vector<std::shared_ptr<Entity>> InstantiateEntitiesAndComponents(std::shared_ptr<Scene> scene, BlueprintRegistry& registry, PrefabOverrides overrides = PrefabOverrides()) const;
+        void BuildHierarchyAndInitializeScripts(std::shared_ptr<Scene> scene, BlueprintRegistry& registry, PrefabOverrides overrides = PrefabOverrides()) const;
+    private:
+        std::vector<const BlueprintEntry*> m_EntityEntries;
+        std::vector<const BlueprintEntry*> m_PrefabEntries;
+        std::vector<const BlueprintEntry*> m_ComponentEntries;
+        std::vector<const BlueprintEntry*> m_ScriptEntries;
+    private:
+        Engine* m_Engine;
+        GUID m_Guid;
     };
 }

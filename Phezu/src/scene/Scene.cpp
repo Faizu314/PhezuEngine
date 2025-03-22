@@ -164,6 +164,7 @@ namespace Phezu {
         nlohmann::json j;
         
         j["Name"] = m_Name;
+        j["Guid"] = m_Guid.Value;
         m_SceneEntities.Serialize(j);
     }
     
@@ -171,6 +172,8 @@ namespace Phezu {
         nlohmann::json j = nlohmann::json::parse(data);
 
         m_Name = j["Name"].get<std::string>();
+        m_Guid.Value = j["Guid"].get<uint64_t>();
         m_SceneEntities.Deserialize(j);
+        m_SceneEntities.Initialize(m_Engine, m_Guid);
     }
 }

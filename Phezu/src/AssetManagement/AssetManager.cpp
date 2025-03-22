@@ -89,7 +89,7 @@ namespace Phezu {
             return m_LoadedAssets[guid];
         
         std::string prefabPath = m_AssetMap[guid].Filepaths[0];
-        std::shared_ptr<Prefab> prefab = std::make_shared<Prefab>(guid);
+        std::shared_ptr<Prefab> prefab = std::make_shared<Prefab>(m_Engine, guid);
         
         FileStreamReader reader(prefabPath);
         std::string fileContent;
