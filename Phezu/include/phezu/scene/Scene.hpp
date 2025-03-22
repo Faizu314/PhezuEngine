@@ -38,6 +38,7 @@ namespace Phezu {
         void DestroyEntityInternal(uint64_t entityID);
     private:
         Engine* const m_Engine;
+        GUID m_Guid;
         Blueprint m_SceneEntities;
         std::string m_Name;
         bool m_IsLoaded;

@@ -5,7 +5,8 @@
 #include "scene/components/RenderData.hpp"
 #include "scene/components/PhysicsData.hpp"
 #include "nlohmann/json.hpp"
-#include "serialization/CustomSerialization.hpp"
+#include "scene/Prefab.hpp"
+#include "Engine.hpp"
 
 namespace Phezu {
     
@@ -29,100 +30,240 @@ namespace Phezu {
         }
     }
     
-    std::vector<std::shared_ptr<Entity>> Blueprint::Instantiate(std::shared_ptr<Scene> scene) const {
-        std::unordered_map<uint64_t, std::shared_ptr<Entity>> entities;
-        std::unordered_map<uint64_t, std::shared_ptr<DataComponent>> components;
-        
-        std::vector<std::shared_ptr<Entity>> rootEntities;
-        
-        /*-----– First Pass -------*/
+    void Blueprint::Initialize(Engine* engine, GUID guid) {
+        m_Engine = engine;
+        m_Guid = guid;
         
         for (size_t i = 0; i < Entries.size(); i++) {
-            const BlueprintEntry& entry = Entries[i];
-            
-            if (entry.TypeID == EntryType::Entity) {
-                auto entity = scene->CreateEntity().lock();
-                entities.insert(std::make_pair(entry.FileID, entity));
-                
-                entity->SetTag(entry.Properties.at("Tag"));
-            }
-        }
-        
-        /*-----– Second Pass -------*/
-        
-        for (size_t i = 0; i < Entries.size(); i++) {
-            const BlueprintEntry& entry = Entries[i];
+            BlueprintEntry& entry = Entries[i];
             
             switch (entry.TypeID) {
                 case EntryType::Entity:
                 {
-                    auto entity = entities[entry.FileID];
-                    
-                    uint64_t parentFileID = nlohmann::json::parse(entry.Properties.at("Parent")).get<uint64_t>();
-                    if (parentFileID == 0)
-                        rootEntities.push_back(entity);
-                    
-                    std::vector<uint64_t> children = nlohmann::json::parse(entry.Properties.at("Children")).get<std::vector<uint64_t>>();
-                    for (size_t j = 0; j < children.size(); j++) {
-                        uint64_t childFileID = children[j];
-                        entities[childFileID]->SetParent(entity);
-                    }
+                    m_EntityEntries.push_back(&entry);
                     break;
                 }
                 case EntryType::TransformData:
                 {
-                    uint64_t entityFileID = nlohmann::json::parse(entry.Properties.at("Entity")).get<uint64_t>();
-                    Vector2 position = nlohmann::json::parse(entry.Properties.at("Position")).get<Vector2>();
-                    Vector2 scale = nlohmann::json::parse(entry.Properties.at("Scale")).get<Vector2>();
+                    m_ComponentEntries.push_back(&entry);
+                    break;
+                }
+                case EntryType::ShapeData:
+                {
+                    m_ComponentEntries.push_back(&entry);
+                    break;
+                }
+                case EntryType::RenderData:
+                {
+                    m_ComponentEntries.push_back(&entry);
+                    break;
+                }
+                case EntryType::PhysicsData:
+                {
+                    m_ComponentEntries.push_back(&entry);
+                    break;
+                }
+                case EntryType::Script:
+                {
+                    m_ScriptEntries.push_back(&entry);
+                    break;
+                }
+                case EntryType::PrefabRef:
+                {
+                    m_PrefabEntries.push_back(&entry);
+                    break;
+                }
+                case EntryType::Invalid:
+                {
+                    break;
+                }
+            }
+        }
+    }
+    
+    std::vector<std::shared_ptr<Entity>> Blueprint::Instantiate(std::shared_ptr<Scene> scene) const {
+        BlueprintRegistry registry;
+        
+        /*-----– First Pass -------*/
+        
+        auto rootEntities = InstantiateEntitiesAndComponents(scene, registry);
+        
+        /*-----– Second Pass -------*/
+        
+        BuildHierarchyAndInitializeScripts(scene, registry);
+        
+        return rootEntities;
+    }
+    
+    nlohmann::json GetProperty(const std::string& propertyName, const BlueprintEntry& entry, const PrefabOverrides& prefabOverrides) {
+        if (prefabOverrides.EntryOverrides.find(entry.FileID) == prefabOverrides.EntryOverrides.end())
+            return entry.Properties.at(propertyName);
+        
+        auto& propertyOverrides = prefabOverrides.EntryOverrides.at(entry.FileID).PropertyOverrides;
+        if (propertyOverrides.find(propertyName) == propertyOverrides.end())
+            return entry.Properties.at(propertyName);
+        
+        return propertyOverrides.at(propertyName);
+    }
+    
+    std::vector<std::shared_ptr<Entity>> Blueprint::InstantiateEntitiesAndComponents(std::shared_ptr<Scene> scene, BlueprintRegistry& registry, PrefabOverrides overrides) const {
+        std::vector<std::shared_ptr<Entity>> rootEntities;
+        
+        /* ---- Prefab Entries ---- */
+        
+        for (size_t i = 0; i < m_PrefabEntries.size(); i++) {
+            const BlueprintEntry& entry = *m_PrefabEntries[i];
+            
+            uint64_t prefabGuid = GetProperty("SourcePrefab", entry, overrides).get<uint64_t>();
+            const Blueprint& prefabBlueprint = m_Engine->GetPrefab(prefabGuid).lock()->GetBlueprint();
+            
+            PrefabOverrides prefabOverrides = entry.Properties.at("Overrides").get<PrefabOverrides>();
+            auto prefabRootEntities = prefabBlueprint.InstantiateEntitiesAndComponents(scene, registry, prefabOverrides);
+            
+            if (prefabRootEntities.size() != 0)
+                rootEntities.push_back(prefabRootEntities[0]);
+        }
+        
+        /* ---- Entity Entries ---- */
+        
+        auto& entities = registry.Files[m_Guid].Entities;
+        
+        for (size_t i = 0; i < m_EntityEntries.size(); i++) {
+            const BlueprintEntry& entry = *m_EntityEntries[i];
+            
+            if (overrides.RemovedEntities.find(entry.FileID) != overrides.RemovedEntities.end())
+                continue;
+            
+            EntryRef parentRef = GetProperty("Parent", entry, overrides).get<EntryRef>();
+            
+            auto entity = scene->CreateEntity().lock();
+            entities.insert(std::make_pair(entry.FileID, entity));
+            entity->SetTag(GetProperty("Tag", entry, overrides).get<std::string>());
+
+            if (parentRef.FileID == 0)
+                rootEntities.push_back(entity);
+        }
+        
+        /* ---- Component Entries ---- */
+        
+        auto& components = registry.Files[m_Guid].Components;
+        
+        for (size_t i = 0; i < m_ComponentEntries.size(); i++) {
+            const BlueprintEntry& entry = *m_ComponentEntries[i];
+            
+            EntryRef parentRef = GetProperty("Parent", entry, overrides).get<EntryRef>();
+            
+            // If component was attached to an entity which was removed
+            if (parentRef.Guid == m_Guid && overrides.RemovedEntities.find(parentRef.FileID) != overrides.RemovedEntities.end())
+                continue;
+            // If component was removed
+            if (overrides.RemovedComponents.find(entry.FileID) != overrides.RemovedComponents.end())
+                continue;
+            
+            switch (entry.TypeID) {
+                case EntryType::TransformData:
+                {
+                    Vector2 position = GetProperty("Position", entry, overrides).get<Vector2>();
+                    Vector2 scale = GetProperty("Scale", entry, overrides).get<Vector2>();
                     
-                    auto transform = entities[entityFileID]->GetTransformData();
+                    auto transform = registry.Files[m_Guid].Entities[parentRef.FileID]->GetTransformData();
                     transform->SetLocalPosition(position);
                     transform->SetLocalScale(scale);
+                    components[entry.FileID] = transform;
                     
                     break;
                 }
                 case EntryType::ShapeData:
                 {
-                    uint64_t entityFileID = nlohmann::json::parse(entry.Properties.at("Entity")).get<uint64_t>();
-                    Vector2 pivot = nlohmann::json::parse(entry.Properties.at("Pivot")).get<Vector2>();
-                    Vector2 size = nlohmann::json::parse(entry.Properties.at("Size")).get<Vector2>();
+                    Vector2 pivot = GetProperty("Pivot", entry, overrides).get<Vector2>();
+                    Vector2 size = GetProperty("Size", entry, overrides).get<Vector2>();
                     
-                    auto shapeData = entities[entityFileID]->AddShapeData();
+                    auto shapeData = registry.Files[parentRef.Guid].Entities[parentRef.FileID]->AddShapeData();
                     shapeData->Set(pivot, size);
+                    components[entry.FileID] = shapeData;
 
                     break;
                 }
                 case EntryType::RenderData:
                 {
-                    uint64_t entityFileID = nlohmann::json::parse(entry.Properties.at("Entity")).get<uint64_t>();
-                    Color tint = nlohmann::json::parse(entry.Properties.at("Tint")).get<Color>();
-                    Rect sourceRect = nlohmann::json::parse(entry.Properties.at("SourceRect")).get<Rect>();
-                    //Texture tex = Json::DeserializeRaw<Vector2>(entry.Properties["Sprite"]);
+                    Color tint = GetProperty("Tint", entry, overrides).get<Color>();
+                    Rect sourceRect = GetProperty("SourceRect", entry, overrides).get<Rect>();
                     
-                    auto renderData = entities[entityFileID]->AddRenderData();
+                    auto renderData = registry.Files[parentRef.Guid].Entities[parentRef.FileID]->AddRenderData();
                     renderData->Tint = tint;
                     renderData->SourceRect = sourceRect;
-                    //renderData->Sprite = tex;
+                    components[entry.FileID] = renderData;
                     
                     break;
                 }
                 case EntryType::PhysicsData:
                 {
-                    uint64_t entityFileID = nlohmann::json::parse(entry.Properties.at("Entity")).get<uint64_t>();
-                    bool isStatic = nlohmann::json::parse(entry.Properties.at("IsStatic")).get<bool>();
-                    Vector2 velocity = nlohmann::json::parse(entry.Properties.at("Velocity")).get<Vector2>();
+                    bool isStatic = GetProperty("IsStatic", entry, overrides).get<bool>();
+                    Vector2 velocity = GetProperty("Velocity", entry, overrides).get<Vector2>();
                     
-                    auto physicsData = entities[entityFileID]->AddPhysicsData(isStatic).lock();
+                    auto physicsData = registry.Files[parentRef.Guid].Entities[parentRef.FileID]->AddPhysicsData(isStatic).lock();
                     physicsData->Velocity = velocity;
+                    components[entry.FileID] = physicsData.get();
                     
                     break;
                 }
-                    
                 default:
                     break;
             }
+            
+        }
+        
+        /* ---- Script Entries ---- */
+        
+        for (size_t i = 0; i < m_ScriptEntries.size(); i++) {
+            const BlueprintEntry& entry = *m_ScriptEntries[i];
+            
+            EntryRef parentRef = GetProperty("Parent", entry, overrides).get<EntryRef>();
+            
+            // If component was attached to an entity which was removed
+            if (parentRef.Guid == m_Guid && overrides.RemovedEntities.find(parentRef.FileID) == overrides.RemovedEntities.end())
+                continue;
+            // If component was removed
+            if (overrides.RemovedComponents.find(entry.FileID) == overrides.RemovedComponents.end())
+                continue;
+            
+            //only instantiate and attach to parents
+            //add after scripting
         }
         
         return rootEntities;
+    }
+    
+    void Blueprint::BuildHierarchyAndInitializeScripts(std::shared_ptr<Scene> scene, BlueprintRegistry& registry, PrefabOverrides overrides) const {
+        
+        for (size_t i = 0; i < m_PrefabEntries.size(); i++) {
+            const BlueprintEntry& entry = *m_PrefabEntries[i];
+            
+            uint64_t prefabGuid = GetProperty("SourcePrefab", entry, overrides).get<uint64_t>();
+            const Blueprint& prefabBlueprint = m_Engine->GetPrefab(prefabGuid).lock()->GetBlueprint();
+            
+            PrefabOverrides prefabOverrides = entry.Properties.at("Overrides").get<PrefabOverrides>();
+            prefabBlueprint.BuildHierarchyAndInitializeScripts(scene, registry, prefabOverrides);
+        }
+        
+        for (size_t i = 0; i < m_EntityEntries.size(); i++) {
+            const BlueprintEntry& entry = *m_EntityEntries[i];
+            
+            EntryRef parentRef = GetProperty("Parent", entry, overrides).get<EntryRef>();
+            
+            if (overrides.RemovedEntities.find(entry.FileID) != overrides.RemovedEntities.end())
+                continue;
+        
+            auto entity = registry.Files[m_Guid].Entities[entry.FileID];
+            
+            if (parentRef.FileID != 0)
+                entity->SetParent(registry.Files[parentRef.Guid].Entities[parentRef.FileID]);
+        }
+    
+        for (size_t i = 0; i < m_ScriptEntries.size(); i++) {
+            const BlueprintEntry& entry = *m_ScriptEntries[i];
+            
+            //add after scripting
+        }
     }
 }

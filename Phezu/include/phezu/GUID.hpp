@@ -3,8 +3,10 @@
 namespace Phezu {
     
     struct GUID {
+        GUID() = default;
+        GUID(uint64_t v) : Value(v) {}
         uint64_t Value = 0;
-        operator uint64_t&() { return Value; }
+        operator uint64_t() const { return Value; }
         bool operator==(const GUID& other) const { return Value == other.Value; }
         bool operator<(const GUID& other) const { return Value < other.Value; }
     };
