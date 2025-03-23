@@ -99,7 +99,7 @@ namespace Phezu {
         if (prefabOverrides.EntryOverrides.find(entry.FileID) == prefabOverrides.EntryOverrides.end())
             return entry.Properties.at(propertyName);
         
-        auto& propertyOverrides = prefabOverrides.EntryOverrides.at(entry.FileID).PropertyOverrides;
+        auto& propertyOverrides = prefabOverrides.EntryOverrides.at(entry.FileID);
         if (propertyOverrides.find(propertyName) == propertyOverrides.end())
             return entry.Properties.at(propertyName);
         

@@ -13,20 +13,17 @@ namespace Phezu {
     
     
     
-    void from_json(const nlohmann::json& j, EntryOverrides& obj) {
-        j.at("PropertyOverrides").get_to(obj.PropertyOverrides);
-    }
-    
-    void to_json(nlohmann::json& j, const EntryOverrides& obj) {
-        j = nlohmann::json{{"PropertyOverrides", obj.PropertyOverrides}};
-    }
-    
-    
-    
     void from_json(const nlohmann::json& j, PrefabOverrides& obj) {
-        j.at("RemovedEntities").get_to(obj.RemovedEntities);
-        j.at("RemovedComponents").get_to(obj.RemovedComponents);
-        j.at("EntryOverrides").get_to(obj.EntryOverrides);
+        obj.RemovedEntities = j.value("RemovedEntities", std::unordered_set<uint64_t>{});
+        obj.RemovedComponents = j.value("RemovedComponents", std::unordered_set<uint64_t>{});
+        
+        obj.EntryOverrides.clear();
+        if (j.contains("EntryOverrides") && j["EntryOverrides"].is_object()) {
+            for (const auto& [key, value] : j["EntryOverrides"].items()) {
+                uint64_t id = std::stoull(key);
+                obj.EntryOverrides[id] = value.get<EntryOverrides>();
+            }
+        }
     }
     
     void to_json(nlohmann::json& j, const PrefabOverrides& obj) {
