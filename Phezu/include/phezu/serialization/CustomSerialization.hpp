@@ -14,9 +14,7 @@ namespace Phezu {
         uint64_t Guid;
         uint64_t FileID;
     };
-    struct EntryOverrides {
-        std::unordered_map<std::string, nlohmann::json> PropertyOverrides;
-    };
+    using EntryOverrides = std::unordered_map<std::string, nlohmann::json>;
     struct PrefabOverrides {
         std::unordered_set<uint64_t> RemovedEntities; //A file will only save the entities it removed
         std::unordered_set<uint64_t> RemovedComponents; //A file will only save the components it removed
@@ -26,12 +24,6 @@ namespace Phezu {
     void from_json(const nlohmann::json& j, EntryRef& v);
     
     void to_json(nlohmann::json& j, const EntryRef& v);
-    
-    
-    
-    void from_json(const nlohmann::json& j, EntryOverrides& obj);
-    
-    void to_json(nlohmann::json& j, const EntryOverrides& obj);
     
     
     
