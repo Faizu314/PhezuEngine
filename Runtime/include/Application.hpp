@@ -1,5 +1,9 @@
 #pragma once
 
+#if _WIN32
+#include <windows.h>
+#endif
+
 #include <filesystem>
 
 namespace PhezuRuntime {
@@ -12,13 +16,10 @@ namespace PhezuRuntime {
         
 #elif _WIN32
         
-#include <windows.h>
-#include <iostream>
-        
-    std::filesystem::path GetProjectPath() {
+    std::string GetProjectPath() {
         wchar_t path[MAX_PATH];
         GetModuleFileNameW(NULL, path, MAX_PATH);
-        return std::filesystem::path(path);
+        return std::filesystem::path(path).parent_path().string();
     }
     
 #endif

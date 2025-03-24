@@ -16,7 +16,7 @@ namespace Phezu {
 
     Engine* Engine::s_Instance = nullptr;
     
-    Engine::Engine() : m_HasInited(false), m_IsRunning(false), m_FrameCount(0), m_AssetManager(this), m_SceneManager(this), m_Input(this), m_Physics(this) {}
+    Engine::Engine() : m_HasInited(false), m_IsRunning(false), m_FrameCount(0), m_AssetManager(this), m_SceneManager(this), m_Input(this), m_Physics(this), m_Renderer(nullptr), m_Window(nullptr) {}
     
     int Engine::Init(std::filesystem::path projectPath, const std::string name, int width, int height, int renderScale) {
         if (m_HasInited) {
@@ -135,7 +135,9 @@ namespace Phezu {
         delete m_Window;
     }
     
-    std::weak_ptr<Prefab> Engine::CreatePrefab() {}
+    std::weak_ptr<Prefab> Engine::CreatePrefab() {
+        return std::weak_ptr<Prefab>();
+    }
     
     std::weak_ptr<Entity> Engine::CreateEntity() {
         auto scene = m_SceneManager.GetActiveScene();
