@@ -27,7 +27,7 @@ namespace Phezu {
     void AssetManager::LoadAssetMap(const std::filesystem::path& assetsFolder) {
         for (const auto& entry : std::filesystem::directory_iterator(assetsFolder)) {
             if (entry.is_regular_file() && entry.path().extension() == ".meta") {
-                FileStreamReader reader(entry.path());
+                FileStreamReader reader(entry.path().string());
                 std::string metaDataString;
                 metaDataString.resize(reader.Size());
                 reader.Read(metaDataString.data(), reader.Size());
@@ -60,7 +60,7 @@ namespace Phezu {
         if (m_LoadedAssets.find(guid) != m_LoadedAssets.end())
             return m_LoadedAssets[guid];
         
-        std::string scenePath = m_AssetMap[guid].Filepaths[0];
+        std::string scenePath = m_AssetMap[guid].Filepaths[0].string();
         std::shared_ptr<Scene> scene = std::make_shared<Scene>(m_Engine);
         
         FileStreamReader reader(scenePath);
@@ -88,8 +88,8 @@ namespace Phezu {
         if (m_LoadedAssets.find(guid) != m_LoadedAssets.end())
             return m_LoadedAssets[guid];
         
-        std::string prefabPath = m_AssetMap[guid].Filepaths[0];
         std::shared_ptr<Prefab> prefab = std::make_shared<Prefab>(m_Engine, guid);
+        std::string prefabPath = m_AssetMap[guid].Filepaths[0].string();
         
         FileStreamReader reader(prefabPath);
         std::string fileContent;

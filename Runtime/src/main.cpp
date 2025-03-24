@@ -13,10 +13,8 @@ int main(int argc, const char* argv[]) {
 
 #elif _WIN32
 
-#include <windows.h>
-
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-    engine.Init(PhezuRuntime::GetProjectPath(argv), "PhezuRuntime", 800, 600);
+int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow) {
+    engine.Init(PhezuRuntime::GetProjectPath(), "PhezuRuntime", 800, 600);
     
     engine.Run();
 

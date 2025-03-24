@@ -166,6 +166,8 @@ namespace Phezu {
         j["Name"] = m_Name;
         j["Guid"] = m_Guid.Value;
         m_SceneEntities.Serialize(j);
+
+        return j.dump(4);
     }
     
     void Scene::Deserialize(const std::string& data) {
