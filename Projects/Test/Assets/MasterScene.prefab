@@ -3,55 +3,6 @@
     "Guid": 123456789,
     "Entries": [
         {
-            "FileID": 500,
-            "TypeID": 1,
-            "TypeName": "Entity",
-            "Properties": {
-                "Parent": { "Guid": 0, "FileID": 0 },
-                "Tag": "Player"
-            }
-        },
-        {
-            "FileID": 501,
-            "TypeID": 2,
-            "TypeName": "TransformData",
-            "Properties": {
-                "Parent": { "Guid": 123456789, "FileID": 500 },
-                "Position": { "x": 0, "y": -100 },
-                "Scale": { "x": 1, "y": 1 }
-            }
-        },
-        {
-            "FileID": 502,
-            "TypeID": 3,
-            "TypeName": "ShapeData",
-            "Properties": {
-                "Parent": { "Guid": 123456789, "FileID": 500 },
-                "Pivot": { "x": 0, "y": 0 },
-                "Size": { "x": 20, "y": 20 }
-            }
-        },
-        {
-            "FileID": 503,
-            "TypeID": 4,
-            "TypeName": "RenderData",
-            "Properties": {
-                "Parent": { "Guid": 123456789, "FileID": 500 },
-                "Tint": { "r": 200, "g": 150, "b": 0, "a": 255 },
-                "SourceRect": { "X": 0, "Y": 0, "Width": 1, "Height": 1 }
-            }
-        },
-        {
-            "FileID": 504,
-            "TypeID": 5,
-            "TypeName": "PhysicsData",
-            "Properties": {
-                "Parent": { "Guid": 123456789, "FileID": 500 },
-                "IsStatic": false,
-                "Velocity": { "x": 20, "y": 20 }
-            }
-        },
-        {
             "FileID": 505,
             "TypeID": 7,
             "TypeName": "PrefabRef",
@@ -60,8 +11,10 @@
                 "Overrides": {
 		    "EntryOverrides": {
 			"500": {
-			    "Parent": { "Guid": 123456789, "FileID": 500 },
-			    "Position": { "x": 150, "y": 0 }
+			    "Parent": { "Guid": 123456789, "InstanceID": 500, "FileID": 500 }
+			},
+			"501": {
+			    "Position": { "x": 0, "y": 0 }
 			}
 		    }
 		}

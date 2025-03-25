@@ -4,11 +4,12 @@ namespace Phezu {
     
     void from_json(const nlohmann::json& j, EntryRef& v) {
         v.Guid = j.value("Guid", 0);
+        v.InstanceID = j.value("InstanceID", 0);
         v.FileID = j.value("FileID", 0);
     }
     
     void to_json(nlohmann::json& j, const EntryRef& v) {
-        j = nlohmann::json{{"Guid", v.Guid}, {"FileID", v.FileID}};
+        j = nlohmann::json{{"Guid", v.Guid}, {"FileID", v.InstanceID}, {"EntityFileID", v.FileID}};
     }
     
     

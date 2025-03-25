@@ -12,6 +12,7 @@ namespace Phezu {
     
     struct EntryRef {
         uint64_t Guid;
+        uint64_t InstanceID;
         uint64_t FileID;
     };
     using EntryOverrides = std::unordered_map<std::string, nlohmann::json>;
