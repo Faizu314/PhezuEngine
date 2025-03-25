@@ -14,6 +14,15 @@ namespace Phezu {
     class Scene;
     class Engine;
     
+    struct RegistryKey {
+        uint64_t InstanceID;
+        uint64_t PrefabGuid;
+        RegistryKey() = default;
+        RegistryKey(uint64_t instanceID, uint64_t prefabGuid);
+        bool operator==(const RegistryKey& other) const;
+        bool operator<(const RegistryKey& other) const;
+    };
+    
     class Blueprint {
     public:
         Blueprint() = default;
@@ -27,19 +36,17 @@ namespace Phezu {
         void Deserialize(const nlohmann::json& j);
         //How do we ensure a unique file gets created for a unique list of entities
     private:
-        struct FileRegistry {
+        struct Registry {
             std::unordered_map<uint64_t, std::shared_ptr<Entity>> Entities;
             std::unordered_map<uint64_t, DataComponent*> Components;
         };
-        struct BlueprintRegistry {
-            std::unordered_map<uint64_t, FileRegistry> Files;
-        };
+        using BlueprintRegistry = std::unordered_map<RegistryKey, Registry>;
     public:
         void Initialize(Engine* engine, GUID guid);
         std::vector<std::shared_ptr<Entity>> Instantiate(std::shared_ptr<Scene> scene) const;
     private:
-        std::vector<std::shared_ptr<Entity>> InstantiateEntitiesAndComponents(std::shared_ptr<Scene> scene, BlueprintRegistry& registry, PrefabOverrides overrides = PrefabOverrides()) const;
-        void BuildHierarchyAndInitializeScripts(std::shared_ptr<Scene> scene, BlueprintRegistry& registry, PrefabOverrides overrides = PrefabOverrides()) const;
+        std::vector<std::shared_ptr<Entity>> InstantiateEntitiesAndComponents(std::shared_ptr<Scene> scene, BlueprintRegistry& registry, uint64_t instanceID = 0, PrefabOverrides overrides = PrefabOverrides()) const;
+        void BuildHierarchyAndInitializeScripts(std::shared_ptr<Scene> scene, BlueprintRegistry& registry, uint64_t instanceID = 0, PrefabOverrides overrides = PrefabOverrides()) const;
     private:
         std::vector<const BlueprintEntry*> m_EntityEntries;
         std::vector<const BlueprintEntry*> m_PrefabEntries;
