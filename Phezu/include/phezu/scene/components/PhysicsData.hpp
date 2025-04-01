@@ -11,14 +11,7 @@ namespace Phezu {
     
     class Physics;
     class BehaviourComponent;
-    class PhysicsData;
-    
-    struct Collision {
-        Collision(std::weak_ptr<PhysicsData> other) : Other(other) {}
-        std::weak_ptr<PhysicsData> Other;
-        Vector2 Point;
-        Vector2 Normal;
-    };
+    struct Collision;
     
     class PhysicsData : public DataComponent {
     public:
@@ -76,5 +69,12 @@ namespace Phezu {
         std::unordered_map<void*, std::function<void(const Collision&)>> m_OnCollisionExitEvent;
         
         friend Physics;
+    };
+
+    struct Collision {
+        Collision(std::weak_ptr<PhysicsData> other) : Other(other) {}
+        std::weak_ptr<PhysicsData> Other;
+        Vector2 Point;
+        Vector2 Normal;
     };
 }

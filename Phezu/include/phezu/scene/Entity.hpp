@@ -62,22 +62,6 @@ namespace Phezu {
             return std::weak_ptr<T>();
         }
         template<typename T>
-        std::weak_ptr<T> GetComponent(uint8_t componentPrefabID) {
-            if (!std::is_base_of<BehaviourComponent, T>::value) {
-                //TODO: copy and paste the logging class
-                return std::weak_ptr<T>();
-            }
-            
-            for (int i = 0; i < m_BehaviourComponents.size(); i++) {
-                auto* componentPtr = m_BehaviourComponents[i].get();
-                if (dynamic_cast<T*>(m_BehaviourComponents[i].get()) && componentPtr->GetComponentPrefabID() == componentPrefabID) {
-                    return std::static_pointer_cast<T>(m_BehaviourComponents[i]);
-                }
-            }
-            
-            return std::weak_ptr<T>();
-        }
-        template<typename T>
         std::vector<std::weak_ptr<T>> GetComponents() {
             if (!std::is_base_of<T, BehaviourComponent>::value) {
                 //TODO: copy and paste the logging class
