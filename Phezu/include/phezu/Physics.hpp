@@ -25,11 +25,11 @@ namespace Phezu {
     public:
         Physics(Engine* engine);
     public:
-        void PhysicsUpdate(const std::vector<std::weak_ptr<Entity>>& physicsEntities, size_t staticCount, size_t dynamicCount, float deltaTime);
+        void PhysicsUpdate(const std::vector<std::weak_ptr<Entity>>& staticEntities, const std::vector<std::weak_ptr<Entity>>& dynamicEntities, size_t staticCount, size_t dynamicCount, float deltaTime);
     private:
-        void ResolveDynamicToStaticCollisions(std::shared_ptr<Entity> dynamicEntity, const std::vector<std::weak_ptr<Entity>>& physicsEntities, size_t staticCount);
+        void ResolveDynamicToStaticCollisions(std::shared_ptr<Entity> dynamicEntity, const std::vector<std::weak_ptr<Entity>>& staticEntities, size_t staticCount);
         void ResolveDynamicToStaticCollision(std::shared_ptr<Entity> dynamicEntity, std::shared_ptr<Entity> staticEntity, CollisionData& collisionData);
-        void ResolveDynamicToDynamicCollisions(const std::vector<std::weak_ptr<Entity>>& dynamicEntities, size_t startIndex, size_t endIndex);
+        void ResolveDynamicToDynamicCollisions(const std::vector<std::weak_ptr<Entity>>& dynamicEntities, size_t entitiesCount);
         void ResolveDynamicToDynamicCollision(std::shared_ptr<Entity> d1, std::shared_ptr<Entity> d2, CollisionData& collisionData);
         bool IsColliding(std::shared_ptr<Entity> entityA, std::shared_ptr<Entity> entityB, CollisionData& collisionData);
         EntityRect GetWorldRectFromTransformAndShapeData(TransformData* transData, ShapeData* shapeData);

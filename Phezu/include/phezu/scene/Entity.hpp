@@ -15,6 +15,7 @@ namespace Phezu {
     class RenderData;
     class PhysicsData;
     class Scene;
+    class Physics;
     
     class Entity {
     public:
@@ -143,6 +144,7 @@ namespace Phezu {
         
         friend void SetParentInternal(std::weak_ptr<Entity> _this, std::weak_ptr<Entity> child);
         friend class Scene;
+        friend class Physics;
         friend void Destroy(Entity* entity);
     };
 }

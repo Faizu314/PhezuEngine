@@ -15,7 +15,7 @@
             "TypeID": 2,
             "TypeName": "TransformData",
             "Properties": {
-                "Parent": { "Guid": 241, "InstanceID": 500, "FileID": 500 },
+                "Parent": { "Guid": 241, "InstanceID": 0, "FileID": 500 },
                 "Position": { "x": -100, "y": 0 },
                 "Scale": { "x": 1, "y": 1 }
             }
@@ -25,7 +25,7 @@
             "TypeID": 3,
             "TypeName": "ShapeData",
             "Properties": {
-                "Parent": { "Guid": 241, "InstanceID": 500, "FileID": 500 },
+                "Parent": { "Guid": 241, "InstanceID": 0, "FileID": 500 },
                 "Pivot": { "x": 0, "y": 0 },
                 "Size": { "x": 20, "y": 20 }
             }
@@ -35,7 +35,7 @@
             "TypeID": 4,
             "TypeName": "RenderData",
             "Properties": {
-                "Parent": { "Guid": 241, "InstanceID": 500, "FileID": 500 },
+                "Parent": { "Guid": 241, "InstanceID": 0, "FileID": 500 },
                 "Tint": { "r": 200, "g": 0, "b": 0, "a": 255 },
                 "SourceRect": { "X": 0, "Y": 0, "Width": 1, "Height": 1 }
             }
@@ -45,9 +45,9 @@
             "TypeID": 5,
             "TypeName": "PhysicsData",
             "Properties": {
-                "Parent": { "Guid": 241, "InstanceID": 500, "FileID": 500 },
+                "Parent": { "Guid": 241, "InstanceID": 0, "FileID": 500 },
                 "IsStatic": false,
-                "Velocity": { "x": 20, "y": 20 }
+                "Velocity": { "x": 10, "y": 10 }
             }
         },
 	{
@@ -56,13 +56,11 @@
             "TypeName": "PrefabRef",
             "Properties": {
 		"SourcePrefab": 721,
+		"Parent": 500,
                 "Overrides": {
 		    "EntryOverrides": {
-			"500": {
-			    "Parent": { "Guid": 241, "InstanceID": 0, "FileID": 500 }
-			},
 			"501": {
-			    "Position": { "x": 10, "y": -10 }
+			    "Position": { "x": -12.5, "y": 12.5 }
 			}
 		    }
 		}
@@ -74,13 +72,11 @@
             "TypeName": "PrefabRef",
             "Properties": {
 		"SourcePrefab": 721,
+		"Parent": 500,
                 "Overrides": {
 		    "EntryOverrides": {
-			"500": {
-			    "Parent": { "Guid": 241, "InstanceID": 0, "FileID": 500 }
-			},
 			"501": {
-			    "Position": { "x": -10, "y": -10 }
+			    "Position": { "x": 12.5, "y": 12.5 }
 			},
 			"503": {
 			    "Tint": { "r": 200, "g": 200, "b": 200, "a": 255 }

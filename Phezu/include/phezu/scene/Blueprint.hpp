@@ -26,7 +26,6 @@ namespace Phezu {
     class Blueprint {
     public:
         Blueprint() = default;
-        Blueprint(std::vector<std::shared_ptr<Entity>> entities);
     public:
         Blueprint& operator=(const Blueprint& other) = delete;
     public:
@@ -39,13 +38,14 @@ namespace Phezu {
         struct Registry {
             std::unordered_map<uint64_t, std::shared_ptr<Entity>> Entities;
             std::unordered_map<uint64_t, DataComponent*> Components;
+            std::shared_ptr<Entity> RootEntity;
         };
         using BlueprintRegistry = std::unordered_map<RegistryKey, Registry>;
     public:
         void Initialize(Engine* engine, GUID guid);
-        std::vector<std::shared_ptr<Entity>> Instantiate(std::shared_ptr<Scene> scene) const;
+        std::shared_ptr<Entity> Instantiate(std::shared_ptr<Scene> scene) const;
     private:
-        std::vector<std::shared_ptr<Entity>> InstantiateEntitiesAndComponents(std::shared_ptr<Scene> scene, BlueprintRegistry& registry, uint64_t instanceID = 0, PrefabOverrides overrides = PrefabOverrides()) const;
+        void InstantiateEntitiesAndComponents(std::shared_ptr<Scene> scene, BlueprintRegistry& registry, uint64_t instanceID = 0, PrefabOverrides overrides = PrefabOverrides()) const;
         void BuildHierarchyAndInitializeScripts(std::shared_ptr<Scene> scene, BlueprintRegistry& registry, uint64_t instanceID = 0, PrefabOverrides overrides = PrefabOverrides()) const;
     private:
         std::vector<const BlueprintEntry*> m_EntityEntries;

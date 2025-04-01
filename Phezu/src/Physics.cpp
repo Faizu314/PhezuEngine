@@ -28,35 +28,33 @@ namespace Phezu {
         }
     }
     
-    // assuming all physics entities are valid as scene cannot return entities that were destroyed.
-    // assuming all these physics entities have valid physicsData components as scene checked for that.
-    void Physics::PhysicsUpdate(const std::vector<std::weak_ptr<Entity>>& physicsEntities, size_t staticCount, size_t dynamicCount, float deltaTime) {
+    void Physics::PhysicsUpdate(const std::vector<std::weak_ptr<Entity>>& staticEntities, const std::vector<std::weak_ptr<Entity>>& dynamicEntities, size_t staticCount, size_t dynamicCount, float deltaTime) {
         m_DeltaTime = deltaTime;
         
         CleanCollidingEntities();
         
-        for (size_t i = staticCount; i < staticCount + dynamicCount; i++) {
-            auto dynamicEntity = physicsEntities[i].lock();
+        for (size_t i = 0; i < dynamicCount; i++) {
+            auto dynamicEntity = dynamicEntities[i].lock();
             auto trans = dynamicEntity->GetTransformData();
             auto phys = dynamicEntity->GetPhysicsData().lock();
-            trans->SetLocalPosition(trans->GetLocalPosition() + (phys->Velocity * deltaTime));
-            trans->RecalculateLocalToWorld();
+            trans->SetWorldPosition(trans->GetWorldPosition() + (phys->Velocity * deltaTime));
+            dynamicEntity->RecalculateSubtreeTransformations();
         }
         
-        for (size_t i = staticCount; i < staticCount + dynamicCount; i++) {
-            auto dynamicEntity = physicsEntities[i].lock();
+        for (size_t i = 0; i < dynamicCount; i++) {
+            auto dynamicEntity = dynamicEntities[i].lock();
                 
-            ResolveDynamicToStaticCollisions(dynamicEntity, physicsEntities, staticCount);
+            ResolveDynamicToStaticCollisions(dynamicEntity, staticEntities, staticCount);
         }
         
-        ResolveDynamicToDynamicCollisions(physicsEntities, staticCount, staticCount + dynamicCount);
+        ResolveDynamicToDynamicCollisions(dynamicEntities, dynamicCount);
     }
     
-    void Physics::ResolveDynamicToDynamicCollisions(const std::vector<std::weak_ptr<Entity>> &dynamicEntities, size_t startIndex, size_t endIndex) {
+    void Physics::ResolveDynamicToDynamicCollisions(const std::vector<std::weak_ptr<Entity>> &dynamicEntities, size_t entitiesCount) {
         CollisionData collisionData;
         
-        for (size_t i = startIndex; i < endIndex; i++) {
-            for (size_t j = i + 1; j < endIndex; j++) {
+        for (size_t i = 0; i < entitiesCount; i++) {
+            for (size_t j = i + 1; j < entitiesCount; j++) {
                 auto d1 = dynamicEntities[i].lock();
                 auto d2 = dynamicEntities[j].lock();
                 
@@ -126,11 +124,11 @@ namespace Phezu {
         }
     }
     
-    void Physics::ResolveDynamicToStaticCollisions(std::shared_ptr<Entity> dynamicEntity, const std::vector<std::weak_ptr<Entity>>& physicsEntities, size_t staticCount) {
+    void Physics::ResolveDynamicToStaticCollisions(std::shared_ptr<Entity> dynamicEntity, const std::vector<std::weak_ptr<Entity>>& staticEntities, size_t staticCount) {
         CollisionData collisionData;
         
         for (size_t i = 0; i < staticCount; i++) {
-            auto staticEntity = physicsEntities[i].lock();
+            auto staticEntity = staticEntities[i].lock();
 
             if (!IsColliding(dynamicEntity, staticEntity, collisionData)) {
                 OnNotColliding(dynamicEntity, staticEntity);

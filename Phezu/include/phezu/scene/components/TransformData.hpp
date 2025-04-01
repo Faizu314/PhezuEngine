@@ -13,6 +13,7 @@ namespace Phezu {
         Vector2 GetWorldPosition() const;
         Vector2 GetLocalScale() { return m_LocalScale; }
         void SetLocalPosition(const Vector2& position);
+        void SetWorldPosition(const Vector2& position);
         void SetLocalScale(const Vector2& scale);
         Vector2 LocalToWorldPoint(const Vector2& point) const;
     public:

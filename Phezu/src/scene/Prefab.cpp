@@ -25,7 +25,7 @@ namespace Phezu {
         m_Blueprint.Initialize(m_Engine, m_Guid);
     }
     
-    std::vector<std::shared_ptr<Entity>> Prefab::Instantiate(std::shared_ptr<Scene> scene) const {
+    std::shared_ptr<Entity> Prefab::Instantiate(std::shared_ptr<Scene> scene) const {
         return m_Blueprint.Instantiate(scene);
     }
 }

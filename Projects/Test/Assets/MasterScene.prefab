@@ -3,16 +3,14 @@
     "Guid": 123456789,
     "Entries": [
         {
-            "FileID": 505,
+            "FileID": 500,
             "TypeID": 7,
             "TypeName": "PrefabRef",
             "Properties": {
                 "SourcePrefab": 241,
+		"Parent": 0,
                 "Overrides": {
 		    "EntryOverrides": {
-			"500": {
-			    "Parent": { "Guid": 123456789, "InstanceID": 500, "FileID": 500 }
-			},
 			"501": {
 			    "Position": { "x": 0, "y": 0 }
 			}

@@ -4,11 +4,17 @@
 
 namespace Phezu {
 
-    TransformData::TransformData(Entity* entity) : DataComponent(entity) {}
+    TransformData::TransformData(Entity* entity) : DataComponent(entity), m_IsDirty(false), m_LocalToWorld(glm::mat3()) {}
     
     void TransformData::SetLocalPosition(const Vector2& position) {
         m_LocalPosition = position;
         m_IsDirty = true;
+    }
+
+    void TransformData::SetWorldPosition(const Vector2& position) {
+        glm::vec3 worldPos(position.X(), position.Y(), 1);
+        glm::vec3 localPos = glm::inverse(m_LocalToWorld) * worldPos;
+        m_LocalPosition.Set(localPos.x, localPos.y);
     }
     
     Vector2 TransformData::GetWorldPosition() const {
