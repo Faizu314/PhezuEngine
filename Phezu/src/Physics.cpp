@@ -9,7 +9,7 @@ namespace Phezu {
     
     const float Physics::EPSILON = 0.000000;
     
-    Physics::Physics(Engine* engine) : m_Engine(engine) {}
+    Physics::Physics(Engine* engine) : m_Engine(engine), m_DeltaTime(0) {}
     
     void Physics::CleanCollidingEntities() {
         for (auto it = m_CollidingEntities.begin(); it != m_CollidingEntities.end();) {
@@ -106,21 +106,21 @@ namespace Phezu {
         if ((phys1->Velocity.SqrLength() > 0 && phys2->Velocity.SqrLength() > 0) || (phys1->Velocity.SqrLength() == 0 && phys2->Velocity.SqrLength() == 0)) {
             auto trans1 = d1->GetTransformData();
             trans1->SetLocalPosition(trans1->GetLocalPosition() + Vector2(xTranslate / 2, yTranslate / 2));
-            trans1->RecalculateLocalToWorld();
+            d1->RecalculateSubtreeTransformations();
             
             auto trans2 = d2->GetTransformData();
             trans2->SetLocalPosition(trans2->GetLocalPosition() + Vector2(-xTranslate / 2, -yTranslate / 2));
-            trans2->RecalculateLocalToWorld();
+            d2->RecalculateSubtreeTransformations();
         }
         else if (phys1->Velocity.SqrLength() > 0) {
             auto trans1 = d1->GetTransformData();
             trans1->SetLocalPosition(trans1->GetLocalPosition() + Vector2(xTranslate, yTranslate));
-            trans1->RecalculateLocalToWorld();
+            d1->RecalculateSubtreeTransformations();
         }
         else {
             auto trans2 = d2->GetTransformData();
             trans2->SetLocalPosition(trans2->GetLocalPosition() + Vector2(-xTranslate, -yTranslate));
-            trans2->RecalculateLocalToWorld();
+            d2->RecalculateSubtreeTransformations();
         }
     }
     
@@ -202,7 +202,7 @@ namespace Phezu {
         phys->Velocity = Vector2(reflectedVel.x, reflectedVel.y);
         
         trans->SetLocalPosition(trans->GetLocalPosition() + Vector2(xTranslate, yTranslate));
-        trans->RecalculateLocalToWorld();
+        dynamicEntity->RecalculateSubtreeTransformations();
     }
     
     void Physics::OnColliding(std::shared_ptr<Entity> a, std::shared_ptr<Entity> b) {
