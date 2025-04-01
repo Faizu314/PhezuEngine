@@ -84,7 +84,9 @@ namespace Phezu {
         Uint64 freqMs = SDL_GetPerformanceFrequency();
         float deltaTime;
 
-        std::vector<std::weak_ptr<Entity>> entitiesBuffer(ENTITIES_BUFFER_SIZE);
+        std::vector<std::weak_ptr<Entity>> staticEntitiesBuffer(ENTITIES_BUFFER_SIZE);
+        std::vector<std::weak_ptr<Entity>> dynamicEntitiesBuffer(ENTITIES_BUFFER_SIZE);
+        std::vector<std::weak_ptr<Entity>> renderEntitiesBuffer(ENTITIES_BUFFER_SIZE);
         size_t renderablesCount;
         size_t staticsCount;
         size_t dynamicsCount;
@@ -97,26 +99,27 @@ namespace Phezu {
             if (!m_Input.PollInput())
                 break;
             
+            renderablesCount = staticsCount = dynamicsCount = 0;
+
             m_Renderer->ClearFrame();
             
             deltaTime = GetDeltaTime(prevTime, freqMs);
             
             masterScene->LogicUpdate(deltaTime);
-            
-            masterScene->GetRenderableEntities(entitiesBuffer, renderablesCount);
-            m_Renderer->DrawEntities(entitiesBuffer, renderablesCount);
+            masterScene->GetPhysicsEntities(staticEntitiesBuffer, dynamicEntitiesBuffer, staticsCount, dynamicsCount);
+            masterScene->GetRenderableEntities(renderEntitiesBuffer, renderablesCount);
             
             activeScene = m_SceneManager.GetActiveScene();
             
             if (auto sceneL = activeScene.lock()) {
                 sceneL->LogicUpdate(deltaTime);
-                
-                sceneL->GetPhysicsEntities(entitiesBuffer, staticsCount, dynamicsCount);
-                m_Physics.PhysicsUpdate(entitiesBuffer, staticsCount, dynamicsCount, deltaTime);
-                
-                sceneL->GetRenderableEntities(entitiesBuffer, renderablesCount);
-                m_Renderer->DrawEntities(entitiesBuffer, renderablesCount);
+                sceneL->GetPhysicsEntities(staticEntitiesBuffer, dynamicEntitiesBuffer, staticsCount, dynamicsCount);
+                sceneL->GetRenderableEntities(renderEntitiesBuffer, renderablesCount);
             }
+
+            m_Physics.PhysicsUpdate(staticEntitiesBuffer, dynamicEntitiesBuffer, staticsCount, dynamicsCount, deltaTime);
+
+            m_Renderer->DrawEntities(renderEntitiesBuffer, renderablesCount);
             
             m_Renderer->RenderFrame();
             

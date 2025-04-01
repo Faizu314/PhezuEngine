@@ -30,7 +30,7 @@ namespace Phezu {
             return std::weak_ptr<Entity>();
         }
         
-        auto entity = prefab->Instantiate(shared_from_this())[0];
+        auto entity = prefab->Instantiate(shared_from_this());
         
         return entity;
     }
@@ -105,44 +105,36 @@ namespace Phezu {
         }
     }
     
-    void Scene::GetPhysicsEntities(std::vector<std::weak_ptr<Entity>>& entities, size_t& staticCount, size_t& dynamicCount) const {
-        staticCount = dynamicCount = 0;
-        
+    void Scene::GetPhysicsEntities(std::vector<std::weak_ptr<Entity>>& staticEntities, std::vector<std::weak_ptr<Entity>>& dynamicEntities, size_t& staticIndex, size_t& dynamicIndex) const {
         for (auto it = m_RuntimeEntities.begin(); it != m_RuntimeEntities.end(); it++) {
             auto entity = (*it).second;
             auto physicsData = entity->GetPhysicsData().lock();
             if (physicsData && physicsData->IsStatic() && entity->GetShapeData() != nullptr) {
-                if (staticCount < entities.size())
-                    entities[staticCount] = entity;
+                if (staticIndex < staticEntities.size())
+                    staticEntities[staticIndex] = entity;
                 else
-                    entities.push_back(entity);
-                staticCount++;
+                    staticEntities.push_back(entity);
+                staticIndex++;
             }
-        }
-        
-        for (auto it = m_RuntimeEntities.begin(); it != m_RuntimeEntities.end(); it++) {
-            auto entity = (*it).second;
-            auto physicsData = entity->GetPhysicsData().lock();
-            if (physicsData && !physicsData->IsStatic() && entity->GetShapeData() != nullptr) {
-                if (staticCount + dynamicCount < entities.size())
-                    entities[staticCount + dynamicCount] = entity;
+            else if (physicsData && !physicsData->IsStatic() && entity->GetShapeData() != nullptr) {
+                if (dynamicIndex < dynamicEntities.size())
+                    dynamicEntities[dynamicIndex] = entity;
                 else
-                    entities.push_back(entity);
-                dynamicCount++;
+                    dynamicEntities.push_back(entity);
+                dynamicIndex++;
             }
         }
     }
     
-    void Scene::GetRenderableEntities(std::vector<std::weak_ptr<Entity>>& entities, size_t& count) const {
-        count = 0;
+    void Scene::GetRenderableEntities(std::vector<std::weak_ptr<Entity>>& entities, size_t& index) const {
         for (auto it = m_RuntimeEntities.begin(); it != m_RuntimeEntities.end(); it++) {
             auto entity = (*it).second;
             if (entity->GetRenderData() != nullptr && entity->GetShapeData() != nullptr) {
-                if (count < entities.size())
-                    entities[count] = entity;
+                if (index < entities.size())
+                    entities[index] = entity;
                 else
                     entities.push_back(entity);
-                count++;
+                index++;
             }
         }
     }

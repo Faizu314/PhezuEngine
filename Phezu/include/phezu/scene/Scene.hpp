@@ -26,7 +26,7 @@ namespace Phezu {
         void Load();
         void LogicUpdate(float deltaTime);
         void UpdateHierarchy();
-        void GetPhysicsEntities(std::vector<std::weak_ptr<Entity>>& entities, size_t& staticCount, size_t& dynamicCount) const;
+        void GetPhysicsEntities(std::vector<std::weak_ptr<Entity>>& staticEntities, std::vector<std::weak_ptr<Entity>>& dynamicEntities, size_t& staticIndex, size_t& dynamicIndex) const;
         void GetRenderableEntities(std::vector<std::weak_ptr<Entity>>& entities, size_t& count) const;
         void BeginUnload();
         void Unload();

@@ -16,7 +16,7 @@ namespace Phezu {
         void Deserialize(const std::string& data);
     public:
         const Blueprint& GetBlueprint() const { return m_Blueprint; }
-        std::vector<std::shared_ptr<Entity>> Instantiate(std::shared_ptr<Scene> scene) const;
+        std::shared_ptr<Entity> Instantiate(std::shared_ptr<Scene> scene) const;
     public: //EDITOR ONLY
         void UpdateEntry(uint64_t fileID, const BlueprintEntry& newEntry);
         void RemoveEntry(uint64_t fileID);
