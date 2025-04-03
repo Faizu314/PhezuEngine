@@ -71,5 +71,6 @@ elseif (WIN32)
         "${LIB_SRC_PATH}/SDL2.lib"
         "${LIB_SRC_PATH}/SDL2_image.lib"
         "${LIB_SRC_PATH}/SDL2_ttf.lib"
+        "${LIB_SRC_PATH}/mono-2.0-sgen.lib"
     )
 endif()
