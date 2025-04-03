@@ -10,6 +10,9 @@
 #include "SDL2/SDL_image.h"
 #include "SDL2/SDL_ttf.h"
 
+#include "mono/jit/jit.h"
+#include "mono/metadata/assembly.h"
+
 namespace Phezu {
     
     static const size_t ENTITIES_BUFFER_SIZE = 128;
@@ -38,6 +41,8 @@ namespace Phezu {
             //TODO: Logging::Log("Failed to init TTF: %s\n", SDL_GetError());
             exit(1);
         }
+
+        mono_set_assemblies_path("mono/lib");
 
         m_HasInited = true;
         m_ProjectPath = projectPath;
