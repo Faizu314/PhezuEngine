@@ -10,18 +10,15 @@
 #include "SDL2/SDL_image.h"
 #include "SDL2/SDL_ttf.h"
 
-#include "mono/jit/jit.h"
-#include "mono/metadata/assembly.h"
-
 namespace Phezu {
     
     static const size_t ENTITIES_BUFFER_SIZE = 128;
 
     Engine* Engine::s_Instance = nullptr;
     
-    Engine::Engine() : m_HasInited(false), m_IsRunning(false), m_FrameCount(0), m_AssetManager(this), m_SceneManager(this), m_Input(this), m_Physics(this), m_Renderer(nullptr), m_Window(nullptr) {}
+    Engine::Engine() : m_HasInited(false), m_IsRunning(false), m_FrameCount(0), m_AssetManager(this), m_SceneManager(this), m_Input(this), m_Physics(this), m_Renderer(nullptr), m_Window(nullptr), m_ScriptEngine(this) {}
     
-    int Engine::Init(std::filesystem::path projectPath, const std::string name, int width, int height, int renderScale) {
+    int Engine::Init(std::filesystem::path exePath, std::filesystem::path projectPath, const std::string name, int width, int height, int renderScale) {
         if (m_HasInited) {
             //TODO: Logging
             exit(1);
@@ -42,14 +39,14 @@ namespace Phezu {
             exit(1);
         }
 
-        mono_set_assemblies_path("mono/lib");
-
         m_HasInited = true;
+        m_ExePath = exePath;
         m_ProjectPath = projectPath;
         m_Window = new Window(name, width, height, renderScale);
         m_Renderer = new Renderer(this, *m_Window);
         m_AssetManager.Init(m_ProjectPath);
         m_SceneManager.Init();
+        m_ScriptEngine.Init();
         
         return 0;
     }
