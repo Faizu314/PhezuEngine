@@ -6,6 +6,7 @@ file(GLOB PHEZU_MATH_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/src/maths/*.cpp")
 file(GLOB PHEZU_SCENE_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/src/scene/*.cpp")
 file(GLOB PHEZU_COMP_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/src/scene/components/*.cpp")
 file(GLOB PHEZU_SERIALIZE_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/src/serialization/*.cpp")
+file(GLOB PHEZU_SCRIPTING_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/src/scripting/*.cpp")
 
 file(GLOB PHEZU_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/*.hpp")
 file(GLOB PHEZU_ASSET_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/AssetManagement/*.hpp")
@@ -13,6 +14,7 @@ file(GLOB PHEZU_MATH_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/maths/*.hp
 file(GLOB PHEZU_SCENE_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/scene/*.hpp")
 file(GLOB PHEZU_COMP_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/scene/components/*.hpp")
 file(GLOB PHEZU_SERIALIZE_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/serialization/*.hpp")
+file(GLOB PHEZU_SCRIPTING_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/scripting/*.hpp")
 
 file(GLOB_RECURSE PHEZU_VENDOR_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/vendor/*.cpp")
 
@@ -23,6 +25,7 @@ set(PHEZU_ALL_SOURCES
     ${PHEZU_SCENE_SOURCES}
     ${PHEZU_COMP_SOURCES}
     ${PHEZU_SERIALIZE_SOURCES}
+    ${PHEZU_SCRIPTING_SOURCES}
     ${PHEZU_VENDOR_SOURCES}
 )
 
@@ -32,6 +35,7 @@ set(PHEZU_ALL_HEADERS
     ${PHEZU_MATH_HEADERS}
     ${PHEZU_SCENE_HEADERS}
     ${PHEZU_SERIALIZE_HEADERS}
+    ${PHEZU_SCRIPTING_HEADERS}
     ${PHEZU_COMP_HEADERS}
 )
 
@@ -48,6 +52,7 @@ source_group("Header Files\\Math" FILES ${PHEZU_MATH_HEADERS})
 source_group("Header Files\\Scene" FILES ${PHEZU_SCENE_HEADERS})
 source_group("Header Files\\Scene\\Components" FILES ${PHEZU_COMP_HEADERS})
 source_group("Header Files\\Serialization" FILES ${PHEZU_SERIALIZE_HEADERS})
+source_group("Header Files\\Scripting" FILES ${PHEZU_SCRIPTING_HEADERS})
 
 source_group("Source Files" FILES ${PHEZU_SOURCES})
 source_group("Source Files\\AssetManagement" FILES ${PHEZU_ASSET_SOURCES})
@@ -55,6 +60,7 @@ source_group("Source Files\\Math" FILES ${PHEZU_MATH_SOURCES})
 source_group("Source Files\\Scene" FILES ${PHEZU_SCENE_SOURCES})
 source_group("Source Files\\Scene\\Components" FILES ${PHEZU_COMP_SOURCES})
 source_group("Source Files\\Serialization" FILES ${PHEZU_SERIALIZE_SOURCES})
+source_group("Source Files\\Scripting" FILES ${PHEZU_SCRIPTING_SOURCES})
 
 
 if (APPLE)

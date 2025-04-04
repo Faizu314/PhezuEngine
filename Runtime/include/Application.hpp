@@ -15,11 +15,15 @@ namespace PhezuRuntime {
     }
         
 #elif _WIN32
-        
-    std::string GetProjectPath() {
+
+    std::string GetExePath() {
         wchar_t path[MAX_PATH];
         GetModuleFileNameW(NULL, path, MAX_PATH);
         return std::filesystem::path(path).parent_path().string();
+    }
+
+    std::string GetProjectPath() {
+        return GetExePath();
     }
     
 #endif
