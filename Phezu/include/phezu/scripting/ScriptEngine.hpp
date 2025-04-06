@@ -1,5 +1,7 @@
 #pragma once
 
+#include "scripting/MonoLogger.hpp"
+
 #ifndef _MONO_UTILS_FORWARD_
 #define _MONO_UTILS_FORWARD_
 
@@ -20,10 +22,10 @@ namespace Phezu {
 		ScriptEngine(Engine* engine);
 	public:
 		void Init();
-	private:
-		
+		void Shutdown();
 	private:
 		Engine* m_Engine;
+		MonoLogger m_MonoLogger;
 		MonoDomain* m_RootDomain;
 		MonoDomain* m_AppDomain;
 	};
