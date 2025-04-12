@@ -23,3 +23,4 @@ endif()
 
 add_subdirectory(Phezu)
 add_subdirectory(Runtime)
+add_subdirectory(ScriptCore)
