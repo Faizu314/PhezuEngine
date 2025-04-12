@@ -3,6 +3,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 project(PhezuEngine)
 
+set(PROJECT_ROOT_DIR "${CMAKE_SOURCE_DIR}/Projects/Default" CACHE PATH "Root directory of the project")
+
 if (NOT DEFINED PROCESSOR_COUNT)
     set(PROCESSOR_COUNT 1)
     if (WIN32)
