@@ -21,9 +21,6 @@ if (APPLE)
     )
 elseif (WIN32)
     add_executable(Runtime WIN32 ${RUNTIME_SOURCES} ${RUNTIME_HEADERS})
-
-    math(EXPR BUILD_CORES "${PROCESSOR_COUNT} * 3 / 4")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP${BUILD_CORES}")
 endif()
 
 
