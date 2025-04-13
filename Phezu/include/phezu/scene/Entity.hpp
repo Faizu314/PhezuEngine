@@ -7,7 +7,7 @@
 
 #include "Renderer.hpp"
 #include "scene/components/TransformData.hpp"
-#include "scene/components/BehaviourComponent.hpp"
+#include "scene/components/ScriptComponent.hpp"
 
 namespace Phezu {
     
@@ -44,66 +44,6 @@ namespace Phezu {
         void RemoveParent();
         size_t GetChildCount();
         std::weak_ptr<Entity> GetChild(size_t childIndex);
-    public:
-        template<typename T>
-        std::weak_ptr<T> GetComponent() {
-            if (!std::is_base_of<BehaviourComponent, T>::value) {
-                //TODO: copy and paste the logging class
-                return std::weak_ptr<T>();
-            }
-            
-            for (int i = 0; i < m_BehaviourComponents.size(); i++) {
-                auto* componentPtr = m_BehaviourComponents[i].get();
-                if (dynamic_cast<T*>(m_BehaviourComponents[i].get())) {
-                    return std::static_pointer_cast<T>(m_BehaviourComponents[i]);
-                }
-            }
-            
-            return std::weak_ptr<T>();
-        }
-        template<typename T>
-        std::vector<std::weak_ptr<T>> GetComponents() {
-            if (!std::is_base_of<T, BehaviourComponent>::value) {
-                //TODO: copy and paste the logging class
-                return std::vector<std::weak_ptr<T>>();
-            }
-            
-            std::vector<std::weak_ptr<T>> comps;
-            comps.reserve(m_BehaviourComponents.size());
-            
-            for (int i = 0; i < m_BehaviourComponents.size(); i++) {
-                auto* componentPtr = m_BehaviourComponents[i].get();
-                if (dynamic_cast<T*>(m_BehaviourComponents[i].get())) {
-                    comps.push_back(m_BehaviourComponents[i]);
-                }
-            }
-            
-            return comps;
-        }
-        template<typename T>
-        std::weak_ptr<T> AddComponent(uint8_t componentPrefabID = -1) {
-            static_assert(std::is_base_of<BehaviourComponent, T>::value, "Component T is not of type BehaviourComponent");
-            
-            std::shared_ptr<T> component = std::make_shared<T>(this, componentPrefabID);
-            
-            m_BehaviourComponents.push_back(std::static_pointer_cast<BehaviourComponent>(component));
-            
-            return component;
-        }
-        template<typename T>
-        void RemoveComponent() {
-            if (!std::is_base_of<BehaviourComponent, T>::value) {
-                //TODO: copy and paste the logging class
-                return;
-            }
-            
-            for (int i = 0; i < m_BehaviourComponents.size(); i++) {
-                if (dynamic_cast<T*>(m_BehaviourComponents[i].get())) {
-                    m_BehaviourComponents.erase(m_BehaviourComponents.begin() + i);
-                    return;
-                }
-            }
-        }
     private:
         void OnDestroyed();
         void OnChildDestroyed();
@@ -119,7 +59,7 @@ namespace Phezu {
         RenderData* m_RenderData;
         std::shared_ptr<PhysicsData> m_PhysicsData;
     private:
-        std::vector<std::shared_ptr<BehaviourComponent>> m_BehaviourComponents;
+        std::vector<std::shared_ptr<ScriptComponent>> m_BehaviourComponents;
     private:
         static uint64_t s_EntitiesCount;
         uint64_t m_EntityID;
