@@ -73,6 +73,6 @@ namespace Phezu {
     }
 
     void MonoLogger::OnLog(const char* msg) {
-        Log("PhezuScriptCore: %s\n", msg);
+        Log("Mono: %s\n", msg);
     }
 }

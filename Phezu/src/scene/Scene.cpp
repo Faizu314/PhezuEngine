@@ -4,7 +4,7 @@
 #include "scene/components/ShapeData.hpp"
 #include "scene/components/RenderData.hpp"
 #include "scene/components/PhysicsData.hpp"
-#include "scene/components/BehaviourComponent.hpp"
+#include "scene/components/ScriptComponent.hpp"
 #include "scene/Prefab.hpp"
 #include "Engine.hpp"
 
@@ -64,8 +64,9 @@ namespace Phezu {
                 DestroyEntityInternal(child->GetEntityID());
         }
         
-        for (auto comp : it->second->m_BehaviourComponents)
-            comp->OnDestroy();
+        //TODO: let script engine destroy components
+        /*for (auto comp : it->second->m_BehaviourComponents)
+            comp->OnDestroy();*/
         it->second->OnDestroyed();
         
         m_RuntimeEntities.erase(it);
@@ -84,15 +85,16 @@ namespace Phezu {
             DestroyEntityInternal(entityID);
         
         m_EntitiesToDestroy.clear();
-        
-        for (auto entity : m_RuntimeEntities) {
-            for (auto comp : entity.second->GetComponents<BehaviourComponent>()) {
-                comp.lock()->Update(deltaTime);
-                
-                if (!m_IsLoaded)
-                    return;
-            }
-        }
+
+        //TODO: Call update on script engine first in engine class then update scene
+        //for (auto entity : m_RuntimeEntities) {
+        //    for (auto comp : entity.second->GetComponents<BehaviourComponent>()) {
+        //        comp.lock()->Update(deltaTime);
+        //        
+        //        if (!m_IsLoaded)
+        //            return;
+        //    }
+        //}
         
         UpdateHierarchy();
     }

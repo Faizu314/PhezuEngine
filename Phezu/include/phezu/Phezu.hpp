@@ -18,7 +18,7 @@
 #include "scene/components/ShapeData.hpp"
 #include "scene/components/RenderData.hpp"
 #include "scene/components/PhysicsData.hpp"
-#include "scene/components/BehaviourComponent.hpp"
+#include "scene/components/ScriptComponent.hpp"
 
 namespace Phezu {
     

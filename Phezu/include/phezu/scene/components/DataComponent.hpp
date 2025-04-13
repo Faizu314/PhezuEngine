@@ -1,10 +1,5 @@
 #pragma once
 
-#include <unordered_map>
-#include <string>
-#include <typeindex>
-#include <functional>
-
 namespace Phezu {
     
     class Entity;

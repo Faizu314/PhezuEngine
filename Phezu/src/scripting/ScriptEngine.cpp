@@ -2,6 +2,8 @@
 
 #include "Engine.hpp"
 #include "Logger.hpp"
+#include "scripting/ScriptClass.hpp"
+#include "scripting/ScriptInstance.hpp"
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
@@ -53,43 +55,46 @@ namespace Phezu {
         uint32_t fileSize = 0;
         char* fileData = ReadBytes(assemblyPath, &fileSize);
 
-        // NOTE: We can't use this image for anything other than loading the assembly because this image doesn't have a reference to the assembly
         MonoImageOpenStatus status;
         MonoImage* image = mono_image_open_from_data_full(fileData, fileSize, 1, &status, 0);
 
         if (status != MONO_IMAGE_OK)
         {
             const char* errorMessage = mono_image_strerror(status);
-            // Log some error message using the errorMessage data
+            Log("Error loading assembly | %s", errorMessage);
             return nullptr;
         }
 
         MonoAssembly* assembly = mono_assembly_load_from_full(image, assemblyPath.c_str(), &status, 0);
         mono_image_close(image);
 
-        // Don't forget to free the file data
         delete[] fileData;
 
         return assembly;
     }
 
-    MonoClass* GetClassInAssembly(MonoAssembly* assembly, const char* namespaceName, const char* className)
-    {
-        MonoImage* image = mono_assembly_get_image(assembly);
-        MonoClass* klass = mono_class_from_name(image, namespaceName, className);
-
-        if (klass == nullptr)
-        {
-            // Log error here
-            return nullptr;
-        }
-
-        return klass;
-    }
-
-    ScriptEngine::ScriptEngine(Engine* engine) : m_Engine(engine), m_RootDomain(nullptr), m_AppDomain(nullptr) {}
+    ScriptEngine::ScriptEngine(Engine* engine) : m_Engine(engine), m_RootDomain(nullptr), m_AppDomain(nullptr), m_CoreAssembly(nullptr) {}
 
     void ScriptEngine::Init() {
+        InitMono();
+        
+        std::filesystem::path phezuCoreAssemblyPath = m_Engine->GetExePath() / "Phezu-ScriptCore.dll";
+
+        m_CoreAssembly = LoadCSharpAssembly(phezuCoreAssemblyPath.string());
+
+        PrintAssemblyClasses(m_CoreAssembly);
+
+        std::shared_ptr<ScriptClass> playerClass = std::make_shared<ScriptClass>(m_CoreAssembly, "Game", "Player");
+
+        std::shared_ptr<ScriptInstance> classInstance = std::make_shared<ScriptInstance>(m_AppDomain, playerClass);
+
+        MonoMethod* updateMethod = playerClass->GetMonoMethod("OnUpdate", 1);
+
+        classInstance->InvokeOnUpdate(updateMethod, 1.34f);
+    }
+
+    void ScriptEngine::InitMono()
+    {
         std::filesystem::path monoCoreAssembliesPath = m_Engine->GetExePath() / "mono" / "lib" / "4.5";
 
         m_MonoLogger.Start();
@@ -101,7 +106,7 @@ namespace Phezu {
         MonoDomain* rootDomain = mono_jit_init("MyScriptRuntime");
         if (rootDomain == nullptr)
         {
-            // TODO: Logging
+            Log("Error initializing mono jit\n");
             return;
         }
 
@@ -109,11 +114,9 @@ namespace Phezu {
 
         m_AppDomain = mono_domain_create_appdomain("MyAppDomain", nullptr);
         mono_domain_set(m_AppDomain, true);
+    }
 
-        MonoAssembly* assembly = LoadCSharpAssembly("E:/Users/faiza/Visual Studio Projects/MonoTest/MonoTest/bin/Debug/net6.0/MonoTest.dll");
-
-        //printing all types to test
-
+    void ScriptEngine::PrintAssemblyClasses(MonoAssembly* assembly) {
         MonoImage* image = mono_assembly_get_image(assembly);
         const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
         int32_t numTypes = mono_table_info_get_rows(typeDefinitionsTable);
@@ -128,45 +131,6 @@ namespace Phezu {
 
             Log("%s.%s\n", nameSpace, name);
         }
-
-
-        // Get a reference to the class we want to instantiate
-        MonoClass* testingClass = GetClassInAssembly(assembly, "MonoTest", "CSharpTesting");
-
-        // Allocate an instance of our class
-        MonoObject* classInstance = mono_object_new(m_AppDomain, testingClass);
-
-        if (classInstance == nullptr)
-        {
-            // Log error here and abort
-        }
-
-        // Call the parameterless (default) constructor
-        mono_runtime_object_init(classInstance);
-
-
-
-
-        // Get a reference to the method in the class
-        MonoMethod* method = mono_class_get_method_from_name(testingClass, "IncrementFloat", 1);
-
-        if (method == nullptr)
-        {
-            Log("No method called IncrementFloat with 1 parameters in the class, log error or something\n");
-            return;
-        }
-
-        // Call the C# method on the objectInstance instance, and get any potential exceptions
-        MonoObject* exception = nullptr;
-        int testInt = 1;
-        void* params[] =
-        {
-            &testInt
-        };
-
-        mono_runtime_invoke(method, classInstance, params, &exception);
-
-        // TODO: Handle the exception
     }
 
     void ScriptEngine::Shutdown() {
