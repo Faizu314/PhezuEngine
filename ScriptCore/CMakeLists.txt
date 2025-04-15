@@ -14,3 +14,10 @@ add_custom_target(ScriptCore ALL
     COMMENT "Building ScriptCore (.NET) project..."
 )
 
+add_custom_command(TARGET ScriptCore POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different 
+        "${CMAKE_BINARY_DIR}/ScriptCore/Build/bin/Phezu-ScriptCore.dll"
+        "${LIB_DEST_PATH}/Phezu-ScriptCore.dll"
+)
+
+add_dependencies(ScriptCore Runtime)

@@ -7,7 +7,7 @@
 namespace Phezu {
 
 	ScriptInstance::ScriptInstance(MonoDomain* domain, std::shared_ptr<ScriptClass> scriptClass)
-	: m_Class(scriptClass){
+	: m_Class(scriptClass) {
 		m_Instance = mono_object_new(domain, scriptClass->GetMonoClass());
 
 		if (m_Instance == nullptr)
@@ -16,12 +16,15 @@ namespace Phezu {
 		}
 
 		mono_runtime_object_init(m_Instance);
+
+		m_OnCreateMethod = scriptClass->GetMonoMethod("OnCreated", 0);
+		m_OnUpdateMethod = scriptClass->GetMonoMethod("OnUpdate", 1);
 	}
 
-	void ScriptInstance::InvokeOnCreate(MonoMethod* method) {
+	void ScriptInstance::InvokeOnCreate() {
 		MonoObject* exception = nullptr;
 
-		mono_runtime_invoke(method, m_Class->GetMonoClass(), nullptr, &exception);
+		mono_runtime_invoke(m_OnCreateMethod, m_Class->GetMonoClass(), nullptr, &exception);
 
 		if (exception) {
 			MonoString* exceptionString = mono_object_to_string(exception, nullptr);
@@ -33,7 +36,7 @@ namespace Phezu {
 		}
 	}
 
-	void ScriptInstance::InvokeOnUpdate(MonoMethod* method, float deltaTime) {
+	void ScriptInstance::InvokeOnUpdate(float deltaTime) {
 		MonoObject* exception = nullptr;
 
 		void* params[] =
@@ -41,7 +44,7 @@ namespace Phezu {
 			&deltaTime
 		};
 
-		mono_runtime_invoke(method, m_Class->GetMonoClass(), params, &exception);
+		mono_runtime_invoke(m_OnUpdateMethod, m_Class->GetMonoClass(), params, &exception);
 
 		if (exception) {
 			MonoString* exceptionString = mono_object_to_string(exception, nullptr);

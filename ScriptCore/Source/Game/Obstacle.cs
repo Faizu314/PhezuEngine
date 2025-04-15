@@ -3,18 +3,18 @@ using PhezuEngine;
 
 namespace Game {
 
-    public class Player : BehaviourComponent {
+    public class Obstacle : BehaviourComponent {
 
         public override void OnCreated() {
-            Console.WriteLine("Created Player");
+            Console.WriteLine("Created Obstacle");
         }
 
         public override void OnDestroyed() {
-            Console.WriteLine("Destroyed Player");
+            Console.WriteLine("Destroyed Obstacle");
         }
 
         public override void OnUpdate(float deltaTime) {
-            Console.WriteLine("Player.OnUpdate: " + deltaTime);
+            Console.WriteLine("Obstacle.OnUpdate: " + deltaTime);
         }
     }
 }
