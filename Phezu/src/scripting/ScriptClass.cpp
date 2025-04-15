@@ -22,7 +22,7 @@ namespace Phezu {
 
 		if (method == nullptr)
 		{
-			Log("OnCreate method not found in script class: %s.%s\n", m_Namespace, m_ClassName);
+			Log("%s method not found in script class: %s.%s\n", methodName.c_str(), m_Namespace.c_str(), m_ClassName.c_str());
 		}
 
 		return method;

@@ -6,18 +6,19 @@ namespace Phezu {
 
     constexpr int LOG_BUFFER_SIZE = 256;
 
-    static char _logBuffer[LOG_BUFFER_SIZE];
+    static char s_LogBuffer[LOG_BUFFER_SIZE];
 
     void Log(const char* msg, ...) {
         va_list args;
 
         va_start(args, msg);
 
-        int length = vsnprintf(_logBuffer, LOG_BUFFER_SIZE, msg, args);
+        int length = vsnprintf(s_LogBuffer, LOG_BUFFER_SIZE, msg, args);
+        s_LogBuffer[LOG_BUFFER_SIZE - 1] = '\0';
 
         va_end(args);
 
-        OutputDebugString(_logBuffer);
+        OutputDebugString(s_LogBuffer);
     }
 
 #elif __APPLE__

@@ -50,7 +50,46 @@ namespace Phezu {
         return buffer;
     }
 
-    MonoAssembly* LoadCSharpAssembly(const std::string& assemblyPath)
+    std::string GetMonoClassFullname(const std::string& nameSpace, const std::string& className) {
+        if (nameSpace.size() == 0)
+            return className;
+        return nameSpace + "." + className;
+    }
+
+    ScriptEngine::ScriptEngine(Engine* engine) : m_Engine(engine), m_RootDomain(nullptr), m_AppDomain(nullptr), m_CoreAssembly(nullptr) {}
+
+    void ScriptEngine::Init() {
+        InitMono();
+        
+        std::filesystem::path phezuCoreAssemblyPath = m_Engine->GetExePath() / "Phezu-ScriptCore.dll";
+
+        m_CoreAssembly = LoadAssembly(phezuCoreAssemblyPath.string());
+
+        GetScriptClasses();
+    }
+
+    void ScriptEngine::InitMono()
+    {
+        std::filesystem::path monoCoreAssembliesPath = m_Engine->GetExePath() / "mono" / "lib" / "4.5";
+
+        m_MonoLogger.Start();
+
+        mono_trace_set_level_string("debug");
+        mono_trace_set_log_handler(MonoLog, nullptr);
+        mono_set_assemblies_path(monoCoreAssembliesPath.string().c_str());
+
+        m_RootDomain = mono_jit_init("MyScriptRuntime");
+        if (m_RootDomain == nullptr)
+        {
+            Log("Error initializing mono jit\n");
+            return;
+        }
+
+        m_AppDomain = mono_domain_create_appdomain("MyAppDomain", nullptr);
+        mono_domain_set(m_AppDomain, true);
+    }
+
+    MonoAssembly* ScriptEngine::LoadAssembly(const std::string& assemblyPath)
     {
         uint32_t fileSize = 0;
         char* fileData = ReadBytes(assemblyPath, &fileSize);
@@ -73,47 +112,31 @@ namespace Phezu {
         return assembly;
     }
 
-    ScriptEngine::ScriptEngine(Engine* engine) : m_Engine(engine), m_RootDomain(nullptr), m_AppDomain(nullptr), m_CoreAssembly(nullptr) {}
+    void ScriptEngine::GetScriptClasses() {
+        MonoImage* image = mono_assembly_get_image(m_CoreAssembly);
+        const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
+        int32_t numTypes = mono_table_info_get_rows(typeDefinitionsTable);
 
-    void ScriptEngine::Init() {
-        InitMono();
-        
-        std::filesystem::path phezuCoreAssemblyPath = m_Engine->GetExePath() / "Phezu-ScriptCore.dll";
+        auto behaviourComponentClass = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "BehaviourComponent");
 
-        m_CoreAssembly = LoadCSharpAssembly(phezuCoreAssemblyPath.string());
-
-        PrintAssemblyClasses(m_CoreAssembly);
-
-        std::shared_ptr<ScriptClass> playerClass = std::make_shared<ScriptClass>(m_CoreAssembly, "Game", "Player");
-
-        std::shared_ptr<ScriptInstance> classInstance = std::make_shared<ScriptInstance>(m_AppDomain, playerClass);
-
-        MonoMethod* updateMethod = playerClass->GetMonoMethod("OnUpdate", 1);
-
-        classInstance->InvokeOnUpdate(updateMethod, 1.34f);
-    }
-
-    void ScriptEngine::InitMono()
-    {
-        std::filesystem::path monoCoreAssembliesPath = m_Engine->GetExePath() / "mono" / "lib" / "4.5";
-
-        m_MonoLogger.Start();
-
-        mono_trace_set_level_string("debug");
-        mono_trace_set_log_handler(MonoLog, nullptr);
-        mono_set_assemblies_path(monoCoreAssembliesPath.string().c_str());
-
-        MonoDomain* rootDomain = mono_jit_init("MyScriptRuntime");
-        if (rootDomain == nullptr)
+        for (int32_t i = 0; i < numTypes; i++)
         {
-            Log("Error initializing mono jit\n");
-            return;
+            uint32_t cols[MONO_TYPEDEF_SIZE];
+            mono_metadata_decode_row(typeDefinitionsTable, i, cols, MONO_TYPEDEF_SIZE);
+
+            const char* nameSpace = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAMESPACE]);
+            const char* name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
+
+            auto monoClass = std::make_shared<ScriptClass>(m_CoreAssembly, nameSpace, name);
+
+            if (monoClass->GetMonoClass() == behaviourComponentClass->GetMonoClass())
+                continue;
+            if (!mono_class_is_subclass_of(monoClass->GetMonoClass(), behaviourComponentClass->GetMonoClass(), false))
+                continue;
+
+            std::string fullname = GetMonoClassFullname(nameSpace, name);
+            m_BehaviourClasses.insert(std::make_pair(fullname, monoClass));
         }
-
-        m_RootDomain = rootDomain;
-
-        m_AppDomain = mono_domain_create_appdomain("MyAppDomain", nullptr);
-        mono_domain_set(m_AppDomain, true);
     }
 
     void ScriptEngine::PrintAssemblyClasses(MonoAssembly* assembly) {

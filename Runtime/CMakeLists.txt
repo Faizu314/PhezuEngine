@@ -30,9 +30,6 @@ target_link_libraries(Runtime PRIVATE Phezu)
 add_custom_command(TARGET Runtime POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory "${LIB_DEST_PATH}"
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${LIB_SRC_PATH}" "${LIB_DEST_PATH}"
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different 
-        "${CMAKE_BINARY_DIR}/ScriptCore/Build/bin/Phezu-ScriptCore.dll"
-        "${LIB_DEST_PATH}/Phezu-ScriptCore.dll"
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_ROOT_DIR}"
                                                  "${LIB_DEST_PATH}"
 )
