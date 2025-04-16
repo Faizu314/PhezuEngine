@@ -12,20 +12,22 @@ namespace Phezu {
     Physics::Physics(Engine* engine) : m_Engine(engine), m_DeltaTime(0) {}
     
     void Physics::CleanCollidingEntities() {
-        for (auto it = m_CollidingEntities.begin(); it != m_CollidingEntities.end();) {
-            auto e1 = (*it).first;
-            auto e2 = (*it).second;
-            
-            if (e1.expired() || e2.expired()) {
-                if (e1.expired() && !e2.expired())
-                    e2.lock()->OnCollisionExit(Collision(e1));
-                else if (e2.expired() && !e1.expired())
-                    e1.lock()->OnCollisionExit(Collision(e2));
-                it = m_CollidingEntities.erase(it);
-            }
-            else
-                it++;
-        }
+        //Physics should receive a callback on physics component being destroyed/removed
+        
+        //for (auto it = m_CollidingEntities.begin(); it != m_CollidingEntities.end();) {
+        //    auto e1 = (*it).first;
+        //    auto e2 = (*it).second;
+        //    
+        //    if (e1.expired() || e2.expired()) {
+        //        if (e1.expired() && !e2.expired())
+        //            e2.lock()->OnCollisionExit(Collision(e1));
+        //        else if (e2.expired() && !e1.expired())
+        //            e1.lock()->OnCollisionExit(Collision(e2));
+        //        it = m_CollidingEntities.erase(it);
+        //    }
+        //    else
+        //        it++;
+        //}
     }
     
     void Physics::PhysicsUpdate(const std::vector<std::weak_ptr<Entity>>& staticEntities, const std::vector<std::weak_ptr<Entity>>& dynamicEntities, size_t staticCount, size_t dynamicCount, float deltaTime) {
@@ -36,7 +38,7 @@ namespace Phezu {
         for (size_t i = 0; i < dynamicCount; i++) {
             auto dynamicEntity = dynamicEntities[i].lock();
             auto trans = dynamicEntity->GetTransformData();
-            auto phys = dynamicEntity->GetPhysicsData().lock();
+            auto phys = dynamicEntity->GetPhysicsData();
             trans->SetWorldPosition(trans->GetWorldPosition() + (phys->Velocity * deltaTime));
             dynamicEntity->RecalculateSubtreeTransformations();
         }
@@ -95,8 +97,8 @@ namespace Phezu {
             reflectionMat[1].y = -1;
         }
         
-        auto phys1 = d1->GetPhysicsData().lock();
-        auto phys2 = d2->GetPhysicsData().lock();
+        auto phys1 = d1->GetPhysicsData();
+        auto phys2 = d2->GetPhysicsData();
         
         glm::vec reflectedVel1 = reflectionMat * phys1->Velocity;
         glm::vec reflectedVel2 = reflectionMat * phys2->Velocity;
@@ -196,7 +198,7 @@ namespace Phezu {
         }
         
         auto trans = dynamicEntity->GetTransformData();
-        auto phys = dynamicEntity->GetPhysicsData().lock();
+        auto phys = dynamicEntity->GetPhysicsData();
         
         glm::vec reflectedVel = reflectionMat * phys->Velocity;
         phys->Velocity = Vector2(reflectedVel.x, reflectedVel.y);
@@ -206,8 +208,8 @@ namespace Phezu {
     }
     
     void Physics::OnColliding(std::shared_ptr<Entity> a, std::shared_ptr<Entity> b) {
-        auto ap = a->GetPhysicsData().lock();
-        auto bp = b->GetPhysicsData().lock();
+        auto ap = a->GetPhysicsData();
+        auto bp = b->GetPhysicsData();
         
         Collision cA(bp);
         Collision cB(ap);
@@ -224,8 +226,8 @@ namespace Phezu {
     }
     
     void Physics::OnNotColliding(std::shared_ptr<Entity> a, std::shared_ptr<Entity> b) {
-        auto ap = a->GetPhysicsData().lock();
-        auto bp = b->GetPhysicsData().lock();
+        auto ap = a->GetPhysicsData();
+        auto bp = b->GetPhysicsData();
         
         Collision cA(bp);
         Collision cB(ap);
@@ -237,10 +239,10 @@ namespace Phezu {
         }
     }
     
-    bool Physics::WereColliding(std::shared_ptr<PhysicsData> a, std::shared_ptr<PhysicsData> b) {
+    bool Physics::WereColliding(PhysicsData* a, PhysicsData* b) {
         for (auto& pair : m_CollidingEntities) {
-            auto sharedA = pair.first.lock();
-            auto sharedB = pair.second.lock();
+            auto sharedA = pair.first;
+            auto sharedB = pair.second;
             auto sharedC = a;
             auto sharedD = b;
             
@@ -251,11 +253,11 @@ namespace Phezu {
         return false;
     }
     
-    void Physics::RemoveCollisionPair(std::shared_ptr<PhysicsData> a, std::shared_ptr<PhysicsData> b) {
+    void Physics::RemoveCollisionPair(PhysicsData* a, PhysicsData* b) {
         for (auto it = m_CollidingEntities.begin(); it != m_CollidingEntities.end(); it++) {
             auto pair = *it;
-            auto sharedA = pair.first.lock();
-            auto sharedB = pair.second.lock();
+            auto sharedA = pair.first;
+            auto sharedB = pair.second;
             auto sharedC = a;
             auto sharedD = b;
             

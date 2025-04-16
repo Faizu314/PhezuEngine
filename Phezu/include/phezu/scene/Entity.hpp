@@ -20,7 +20,7 @@ namespace Phezu {
     class Entity {
     public:
         Entity() = delete;
-        Entity(std::weak_ptr<Scene> scene);
+        Entity(Scene* scene);
         ~Entity();
     public:
         uint64_t GetEntityID() const;
@@ -33,12 +33,13 @@ namespace Phezu {
         TransformData* GetTransformData();
         ShapeData* GetShapeData() const { return m_ShapeData; }
         RenderData* GetRenderData() const { return m_RenderData; }
-        std::weak_ptr<PhysicsData> GetPhysicsData() const { return m_PhysicsData; }
+        PhysicsData* GetPhysicsData() const { return m_PhysicsData; }
     public:
         ShapeData* AddShapeData();
         RenderData* AddRenderData(Color tint = Color::White);
-        std::weak_ptr<PhysicsData> AddPhysicsData(bool isStatic);
+        PhysicsData* AddPhysicsData(bool isStatic);
     public:
+        Scene* GetSceneContext() const { return m_Scene; }
         TransformData* GetParent() const;
         void SetParent(std::weak_ptr<Entity> parent);
         void RemoveParent();
@@ -50,16 +51,16 @@ namespace Phezu {
         void AddChild(std::weak_ptr<Entity> child);
         void RecalculateSubtreeTransformations();
     private:
-        const std::weak_ptr<Scene> m_Scene;
+        Scene* m_Scene;
         Entity* m_Parent;
         std::vector<std::weak_ptr<Entity>> m_Children;
     private:
         TransformData m_TransformData;
         ShapeData* m_ShapeData;
         RenderData* m_RenderData;
-        std::shared_ptr<PhysicsData> m_PhysicsData;
+        PhysicsData* m_PhysicsData;
     private:
-        std::vector<std::shared_ptr<ScriptComponent>> m_BehaviourComponents;
+        std::vector<std::shared_ptr<ScriptComponent>> m_ScriptComponents;
     private:
         static uint64_t s_EntitiesCount;
         uint64_t m_EntityID;
