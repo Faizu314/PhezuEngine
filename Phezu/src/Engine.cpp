@@ -16,7 +16,10 @@ namespace Phezu {
 
     Engine* Engine::s_Instance = nullptr;
     
-    Engine::Engine() : m_HasInited(false), m_IsRunning(false), m_FrameCount(0), m_AssetManager(this), m_SceneManager(this), m_Input(this), m_Physics(this), m_Renderer(nullptr), m_Window(nullptr), m_ScriptEngine(this) {}
+    Engine::Engine() : m_HasInited(false), m_IsRunning(false),
+        m_FrameCount(0), m_AssetManager(this), m_SceneManager(this),
+        m_Input(this), m_Physics(this), m_Renderer(nullptr),
+        m_Window(nullptr), m_ScriptEngine(this) {}
     
     int Engine::Init(std::filesystem::path exePath, std::filesystem::path projectPath, const std::string name, int width, int height, int renderScale) {
         if (m_HasInited) {
@@ -49,19 +52,6 @@ namespace Phezu {
         m_ScriptEngine.Init();
         
         return 0;
-    }
-    
-    std::weak_ptr<Scene> Engine::GetMasterScene() {
-        return m_SceneManager.GetMasterScene();
-    }
-    
-    void Engine::LoadScene(const std::string& sceneName) {
-        if (!m_IsRunning) {
-            //TODO: Logging
-            return;
-        }
-        
-        m_SceneManager.LoadScene(sceneName);
     }
     
     float GetDeltaTime(Uint64& prevTime, Uint64& freqMs) {
@@ -136,42 +126,10 @@ namespace Phezu {
     }
     
     void Engine::Destroy() {
+        m_ScriptEngine.Shutdown();
+
         delete m_Renderer;
         delete m_Window;
-    }
-    
-    std::weak_ptr<Prefab> Engine::CreatePrefab() {
-        return std::weak_ptr<Prefab>();
-    }
-    
-    std::weak_ptr<Entity> Engine::CreateEntity() {
-        auto scene = m_SceneManager.GetActiveScene();
-        
-        if (auto sceneL = scene.lock())
-            return sceneL->CreateEntity();
-        else
-            return std::weak_ptr<Entity>();
-    }
-    
-    std::weak_ptr<Entity> Engine::CreateEntity(GUID prefabGuid) {
-        auto scene = m_SceneManager.GetActiveScene();
-        
-        if (auto sceneL = scene.lock())
-            return sceneL->CreateEntity(prefabGuid);
-        else
-            return std::weak_ptr<Entity>();
-    }
-    
-    const InputData& Engine::GetInput() {
-        return m_Input.GetInput();
-    }
-    
-    SceneManager& Engine::GetSceneManager() {
-        return m_SceneManager;
-    }
-    
-    AssetManager& Engine::GetAssetManager() {
-        return m_AssetManager;
     }
     
     std::weak_ptr<const Prefab> Engine::GetPrefab(GUID guid) {

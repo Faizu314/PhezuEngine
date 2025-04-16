@@ -23,22 +23,4 @@
 namespace Phezu {
     
     Engine& CreateEngine();
-    std::weak_ptr<Entity> CreateEntity();
-    std::weak_ptr<Entity> CreateEntity(GUID prefabGuid);
-    void LoadScene(const std::string& sceneName);
-    void Destroy(Entity* entity);
-    const InputData& GetInput();
-    long long unsigned int GetFrameCount();
-    
-    template<typename T>
-    void SubscribeToOnSceneLoaded(T* subscriber, void (T::*handler)(void)) {
-        if (Engine::s_Instance == nullptr) {
-            //TODO: Logging
-            return;
-        }
-        
-        Engine::s_Instance->m_SceneManager.SubscribeToOnSceneLoaded(subscriber, handler);
-    }
-    
-    void UnsubscribeToOnSceneLoaded(void* subscriber);
 }

@@ -64,9 +64,7 @@ namespace Phezu {
                 DestroyEntityInternal(child->GetEntityID());
         }
         
-        //TODO: let script engine destroy components
-        /*for (auto comp : it->second->m_BehaviourComponents)
-            comp->OnDestroy();*/
+        m_Engine->GetScriptEngine().OnEntityDestroyed(it->second);
         it->second->OnDestroyed();
         
         m_RuntimeEntities.erase(it);
@@ -75,6 +73,12 @@ namespace Phezu {
     void Scene::Load() {
         m_SceneEntities.Instantiate(this);
         
+        ScriptEngine& scriptEngine = m_Engine->GetScriptEngine();
+
+        for (auto it = m_RuntimeEntities.begin(); it != m_RuntimeEntities.end(); it++) {
+            scriptEngine.OnEntityCreated(it->second);
+        }
+
         m_IsLoaded = true;
         
         UpdateHierarchy();
@@ -83,18 +87,9 @@ namespace Phezu {
     void Scene::LogicUpdate(float deltaTime) {
         for (auto entityID : m_EntitiesToDestroy)
             DestroyEntityInternal(entityID);
-        
         m_EntitiesToDestroy.clear();
 
-        //TODO: Call update on script engine first in engine class then update scene
-        //for (auto entity : m_RuntimeEntities) {
-        //    for (auto comp : entity.second->GetComponents<BehaviourComponent>()) {
-        //        comp.lock()->Update(deltaTime);
-        //        
-        //        if (!m_IsLoaded)
-        //            return;
-        //    }
-        //}
+        m_Engine->GetScriptEngine().OnUpdate(deltaTime);
         
         UpdateHierarchy();
     }

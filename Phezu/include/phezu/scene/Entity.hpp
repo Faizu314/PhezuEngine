@@ -34,10 +34,13 @@ namespace Phezu {
         ShapeData* GetShapeData() const { return m_ShapeData; }
         RenderData* GetRenderData() const { return m_RenderData; }
         PhysicsData* GetPhysicsData() const { return m_PhysicsData; }
+        size_t GetScriptComponentCount() const { return m_ScriptComponents.size(); }
+        ScriptComponent* GetScriptComponent(size_t index);
     public:
         ShapeData* AddShapeData();
         RenderData* AddRenderData(Color tint = Color::White);
         PhysicsData* AddPhysicsData(bool isStatic);
+        ScriptComponent* AddScriptComponent(const std::string& classFullname);
     public:
         Scene* GetSceneContext() const { return m_Scene; }
         TransformData* GetParent() const;
@@ -60,7 +63,7 @@ namespace Phezu {
         RenderData* m_RenderData;
         PhysicsData* m_PhysicsData;
     private:
-        std::vector<std::shared_ptr<ScriptComponent>> m_ScriptComponents;
+        std::vector<ScriptComponent> m_ScriptComponents;
     private:
         static uint64_t s_EntitiesCount;
         uint64_t m_EntityID;

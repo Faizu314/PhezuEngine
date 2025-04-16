@@ -4,6 +4,9 @@
 #include "Logger.hpp"
 #include "scripting/ScriptClass.hpp"
 #include "scripting/ScriptInstance.hpp"
+#include "scripting/EntityInstance.hpp"
+#include "scene/Scene.hpp"
+#include "scene/Entity.hpp"
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
@@ -66,6 +69,54 @@ namespace Phezu {
         m_CoreAssembly = LoadAssembly(phezuCoreAssemblyPath.string());
 
         GetScriptClasses();
+    }
+
+    void ScriptEngine::OnEntityCreated(std::shared_ptr<Entity> entity) {
+        std::shared_ptr<EntityInstance> entityInstance = std::make_shared<EntityInstance>(entity->GetEntityID(), m_AppDomain, m_EntityClass);
+        m_EntityInstances[entity->GetEntityID()] = entityInstance;
+
+        size_t compCount = entity->GetScriptComponentCount();
+
+        for (size_t i = 0; i < compCount; i++) {
+            ScriptComponent* comp = entity->GetScriptComponent(i);
+            auto scriptClass = m_BehaviourClasses[comp->GetScriptClassFullname()];
+            entityInstance->BehaviourScripts.emplace_back(m_AppDomain, scriptClass);
+
+            entityInstance->BehaviourScripts[i].InvokeOnCreate();
+        }
+    }
+
+    void ScriptEngine::OnScriptComponentAddedToEntity(std::shared_ptr<Entity> entity, ScriptComponent* script) {
+        auto entityInstance = m_EntityInstances[entity->GetEntityID()];
+        
+        size_t compCount = entity->GetScriptComponentCount();
+
+        auto scriptClass = m_BehaviourClasses[script->GetScriptClassFullname()];
+        entityInstance->BehaviourScripts.emplace_back(m_AppDomain, scriptClass);
+
+        entityInstance->BehaviourScripts[compCount - 1].InvokeOnCreate();
+    }
+
+    void ScriptEngine::OnEntityDestroyed(std::shared_ptr<Entity> entity) {
+        auto entityInstance = m_EntityInstances[entity->GetEntityID()];
+
+        for (size_t i = 0; i < entityInstance->BehaviourScripts.size(); i++) {
+            //Invoke On Destroy
+            
+            //entityInstance->BehaviourScripts[i].InvokeOnCreate();
+        }
+
+        m_EntityInstances.erase(entity->GetEntityID());
+    }
+
+    void ScriptEngine::OnUpdate(float deltaTime) {
+        for (auto it = m_EntityInstances.begin(); it != m_EntityInstances.end(); it++) {
+            auto entityInstance = it->second;
+
+            for (size_t i = 0; i < entityInstance->BehaviourScripts.size(); i++) {
+                entityInstance->BehaviourScripts[i].InvokeOnUpdate(deltaTime);
+            }
+        }
     }
 
     void ScriptEngine::InitMono()

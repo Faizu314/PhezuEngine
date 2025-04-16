@@ -8,8 +8,10 @@ namespace Phezu {
     
     class ScriptComponent : public DataComponent {
     public:
-        ScriptComponent(Entity* entity, const std::string& classFullName) : DataComponent(entity), m_ClassFullName(classFullName) {}
+        ScriptComponent(Entity* entity, const std::string& classFullName) : DataComponent(entity), m_ClassFullname(classFullName) {}
+    public:
+        std::string GetScriptClassFullname() const { return m_ClassFullname; }
     private:
-        std::string m_ClassFullName;
+        std::string m_ClassFullname;
     };
 }

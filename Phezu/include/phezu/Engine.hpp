@@ -19,26 +19,24 @@ namespace Phezu {
     public:
         int Init(std::filesystem::path exePath, std::filesystem::path projectPath, const std::string name, int width, int height, int renderScale = 1);
         void Run();
-        std::weak_ptr<Scene> GetMasterScene();
-        void Destroy();
-        std::weak_ptr<Prefab> CreatePrefab();
+    public:
         std::weak_ptr<const Prefab> GetPrefab(GUID guid);
     public:
-        void LoadScene(const std::string& sceneName);
-        SceneManager& GetSceneManager();
-        AssetManager& GetAssetManager();
-        std::weak_ptr<Entity> CreateEntity();
-        std::weak_ptr<Entity> CreateEntity(GUID prefabGuid);
+        SceneManager& GetSceneManager() { return m_SceneManager; }
+        AssetManager& GetAssetManager() { return m_AssetManager; }
+        ScriptEngine& GetScriptEngine() { return m_ScriptEngine; }
+        const InputData& GetInput() const { return m_Input.GetInput(); }
         long long unsigned int GetFrameCount() const { return m_FrameCount; }
-        const InputData& GetInput();
-        std::filesystem::path GetExePath() { return m_ExePath; }
-        std::filesystem::path GetProjectPath() { return m_ProjectPath; }
+        std::filesystem::path GetExePath() const { return m_ExePath; }
+        std::filesystem::path GetProjectPath() const { return m_ProjectPath; }
     private:
         Engine();
         Engine(const Engine&) = delete;
         Engine& operator=(const Engine&) = delete;
         Engine(Engine&&) = delete;
         Engine& operator=(Engine&&) = delete;
+    private:
+        void Destroy();
     private:
         Window* m_Window;
         Renderer* m_Renderer;
@@ -58,7 +56,5 @@ namespace Phezu {
         
         friend Engine* GetEngine();
         friend Engine& CreateEngine();
-        template<typename T>
-        friend void SubscribeToOnSceneLoaded(T* subscriber, void (T::*handler)(void));
     };
 }
