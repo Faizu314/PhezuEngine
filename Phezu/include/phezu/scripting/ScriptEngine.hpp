@@ -22,7 +22,6 @@ namespace Phezu {
 	public:
 		void Init();
 		void OnEntityCreated(std::shared_ptr<Entity> entity);
-		void OnScriptComponentAddedToEntity(std::shared_ptr<Entity> entity, ScriptComponent* script);
 		void OnEntityDestroyed(std::shared_ptr<Entity> entity);
 		void OnUpdate(float deltaTime);
 		void Shutdown();

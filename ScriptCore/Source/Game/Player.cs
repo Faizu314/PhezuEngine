@@ -6,11 +6,11 @@ namespace Game {
     public class Player : BehaviourComponent {
 
         public override void OnCreated() {
-            Console.WriteLine("Created Player");
+            Console.WriteLine("Player.OnCreated");
         }
 
         public override void OnDestroyed() {
-            Console.WriteLine("Destroyed Player");
+            Console.WriteLine("Player.OnDestroyed");
         }
 
         public override void OnUpdate(float deltaTime) {

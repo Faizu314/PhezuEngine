@@ -6,8 +6,8 @@
 
 namespace Phezu {
 
-	ScriptClass::ScriptClass(MonoAssembly* assembly, const std::string& classNamespace, const std::string& className) 
-	: m_ClassName(className), m_Namespace(classNamespace) {
+	ScriptClass::ScriptClass(MonoAssembly* assembly, const std::string& classNamespace, const std::string& className, bool isBehaviourClass)
+	: m_ClassName(className), m_Namespace(classNamespace), m_IsBehaviourClass(isBehaviourClass) {
 		MonoImage* image = mono_assembly_get_image(assembly);
 		m_Class = mono_class_from_name(image, classNamespace.c_str(), className.c_str());
 
