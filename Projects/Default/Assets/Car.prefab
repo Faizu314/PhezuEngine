@@ -50,6 +50,15 @@
                 "Velocity": { "x": -10, "y": 0 }
             }
         },
+        {
+            "FileID": 507,
+            "TypeID": 6,
+            "TypeName": "Script",
+            "Properties": {
+		"Parent": { "Guid": 241, "InstanceID": 0, "FileID": 500 },
+                "Fullname": "Game.Player"
+            }
+        },
 	{
             "FileID": 505,
             "TypeID": 7,

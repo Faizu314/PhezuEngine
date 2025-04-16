@@ -86,17 +86,6 @@ namespace Phezu {
         }
     }
 
-    void ScriptEngine::OnScriptComponentAddedToEntity(std::shared_ptr<Entity> entity, ScriptComponent* script) {
-        auto entityInstance = m_EntityInstances[entity->GetEntityID()];
-        
-        size_t compCount = entity->GetScriptComponentCount();
-
-        auto scriptClass = m_BehaviourClasses[script->GetScriptClassFullname()];
-        entityInstance->BehaviourScripts.emplace_back(m_AppDomain, scriptClass);
-
-        entityInstance->BehaviourScripts[compCount - 1].InvokeOnCreate();
-    }
-
     void ScriptEngine::OnEntityDestroyed(std::shared_ptr<Entity> entity) {
         auto entityInstance = m_EntityInstances[entity->GetEntityID()];
 
@@ -168,7 +157,8 @@ namespace Phezu {
         const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
         int32_t numTypes = mono_table_info_get_rows(typeDefinitionsTable);
 
-        auto behaviourComponentClass = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "BehaviourComponent");
+        m_EntityClass = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "Entity", false);
+        auto behaviourComponentClass = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "BehaviourComponent", true);
 
         for (int32_t i = 0; i < numTypes; i++)
         {
@@ -178,7 +168,7 @@ namespace Phezu {
             const char* nameSpace = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAMESPACE]);
             const char* name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
 
-            auto monoClass = std::make_shared<ScriptClass>(m_CoreAssembly, nameSpace, name);
+            auto monoClass = std::make_shared<ScriptClass>(m_CoreAssembly, nameSpace, name, true);
 
             if (monoClass->GetMonoClass() == behaviourComponentClass->GetMonoClass())
                 continue;

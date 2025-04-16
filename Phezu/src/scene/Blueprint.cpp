@@ -251,14 +251,22 @@ namespace Phezu {
             EntryRef parentRef = GetProperty<EntryRef>("Parent", entry, overrides);
             
             // If component was attached to an entity which was removed
-            if (parentRef.Guid == m_Guid && overrides.RemovedEntities.find(parentRef.InstanceID) == overrides.RemovedEntities.end())
+            if (parentRef.Guid == m_Guid && overrides.RemovedEntities.find(parentRef.InstanceID) != overrides.RemovedEntities.end())
                 continue;
             // If component was removed
-            if (overrides.RemovedComponents.find(entry.FileID) == overrides.RemovedComponents.end())
+            if (overrides.RemovedComponents.find(entry.FileID) != overrides.RemovedComponents.end())
                 continue;
             
-            //only instantiate and attach to parents
-            //add after scripting
+            std::shared_ptr<Entity> parentEntity;
+            if (parentRef.Guid == m_Guid)
+                parentEntity = registry[registryKey].Entities[parentRef.FileID];
+            else
+                parentEntity = registry[RegistryKey(parentRef.InstanceID, parentRef.Guid)].Entities[parentRef.FileID];
+            
+            std::string classFullname = GetProperty<std::string>("Fullname", entry, overrides);
+
+            auto scriptComponent = parentEntity->AddScriptComponent(classFullname);
+            components[entry.FileID] = scriptComponent;
         }
     }
     
@@ -307,46 +315,14 @@ namespace Phezu {
             }
         }
 
-        /* ---- Component Entries ---- */
-
         auto& components = registry[registryKey].Components;
-
-        for (size_t i = 0; i < m_ComponentEntries.size(); i++) {
-            const BlueprintEntry& entry = *m_ComponentEntries[i];
-
-            EntryRef parentRef = GetProperty<EntryRef>("Parent", entry, overrides);
-
-            // If component was removed
-            if (overrides.RemovedComponents.find(entry.FileID) != overrides.RemovedComponents.end())
-                continue;
-            // If component was attached to an entity which was removed
-            if (parentRef.Guid == m_Guid && overrides.RemovedEntities.find(parentRef.FileID) != overrides.RemovedEntities.end())
-                continue;
-
-            std::shared_ptr<Entity> parentEntity;
-            if (parentRef.Guid == m_Guid)
-                parentEntity = registry[registryKey].Entities[parentRef.FileID];
-            else
-                parentEntity = registry[RegistryKey(parentRef.InstanceID, parentRef.Guid)].Entities[parentRef.FileID];
-
-            switch (entry.TypeID) {
-            case EntryType::PhysicsData:
-            {
-                //static_cast<PhysicsData*>(components[entry.FileID])->PrecomputeData();
-
-                break;
-            }
-            default:
-                break;
-            }
-        }
 
         /* ---- Script Entries ---- */
     
         for (size_t i = 0; i < m_ScriptEntries.size(); i++) {
             const BlueprintEntry& entry = *m_ScriptEntries[i];
             
-            //add after scripting
+            //add after script field references
         }
     }
 }
