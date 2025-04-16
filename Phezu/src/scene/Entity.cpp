@@ -21,14 +21,6 @@ namespace Phezu {
             delete m_RenderData;
         if (m_PhysicsData != nullptr)
             delete m_PhysicsData;
-        
-        if (m_Scene == nullptr)
-            return;
-        
-        for (int i = 0; i < m_Children.size(); i++) {
-            if (auto child = m_Children[i].lock())
-                m_Scene->DestroyEntity(child->GetEntityID());
-        }
     }
     
     uint64_t Entity::GetEntityID() const {
@@ -45,6 +37,13 @@ namespace Phezu {
     TransformData* Entity::GetTransformData() {
         return &m_TransformData;
     }
+    ScriptComponent* Entity::GetScriptComponent(size_t index)
+    {
+        if (index < 0 || index >= m_ScriptComponents.size())
+            return nullptr;
+
+        return &m_ScriptComponents[index];
+    }
     ShapeData* Entity::AddShapeData() {
         m_ShapeData = new ShapeData(this);
         return m_ShapeData;
@@ -56,6 +55,10 @@ namespace Phezu {
     PhysicsData* Entity::AddPhysicsData(bool isStatic) {
         m_PhysicsData = new PhysicsData(this, isStatic);
         return m_PhysicsData;
+    }
+    ScriptComponent* Entity::AddScriptComponent(const std::string& classFullname) {
+        m_ScriptComponents.emplace_back(this, classFullname);
+        return &m_ScriptComponents[m_ScriptComponents.size() - 1];
     }
     TransformData* Entity::GetParent() const {
         if (m_Parent == nullptr)

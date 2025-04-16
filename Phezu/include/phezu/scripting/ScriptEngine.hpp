@@ -2,23 +2,29 @@
 
 #include "scripting/MonoLogger.hpp"
 #include "scripting/MonoDefs.hpp"
-#include "scripting/ScriptClass.hpp"
 
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 namespace Phezu {
 
 	class Engine;
+	class Scene;
+	class Entity;
+	class ScriptClass;
+	struct EntityInstance;
+	class ScriptComponent;
 
 	class ScriptEngine {
 	public:
 		ScriptEngine(Engine* engine);
 	public:
 		void Init();
-		void OnEntityCreated(std::shared_ptr<Scene> scene, uint64_t entityID);
-		void OnUpdate();
-		void OnEntityDestroyed(std::shared_ptr<Scene> scene, uint64_t entityID);
+		void OnEntityCreated(std::shared_ptr<Entity> entity);
+		void OnScriptComponentAddedToEntity(std::shared_ptr<Entity> entity, ScriptComponent* script);
+		void OnEntityDestroyed(std::shared_ptr<Entity> entity);
+		void OnUpdate(float deltaTime);
 		void Shutdown();
 	private:
 		void InitMono();
@@ -34,5 +40,6 @@ namespace Phezu {
 	private:
 		std::unordered_map<std::string, std::shared_ptr<ScriptClass>> m_BehaviourClasses;
 		std::shared_ptr<ScriptClass> m_EntityClass;
+		std::unordered_map<uint64_t, std::shared_ptr<EntityInstance>> m_EntityInstances;
 	};
 }

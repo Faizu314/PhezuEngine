@@ -4,7 +4,7 @@
 
 namespace Phezu {
     
-    SceneManager::SceneManager(Engine* engine) : m_Engine(engine), m_LoadSceneAfterFrame(false), m_ActiveScene(nullptr) {}
+    SceneManager::SceneManager(Engine* engine) : m_Engine(engine), m_LoadSceneAfterFrame(false), m_ActiveScene(nullptr), m_SceneToLoad(0) {}
     
     void SceneManager::Init() {
         AssetManager& assetManager = m_Engine->GetAssetManager();
