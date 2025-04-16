@@ -47,10 +47,10 @@ namespace Phezu {
     }
     
     void Destroy(Entity* entity) {
-        if (entity == nullptr)
+        if (entity == nullptr || entity->m_Scene == nullptr)
             return;
-        if (auto scene = entity->m_Scene.lock())
-            scene->DestroyEntity(entity->GetEntityID());
+        
+        entity->m_Scene->DestroyEntity(entity->GetEntityID());
     }
     
     const InputData& GetInput() {

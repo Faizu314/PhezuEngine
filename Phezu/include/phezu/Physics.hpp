@@ -35,13 +35,13 @@ namespace Phezu {
         EntityRect GetWorldRectFromTransformAndShapeData(TransformData* transData, ShapeData* shapeData);
     private:
         void CleanCollidingEntities();
-        bool WereColliding(std::shared_ptr<PhysicsData> a, std::shared_ptr<PhysicsData> b);
+        bool WereColliding(PhysicsData* a, PhysicsData* b);
         void OnColliding(std::shared_ptr<Entity> a, std::shared_ptr<Entity> b);
         void OnNotColliding(std::shared_ptr<Entity> a, std::shared_ptr<Entity> b);
-        void RemoveCollisionPair(std::shared_ptr<PhysicsData> a, std::shared_ptr<PhysicsData> b);
+        void RemoveCollisionPair(PhysicsData* a, PhysicsData* b);
     private:
         Engine* m_Engine;
-        std::vector<std::pair<std::weak_ptr<PhysicsData>, std::weak_ptr<PhysicsData>>> m_CollidingEntities;
+        std::vector<std::pair<PhysicsData*, PhysicsData*>> m_CollidingEntities;
     private:
         static const float EPSILON;
         float m_DeltaTime;

@@ -16,7 +16,7 @@ namespace Phezu {
     Scene::Scene(Engine* engine, const std::string& name) : m_Engine(engine), m_Name(name), m_IsLoaded(false) { }
     
     std::weak_ptr<Entity> Scene::CreateEntity() {
-        std::shared_ptr<Entity> entity = std::make_shared<Entity>(shared_from_this());
+        std::shared_ptr<Entity> entity = std::make_shared<Entity>(this);
         m_RuntimeEntities.insert(std::make_pair(entity->GetEntityID(), entity));
         
         return entity;
@@ -30,7 +30,7 @@ namespace Phezu {
             return std::weak_ptr<Entity>();
         }
         
-        auto entity = prefab->Instantiate(shared_from_this());
+        auto entity = prefab->Instantiate(this);
         
         return entity;
     }
@@ -73,7 +73,7 @@ namespace Phezu {
     }
     
     void Scene::Load() {
-        m_SceneEntities.Instantiate(shared_from_this());
+        m_SceneEntities.Instantiate(this);
         
         m_IsLoaded = true;
         
@@ -110,7 +110,7 @@ namespace Phezu {
     void Scene::GetPhysicsEntities(std::vector<std::weak_ptr<Entity>>& staticEntities, std::vector<std::weak_ptr<Entity>>& dynamicEntities, size_t& staticIndex, size_t& dynamicIndex) const {
         for (auto it = m_RuntimeEntities.begin(); it != m_RuntimeEntities.end(); it++) {
             auto entity = (*it).second;
-            auto physicsData = entity->GetPhysicsData().lock();
+            auto physicsData = entity->GetPhysicsData();
             if (physicsData && physicsData->IsStatic() && entity->GetShapeData() != nullptr) {
                 if (staticIndex < staticEntities.size())
                     staticEntities[staticIndex] = entity;

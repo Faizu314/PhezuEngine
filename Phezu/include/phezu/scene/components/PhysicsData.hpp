@@ -72,8 +72,8 @@ namespace Phezu {
     };
 
     struct Collision {
-        Collision(std::weak_ptr<PhysicsData> other) : Other(other) {}
-        std::weak_ptr<PhysicsData> Other;
+        Collision(PhysicsData* other) : Other(other) {}
+        PhysicsData* Other;
         Vector2 Point;
         Vector2 Normal;
     };

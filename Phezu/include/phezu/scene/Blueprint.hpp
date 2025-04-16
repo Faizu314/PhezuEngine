@@ -43,10 +43,10 @@ namespace Phezu {
         using BlueprintRegistry = std::unordered_map<RegistryKey, Registry>;
     public:
         void Initialize(Engine* engine, GUID guid);
-        std::shared_ptr<Entity> Instantiate(std::shared_ptr<Scene> scene) const;
+        std::shared_ptr<Entity> Instantiate(Scene* scene) const;
     private:
-        void InstantiateEntitiesAndComponents(std::shared_ptr<Scene> scene, BlueprintRegistry& registry, uint64_t instanceID = 0, PrefabOverrides overrides = PrefabOverrides()) const;
-        void BuildHierarchyAndInitializeScripts(std::shared_ptr<Scene> scene, BlueprintRegistry& registry, uint64_t instanceID = 0, PrefabOverrides overrides = PrefabOverrides()) const;
+        void InstantiateEntitiesAndComponents(Scene* scene, BlueprintRegistry& registry, uint64_t instanceID = 0, PrefabOverrides overrides = PrefabOverrides()) const;
+        void BuildHierarchyAndInitializeScripts(Scene* scene, BlueprintRegistry& registry, uint64_t instanceID = 0, PrefabOverrides overrides = PrefabOverrides()) const;
     private:
         std::vector<const BlueprintEntry*> m_EntityEntries;
         std::vector<const BlueprintEntry*> m_PrefabEntries;

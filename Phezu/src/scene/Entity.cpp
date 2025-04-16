@@ -9,7 +9,7 @@ namespace Phezu {
     
     uint64_t Entity::s_EntitiesCount = 0;
     
-    Entity::Entity(std::weak_ptr<Scene> scene) : m_Scene(scene), m_TransformData(this), m_ShapeData(nullptr), m_RenderData(nullptr), m_PhysicsData(nullptr), m_Parent(nullptr), m_IsActive(true), m_Tag("Default") {
+    Entity::Entity(Scene* scene) : m_Scene(scene), m_TransformData(this), m_ShapeData(nullptr), m_RenderData(nullptr), m_PhysicsData(nullptr), m_Parent(nullptr), m_IsActive(true), m_Tag("Default") {
         m_EntityID = s_EntitiesCount;
         s_EntitiesCount++;
     }
@@ -19,14 +19,15 @@ namespace Phezu {
             delete m_ShapeData;
         if (m_RenderData != nullptr)
             delete m_RenderData;
+        if (m_PhysicsData != nullptr)
+            delete m_PhysicsData;
         
-        auto scene = m_Scene.lock();
-        if (!scene)
+        if (m_Scene == nullptr)
             return;
         
         for (int i = 0; i < m_Children.size(); i++) {
             if (auto child = m_Children[i].lock())
-                scene->DestroyEntity(child->GetEntityID());
+                m_Scene->DestroyEntity(child->GetEntityID());
         }
     }
     
@@ -52,8 +53,8 @@ namespace Phezu {
         m_RenderData = new RenderData(this, tint);
         return m_RenderData;
     }
-    std::weak_ptr<PhysicsData> Entity::AddPhysicsData(bool isStatic) {
-        m_PhysicsData = std::make_shared<PhysicsData>(this, isStatic);
+    PhysicsData* Entity::AddPhysicsData(bool isStatic) {
+        m_PhysicsData = new PhysicsData(this, isStatic);
         return m_PhysicsData;
     }
     TransformData* Entity::GetParent() const {
@@ -94,7 +95,7 @@ namespace Phezu {
             if (parentL.get() == this)
                 return;
         
-        SetParentInternal(m_Scene.lock()->GetEntity(m_EntityID), parent);
+        SetParentInternal(m_Scene->GetEntity(m_EntityID), parent);
     }
     
     void SetParentInternal(std::weak_ptr<Entity> _this, std::weak_ptr<Entity> parent) {

@@ -119,7 +119,7 @@ namespace Phezu {
         }
     }
     
-    std::shared_ptr<Entity> Blueprint::Instantiate(std::shared_ptr<Scene> scene) const {
+    std::shared_ptr<Entity> Blueprint::Instantiate(Scene* scene) const {
         BlueprintRegistry registry;
         
         /*-----– First Pass -------*/
@@ -133,7 +133,7 @@ namespace Phezu {
         return registry[RegistryKey(0, m_Guid)].RootEntity;
     }
     
-    void Blueprint::InstantiateEntitiesAndComponents(std::shared_ptr<Scene> scene, BlueprintRegistry& registry, uint64_t instanceID, PrefabOverrides overrides) const {
+    void Blueprint::InstantiateEntitiesAndComponents(Scene* scene, BlueprintRegistry& registry, uint64_t instanceID, PrefabOverrides overrides) const {
         RegistryKey registryKey(instanceID, m_Guid);
         
         /* ---- Prefab Entries ---- */
@@ -231,9 +231,9 @@ namespace Phezu {
                     bool isStatic = GetProperty<bool>("IsStatic", entry, overrides);
                     Vector2 velocity = GetProperty<Vector2>("Velocity", entry, overrides);
                     
-                    auto physicsData = parentEntity->AddPhysicsData(isStatic).lock();
+                    auto physicsData = parentEntity->AddPhysicsData(isStatic);
                     physicsData->Velocity = velocity;
-                    components[entry.FileID] = physicsData.get();
+                    components[entry.FileID] = physicsData;
                     
                     break;
                 }
@@ -262,7 +262,7 @@ namespace Phezu {
         }
     }
     
-    void Blueprint::BuildHierarchyAndInitializeScripts(std::shared_ptr<Scene> scene, BlueprintRegistry& registry, uint64_t instanceID, PrefabOverrides overrides) const {
+    void Blueprint::BuildHierarchyAndInitializeScripts(Scene* scene, BlueprintRegistry& registry, uint64_t instanceID, PrefabOverrides overrides) const {
         RegistryKey registryKey(instanceID, m_Guid);
         
         /* ---- Prefab Entries ---- */
