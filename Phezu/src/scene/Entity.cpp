@@ -31,12 +31,15 @@ namespace Phezu {
     void Entity::SetActive(bool isActive) {
         m_IsActive = isActive;
     }
+
     bool Entity::GetActive() const {
         return m_IsActive;
     }
+
     TransformData* Entity::GetTransformData() {
         return &m_TransformData;
     }
+
     ScriptComponent* Entity::GetScriptComponent(size_t index)
     {
         if (index < 0 || index >= m_ScriptComponents.size())
@@ -44,31 +47,47 @@ namespace Phezu {
 
         return &m_ScriptComponents[index];
     }
+
     ShapeData* Entity::AddShapeData() {
         m_ShapeData = new ShapeData(this);
         return m_ShapeData;
     }
+
     RenderData* Entity::AddRenderData(Color tint) {
         m_RenderData = new RenderData(this, tint);
         return m_RenderData;
     }
+
     PhysicsData* Entity::AddPhysicsData(bool isStatic) {
         m_PhysicsData = new PhysicsData(this, isStatic);
         return m_PhysicsData;
     }
+
     ScriptComponent* Entity::AddScriptComponent(const std::string& classFullname) {
         m_ScriptComponents.emplace_back(this, classFullname);
         return &m_ScriptComponents[m_ScriptComponents.size() - 1];
     }
+
+    bool Entity::HasScriptComponent(const std::string& classFullname) {
+        for (size_t i = 0; i < m_ScriptComponents.size(); i++) {
+            if (m_ScriptComponents[i].GetScriptClassFullname() == classFullname)
+                return true;
+        }
+
+        return false;
+    }
+
     TransformData* Entity::GetParent() const {
         if (m_Parent == nullptr)
             return nullptr;
         
         return m_Parent->GetTransformData();
     }
+
     size_t Entity::GetChildCount() {
         return m_Children.size();
     }
+
     std::weak_ptr<Entity> Entity::GetChild(size_t childIndex) {
         if (childIndex >= m_Children.size())
             return std::weak_ptr<Entity>();

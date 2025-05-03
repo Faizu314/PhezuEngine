@@ -2,6 +2,7 @@
 
 #include "Engine.hpp"
 #include "Logger.hpp"
+#include "scripting/ScriptGlue.hpp"
 #include "scripting/ScriptClass.hpp"
 #include "scripting/ScriptInstance.hpp"
 #include "scripting/EntityInstance.hpp"
@@ -25,8 +26,7 @@ namespace Phezu {
         Log("Fatal  : %s\n\n", fatal ? "true" : "false");
     }
 
-    char* ReadBytes(const std::string& filepath, uint32_t* outSize)
-    {
+    char* ReadBytes(const std::string& filepath, uint32_t* outSize) {
         std::ifstream stream(filepath, std::ios::binary | std::ios::ate);
 
         if (!stream)
@@ -59,10 +59,15 @@ namespace Phezu {
         return nameSpace + "." + className;
     }
 
-    ScriptEngine::ScriptEngine(Engine* engine) : m_Engine(engine), m_RootDomain(nullptr), m_AppDomain(nullptr), m_CoreAssembly(nullptr) {}
+    ScriptEngine::ScriptEngine(Engine* engine) : m_Engine(engine), m_RootDomain(nullptr), 
+        m_AppDomain(nullptr), m_CoreAssembly(nullptr),
+        m_EntityIdField(nullptr), m_BehaviourComponentEntitySetter(nullptr) {}
 
     void ScriptEngine::Init() {
         InitMono();
+
+        ScriptGlue::Init(m_Engine, this);
+        ScriptGlue::Bind();
         
         std::filesystem::path phezuCoreAssemblyPath = m_Engine->GetExePath() / "Phezu-ScriptCore.dll";
 
@@ -72,16 +77,19 @@ namespace Phezu {
     }
 
     void ScriptEngine::OnEntityCreated(std::shared_ptr<Entity> entity) {
-        std::shared_ptr<EntityInstance> entityInstance = std::make_shared<EntityInstance>(entity->GetEntityID(), m_AppDomain, m_EntityClass);
+        std::shared_ptr<EntityInstance> entityInstance = 
+            std::make_shared<EntityInstance>(entity->GetEntityID(), m_AppDomain, m_EntityClass, m_ObjectGcHandleGetter);
+        entityInstance->EntityScript.SetUlongField(m_EntityIdField, entity->GetEntityID());
         m_EntityInstances[entity->GetEntityID()] = entityInstance;
 
         size_t compCount = entity->GetScriptComponentCount();
 
         for (size_t i = 0; i < compCount; i++) {
             ScriptComponent* comp = entity->GetScriptComponent(i);
-            auto scriptClass = m_BehaviourClasses[comp->GetScriptClassFullname()];
-            entityInstance->BehaviourScripts.emplace_back(m_AppDomain, scriptClass);
+            auto scriptClass = m_ScriptClasses[comp->GetScriptClassFullname()];
+            entityInstance->BehaviourScripts.emplace_back(m_AppDomain, scriptClass, m_ObjectGcHandleGetter);
 
+            entityInstance->BehaviourScripts[i].SetGcHandleProperty(m_BehaviourComponentEntitySetter, entityInstance->EntityScript.GetMonoGcHandle());
             entityInstance->BehaviourScripts[i].InvokeOnCreate();
         }
     }
@@ -108,8 +116,7 @@ namespace Phezu {
         }
     }
 
-    void ScriptEngine::InitMono()
-    {
+    void ScriptEngine::InitMono() {
         std::filesystem::path monoCoreAssembliesPath = m_Engine->GetExePath() / "mono" / "lib" / "4.5";
 
         m_MonoLogger.Start();
@@ -129,8 +136,7 @@ namespace Phezu {
         mono_domain_set(m_AppDomain, true);
     }
 
-    MonoAssembly* ScriptEngine::LoadAssembly(const std::string& assemblyPath)
-    {
+    MonoAssembly* ScriptEngine::LoadAssembly(const std::string& assemblyPath) {
         uint32_t fileSize = 0;
         char* fileData = ReadBytes(assemblyPath, &fileSize);
 
@@ -157,8 +163,12 @@ namespace Phezu {
         const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
         int32_t numTypes = mono_table_info_get_rows(typeDefinitionsTable);
 
-        m_EntityClass = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "Entity", false);
-        auto behaviourComponentClass = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "BehaviourComponent", true);
+        m_ObjectClass = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "Object", ScriptClassType::Object);
+        m_EntityClass = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "Entity", ScriptClassType::Entity);
+        m_ObjectGcHandleGetter = m_ObjectClass->GetMonoMethod("GetGcHandle", 0);
+        m_EntityIdField = m_EntityClass->GetMonoClassField("ID");
+        m_BehaviourComponentClass = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "BehaviourComponent", ScriptClassType::BehaviourComponent);
+        m_BehaviourComponentEntitySetter = m_BehaviourComponentClass->GetMonoMethod("SetEntity", 1);
 
         for (int32_t i = 0; i < numTypes; i++)
         {
@@ -168,15 +178,15 @@ namespace Phezu {
             const char* nameSpace = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAMESPACE]);
             const char* name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
 
-            auto monoClass = std::make_shared<ScriptClass>(m_CoreAssembly, nameSpace, name, true);
+            auto monoClass = std::make_shared<ScriptClass>(m_CoreAssembly, nameSpace, name, ScriptClassType::ScriptComponent);
 
-            if (monoClass->GetMonoClass() == behaviourComponentClass->GetMonoClass())
+            if (monoClass->GetMonoClass() == m_BehaviourComponentClass->GetMonoClass())
                 continue;
-            if (!mono_class_is_subclass_of(monoClass->GetMonoClass(), behaviourComponentClass->GetMonoClass(), false))
+            if (!mono_class_is_subclass_of(monoClass->GetMonoClass(), m_BehaviourComponentClass->GetMonoClass(), false))
                 continue;
 
             std::string fullname = GetMonoClassFullname(nameSpace, name);
-            m_BehaviourClasses.insert(std::make_pair(fullname, monoClass));
+            m_ScriptClasses.insert(std::make_pair(fullname, monoClass));
         }
     }
 
@@ -199,5 +209,28 @@ namespace Phezu {
 
     void ScriptEngine::Shutdown() {
         m_MonoLogger.Stop();
+        ScriptGlue::Destroy();
     }
+
+    MonoObject* ScriptEngine::GetScriptComponentInstance(uint64_t entityID, const std::string& classFullname) {
+        if (m_EntityInstances.find(entityID) == m_EntityInstances.end()) {
+            Log("Entity not found");
+            return nullptr;
+        }
+
+        auto entityInstance = m_EntityInstances.at(entityID);
+
+        for (size_t i = 0; i < entityInstance->BehaviourScripts.size(); i++) {
+            if (entityInstance->BehaviourScripts[i].GetFullname() == classFullname)
+                return entityInstance->BehaviourScripts[i].GetMonoObject();
+        }
+
+        Log("Script component on Entity not found");
+        return nullptr;
+    }
+
+    MonoClass* ScriptEngine::GetBehaviourComponentClass() {
+        return m_BehaviourComponentClass->GetMonoClass();
+    }
+
 }
