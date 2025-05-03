@@ -36,6 +36,7 @@ namespace Phezu {
         PhysicsData* GetPhysicsData() const { return m_PhysicsData; }
         size_t GetScriptComponentCount() const { return m_ScriptComponents.size(); }
         ScriptComponent* GetScriptComponent(size_t index);
+        bool HasScriptComponent(const std::string& classFullname);
     public:
         ShapeData* AddShapeData();
         RenderData* AddRenderData(Color tint = Color::White);

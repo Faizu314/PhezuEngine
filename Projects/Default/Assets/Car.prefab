@@ -47,7 +47,7 @@
             "Properties": {
                 "Parent": { "Guid": 241, "InstanceID": 0, "FileID": 500 },
                 "IsStatic": false,
-                "Velocity": { "x": -10, "y": 0 }
+                "Velocity": { "x": 0, "y": 0 }
             }
         },
         {
