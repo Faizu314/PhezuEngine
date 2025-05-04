@@ -5,13 +5,13 @@
 
 namespace Phezu {
     
-    InputData Input::s_InputData;
+    static InputData s_InputData;
     
-    Input::Input(Engine* engine) : m_Engine(engine) {
+    void Input::Init() {
         memset(&s_InputData, 0, sizeof(s_InputData));
     }
     
-    Input::~Input() {
+    void Input::Destroy() {
         memset(&s_InputData, 0, sizeof(s_InputData));
     }
     
@@ -83,5 +83,9 @@ namespace Phezu {
         }
         
         return true;
+    }
+
+    const InputData& Input::GetInput() {
+        return s_InputData;
     }
 }

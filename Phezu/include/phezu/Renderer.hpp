@@ -60,9 +60,9 @@ namespace Phezu {
     public:
         void ClearFrame(const Color& bg = Color::Black);
         void DrawEntities(const std::vector<std::weak_ptr<Entity>>& renderableEntities, size_t count, const Color& bg = Color::Black);
-        void DrawEntity(std::weak_ptr<Entity> entity);
         void RenderFrame();
     private:
+        void DrawEntity(std::weak_ptr<Entity> entity);
         Vector2 WorldToSdlPosition(const Vector2& worldPos) const;
     private:
         Engine* m_Engine;

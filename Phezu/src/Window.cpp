@@ -1,4 +1,5 @@
 #include "Window.hpp"
+#include "Logger.hpp"
 
 #include "SDL2/SDL.h"
 
@@ -11,7 +12,7 @@ namespace Phezu {
             SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width * renderScale, height * renderScale, windowsFlag);
 
         if (!m_WindowPtr) {
-            //TODO: Logging::Log("Failed to open %d x %d window: %s\n", width, height, SDL_GetError());
+            Log("Failed to open %d x %d window: %s\n", width, height, SDL_GetError());
             exit(1);
         }
 

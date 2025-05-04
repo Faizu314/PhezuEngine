@@ -4,8 +4,6 @@
 
 namespace Phezu {
     
-    class Engine;
-    
     struct InputData {
         bool W, A, S, D;
         bool Up, Right, Down, Left;
@@ -16,14 +14,9 @@ namespace Phezu {
     
     class Input {
     public:
-        Input(Engine* engine);
-        ~Input();
-    public:
-        bool PollInput();
-    public:
-        static const InputData& GetInput() { return s_InputData; }
-    private:
-        Engine* m_Engine;
-        static InputData s_InputData;
+        static void Init();
+        static void Destroy();
+        static bool PollInput();
+        static const InputData& GetInput();
     };
 }

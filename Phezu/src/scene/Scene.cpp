@@ -26,7 +26,7 @@ namespace Phezu {
         auto prefab = m_Engine->GetPrefab(prefabGuid).lock();
         
         if (!prefab) {
-            //TODO: logging
+            //TODO: add asserts
             return std::weak_ptr<Entity>();
         }
         

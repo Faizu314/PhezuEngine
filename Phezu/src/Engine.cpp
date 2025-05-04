@@ -5,6 +5,7 @@
 #include "Renderer.hpp"
 #include "scene/Scene.hpp"
 #include "scene/Prefab.hpp"
+#include "Logger.hpp"
 
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
@@ -18,27 +19,27 @@ namespace Phezu {
     
     Engine::Engine() : m_HasInited(false), m_IsRunning(false),
         m_FrameCount(0), m_AssetManager(this), m_SceneManager(this),
-        m_Input(this), m_Physics(this), m_Renderer(nullptr),
+        m_Physics(this), m_Renderer(nullptr),
         m_Window(nullptr), m_ScriptEngine(this) {}
     
     int Engine::Init(std::filesystem::path exePath, std::filesystem::path projectPath, const std::string name, int width, int height, int renderScale) {
         if (m_HasInited) {
-            //TODO: Logging
+            Log("Trying to init engine twice");
             exit(1);
         }
 
         if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-            //TODO: Logging::Log("Couldn't initialize SDL: %s\n", SDL_GetError());
+            Log("Couldn't initialize SDL: %s\n", SDL_GetError());
             exit(1);
         }
 
         if (IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG) < 0){
-            //TODO: Logging::Log("Couldn't initialize SDL: %s\n", SDL_GetError());
+            Log("Couldn't initialize SDL Image: %s\n", SDL_GetError());
             exit(1);
         }
 
         if (TTF_Init() < 0) {
-            //TODO: Logging::Log("Failed to init TTF: %s\n", SDL_GetError());
+            Log("Couldn't initialize SDL TTF: %s\n", SDL_GetError());
             exit(1);
         }
 
@@ -64,7 +65,7 @@ namespace Phezu {
     
     void Engine::Run() {
         if (!m_HasInited || m_Window == nullptr || m_Renderer == nullptr) {
-            //TODO: logging file
+            Log("Trying to run non inited engine");
             return;
         }
         
@@ -88,7 +89,7 @@ namespace Phezu {
         
         while (m_IsRunning)
         {
-            if (!m_Input.PollInput())
+            if (!Input::PollInput())
                 break;
             
             renderablesCount = staticsCount = dynamicsCount = 0;
@@ -126,6 +127,7 @@ namespace Phezu {
     }
     
     void Engine::Destroy() {
+        Input::Destroy();
         m_ScriptEngine.Shutdown();
 
         delete m_Renderer;
@@ -134,7 +136,7 @@ namespace Phezu {
     
     std::weak_ptr<const Prefab> Engine::GetPrefab(GUID guid) {
         if (!m_HasInited) {
-            //TODO: Logging
+            Log("Trying to get prefab from non inited engine");
             return std::weak_ptr<const Prefab>();
         }
 
