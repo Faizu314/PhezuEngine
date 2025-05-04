@@ -25,7 +25,7 @@ namespace Phezu {
         SceneManager& GetSceneManager() { return m_SceneManager; }
         AssetManager& GetAssetManager() { return m_AssetManager; }
         ScriptEngine& GetScriptEngine() { return m_ScriptEngine; }
-        const InputData& GetInput() const { return m_Input.GetInput(); }
+        const InputData& GetInput() const { return Input::GetInput(); }
         long long unsigned int GetFrameCount() const { return m_FrameCount; }
         std::filesystem::path GetExePath() const { return m_ExePath; }
         std::filesystem::path GetProjectPath() const { return m_ProjectPath; }
@@ -40,9 +40,9 @@ namespace Phezu {
     private:
         Window* m_Window;
         Renderer* m_Renderer;
-        Input m_Input;
-        SceneManager m_SceneManager;
         Physics m_Physics;
+    private:
+        SceneManager m_SceneManager;
         AssetManager m_AssetManager;
         ScriptEngine m_ScriptEngine;
     private:

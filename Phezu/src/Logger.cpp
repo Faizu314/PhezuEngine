@@ -1,5 +1,13 @@
 #include "Logger.hpp"
 
+#include <iostream>
+
+#if _WIN32
+
+#include <windows.h>
+
+#endif
+
 namespace Phezu {
 
 #if _WIN32

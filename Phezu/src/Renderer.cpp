@@ -5,6 +5,7 @@
 #include "scene/components/ShapeData.hpp"
 #include "scene/components/RenderData.hpp"
 #include "maths/Math.hpp"
+#include "Logger.hpp"
 
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
@@ -50,13 +51,11 @@ namespace Phezu {
     Renderer::Renderer(Engine* engine, const Window& window)
     : m_Engine(engine), m_WorldToSdl(glm::mat3(1, 0, 0, 0, -1,  0,  window.GetWidth() / 2.0,  window.GetHeight() / 2.0, 1))
     {
-        int renderersFlag = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
-
-        m_RendererPtr = SDL_CreateRenderer(window, -1, renderersFlag);
+        m_RendererPtr = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
         if (!m_RendererPtr)
         {
-            //TODO: Logging::Log("Failed to create renderer: %s\n", SDL_GetError());
+            Log("Failed to create renderer: %s\n", SDL_GetError());
             exit(1);
         }
         
@@ -92,7 +91,7 @@ namespace Phezu {
     
     void Renderer::DrawEntities(const std::vector<std::weak_ptr<Entity>>& renderableEntities, size_t count, const Color& bg) {
         int index = 0;
-        for (auto entity : renderableEntities) {
+        for (auto& entity : renderableEntities) {
             if (index >= count)
                 break;
             DrawEntity(entity);

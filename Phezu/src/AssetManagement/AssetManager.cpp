@@ -5,6 +5,7 @@
 #include "scene/Blueprint.hpp"
 #include "scene/Prefab.hpp"
 #include "serialization/FileStream.hpp"
+#include "Logger.hpp"
 #include <filesystem>
 
 namespace Phezu {
@@ -54,7 +55,7 @@ namespace Phezu {
     
     Asset AssetManager::GetSceneAsset(GUID guid) {
         if (m_AssetMap.find(guid) == m_AssetMap.end()) {
-            //TODO: assert
+            Log("Scene Asset with guid: %i not found", guid.Value);
             return Asset();
         }
         if (m_LoadedAssets.find(guid) != m_LoadedAssets.end())
@@ -82,7 +83,7 @@ namespace Phezu {
     
     Asset AssetManager::GetPrefabAsset(GUID guid) {
         if (m_AssetMap.find(guid) == m_AssetMap.end()) {
-            //TODO: assert
+            Log("Prefab Asset with guid: %i not found", guid.Value);
             return Asset();
         }
         if (m_LoadedAssets.find(guid) != m_LoadedAssets.end())
