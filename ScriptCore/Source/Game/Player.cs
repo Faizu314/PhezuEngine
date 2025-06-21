@@ -6,10 +6,12 @@ namespace Game {
     public class Player : BehaviourComponent {
 
         private Transform m_Transform;
+        private PlayerInput m_Input;
 
         public override void OnCreated() {
-            Console.WriteLine("Player.OnCreated | Entity: " + Entity);
             m_Transform = Entity.GetComponent<Transform>();
+            m_Input = Entity.GetComponent<PlayerInput>();
+            Console.WriteLine("Has PlayerInput: " + Entity.HasComponent<PlayerInput>());
         }
 
         public override void OnDestroyed() {

@@ -15,7 +15,22 @@ namespace PhezuEngine {
             if (typeof(T) == typeof(Transform))
                 return (T)(object)new Transform() { Entity = this };
 
-            return null;
+            Type type = typeof(T);
+            IntPtr compPtr = InternalCalls.Entity_GetComponent(ID, type.TypeHandle.Value);
+
+            GCHandle handle = GCHandle.FromIntPtr(compPtr);
+
+            T comp = handle.Target as T;
+
+            return comp;
+        }
+
+        public bool HasComponent<T>() where T : Component {
+            if (typeof(T) == typeof(Transform))
+                return true;
+
+            Type type = typeof(T);
+            return InternalCalls.Entity_HasComponent(ID, type.TypeHandle.Value);
         }
     }
 }

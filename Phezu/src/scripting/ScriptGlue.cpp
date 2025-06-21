@@ -3,6 +3,7 @@
 #include "Engine.hpp"
 #include "scripting/ScriptEngine.hpp"
 #include "scripting/ScriptGlue.hpp"
+#include "scripting/ScriptInstance.hpp"
 
 #include "scene/Scene.hpp"
 #include "scene/Entity.hpp"
@@ -100,18 +101,26 @@ namespace Phezu {
 		return false;
 	}
 
-	MonoObject* Entity_GetComponent(uint64_t entityID, MonoType* monoType) {
+	intptr_t Entity_GetComponent(uint64_t entityID, MonoType* monoType) {
 		auto entity = GetEntity(entityID);
 
 		std::string classFullname;
 		NativeType nativeType = MonoToNativeType(monoType, classFullname);
 
 		if (nativeType != NativeType::ScriptComponent) {
-			Log("Trying to get a native component as a C# class");
-			return nullptr;
+			Log("Trying to get a native component as a C# class\n");
+			return 0;
 		}
 
-		return s_Data->ScriptEngine->GetScriptComponentInstance(entityID, classFullname);
+		ScriptInstance* scriptInstance = 
+			s_Data->ScriptEngine->GetScriptInstance(entityID, classFullname);
+
+		if (scriptInstance == nullptr) {
+			Log("Unable to find script component: %s on entity: %i\n", classFullname.c_str(), entityID);
+			return 0;
+		}
+
+		return scriptInstance->GetMonoGcHandle();
 	}
 
 	void Transform_GetPosition(uint64_t entityID, glm::vec2* position) {
@@ -141,6 +150,8 @@ namespace Phezu {
 	void ScriptGlue::Bind() {
 		mono_add_internal_call("PhezuEngine.InternalCalls::Transform_GetPosition", Transform_GetPosition);
 		mono_add_internal_call("PhezuEngine.InternalCalls::Transform_SetPosition", Transform_SetPosition);
+		mono_add_internal_call("PhezuEngine.InternalCalls::Entity_HasComponent", Entity_HasComponent);
+		mono_add_internal_call("PhezuEngine.InternalCalls::Entity_GetComponent", Entity_GetComponent);
 	}
 
 	void ScriptGlue::Destroy() {

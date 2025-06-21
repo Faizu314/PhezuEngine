@@ -14,6 +14,7 @@ namespace Phezu {
 	class Entity;
 	class ScriptClass;
 	class ScriptComponent;
+	class ScriptInstance;
 	struct EntityInstance;
 
 	class ScriptEngine {
@@ -27,7 +28,7 @@ namespace Phezu {
 		void Shutdown();
 	public:
 		MonoClass* GetBehaviourComponentClass();
-		MonoObject* GetScriptComponentInstance(uint64_t entityID, const std::string& classFullname);
+		ScriptInstance* GetScriptInstance(uint64_t entityID, const std::string& classFullname);
 	private:
 		void InitMono();
 		MonoAssembly* LoadAssembly(const std::string& assemblyPath);
