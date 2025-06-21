@@ -42,7 +42,6 @@ namespace PhezuEngine {
             GCHandle handle = GCHandle.FromIntPtr(ptr);
 
             Entity = handle.Target as Entity;
-            Console.WriteLine("BehaviourComponent.SetEntity | Entity: " + Entity + ", ID: " + Entity.ID);
         }
     }
 }

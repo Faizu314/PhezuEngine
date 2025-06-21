@@ -38,7 +38,6 @@ namespace Phezu {
             m_OnSceneLoaded.insert(std::make_pair(subscriber, delegate));
         }
         void UnsubscribeToOnSceneLoaded(void* subscriber);
-    public:
     private:
         Engine* m_Engine;
     private:

@@ -60,7 +60,7 @@ namespace Phezu {
     }
 
     ScriptEngine::ScriptEngine(Engine* engine) : m_Engine(engine), m_RootDomain(nullptr), 
-        m_AppDomain(nullptr), m_CoreAssembly(nullptr),
+        m_AppDomain(nullptr), m_CoreAssembly(nullptr), m_ObjectGcHandleGetter(nullptr),
         m_EntityIdField(nullptr), m_BehaviourComponentEntitySetter(nullptr) {}
 
     void ScriptEngine::Init() {
@@ -89,7 +89,11 @@ namespace Phezu {
             auto scriptClass = m_ScriptClasses[comp->GetScriptClassFullname()];
             entityInstance->BehaviourScripts.emplace_back(m_AppDomain, scriptClass, m_ObjectGcHandleGetter);
 
-            entityInstance->BehaviourScripts[i].SetGcHandleProperty(m_BehaviourComponentEntitySetter, entityInstance->EntityScript.GetMonoGcHandle());
+            entityInstance->BehaviourScripts[i].SetGcHandleProperty(
+                m_BehaviourComponentEntitySetter, entityInstance->EntityScript.GetMonoGcHandle());
+        }
+
+        for (size_t i = 0; i < compCount; i++) {
             entityInstance->BehaviourScripts[i].InvokeOnCreate();
         }
     }
@@ -212,7 +216,7 @@ namespace Phezu {
         ScriptGlue::Destroy();
     }
 
-    MonoObject* ScriptEngine::GetScriptComponentInstance(uint64_t entityID, const std::string& classFullname) {
+    ScriptInstance* ScriptEngine::GetScriptInstance(uint64_t entityID, const std::string& classFullname) {
         if (m_EntityInstances.find(entityID) == m_EntityInstances.end()) {
             Log("Entity not found");
             return nullptr;
@@ -222,10 +226,10 @@ namespace Phezu {
 
         for (size_t i = 0; i < entityInstance->BehaviourScripts.size(); i++) {
             if (entityInstance->BehaviourScripts[i].GetFullname() == classFullname)
-                return entityInstance->BehaviourScripts[i].GetMonoObject();
+                return &entityInstance->BehaviourScripts[i];
         }
 
-        Log("Script component on Entity not found");
+        Log("Script component on Entity not found\n");
         return nullptr;
     }
 
