@@ -1,5 +1,3 @@
-#pragma once
-
 #include "Engine.hpp"
 #include "scripting/ScriptEngine.hpp"
 #include "scripting/ScriptGlue.hpp"
@@ -148,10 +146,10 @@ namespace Phezu {
 	}
 
 	void ScriptGlue::Bind() {
-		mono_add_internal_call("PhezuEngine.InternalCalls::Transform_GetPosition", Transform_GetPosition);
-		mono_add_internal_call("PhezuEngine.InternalCalls::Transform_SetPosition", Transform_SetPosition);
-		mono_add_internal_call("PhezuEngine.InternalCalls::Entity_HasComponent", Entity_HasComponent);
-		mono_add_internal_call("PhezuEngine.InternalCalls::Entity_GetComponent", Entity_GetComponent);
+		mono_add_internal_call("PhezuEngine.InternalCalls::Transform_GetPosition", reinterpret_cast<const void*>(&Transform_GetPosition));
+		mono_add_internal_call("PhezuEngine.InternalCalls::Transform_SetPosition", reinterpret_cast<const void*>(&Transform_SetPosition));
+		mono_add_internal_call("PhezuEngine.InternalCalls::Entity_HasComponent", reinterpret_cast<const void*>(&Entity_HasComponent));
+		mono_add_internal_call("PhezuEngine.InternalCalls::Entity_GetComponent", reinterpret_cast<const void*>(&Entity_GetComponent));
 	}
 
 	void ScriptGlue::Destroy() {

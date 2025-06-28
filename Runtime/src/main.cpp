@@ -6,7 +6,7 @@ Phezu::Engine& engine = Phezu::CreateEngine();
 #ifdef __APPLE__
 
 int main(int argc, const char* argv[]) {
-    engine.Init(PhezuRuntime::GetProjectPath(argv), "PhezuRuntime", 800, 600);
+    engine.Init(PhezuRuntime::GetExePath(argv), PhezuRuntime::GetProjectPath(argv), "PhezuRuntime", 800, 600);
     
     engine.Run();
 }
