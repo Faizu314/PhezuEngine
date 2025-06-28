@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" 
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>Mono</string>
+    <key>CFBundleIdentifier</key>
+    <string>org.mono.MonoFramework</string>
+    <key>CFBundleVersion</key>
+    <string>6.12.0</string> <!-- or whatever version you're using -->
+    <key>CFBundlePackageType</key>
+    <string>FMWK</string>
+    <key>CFBundleSignature</key>
+    <string>????</string>
+</dict>
+</plist>
