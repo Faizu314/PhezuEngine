@@ -13,6 +13,10 @@ namespace PhezuRuntime {
     std::filesystem::path GetProjectPath(const char* argv[]) {
         return std::filesystem::path(argv[0]).parent_path().parent_path() / "Project";
     }
+    
+    std::filesystem::path GetExePath(const char* argv[]) {
+        return std::filesystem::path(argv[0]).parent_path();
+    }
         
 #elif _WIN32
 

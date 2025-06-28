@@ -1,5 +1,3 @@
-#pragma once
-
 #include "scripting/MonoDefs.hpp"
 #include "scripting/EntityInstance.hpp"
 
