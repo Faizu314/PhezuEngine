@@ -70,6 +70,7 @@ if (APPLE)
         "-framework SDL2"
         "-framework SDL2_image"
         "-framework SDL2_ttf"
+        "-framework Mono"
     )
 elseif (WIN32)
     target_include_directories(Phezu PRIVATE ${CMAKE_SOURCE_DIR}/Phezu/include/windows)

@@ -29,17 +29,17 @@ target_link_libraries(Runtime PRIVATE Phezu)
 
 add_custom_command(TARGET Runtime POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory "${LIB_DEST_PATH}"
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${LIB_SRC_PATH}" "${LIB_DEST_PATH}"
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_ROOT_DIR}"
-                                                 "${LIB_DEST_PATH}"
-)
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${PROJ_DEST_PATH}"
 
+    COMMAND cp -pr "${LIB_SRC_PATH}/" "${LIB_DEST_PATH}"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SRC_DIR}" "${PROJ_DEST_PATH}"
+)
 
 if (WIN32)
     add_custom_command(TARGET Runtime POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E make_directory "${LIB_DEST_PATH}/mono"
         COMMAND ${CMAKE_COMMAND} -E copy_directory 
-            "${CMAKE_SOURCE_DIR}/Vendor/Windows/mono"
+            "${MONO_CORE_NAMESPACES_SRC_PATH}"
             "${LIB_DEST_PATH}/mono"
     )
 endif()

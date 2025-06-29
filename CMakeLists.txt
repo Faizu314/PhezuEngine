@@ -3,7 +3,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 project(PhezuEngine)
 
-set(PROJECT_ROOT_DIR "${CMAKE_SOURCE_DIR}/Projects/Default" CACHE PATH "Root directory of the project")
+set(PROJECT_SRC_DIR "${CMAKE_SOURCE_DIR}/Projects/Default" CACHE PATH "Root directory of the project")
 
 if (NOT DEFINED PROCESSOR_COUNT)
     set(PROCESSOR_COUNT 1)
@@ -17,10 +17,16 @@ endif()
 
 if (APPLE)
     set(LIB_SRC_PATH "${CMAKE_SOURCE_DIR}/Phezu/lib/mac" CACHE INTERNAL "")
-    set(LIB_DEST_PATH "${CMAKE_CFG_INTDIR}/Runtime.app/Contents/Frameworks" CACHE INTERNAL "")
+    set(LIB_DEST_PATH "$<TARGET_FILE_DIR:Runtime>/../Frameworks" CACHE INTERNAL "")
+    set(PROJ_DEST_PATH "$<TARGET_FILE_DIR:Runtime>/../Project" CACHE INTERNAL "")
+    set(MONO_CORE_NAMESPACES_SRC_PATH "$<TARGET_FILE_DIR:Runtime>/../Frameworks/Mono.Framework/Libraries/mono" CACHE INTERNAL "")
+    set(SCRIPT_CORE_DLL_PATH "$<TARGET_FILE_DIR:Runtime>/../Mono" CACHE INTERNAL "")
 elseif (WIN32)
     set(LIB_SRC_PATH "${CMAKE_SOURCE_DIR}/Phezu/lib/windows" CACHE INTERNAL "")
     set(LIB_DEST_PATH "$<TARGET_FILE_DIR:Runtime>" CACHE INTERNAL "")
+    set(PROJ_DEST_PATH "$<TARGET_FILE_DIR:Runtime>" CACHE INTERNAL "")
+    set(MONO_CORE_NAMESPACES_SRC_PATH "${CMAKE_SOURCE_DIR}/Vendor/Windows/mono" CACHE INTERNAL "")
+    set(SCRIPT_CORE_DLL_PATH "${LIB_DEST_PATH}/Phezu-ScriptCore.dll" CACHE INTERNAL "")
 endif()
 
 add_subdirectory(Phezu)
