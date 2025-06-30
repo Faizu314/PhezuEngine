@@ -1,12 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <AssemblyName>Phezu-ScriptCore</AssemblyName>
     <TargetFramework>netstandard2.1</TargetFramework>
     <RootNamespace>PhezuEngine</RootNamespace>
     <LangVersion>latest</LangVersion>
-    <OutputPath>$(OutputPath)</OutputPath>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    <AssemblyName>Phezu-ScriptCore</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
