@@ -2,23 +2,20 @@ project(ScriptCore)
 
 find_program(DOTNET_EXE dotnet REQUIRED)
 
-set(SCRIPTCORE_CONFIG "Release")
-set(SCRIPTCORE_OUTPUT_DIR "${CMAKE_BINARY_DIR}/ScriptCore/Build")
-
-add_custom_target(ScriptCore ALL
-    COMMAND ${DOTNET_EXE} build ScriptCore.csproj
-            -c ${SCRIPTCORE_CONFIG}
-            -o ${SCRIPTCORE_OUTPUT_DIR}/bin
-            -p:BaseIntermediateOutputPath=${SCRIPTCORE_OUTPUT_DIR}/obj/
+add_custom_target(Phezu-ScriptCore ALL
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMAND ${CMAKE_COMMAND} -E echo "Building ScriptCore .NET project..."
+
+    COMMAND ${DOTNET_EXE} build ScriptCore.csproj
+            -c "Release"
+            -o ${CMAKE_BINARY_DIR}/ScriptCore/Build/bin
+            -p:BaseIntermediateOutputPath=${CMAKE_BINARY_DIR}/ScriptCore/Build/obj/
 )
 
-add_custom_command(TARGET ScriptCore POST_BUILD
+add_custom_command(TARGET Phezu-ScriptCore POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory "${SCRIPT_CORE_DLL_PATH}"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different 
-        "${CMAKE_BINARY_DIR}/ScriptCore/Build/bin/ScriptCore.dll"
+        "${CMAKE_BINARY_DIR}/ScriptCore/Build/bin/Phezu-ScriptCore.dll"
         "${SCRIPT_CORE_DLL_PATH}/Phezu-ScriptCore.dll"
 )
 
-add_dependencies(ScriptCore Runtime)
+add_dependencies(Phezu-ScriptCore Runtime)
