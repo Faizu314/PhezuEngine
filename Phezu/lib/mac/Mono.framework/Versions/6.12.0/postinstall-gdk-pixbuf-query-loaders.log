@@ -1,1 +1,0 @@
-g_module_open() failed for /Library/Frameworks/Mono.framework/Versions/6.12.0/lib/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-svg.so: dlopen(/Library/Frameworks/Mono.framework/Versions/6.12.0/lib/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-svg.so, 0x000A): symbol not found in flat namespace '_OBJC_CLASS_$_NSFont'

@@ -1,2 +1,0 @@
-#!/bin/sh
-mono /Library/Frameworks/Mono.framework/Versions/6.12.0/lib/gtk-sharp-2.0/gapi-fixup.exe "$@"
