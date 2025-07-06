@@ -51,6 +51,7 @@ namespace Phezu {
         m_AssetManager.Init(m_ProjectPath);
         m_SceneManager.Init();
         m_ScriptEngine.Init();
+        Input::Init();
         
         return 0;
     }
@@ -132,6 +133,10 @@ namespace Phezu {
 
         delete m_Renderer;
         delete m_Window;
+        
+        TTF_Quit();
+        IMG_Quit();
+        SDL_Quit();
     }
     
     std::weak_ptr<const Prefab> Engine::GetPrefab(GUID guid) {
