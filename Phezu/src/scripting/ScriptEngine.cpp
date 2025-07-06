@@ -69,7 +69,11 @@ namespace Phezu {
         ScriptGlue::Init(m_Engine, this);
         ScriptGlue::Bind();
         
+#if __APPLE__
+        std::filesystem::path phezuCoreAssemblyPath = m_Engine->GetExePath().parent_path() / "MonoAssemblies" / "Phezu-ScriptCore.dll";
+#elif _WIN32
         std::filesystem::path phezuCoreAssemblyPath = m_Engine->GetExePath() / "Phezu-ScriptCore.dll";
+#endif
 
         m_CoreAssembly = LoadAssembly(phezuCoreAssemblyPath.string());
 
@@ -121,7 +125,11 @@ namespace Phezu {
     }
 
     void ScriptEngine::InitMono() {
+#if __APPLE__
+        std::filesystem::path monoCoreAssembliesPath = m_Engine->GetExePath().parent_path() / "MonoCoreLibs" / "mono" / "lib" / "4.5";
+#elif _WIN32
         std::filesystem::path monoCoreAssembliesPath = m_Engine->GetExePath() / "mono" / "lib" / "4.5";
+#endif
 
         m_MonoLogger.Start();
 
@@ -213,6 +221,8 @@ namespace Phezu {
 
     void ScriptEngine::Shutdown() {
         m_MonoLogger.Stop();
+        mono_domain_unload(m_AppDomain);
+        mono_domain_unload(m_RootDomain);
         ScriptGlue::Destroy();
     }
 
