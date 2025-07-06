@@ -29,8 +29,9 @@
 *.out
 *.app
 
-# Exclude .exe files in the Vendor/Windows/CMake/bin
+# Don't ignore .exe files in the Vendor/Windows/CMake/bin
 !Vendor/Windows/Cmake/bin/*.exe
+!Vendor/Mac/mono/lib/4.5/*.exe
 
 #mac finder
 *.DS_Store

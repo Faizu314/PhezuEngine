@@ -131,7 +131,7 @@ namespace Phezu {
         std::filesystem::path monoCoreAssembliesPath = m_Engine->GetExePath() / "mono" / "lib" / "4.5";
 #endif
 
-        m_MonoLogger.Start();
+        //m_MonoLogger.Start();
 
         mono_trace_set_level_string("debug");
         mono_trace_set_log_handler(MonoLog, nullptr);
@@ -220,9 +220,7 @@ namespace Phezu {
     }
 
     void ScriptEngine::Shutdown() {
-        m_MonoLogger.Stop();
-        mono_domain_unload(m_AppDomain);
-        mono_domain_unload(m_RootDomain);
+        //m_MonoLogger.Stop();
         ScriptGlue::Destroy();
     }
 

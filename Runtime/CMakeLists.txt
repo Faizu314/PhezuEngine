@@ -31,15 +31,13 @@ add_custom_command(TARGET Runtime POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory "${LIB_DEST_PATH}"
     COMMAND ${CMAKE_COMMAND} -E make_directory "${PROJ_DEST_PATH}"
 
-    COMMAND cp -pr "${LIB_SRC_PATH}/" "${LIB_DEST_PATH}"
+    COMMAND rsync -a --links "${LIB_SRC_PATH}/" "${LIB_DEST_PATH}"
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SRC_DIR}" "${PROJ_DEST_PATH}"
 )
 
-if (WIN32)
-    add_custom_command(TARGET Runtime POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E make_directory "${LIB_DEST_PATH}/mono"
-        COMMAND ${CMAKE_COMMAND} -E copy_directory 
-            "${MONO_CORE_NAMESPACES_SRC_PATH}"
-            "${LIB_DEST_PATH}/mono"
-    )
-endif()
+add_custom_command(TARGET Runtime POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${MONO_CORE_LIBS_DEST_PATH}"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory 
+        "${MONO_CORE_LIBS_SRC_PATH}"
+        "${MONO_CORE_LIBS_DEST_PATH}"
+)
