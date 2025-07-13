@@ -130,8 +130,10 @@ namespace Phezu {
 #elif _WIN32
         std::filesystem::path monoCoreAssembliesPath = m_Engine->GetExePath() / "mono" / "lib" / "4.5";
 #endif
-
-        //m_MonoLogger.Start();
+        
+#if _WIN32
+        m_MonoLogger.Start();
+#endif
 
         mono_trace_set_level_string("debug");
         mono_trace_set_log_handler(MonoLog, nullptr);
