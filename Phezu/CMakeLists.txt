@@ -66,7 +66,7 @@ source_group("Source Files\\Scripting" FILES ${PHEZU_SCRIPTING_SOURCES})
 if (APPLE)
     target_include_directories(Phezu PRIVATE ${CMAKE_SOURCE_DIR}/Phezu/include/mac)
     target_link_libraries(Phezu PRIVATE
-        "-F${LIB_SRC_PATH}"
+        "-F${LIB_SRC_DIR}"
         "-framework SDL2"
         "-framework SDL2_image"
         "-framework SDL2_ttf"
@@ -75,9 +75,9 @@ if (APPLE)
 elseif (WIN32)
     target_include_directories(Phezu PRIVATE ${CMAKE_SOURCE_DIR}/Phezu/include/windows)
     target_link_libraries(Phezu PRIVATE
-        "${LIB_SRC_PATH}/SDL2.lib"
-        "${LIB_SRC_PATH}/SDL2_image.lib"
-        "${LIB_SRC_PATH}/SDL2_ttf.lib"
-        "${LIB_SRC_PATH}/mono-2.0-sgen.lib"
+        "${LIB_SRC_DIR}/SDL2.lib"
+        "${LIB_SRC_DIR}/SDL2_image.lib"
+        "${LIB_SRC_DIR}/SDL2_ttf.lib"
+        "${LIB_SRC_DIR}/mono-2.0-sgen.lib"
     )
 endif()
