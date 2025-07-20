@@ -19,13 +19,6 @@
 
 namespace Phezu {
 
-    void MonoLog(const char* log_domain, const char* log_level, const char* message, mono_bool fatal, void* userData) {
-        Log("Domain : %s\n", log_domain);
-        Log("Level  : %s\n", log_level);
-        Log("Message: %s\n", message);
-        Log("Fatal  : %s\n\n", fatal ? "true" : "false");
-    }
-
     char* ReadBytes(const std::string& filepath, uint32_t* outSize) {
         std::ifstream stream(filepath, std::ios::binary | std::ios::ate);
 
@@ -65,8 +58,11 @@ namespace Phezu {
 
     void ScriptEngine::Init() {
         InitMono();
+        
+        m_MonoLogger.Init();
 
         ScriptGlue::Init(m_Engine, this);
+        
         ScriptGlue::Bind();
 
         std::filesystem::path scriptCoreDllPath = m_Engine->GetScriptCoreDllPath() / "Phezu-ScriptCore.dll";
@@ -121,12 +117,6 @@ namespace Phezu {
     }
 
     void ScriptEngine::InitMono() {
-#if _WIN32
-        m_MonoLogger.Start();
-#endif
-
-        mono_trace_set_level_string("debug");
-        mono_trace_set_log_handler(MonoLog, nullptr);
         mono_set_assemblies_path(m_Engine->GetMonoCoreLibsPath().c_str());
 
         m_RootDomain = mono_jit_init("MyScriptRuntime");
@@ -212,7 +202,7 @@ namespace Phezu {
     }
 
     void ScriptEngine::Shutdown() {
-        //m_MonoLogger.Stop();
+        m_MonoLogger.Destroy();
         ScriptGlue::Destroy();
     }
 
