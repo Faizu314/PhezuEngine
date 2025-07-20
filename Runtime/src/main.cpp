@@ -3,10 +3,27 @@
 
 Phezu::Engine& engine = Phezu::CreateEngine();
 
+Phezu::EngineConfig engineConfig {
+    .Name = "PhezuRuntime",
+    .ResolutionSettings = {
+        .Width = 800,
+        .Height = 600,
+        .RenderScale = 1
+    }
+};
+
 #ifdef __APPLE__
 
 int main(int argc, const char* argv[]) {
-    engine.Init(PhezuRuntime::GetExePath(argv), PhezuRuntime::GetProjectPath(argv), "PhezuRuntime", 800, 600);
+    engineConfig.AllPaths = {
+        .ExePath = PhezuRuntime::GetExePath(argv),
+        .ProjectPath = PhezuRuntime::GetProjectPath(argv),
+        .ScriptCoreDllPath = PhezuRuntime::GetScriptCoreDllPath(argv),
+        .MonoCoreLibsPath = PhezuRuntime::GetMonoCoreLibsPath(argv)
+    };
+    
+    if (engine.Init(engineConfig) != 0)
+        return 1;
     
     engine.Run();
 }

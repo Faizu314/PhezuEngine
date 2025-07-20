@@ -22,31 +22,33 @@ namespace Phezu {
         m_Physics(this), m_Renderer(nullptr),
         m_Window(nullptr), m_ScriptEngine(this) {}
     
-    int Engine::Init(std::filesystem::path exePath, std::filesystem::path projectPath, const std::string name, int width, int height, int renderScale) {
+    int Engine::Init(EngineConfig& config) {
         if (m_HasInited) {
             Log("Trying to init engine twice");
-            exit(1);
+            return 1;
         }
 
         if (SDL_Init(SDL_INIT_VIDEO) < 0) {
             Log("Couldn't initialize SDL: %s\n", SDL_GetError());
-            exit(1);
+            return 2;
         }
 
         if (IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG) < 0){
             Log("Couldn't initialize SDL Image: %s\n", SDL_GetError());
-            exit(1);
+            return 3;
         }
 
         if (TTF_Init() < 0) {
             Log("Couldn't initialize SDL TTF: %s\n", SDL_GetError());
-            exit(1);
+            return 4;
         }
 
         m_HasInited = true;
-        m_ExePath = exePath;
-        m_ProjectPath = projectPath;
-        m_Window = new Window(name, width, height, renderScale);
+        m_ExePath = config.AllPaths.ExePath;
+        m_ProjectPath = config.AllPaths.ProjectPath;
+        m_ScriptCoreDllPath = config.AllPaths.ScriptCoreDllPath;
+        m_MonoCoreLibsPath = config.AllPaths.MonoCoreLibsPath;
+        m_Window = new Window(config.Name, config.ResolutionSettings.Width, config.ResolutionSettings.Height, config.ResolutionSettings.RenderScale);
         m_Renderer = new Renderer(this, *m_Window);
         m_AssetManager.Init(m_ProjectPath);
         m_SceneManager.Init();

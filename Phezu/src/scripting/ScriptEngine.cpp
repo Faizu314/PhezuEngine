@@ -31,7 +31,7 @@ namespace Phezu {
 
         if (!stream)
         {
-            // Failed to open the file
+            Log("Failed to read file at path: %s\n", filepath.c_str());
             return nullptr;
         }
 
@@ -41,7 +41,7 @@ namespace Phezu {
 
         if (size == 0)
         {
-            // File is empty
+            Log("Trying to read an empty file at path: %s\n", filepath.c_str());
             return nullptr;
         }
 
@@ -68,14 +68,10 @@ namespace Phezu {
 
         ScriptGlue::Init(m_Engine, this);
         ScriptGlue::Bind();
-        
-#if __APPLE__
-        std::filesystem::path phezuCoreAssemblyPath = m_Engine->GetExePath().parent_path() / "MonoAssemblies" / "Phezu-ScriptCore.dll";
-#elif _WIN32
-        std::filesystem::path phezuCoreAssemblyPath = m_Engine->GetExePath() / "Phezu-ScriptCore.dll";
-#endif
 
-        m_CoreAssembly = LoadAssembly(phezuCoreAssemblyPath.string());
+        std::filesystem::path scriptCoreDllPath = m_Engine->GetScriptCoreDllPath() / "Phezu-ScriptCore.dll";
+        
+        m_CoreAssembly = LoadAssembly(scriptCoreDllPath.string());
 
         GetScriptClasses();
     }
@@ -125,19 +121,13 @@ namespace Phezu {
     }
 
     void ScriptEngine::InitMono() {
-#if __APPLE__
-        std::filesystem::path monoCoreAssembliesPath = m_Engine->GetExePath().parent_path() / "MonoCoreLibs" / "mono" / "lib" / "4.5";
-#elif _WIN32
-        std::filesystem::path monoCoreAssembliesPath = m_Engine->GetExePath() / "mono" / "lib" / "4.5";
-#endif
-        
 #if _WIN32
         m_MonoLogger.Start();
 #endif
 
         mono_trace_set_level_string("debug");
         mono_trace_set_log_handler(MonoLog, nullptr);
-        mono_set_assemblies_path(monoCoreAssembliesPath.string().c_str());
+        mono_set_assemblies_path(m_Engine->GetMonoCoreLibsPath().c_str());
 
         m_RootDomain = mono_jit_init("MyScriptRuntime");
         if (m_RootDomain == nullptr)
