@@ -13,6 +13,7 @@
 #include "mono/metadata/assembly.h"
 #include "mono/metadata/debug-helpers.h"
 #include "mono/metadata/mono-config.h"
+#include <mono/metadata/object.h>
 #include "mono/utils/mono-logger.h"
 
 #include <fstream>
@@ -105,6 +106,16 @@ namespace Phezu {
 
         m_EntityInstances.erase(entity->GetEntityID());
     }
+    
+    void ScriptEngine::PreUpdate() {
+        bool a = m_Engine->GetInput().A;
+        
+        mono_field_static_set_value(m_InputClassVTable, m_InputFields.W, (void*)&(m_Engine->GetInput().W));
+        mono_field_static_set_value(m_InputClassVTable, m_InputFields.A, (void*)&(m_Engine->GetInput().A));
+        mono_field_static_set_value(m_InputClassVTable, m_InputFields.S, (void*)&(m_Engine->GetInput().S));
+        mono_field_static_set_value(m_InputClassVTable, m_InputFields.D, (void*)&(m_Engine->GetInput().D));
+        mono_field_static_set_value(m_InputClassVTable, m_InputFields.Space, (void*)&(m_Engine->GetInput().Space));
+    }
 
     void ScriptEngine::OnUpdate(float deltaTime) {
         for (auto it = m_EntityInstances.begin(); it != m_EntityInstances.end(); it++) {
@@ -151,7 +162,7 @@ namespace Phezu {
 
         return assembly;
     }
-
+    
     void ScriptEngine::GetScriptClasses() {
         MonoImage* image = mono_assembly_get_image(m_CoreAssembly);
         const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
@@ -163,7 +174,7 @@ namespace Phezu {
         m_EntityIdField = m_EntityClass->GetMonoClassField("ID");
         m_BehaviourComponentClass = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "BehaviourComponent", ScriptClassType::BehaviourComponent);
         m_BehaviourComponentEntitySetter = m_BehaviourComponentClass->GetMonoMethod("SetEntity", 1);
-
+        
         for (int32_t i = 0; i < numTypes; i++)
         {
             uint32_t cols[MONO_TYPEDEF_SIZE];
@@ -182,6 +193,20 @@ namespace Phezu {
             std::string fullname = GetMonoClassFullname(nameSpace, name);
             m_ScriptClasses.insert(std::make_pair(fullname, monoClass));
         }
+        
+        GetInputClassAndFields();
+    }
+    
+    void ScriptEngine::GetInputClassAndFields() {
+        std::shared_ptr<ScriptClass> inputClass = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "Input", ScriptClassType::CSharpClass);
+        m_InputClassVTable = mono_class_vtable(m_AppDomain, inputClass->GetMonoClass());
+        mono_runtime_class_init(m_InputClassVTable);
+        
+        m_InputFields.W = inputClass->GetMonoClassField("_W");
+        m_InputFields.A = inputClass->GetMonoClassField("_A");
+        m_InputFields.S = inputClass->GetMonoClassField("_S");
+        m_InputFields.D = inputClass->GetMonoClassField("_D");
+        m_InputFields.Space = inputClass->GetMonoClassField("_Space");
     }
 
     void ScriptEngine::PrintAssemblyClasses(MonoAssembly* assembly) {

@@ -10,12 +10,11 @@ namespace Phezu {
 		//Engine types
 		Object,
 		Entity,
-		Component,
 		BehaviourComponent,
+        CSharpClass,
 
 		//User types
 		ScriptComponent,
-		CSharpClass,
 	};
 
 	class ScriptClass {

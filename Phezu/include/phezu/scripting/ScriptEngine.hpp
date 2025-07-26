@@ -5,7 +5,6 @@
 
 #include <string>
 #include <unordered_map>
-#include <vector>
 
 namespace Phezu {
 
@@ -16,7 +15,11 @@ namespace Phezu {
 	class ScriptComponent;
 	class ScriptInstance;
 	struct EntityInstance;
-
+    
+    struct InputFields {
+        MonoClassField *W, *A, *S, *D, *Space;
+    };
+    
 	class ScriptEngine {
 	public:
 		ScriptEngine(Engine* engine);
@@ -24,6 +27,7 @@ namespace Phezu {
 		void Init();
 		void OnEntityCreated(std::shared_ptr<Entity> entity);
 		void OnEntityDestroyed(std::shared_ptr<Entity> entity);
+        void PreUpdate();
 		void OnUpdate(float deltaTime);
 		void Shutdown();
 	public:
@@ -32,6 +36,7 @@ namespace Phezu {
 	private:
 		void InitMono();
 		MonoAssembly* LoadAssembly(const std::string& assemblyPath);
+        void GetInputClassAndFields();
 		void GetScriptClasses();
 		void PrintAssemblyClasses(MonoAssembly* assembly);
 	private:
@@ -44,6 +49,9 @@ namespace Phezu {
 		std::shared_ptr<ScriptClass> m_ObjectClass;
 		std::shared_ptr<ScriptClass> m_EntityClass;
 		std::shared_ptr<ScriptClass> m_BehaviourComponentClass;
+    private:
+        MonoVTable* m_InputClassVTable;
+        InputFields m_InputFields;
 	private:
 		MonoMethod* m_ObjectGcHandleGetter;
 		MonoClassField* m_EntityIdField;
