@@ -120,6 +120,8 @@ namespace Phezu {
         SetParentInternal(m_Scene->GetEntity(m_EntityID), parent);
     }
     
+    //TODO: I need an internal AddChild(Entity* other) function. Don't need to use scene to get me a smart pointer of this
+    
     void SetParentInternal(std::weak_ptr<Entity> _this, std::weak_ptr<Entity> parent) {
         auto _thisL = _this.lock();
         if (auto parentL = parent.lock()) {
@@ -130,7 +132,7 @@ namespace Phezu {
     }
     
     void Entity::RemoveParent() {
-        
+        //TODO: 
     }
     
     void Entity::OnDestroyed() {

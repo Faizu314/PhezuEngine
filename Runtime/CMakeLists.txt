@@ -30,7 +30,7 @@ endif()
 add_custom_command(
     OUTPUT "${RUNTIME_DEFINES_HEADER}"
     COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/Runtime/Generated"
-    COMMAND ${CMAKE_COMMAND} -E echo_append "#pragma once\n" > "${RUNTIME_DEFINES_HEADER}"
+    COMMAND ${CMAKE_COMMAND} -E echo_append "#pragma once\n\n" > "${RUNTIME_DEFINES_HEADER}"
     COMMAND ${CMAKE_COMMAND} -E echo_append "#define SCRIPT_CORE_DLL_RELATIVE_PATH \"${SCRIPT_CORE_DLL_RELATIVE_PATH}\"\n" >> "${RUNTIME_DEFINES_HEADER}"
     COMMAND ${CMAKE_COMMAND} -E echo_append "#define MONO_CORE_LIBS_RELATIVE_PATH \"${MONO_CORE_LIBS_RELATIVE_PATH}\"\n" >> "${RUNTIME_DEFINES_HEADER}"
     VERBATIM

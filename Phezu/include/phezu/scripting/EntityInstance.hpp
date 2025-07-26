@@ -4,7 +4,6 @@
 #include "scripting/ScriptClass.hpp"
 #include "scripting/ScriptInstance.hpp"
 
-#include <string>
 #include <vector>
 
 namespace Phezu {

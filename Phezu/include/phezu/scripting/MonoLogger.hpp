@@ -1,8 +1,8 @@
 #pragma once
 
+#if defined(_WIN32)
 #include <thread>
 #include <atomic>
-#if defined(_WIN32)
 #include <Windows.h>
 #endif
 
