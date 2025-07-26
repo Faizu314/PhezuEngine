@@ -11,7 +11,6 @@ namespace Game {
         public override void OnCreated() {
             m_Transform = Entity.GetComponent<Transform>();
             m_Input = Entity.GetComponent<PlayerInput>();
-            Console.WriteLine("Has PlayerInput: " + Entity.HasComponent<PlayerInput>());
         }
 
         public override void OnDestroyed() {
@@ -19,7 +18,7 @@ namespace Game {
         }
 
         public override void OnUpdate(float deltaTime) {
-            m_Transform.Position = m_Transform.Position + new Vector2(10f * deltaTime, 0f);
+            m_Transform.Position = m_Transform.Position + new Vector2(m_Input.MoveDir.X * 50f * deltaTime, m_Input.MoveDir.Y * 50f * deltaTime);
         }
     }
 }

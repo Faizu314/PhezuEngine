@@ -6,20 +6,27 @@ namespace Game {
     public class PlayerInput : BehaviourComponent {
 
         public Vector2 MoveDir;
-        public float InitedStatically = 0.45f;
-        public float InitedOnCreate;
 
         public override void OnCreated() {
-            InitedOnCreate = 0.245f;
-            Console.WriteLine("PlayerInput.OnCreated | Entity: " + Entity);
+
         }
 
         public override void OnDestroyed() {
-            Console.WriteLine("PlayerInput.OnDestroyed");
+
         }
 
         public override void OnUpdate(float deltaTime) {
+            MoveDir.X = 0f;
+            MoveDir.Y = 0f;
 
+            if (Input.W)
+                MoveDir.Y++;
+            if (Input.A)
+                MoveDir.X--;
+            if (Input.S)
+                MoveDir.Y--;
+            if (Input.D)
+                MoveDir.X++;
         }
     }
 }

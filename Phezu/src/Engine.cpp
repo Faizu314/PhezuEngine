@@ -95,6 +95,8 @@ namespace Phezu {
             if (!Input::PollInput())
                 break;
             
+            m_ScriptEngine.PreUpdate();
+            
             renderablesCount = staticsCount = dynamicsCount = 0;
 
             m_Renderer->ClearFrame();
