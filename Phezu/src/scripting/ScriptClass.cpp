@@ -13,7 +13,7 @@ namespace Phezu {
 
 		if (m_Class == nullptr)
 		{
-			Log("Error getting mono class from name");
+			Log("Error getting mono class from name: %s.%s", classNamespace.c_str(), className.c_str());
 		}
 	}
 
