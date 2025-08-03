@@ -1,6 +1,5 @@
 {
-    "Name": "MasterScene",
-    "Guid": 123456789,
+    "Guid": 3,
     "Entries": [
         {
             "FileID": 500,
@@ -8,7 +7,7 @@
             "TypeName": "Entity",
             "Properties": {
                 "Parent": { "Guid": 0, "InstanceID": 0, "FileID": 0 },
-                "Tag": "Obstacle"
+                "Tag": "Brick"
             }
         },
         {
@@ -16,8 +15,8 @@
             "TypeID": 2,
             "TypeName": "TransformData",
             "Properties": {
-                "Parent": { "Guid": 123456789, "InstanceID": 0, "FileID": 500 },
-                "Position": { "x": -100, "y": 0 },
+                "Parent": { "Guid": 3, "InstanceID": 0, "FileID": 500 },
+                "Position": { "x": 0, "y": 0 },
                 "Scale": { "x": 1, "y": 1 }
             }
         },
@@ -26,9 +25,9 @@
             "TypeID": 3,
             "TypeName": "ShapeData",
             "Properties": {
-                "Parent": { "Guid": 123456789, "InstanceID": 0, "FileID": 500 },
+                "Parent": { "Guid": 3, "InstanceID": 0, "FileID": 500 },
                 "Pivot": { "x": 0, "y": 0 },
-                "Size": { "x": 20, "y": 20 }
+                "Size": { "x": 20, "y": 5 }
             }
         },
         {
@@ -36,35 +35,19 @@
             "TypeID": 4,
             "TypeName": "RenderData",
             "Properties": {
-                "Parent": { "Guid": 123456789, "InstanceID": 0, "FileID": 500 },
-                "Tint": { "r": 200, "g": 200, "b": 200, "a": 255 },
+                "Parent": { "Guid": 3, "InstanceID": 0, "FileID": 500 },
+                "Tint": { "r": 200, "g": 0, "b": 0, "a": 255 },
                 "SourceRect": { "X": 0, "Y": 0, "Width": 1, "Height": 1 }
             }
         },
-        {
+	{
             "FileID": 504,
             "TypeID": 5,
             "TypeName": "PhysicsData",
             "Properties": {
-                "Parent": { "Guid": 123456789, "InstanceID": 0, "FileID": 500 },
+                "Parent": { "Guid": 3, "InstanceID": 0, "FileID": 500 },
                 "IsStatic": true,
                 "Velocity": { "x": 0, "y": 0 }
-            }
-        },
-        {
-            "FileID": 505,
-            "TypeID": 7,
-            "TypeName": "PrefabRef",
-            "Properties": {
-                "SourcePrefab": 241,
-		"Parent": 0,
-                "Overrides": {
-		    "EntryOverrides": {
-			"501": {
-			    "Position": { "x": 0, "y": 0 }
-			}
-		    }
-		}
             }
         }
     ]
