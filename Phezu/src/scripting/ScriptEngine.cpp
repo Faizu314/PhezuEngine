@@ -129,7 +129,9 @@ namespace Phezu {
 
     void ScriptEngine::InitMono() {
         mono_set_assemblies_path(m_Engine->GetMonoCoreLibsPath().c_str());
-
+        
+        mono_config_parse(NULL);
+        
         m_RootDomain = mono_jit_init("MyScriptRuntime");
         if (m_RootDomain == nullptr)
         {
