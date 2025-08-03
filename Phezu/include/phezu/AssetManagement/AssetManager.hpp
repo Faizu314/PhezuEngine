@@ -31,6 +31,7 @@ namespace Phezu {
         BuildScenesConfig GetBuildScenesConfig() { return m_BuildScenesConfig; }
     private:
         void LoadAssetMap(const std::filesystem::path& assetsFolder);
+        void LoadAssetsInDirectory(const std::filesystem::path& folder);
         void LoadBuildScenesConfig(const std::filesystem::path& buildScenesConfigPath);
     private:
         std::unordered_map<GUID, AssetRef> m_AssetMap;
