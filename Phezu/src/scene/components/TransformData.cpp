@@ -15,6 +15,7 @@ namespace Phezu {
         glm::vec3 worldPos(position.X(), position.Y(), 1);
         glm::vec3 localPos = glm::inverse(m_LocalToWorld) * worldPos;
         m_LocalPosition.Set(localPos.x, localPos.y);
+        m_IsDirty = true;
     }
     
     Vector2 TransformData::GetWorldPosition() const {

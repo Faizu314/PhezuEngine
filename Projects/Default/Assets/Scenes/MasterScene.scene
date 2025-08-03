@@ -1,0 +1,22 @@
+{
+    "Name": "MasterScene",
+    "Guid": 1,
+    "Entries": [
+        {
+            "FileID": 505,
+            "TypeID": 7,
+            "TypeName": "PrefabRef",
+            "Properties": {
+                "SourcePrefab": 2,
+                "Parent": 0,
+                "Overrides": {
+                "EntryOverrides": {
+                    "501": {
+                        "Position": { "x": 0, "y": -200 }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
