@@ -46,6 +46,8 @@ target_link_libraries(Runtime PRIVATE Phezu)
 add_custom_command(TARGET Runtime POST_BUILD
     DEPENDS "${RUNTIME_DEFINES_HEADER}"
 
+    COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJ_DEST_DIR}"
+    
     COMMAND ${CMAKE_COMMAND} -E make_directory "${LIB_DEST_DIR}"
     COMMAND ${CMAKE_COMMAND} -E make_directory "${PROJ_DEST_DIR}"
     COMMAND ${CMAKE_COMMAND} -E make_directory "${MONO_CORE_LIBS_DEST_DIR}"

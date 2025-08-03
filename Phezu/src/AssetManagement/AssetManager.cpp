@@ -26,7 +26,17 @@ namespace Phezu {
     }
     
     void AssetManager::LoadAssetMap(const std::filesystem::path& assetsFolder) {
+        LoadAssetsInDirectory(assetsFolder);
+        
         for (const auto& entry : std::filesystem::directory_iterator(assetsFolder)) {
+            if (entry.is_directory()) {
+                LoadAssetsInDirectory(entry.path());
+            }
+        }
+    }
+    
+    void AssetManager::LoadAssetsInDirectory(const std::filesystem::path& folder) {
+        for (const auto& entry : std::filesystem::directory_iterator(folder)) {
             if (entry.is_regular_file() && entry.path().extension() == ".meta") {
                 FileStreamReader reader(entry.path().string());
                 std::string metaDataString;
