@@ -31,6 +31,20 @@ namespace PhezuEngine {
             }
         }
     }
+    
+    public class Physics : Component {
+        public Vector2 Velocity {
+            get {
+                InternalCalls.Physics_GetVelocity(Entity.ID, out Vector2 velocity);
+                return velocity;
+            }
+
+            set {
+                InternalCalls.Physics_SetVelocity(Entity.ID, ref value);
+            }
+        }
+    
+    }
 
     public abstract class BehaviourComponent : Component {
         public abstract void OnCreated();

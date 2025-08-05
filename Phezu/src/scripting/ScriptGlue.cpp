@@ -4,6 +4,7 @@
 #include "scripting/ScriptInstance.hpp"
 
 #include "scene/Scene.hpp"
+#include "scene/components/PhysicsData.hpp"
 #include "scene/Entity.hpp"
 #include "maths/Math.hpp"
 
@@ -138,6 +139,24 @@ namespace Phezu {
 			entity->GetTransformData()->SetWorldPosition(Vector2(position->x, position->y));
 		}
 	}
+    
+    void Physics_GetVelocity(uint64_t entityID, glm::vec2* velocity) {
+        std::shared_ptr<Entity> entity = GetEntity(entityID);
+
+        if (entity) {
+            Vector2 vel = entity->GetPhysicsData()->Velocity;
+            velocity->x = vel.X();
+            velocity->y = vel.Y();
+        }
+    }
+
+    void Physics_SetVelocity(uint64_t entityID, glm::vec2* velocity) {
+        std::shared_ptr<Entity> entity = GetEntity(entityID);
+
+        if (entity) {
+            entity->GetPhysicsData()->Velocity = Vector2(velocity->x, velocity->y);
+        }
+    }
 
 	void ScriptGlue::Init(Engine* engine, ScriptEngine* scriptEngine) {
 		s_Data = new Data();
@@ -148,6 +167,8 @@ namespace Phezu {
 	void ScriptGlue::Bind() {
 		mono_add_internal_call("PhezuEngine.InternalCalls::Transform_GetPosition", reinterpret_cast<const void*>(&Transform_GetPosition));
 		mono_add_internal_call("PhezuEngine.InternalCalls::Transform_SetPosition", reinterpret_cast<const void*>(&Transform_SetPosition));
+        mono_add_internal_call("PhezuEngine.InternalCalls::Physics_GetVelocity", reinterpret_cast<const void*>(&Physics_GetVelocity));
+        mono_add_internal_call("PhezuEngine.InternalCalls::Physics_SetVelocity", reinterpret_cast<const void*>(&Physics_SetVelocity));
 		mono_add_internal_call("PhezuEngine.InternalCalls::Entity_HasComponent", reinterpret_cast<const void*>(&Entity_HasComponent));
 		mono_add_internal_call("PhezuEngine.InternalCalls::Entity_GetComponent", reinterpret_cast<const void*>(&Entity_GetComponent));
 	}

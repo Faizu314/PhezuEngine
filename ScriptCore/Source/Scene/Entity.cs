@@ -14,6 +14,8 @@ namespace PhezuEngine {
         {
             if (typeof(T) == typeof(Transform))
                 return (T)(object)new Transform() { Entity = this };
+            if (typeof(T) == typeof(Physics))
+                return (T)(object)new Physics() { Entity = this };
 
             Type type = typeof(T);
             IntPtr compPtr = InternalCalls.Entity_GetComponent(ID, type.TypeHandle.Value);

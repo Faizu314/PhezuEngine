@@ -17,5 +17,11 @@ namespace PhezuEngine {
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static void Transform_SetPosition(ulong entityID, ref Vector2 position);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static void Physics_GetVelocity(ulong entityID, out Vector2 velocity);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static void Physics_SetVelocity(ulong entityID, ref Vector2 velocity);
     }
 }
