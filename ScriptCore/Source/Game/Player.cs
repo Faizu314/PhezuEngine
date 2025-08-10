@@ -7,6 +7,7 @@ namespace Game {
 
         private Transform m_Transform;
         private PlayerInput m_Input;
+        private float m_Speed = 400f;
 
         public override void OnCreated() {
             m_Transform = Entity.GetComponent<Transform>();
@@ -18,7 +19,7 @@ namespace Game {
         }
 
         public override void OnUpdate(float deltaTime) {
-            m_Transform.Position = m_Transform.Position + new Vector2(m_Input.MoveDir.X * 50f * deltaTime, m_Input.MoveDir.Y * 50f * deltaTime);
+            m_Transform.Position = m_Transform.Position + new Vector2(m_Input.MoveDir * m_Speed * deltaTime, 0f);
         }
     }
 }

@@ -4,7 +4,7 @@ namespace Game {
 
     public class PlayerInput : BehaviourComponent {
 
-        public Vector2 MoveDir;
+        public float MoveDir;
 
         public override void OnCreated() {
 
@@ -15,17 +15,12 @@ namespace Game {
         }
 
         public override void OnUpdate(float deltaTime) {
-            MoveDir.X = 0f;
-            MoveDir.Y = 0f;
+            MoveDir = 0f;
 
-            if (Input.W)
-                MoveDir.Y++;
             if (Input.A)
-                MoveDir.X--;
-            if (Input.S)
-                MoveDir.Y--;
+                MoveDir--;
             if (Input.D)
-                MoveDir.X++;
+                MoveDir++;
         }
     }
 }
