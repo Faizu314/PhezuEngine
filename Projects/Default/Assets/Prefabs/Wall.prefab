@@ -1,5 +1,5 @@
 {
-    "Guid": 3,
+    "Guid": 6,
     "Entries": [
         {
             "FileID": 500,
@@ -15,7 +15,7 @@
             "TypeID": 2,
             "TypeName": "TransformData",
             "Properties": {
-                "Parent": { "Guid": 3, "InstanceID": 0, "FileID": 500 },
+                "Parent": { "Guid": 6, "InstanceID": 0, "FileID": 500 },
                 "Position": { "x": 0, "y": 0 },
                 "Scale": { "x": 1, "y": 1 }
             }
@@ -25,9 +25,9 @@
             "TypeID": 3,
             "TypeName": "ShapeData",
             "Properties": {
-                "Parent": { "Guid": 3, "InstanceID": 0, "FileID": 500 },
+                "Parent": { "Guid": 6, "InstanceID": 0, "FileID": 500 },
                 "Pivot": { "x": 0, "y": 0 },
-                "Size": { "x": 40, "y": 15 }
+                "Size": { "x": 1, "y": 1 }
             }
         },
         {
@@ -35,8 +35,8 @@
             "TypeID": 4,
             "TypeName": "RenderData",
             "Properties": {
-                "Parent": { "Guid": 3, "InstanceID": 0, "FileID": 500 },
-                "Tint": { "r": 200, "g": 0, "b": 0, "a": 255 },
+                "Parent": { "Guid": 6, "InstanceID": 0, "FileID": 500 },
+                "Tint": { "r": 0, "g": 0, "b": 0, "a": 0 },
                 "SourceRect": { "X": 0, "Y": 0, "Width": 1, "Height": 1 }
             }
         },
@@ -45,7 +45,7 @@
             "TypeID": 5,
             "TypeName": "PhysicsData",
             "Properties": {
-                "Parent": { "Guid": 3, "InstanceID": 0, "FileID": 500 },
+                "Parent": { "Guid": 6, "InstanceID": 0, "FileID": 500 },
                 "IsStatic": true,
                 "Velocity": { "x": 0, "y": 0 }
             }

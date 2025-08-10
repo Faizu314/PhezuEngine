@@ -27,7 +27,7 @@
             "Properties": {
                 "Parent": { "Guid": 2, "InstanceID": 0, "FileID": 500 },
                 "Pivot": { "x": 0, "y": 0 },
-                "Size": { "x": 20, "y": 5 }
+                "Size": { "x": 40, "y": 10 }
             }
         },
         {
@@ -55,7 +55,7 @@
             "TypeID": 6,
             "TypeName": "Script",
             "Properties": {
-		"Parent": { "Guid": 2, "InstanceID": 0, "FileID": 500 },
+                "Parent": { "Guid": 2, "InstanceID": 0, "FileID": 500 },
                 "Fullname": "Game.Player"
             }
         },
@@ -64,7 +64,7 @@
             "TypeID": 6,
             "TypeName": "Script",
             "Properties": {
-		"Parent": { "Guid": 2, "InstanceID": 0, "FileID": 500 },
+            "Parent": { "Guid": 2, "InstanceID": 0, "FileID": 500 },
                 "Fullname": "Game.PlayerInput"
             }
         }
