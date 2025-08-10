@@ -11,6 +11,7 @@
 #include "Logger.hpp"
 
 #include "glm/glm.hpp"
+#include <mono/jit/jit.h>
 #include "mono/metadata/object.h"
 
 namespace Phezu {
@@ -64,6 +65,13 @@ namespace Phezu {
 		
 		return NativeType::None;
 	}
+    
+    MonoString* Entity_GetTag(uint64_t entityID) {
+        auto entity = GetEntity(entityID);
+        const std::string& tag = entity->GetTag();
+        
+        return mono_string_new(mono_domain_get(), tag.c_str());
+    }
 
 	bool Entity_HasComponent(uint64_t entityID, MonoType* monoType) {
 		auto entity = GetEntity(entityID);
@@ -165,12 +173,15 @@ namespace Phezu {
 	}
 
 	void ScriptGlue::Bind() {
+        mono_add_internal_call("PhezuEngine.InternalCalls::Entity_GetTag", reinterpret_cast<const void*>(&Entity_GetTag));
+        mono_add_internal_call("PhezuEngine.InternalCalls::Entity_HasComponent", reinterpret_cast<const void*>(&Entity_HasComponent));
+        mono_add_internal_call("PhezuEngine.InternalCalls::Entity_GetComponent", reinterpret_cast<const void*>(&Entity_GetComponent));
+        
 		mono_add_internal_call("PhezuEngine.InternalCalls::Transform_GetPosition", reinterpret_cast<const void*>(&Transform_GetPosition));
 		mono_add_internal_call("PhezuEngine.InternalCalls::Transform_SetPosition", reinterpret_cast<const void*>(&Transform_SetPosition));
+        
         mono_add_internal_call("PhezuEngine.InternalCalls::Physics_GetVelocity", reinterpret_cast<const void*>(&Physics_GetVelocity));
         mono_add_internal_call("PhezuEngine.InternalCalls::Physics_SetVelocity", reinterpret_cast<const void*>(&Physics_SetVelocity));
-		mono_add_internal_call("PhezuEngine.InternalCalls::Entity_HasComponent", reinterpret_cast<const void*>(&Entity_HasComponent));
-		mono_add_internal_call("PhezuEngine.InternalCalls::Entity_GetComponent", reinterpret_cast<const void*>(&Entity_GetComponent));
 	}
 
 	void ScriptGlue::Destroy() {

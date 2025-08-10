@@ -7,7 +7,7 @@
             "TypeName": "Entity",
             "Properties": {
                 "Parent": { "Guid": 0, "InstanceID": 0, "FileID": 0 },
-                "Tag": "Brick"
+                "Tag": "Wall"
             }
         },
         {

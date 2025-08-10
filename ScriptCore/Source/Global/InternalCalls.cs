@@ -7,6 +7,9 @@ namespace PhezuEngine {
     public static class InternalCalls {
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static string Entity_GetTag(ulong entityID);
+        
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
         internal extern static bool Entity_HasComponent(ulong entityID, IntPtr componentType);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
