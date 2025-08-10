@@ -18,10 +18,6 @@ namespace Phezu {
         PhysicsData(Entity* entity, bool isStatic) : DataComponent(entity), m_IsStatic(isStatic) {}
     public:
         bool IsStatic() const { return m_IsStatic; }
-    private:
-        void OnCollisionEnter(const Collision& collision);
-        void OnCollisionStay(const Collision& collision);
-        void OnCollisionExit(const Collision& collision);
     public:
         Vector2 Velocity;
     private:

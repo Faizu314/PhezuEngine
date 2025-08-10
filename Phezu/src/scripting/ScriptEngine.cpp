@@ -71,6 +71,7 @@ namespace Phezu {
         m_CoreAssembly = LoadAssembly(scriptCoreDllPath.string());
 
         GetScriptClasses();
+        PrintAssemblyClasses(m_CoreAssembly);
     }
 
     void ScriptEngine::OnEntityCreated(std::shared_ptr<Entity> entity) {
@@ -83,10 +84,11 @@ namespace Phezu {
 
         for (size_t i = 0; i < compCount; i++) {
             ScriptComponent* comp = entity->GetScriptComponent(i);
+            //TODO: Log error if script class not found
             auto scriptClass = m_ScriptClasses[comp->GetScriptClassFullname()];
             entityInstance->BehaviourScripts.emplace_back(m_AppDomain, scriptClass, m_ObjectGcHandleGetter);
 
-            entityInstance->BehaviourScripts[i].SetGcHandleProperty(
+            entityInstance->BehaviourScripts[i].SetEntityProperty(
                 m_BehaviourComponentEntitySetter, entityInstance->EntityScript.GetMonoGcHandle());
         }
 
@@ -209,6 +211,29 @@ namespace Phezu {
         m_InputFields.S = inputClass->GetMonoClassField("_S");
         m_InputFields.D = inputClass->GetMonoClassField("_D");
         m_InputFields.Space = inputClass->GetMonoClassField("_Space");
+    }
+    
+    void ScriptEngine::FirePhysicsCollisionEvent(uint64_t entityA, uint64_t entityB, PhysicsEventType eventType) {
+        auto entityInstanceA = m_EntityInstances[entityA];
+        auto entityInstanceB = m_EntityInstances[entityB];
+        
+        for (size_t i = 0; i < entityInstanceA->BehaviourScripts.size(); i++) {
+            if (eventType == PhysicsEventType::CollisionEnter)
+                entityInstanceA->BehaviourScripts[i].TryInvokeOnCollisionEnter(entityInstanceB->EntityScript.GetMonoGcHandle());
+            else if (eventType == PhysicsEventType::CollisionStay)
+                entityInstanceA->BehaviourScripts[i].TryInvokeOnCollisionStay(entityInstanceB->EntityScript.GetMonoGcHandle());
+            else if (eventType == PhysicsEventType::CollisionExit)
+                entityInstanceA->BehaviourScripts[i].TryInvokeOnCollisionExit(entityInstanceB->EntityScript.GetMonoGcHandle());
+        }
+        
+        for (size_t i = 0; i < entityInstanceB->BehaviourScripts.size(); i++) {
+            if (eventType == PhysicsEventType::CollisionEnter)
+                entityInstanceB->BehaviourScripts[i].TryInvokeOnCollisionEnter(entityInstanceA->EntityScript.GetMonoGcHandle());
+            else if (eventType == PhysicsEventType::CollisionStay)
+                entityInstanceB->BehaviourScripts[i].TryInvokeOnCollisionStay(entityInstanceA->EntityScript.GetMonoGcHandle());
+            else if (eventType == PhysicsEventType::CollisionExit)
+                entityInstanceB->BehaviourScripts[i].TryInvokeOnCollisionExit(entityInstanceA->EntityScript.GetMonoGcHandle());
+        }
     }
 
     void ScriptEngine::PrintAssemblyClasses(MonoAssembly* assembly) {

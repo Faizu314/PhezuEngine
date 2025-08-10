@@ -1,4 +1,5 @@
 #include "Physics.hpp"
+#include "Engine.hpp"
 #include "scene/Entity.hpp"
 #include "scene/components/PhysicsData.hpp"
 #include "scene/components/ShapeData.hpp"
@@ -215,12 +216,10 @@ namespace Phezu {
         Collision cB(ap);
         
         if (WereColliding(ap, bp)) {
-            ap->OnCollisionStay(cA);
-            bp->OnCollisionStay(cB);
+            m_Engine->GetScriptEngine().FirePhysicsCollisionEvent(a->GetEntityID(), b->GetEntityID(), PhysicsEventType::CollisionStay);
         }
         else {
-            ap->OnCollisionEnter(cA);
-            bp->OnCollisionEnter(cB);
+            m_Engine->GetScriptEngine().FirePhysicsCollisionEvent(a->GetEntityID(), b->GetEntityID(), PhysicsEventType::CollisionEnter);
             m_CollidingEntities.emplace_back(ap, bp);
         }
     }
@@ -233,8 +232,7 @@ namespace Phezu {
         Collision cB(ap);
         
         if (WereColliding(ap, bp)) {
-            ap->OnCollisionExit(cA);
-            bp->OnCollisionExit(cB);
+            m_Engine->GetScriptEngine().FirePhysicsCollisionEvent(a->GetEntityID(), b->GetEntityID(), PhysicsEventType::CollisionExit);
             RemoveCollisionPair(ap, bp);
         }
     }

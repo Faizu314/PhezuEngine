@@ -13,7 +13,12 @@ namespace Phezu {
 	public:
 		void InvokeOnCreate();
 		void InvokeOnUpdate(float deltaTime);
-		void SetGcHandleProperty(MonoMethod* propertySetter, intptr_t value);
+    public:
+        void TryInvokeOnCollisionEnter(intptr_t otherEntity);
+        void TryInvokeOnCollisionStay(intptr_t otherEntity);
+        void TryInvokeOnCollisionExit(intptr_t otherEntity);
+    public:
+		void SetEntityProperty(MonoMethod* propertySetter, intptr_t value);
 		void SetUlongField(MonoClassField* field, uint64_t value);
 		std::string GetFullname() { return m_Class->GetFullname(); }
 		MonoObject* GetMonoObject() { return m_Instance; }
@@ -23,6 +28,9 @@ namespace Phezu {
 		MonoObject* m_Instance;
 		MonoMethod* m_OnCreateMethod;
 		MonoMethod* m_OnUpdateMethod;
+        MonoMethod* m_OnCollisionEnterMethod;
+        MonoMethod* m_OnCollisionStayMethod;
+        MonoMethod* m_OnCollisionExitMethod;
 		intptr_t m_IntPtr;
 	};
 }

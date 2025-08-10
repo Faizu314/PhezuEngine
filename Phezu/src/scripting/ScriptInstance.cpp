@@ -20,10 +20,13 @@ namespace Phezu {
 		MonoObject* result = mono_runtime_invoke(gcHandleGetter, m_Instance, nullptr, nullptr);
 		m_IntPtr = *(intptr_t*)mono_object_unbox(result);
 
-		if (scriptClass->GetScriptClassType() == ScriptClassType::BehaviourComponent ||
-			scriptClass->GetScriptClassType() == ScriptClassType::ScriptComponent) {
+		if (scriptClass->GetScriptClassType() == ScriptClassType::ScriptComponent) {
 			m_OnCreateMethod = scriptClass->GetMonoMethod("OnCreated", 0);
 			m_OnUpdateMethod = scriptClass->GetMonoMethod("OnUpdate", 1);
+            
+            m_OnCollisionEnterMethod = scriptClass->GetMonoMethod("OnCollisionEnter", 1);
+            m_OnCollisionStayMethod = scriptClass->GetMonoMethod("OnCollisionStay", 1);
+            m_OnCollisionExitMethod = scriptClass->GetMonoMethod("OnCollisionExit", 1);
 		}
 	}
 
@@ -61,8 +64,77 @@ namespace Phezu {
 			mono_free(exceptionCStr);
 		}
 	}
+    
+    void ScriptInstance::TryInvokeOnCollisionEnter(intptr_t otherEntity) {
+        if (m_OnCollisionEnterMethod == nullptr)
+            return;
+        
+        MonoObject* exception = nullptr;
 
-	void ScriptInstance::SetGcHandleProperty(MonoMethod* propertySetter, intptr_t value) {
+        void* params[] =
+        {
+            &otherEntity
+        };
+
+        mono_runtime_invoke(m_OnCollisionEnterMethod, m_Instance, params, &exception);
+
+        if (exception) {
+            MonoString* exceptionString = mono_object_to_string(exception, nullptr);
+            char* exceptionCStr = mono_string_to_utf8(exceptionString);
+
+            Log("Mono Exception: %s\n", exceptionCStr);
+
+            mono_free(exceptionCStr);
+        }
+    }
+    
+    void ScriptInstance::TryInvokeOnCollisionStay(intptr_t otherEntity) {
+        if (m_OnCollisionStayMethod == nullptr)
+            return;
+        
+        MonoObject* exception = nullptr;
+
+        void* params[] =
+        {
+            &otherEntity
+        };
+
+        mono_runtime_invoke(m_OnCollisionStayMethod, m_Instance, params, &exception);
+
+        if (exception) {
+            MonoString* exceptionString = mono_object_to_string(exception, nullptr);
+            char* exceptionCStr = mono_string_to_utf8(exceptionString);
+
+            Log("Mono Exception: %s\n", exceptionCStr);
+
+            mono_free(exceptionCStr);
+        }
+    }
+    
+    void ScriptInstance::TryInvokeOnCollisionExit(intptr_t otherEntity) {
+        if (m_OnCollisionExitMethod == nullptr)
+            return;
+        
+        MonoObject* exception = nullptr;
+
+        void* params[] =
+        {
+            &otherEntity
+        };
+
+        mono_runtime_invoke(m_OnCollisionExitMethod, m_Instance, params, &exception);
+
+        if (exception) {
+            MonoString* exceptionString = mono_object_to_string(exception, nullptr);
+            char* exceptionCStr = mono_string_to_utf8(exceptionString);
+
+            Log("Mono Exception: %s\n", exceptionCStr);
+
+            mono_free(exceptionCStr);
+        }
+    }
+
+	void ScriptInstance::SetEntityProperty(MonoMethod* propertySetter, intptr_t value) {
 		MonoObject* exception = nullptr;
 
 		void* params[] =
