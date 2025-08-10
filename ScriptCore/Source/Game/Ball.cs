@@ -23,19 +23,19 @@ namespace Game {
         private void OnCollisionEnter(IntPtr otherEntity) {
             Entity other = Entity.GetEntity(otherEntity);
             
-            Console.WriteLine("OnCollisionEnter: " + Entity.ID + ", " + other.ID);
+            Console.WriteLine("OnCollisionEnter: " + Entity.Tag + ", " + other.Tag);
         }
         
         private void OnCollisionStay(IntPtr otherEntity) {
             Entity other = Entity.GetEntity(otherEntity);
             
-            Console.WriteLine("OnCollisionStay: " + Entity.ID + ", " + other.ID);
+            Console.WriteLine("OnCollisionStay: " + Entity.Tag + ", " + other.Tag);
         }
         
         private void OnCollisionExit(IntPtr otherEntity) {
             Entity other = Entity.GetEntity(otherEntity);
             
-            Console.WriteLine("OnCollisionExit: " + Entity.ID + ", " + other.ID);
+            Console.WriteLine("OnCollisionExit: " + Entity.Tag + ", " + other.Tag);
         }
     }
 }

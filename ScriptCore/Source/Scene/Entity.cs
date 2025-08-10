@@ -21,6 +21,12 @@ namespace PhezuEngine {
             
             return entity;
         }
+        
+        public string Tag {
+            get {
+                return InternalCalls.Entity_GetTag(ID);
+            }
+        }
 
         public T GetComponent<T>() where T : Component
         {
