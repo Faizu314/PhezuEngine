@@ -20,6 +20,12 @@ namespace Phezu {
         MonoClassField *W, *A, *S, *D, *Space;
     };
     
+    enum class PhysicsEventType {
+        CollisionEnter,
+        CollisionStay,
+        CollisionExit
+    };
+    
 	class ScriptEngine {
 	public:
 		ScriptEngine(Engine* engine);
@@ -29,6 +35,7 @@ namespace Phezu {
 		void OnEntityDestroyed(std::shared_ptr<Entity> entity);
         void PreUpdate();
 		void OnUpdate(float deltaTime);
+        void FirePhysicsCollisionEvent(uint64_t entityA, uint64_t entityB, PhysicsEventType eventType);
 		void Shutdown();
 	public:
 		MonoClass* GetBehaviourComponentClass();
@@ -38,7 +45,8 @@ namespace Phezu {
 		MonoAssembly* LoadAssembly(const std::string& assemblyPath);
         void GetInputClassAndFields();
 		void GetScriptClasses();
-		void PrintAssemblyClasses(MonoAssembly* assembly);
+    private:
+        void PrintAssemblyClasses(MonoAssembly* assembly);
 	private:
 		Engine* m_Engine;
 		MonoLogger m_MonoLogger;
