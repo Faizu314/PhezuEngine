@@ -37,24 +37,24 @@ namespace Phezu {
 		return entity;
 	}
 
-	NativeType MonoToNativeType(MonoType* monoType, std::string& outFullname) {
+	ManagedType MonoToNativeType(MonoType* monoType, std::string& outFullname) {
 		MonoClass* monoClass = mono_type_get_class(monoType);
 		std::string nameSpace = mono_class_get_namespace(monoClass);
 		std::string name = mono_class_get_name(monoClass);
 		outFullname = nameSpace + "." + name;
 
 		if (outFullname == "PhezuEngine.Transform")
-			return NativeType::Transform;
+			return ManagedType::Transform;
 		else if (outFullname == "PhezuEngine.Shape")
-			return NativeType::Shape;
+			return ManagedType::Shape;
 		else if (outFullname == "PhezuEngine.Renderer")
-			return NativeType::Renderer;
+			return ManagedType::Renderer;
 		else if (outFullname == "PhezuEngine.Physics")
-			return NativeType::Physics;
+			return ManagedType::Physics;
 		else if (mono_class_is_subclass_of(monoClass, s_Data->ScriptEngine->GetBehaviourComponentClass(), false))
-			return NativeType::ScriptComponent;
+			return ManagedType::ScriptComponent;
 		
-		return NativeType::None;
+		return ManagedType::None;
 	}
     
     MonoString* Entity_GetTag(uint64_t entityID) {
@@ -68,26 +68,26 @@ namespace Phezu {
 		auto entity = GetEntity(entityID);
 
 		std::string classFullname;
-		NativeType nativeType = MonoToNativeType(monoType, classFullname);
+		ManagedType managedType = MonoToNativeType(monoType, classFullname);
 
-		switch (nativeType) {
-			case NativeType::Transform:
+		switch (managedType) {
+			case ManagedType::Transform:
 			{
 				return true;
 			}
-			case NativeType::Shape:
+			case ManagedType::Shape:
 			{
 				return entity->GetShapeData() != nullptr;
 			}
-			case NativeType::Renderer:
+			case ManagedType::Renderer:
 			{
 				return entity->GetRenderData() != nullptr;
 			}
-			case NativeType::Physics:
+			case ManagedType::Physics:
 			{
 				return entity->GetPhysicsData() != nullptr;
 			}
-			case NativeType::ScriptComponent:
+			case ManagedType::ScriptComponent:
 			{
 				return entity->HasScriptComponent(classFullname);
 			}
@@ -103,19 +103,19 @@ namespace Phezu {
 		auto entity = GetEntity(entityID);
 
 		std::string classFullname;
-		NativeType nativeType = MonoToNativeType(monoType, classFullname);
+		ManagedType managedType = MonoToNativeType(monoType, classFullname);
         
-		if (nativeType == NativeType::None) {
+		if (managedType == ManagedType::None) {
             Log("Mono type %s not recognized", classFullname.c_str());
 			return 0;
 		}
 
         ScriptInstance* scriptInstance = nullptr;
         
-        if (nativeType == NativeType::ScriptComponent)
+        if (managedType == ManagedType::ScriptComponent)
 			scriptInstance = s_Data->ScriptEngine->GetBehaviourScriptInstance(entityID, classFullname);
         else
-            scriptInstance = s_Data->ScriptEngine->GetNativeComponentInstance(entityID, nativeType);
+            scriptInstance = s_Data->ScriptEngine->GetEngineComponentInstance(entityID, managedType);
 
 		if (scriptInstance == nullptr) {
 			Log("Unable to find script component: %s on entity: %i\n", classFullname.c_str(), entityID);

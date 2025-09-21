@@ -14,7 +14,7 @@ namespace Phezu {
 	class ScriptClass;
 	class ScriptComponent;
 	class ScriptInstance;
-	struct EntityData;
+	struct EntityScriptingConext;
     
     struct InputFields {
         MonoClassField *W, *A, *S, *D, *Space;
@@ -26,7 +26,7 @@ namespace Phezu {
         CollisionExit
     };
     
-    enum class NativeType {
+    enum class ManagedType {
         None,
         Transform,
         Shape,
@@ -35,7 +35,7 @@ namespace Phezu {
         ScriptComponent
     };
     
-    std::string ToString(NativeType t);
+    std::string ToString(ManagedType t);
     
 	class ScriptEngine {
 	public:
@@ -51,7 +51,7 @@ namespace Phezu {
 	public:
 		MonoClass* GetBehaviourComponentClass();
 		ScriptInstance* GetBehaviourScriptInstance(uint64_t entityID, const std::string& classFullname);
-        ScriptInstance* GetNativeComponentInstance(uint64_t entityID, const NativeType componentType);
+        ScriptInstance* GetEngineComponentInstance(uint64_t entityID, const ManagedType componentType);
 	private:
 		void InitMono();
 		MonoAssembly* LoadAssembly(const std::string& assemblyPath);
@@ -79,7 +79,7 @@ namespace Phezu {
 		MonoMethod* m_ComponentEntitySetter;
 	private:
 		std::unordered_map<std::string, ScriptClass*> m_ScriptClasses;
-        std::unordered_map<NativeType, ScriptClass*> m_NativeComponentClasses;
-		std::unordered_map<uint64_t, EntityData*> m_EntityDatas;
+        std::unordered_map<ManagedType, ScriptClass*> m_EngineComponentClasses;
+		std::unordered_map<uint64_t, EntityScriptingConext*> m_EntityDatas;
 	};
 }

@@ -5,7 +5,7 @@
 #include "scripting/ScriptGlue.hpp"
 #include "scripting/ScriptClass.hpp"
 #include "scripting/ScriptInstance.hpp"
-#include "scripting/EntityData.hpp"
+#include "scripting/EntityScriptingConext.hpp"
 #include "scene/Scene.hpp"
 #include "scene/Entity.hpp"
 
@@ -47,14 +47,14 @@ namespace Phezu {
         return buffer;
     }
 
-    std::string ToString(NativeType t) {
+    std::string ToString(ManagedType t) {
         switch (t) {
-            case NativeType::None:   return "None";
-            case NativeType::Transform: return "Transform";
-            case NativeType::Physics:  return "Physics";
-            case NativeType::Shape: return "Shape";
-            case NativeType::Renderer: return "Renderer";
-            case NativeType::ScriptComponent: return "ScriptComponent";
+            case ManagedType::None: return "None";
+            case ManagedType::Transform: return "Transform";
+            case ManagedType::Physics:  return "Physics";
+            case ManagedType::Shape: return "Shape";
+            case ManagedType::Renderer: return "Renderer";
+            case ManagedType::ScriptComponent: return "ScriptComponent";
         }
         return "Unknown";
     }
@@ -88,21 +88,21 @@ namespace Phezu {
     void ScriptEngine::OnEntityCreated(Entity* entity) {
         auto entityID = entity->GetEntityID();
         
-        EntityData* entityData =
-            new EntityData(entity->GetEntityID(), m_RuntimeDomain, m_EntityClass);
+        EntityScriptingConext* entityData =
+            new EntityScriptingConext(entity->GetEntityID(), m_RuntimeDomain, m_EntityClass);
         entityData->EntityScript.SetUlongField(m_EntityIdField, entity->GetEntityID());
         m_EntityDatas[entity->GetEntityID()] = entityData;
         
         // Create Native Components
         
-        ComponentInstance transform(m_RuntimeDomain, m_NativeComponentClasses[NativeType::Transform]);
+        ComponentInstance transform(m_RuntimeDomain, m_EngineComponentClasses[ManagedType::Transform]);
         transform.SetEntityProperty(m_ComponentEntitySetter, entityData->EntityScript.GetMonoGcHandle());
-        entityData->NativeComponents.emplace(NativeType::Transform, std::move(transform));
+        entityData->EngineComponents.emplace(ManagedType::Transform, std::move(transform));
         
         if (entity->GetPhysicsData() != nullptr) {
-            ComponentInstance physics(m_RuntimeDomain, m_NativeComponentClasses[NativeType::Physics]);
+            ComponentInstance physics(m_RuntimeDomain, m_EngineComponentClasses[ManagedType::Physics]);
             physics.SetEntityProperty(m_ComponentEntitySetter, entityData->EntityScript.GetMonoGcHandle());
-            entityData->NativeComponents.emplace(NativeType::Physics, std::move(physics));
+            entityData->EngineComponents.emplace(ManagedType::Physics, std::move(physics));
         }
         
         // Create Script Components
@@ -113,21 +113,21 @@ namespace Phezu {
             ScriptComponent* comp = entity->GetScriptComponent(i);
             //TODO: Log error if script class not found
             auto scriptClass = m_ScriptClasses[comp->GetScriptClassFullname()];
-            entityData->BehaviourScripts.emplace_back(m_RuntimeDomain, scriptClass);
+            entityData->BehaviourComponents.emplace_back(m_RuntimeDomain, scriptClass);
 
-            entityData->BehaviourScripts[i].SetEntityProperty(
+            entityData->BehaviourComponents[i].SetEntityProperty(
                 m_ComponentEntitySetter, entityData->EntityScript.GetMonoGcHandle());
         }
         
         for (size_t i = 0; i < compCount; i++) {
-            entityData->BehaviourScripts[i].InvokeOnCreate();
+            entityData->BehaviourComponents[i].InvokeOnCreate();
         }
     }
 
     void ScriptEngine::OnEntityDestroyed(Entity* entity) {
         auto entityData = m_EntityDatas[entity->GetEntityID()];
 
-        for (size_t i = 0; i < entityData->BehaviourScripts.size(); i++) {
+        for (size_t i = 0; i < entityData->BehaviourComponents.size(); i++) {
             //Invoke On Destroy
             
             //entityData->BehaviourScripts[i].InvokeOnCreate();
@@ -150,8 +150,8 @@ namespace Phezu {
         for (auto it = m_EntityDatas.begin(); it != m_EntityDatas.end(); it++) {
             auto entityData = it->second;
 
-            for (size_t i = 0; i < entityData->BehaviourScripts.size(); i++) {
-                entityData->BehaviourScripts[i].InvokeOnUpdate(deltaTime);
+            for (size_t i = 0; i < entityData->BehaviourComponents.size(); i++) {
+                entityData->BehaviourComponents[i].InvokeOnUpdate(deltaTime);
             }
         }
     }
@@ -201,8 +201,8 @@ namespace Phezu {
         m_ComponentEntitySetter = m_ComponentClass->GetMonoMethod("SetEntity", 1);
         m_EntityClass = new ScriptClass(m_CoreAssembly, "PhezuEngine", "Entity", ScriptClassType::Entity);
         
-        m_NativeComponentClasses[NativeType::Transform] = new ScriptClass(m_CoreAssembly, "PhezuEngine", "Transform", ScriptClassType::NativeComponent);
-        m_NativeComponentClasses[NativeType::Physics] = new ScriptClass(m_CoreAssembly, "PhezuEngine", "Physics", ScriptClassType::NativeComponent);
+        m_EngineComponentClasses[ManagedType::Transform] = new ScriptClass(m_CoreAssembly, "PhezuEngine", "Transform", ScriptClassType::NativeComponent);
+        m_EngineComponentClasses[ManagedType::Physics] = new ScriptClass(m_CoreAssembly, "PhezuEngine", "Physics", ScriptClassType::NativeComponent);
     }
     
     void ScriptEngine::GetScriptClasses() {
@@ -252,22 +252,22 @@ namespace Phezu {
         auto entityDataA = m_EntityDatas[entityA];
         auto entityDataB = m_EntityDatas[entityB];
         
-        for (size_t i = 0; i < entityDataA->BehaviourScripts.size(); i++) {
+        for (size_t i = 0; i < entityDataA->BehaviourComponents.size(); i++) {
             if (eventType == PhysicsEventType::CollisionEnter)
-                entityDataA->BehaviourScripts[i].TryInvokeOnCollisionEnter(entityDataB->EntityScript.GetMonoGcHandle());
+                entityDataA->BehaviourComponents[i].TryInvokeOnCollisionEnter(entityDataB->EntityScript.GetMonoGcHandle());
             else if (eventType == PhysicsEventType::CollisionStay)
-                entityDataA->BehaviourScripts[i].TryInvokeOnCollisionStay(entityDataB->EntityScript.GetMonoGcHandle());
+                entityDataA->BehaviourComponents[i].TryInvokeOnCollisionStay(entityDataB->EntityScript.GetMonoGcHandle());
             else if (eventType == PhysicsEventType::CollisionExit)
-                entityDataA->BehaviourScripts[i].TryInvokeOnCollisionExit(entityDataB->EntityScript.GetMonoGcHandle());
+                entityDataA->BehaviourComponents[i].TryInvokeOnCollisionExit(entityDataB->EntityScript.GetMonoGcHandle());
         }
         
-        for (size_t i = 0; i < entityDataB->BehaviourScripts.size(); i++) {
+        for (size_t i = 0; i < entityDataB->BehaviourComponents.size(); i++) {
             if (eventType == PhysicsEventType::CollisionEnter)
-                entityDataB->BehaviourScripts[i].TryInvokeOnCollisionEnter(entityDataA->EntityScript.GetMonoGcHandle());
+                entityDataB->BehaviourComponents[i].TryInvokeOnCollisionEnter(entityDataA->EntityScript.GetMonoGcHandle());
             else if (eventType == PhysicsEventType::CollisionStay)
-                entityDataB->BehaviourScripts[i].TryInvokeOnCollisionStay(entityDataA->EntityScript.GetMonoGcHandle());
+                entityDataB->BehaviourComponents[i].TryInvokeOnCollisionStay(entityDataA->EntityScript.GetMonoGcHandle());
             else if (eventType == PhysicsEventType::CollisionExit)
-                entityDataB->BehaviourScripts[i].TryInvokeOnCollisionExit(entityDataA->EntityScript.GetMonoGcHandle());
+                entityDataB->BehaviourComponents[i].TryInvokeOnCollisionExit(entityDataA->EntityScript.GetMonoGcHandle());
         }
     }
 
@@ -301,9 +301,9 @@ namespace Phezu {
 
         auto entityData = m_EntityDatas.at(entityID);
 
-        for (size_t i = 0; i < entityData->BehaviourScripts.size(); i++) {
-            if (entityData->BehaviourScripts[i].GetFullname() == classFullname)
-                return &entityData->BehaviourScripts[i];
+        for (size_t i = 0; i < entityData->BehaviourComponents.size(); i++) {
+            if (entityData->BehaviourComponents[i].GetFullname() == classFullname)
+                return &entityData->BehaviourComponents[i];
         }
 
         Log("Behaviour Script %s on Entity not found\n", classFullname.c_str());
@@ -311,7 +311,7 @@ namespace Phezu {
         return nullptr;
     }
     
-    ScriptInstance* ScriptEngine::GetNativeComponentInstance(uint64_t entityID, const NativeType componentType) {
+    ScriptInstance* ScriptEngine::GetEngineComponentInstance(uint64_t entityID, const ManagedType componentType) {
         if (m_EntityDatas.find(entityID) == m_EntityDatas.end()) {
             Log("Entity not found");
             return nullptr;
@@ -319,12 +319,12 @@ namespace Phezu {
 
         auto entityData = m_EntityDatas.at(entityID);
         
-        if (entityData->NativeComponents.find(componentType) == entityData->NativeComponents.end()) {
+        if (entityData->EngineComponents.find(componentType) == entityData->EngineComponents.end()) {
             Log("Native Component %s on Entity not found\n", ToString(componentType).c_str());
             return nullptr;
         }
         
-        return &entityData->NativeComponents.at(componentType);
+        return &entityData->EngineComponents.at(componentType);
     }
 
     MonoClass* ScriptEngine::GetBehaviourComponentClass() {
