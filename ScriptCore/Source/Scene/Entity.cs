@@ -42,5 +42,10 @@ namespace PhezuEngine {
             Type type = typeof(T);
             return InternalCalls.Entity_HasComponent(ID, type.TypeHandle.Value);
         }
+
+        public void Destroy()
+        {
+            InternalCalls.Entity_Destroy(ID);
+        }
     }
 }

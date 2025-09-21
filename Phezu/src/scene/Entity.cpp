@@ -79,6 +79,10 @@ namespace Phezu {
         return m_Children[childIndex];
     }
     
+    void Entity::Destroy() {
+        m_Scene->DestroyEntity(m_EntityID);
+    }
+    
     void Entity::AddChild(Entity* child) {
         m_Children.push_back(child);
     }
