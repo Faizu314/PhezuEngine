@@ -3,8 +3,6 @@
 #include "maths/Math.hpp"
 #include "scene/components/DataComponent.hpp"
 
-#include <memory>
-
 class mat3;
 
 namespace Phezu {

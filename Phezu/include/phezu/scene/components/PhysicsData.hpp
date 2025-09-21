@@ -2,7 +2,6 @@
 
 #include <functional>
 #include <unordered_map>
-#include <memory>
 
 #include "maths/Math.hpp"
 #include "scene/components/DataComponent.hpp"
