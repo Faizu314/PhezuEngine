@@ -22,10 +22,10 @@ namespace Phezu {
         Entity(Scene* scene);
         ~Entity();
     public:
-        uint64_t GetEntityID() const;
-        void SetActive(bool isActive);
-        bool GetActive() const;
-        bool IsDirty();
+        uint64_t GetEntityID() const { return m_EntityID; }
+        void SetActive(bool isActive) { m_IsActive = isActive; }
+        bool GetActive() const { return m_IsActive; }
+        bool IsDirty() {return m_TransformData.GetIsDirty(); }
         const std::string& GetTag() { return m_Tag; }
         void SetTag(const std::string& tag) { m_Tag = tag; }
     public:
@@ -33,8 +33,8 @@ namespace Phezu {
         ShapeData* GetShapeData() const { return m_ShapeData; }
         RenderData* GetRenderData() const { return m_RenderData; }
         PhysicsData* GetPhysicsData() const { return m_PhysicsData; }
-        size_t GetScriptComponentCount() const { return m_ScriptComponents.size(); }
         ScriptComponent* GetScriptComponent(size_t index);
+        size_t GetScriptComponentCount() const { return m_ScriptComponents.size(); }
         bool HasScriptComponent(const std::string& classFullname);
     public:
         ShapeData* AddShapeData();
@@ -46,11 +46,11 @@ namespace Phezu {
         TransformData* GetParent() const;
         void SetParent(Entity* parent);
         void RemoveParent();
-        size_t GetChildCount();
+        size_t GetChildCount() { return m_Children.size(); }
         Entity* GetChild(size_t childIndex);
     private:
         void OnDestroyed();
-        void OnChildDestroyed();
+        void OnChildRemoved(const Entity* removedChild);
         void AddChild(Entity* child);
         void RecalculateSubtreeTransformations();
     private:
@@ -70,9 +70,7 @@ namespace Phezu {
         bool m_IsActive;
         std::string m_Tag;
         
-        friend void SetParentInternal(Entity* _this, Entity* child);
         friend class Scene;
         friend class Physics;
-        friend void Destroy(Entity* entity);
     };
 }
