@@ -2,21 +2,15 @@ using System;
 using System.Runtime.InteropServices;
 
 namespace PhezuEngine {
- 
-    public class Object {
-        private GCHandle m_GcHandle;
-
-        public Object() {
-            m_GcHandle = GCHandle.Alloc(this, GCHandleType.Normal);
-        }
-
-        public IntPtr GetGcHandle() {
-            return GCHandle.ToIntPtr(m_GcHandle);
-        }
-    }
 
     public class Component : Object {
         public Entity Entity { get; internal set; }
+        
+        internal void SetEntity(IntPtr ptr) {
+            GCHandle handle = GCHandle.FromIntPtr(ptr);
+
+            Entity = handle.Target as Entity;
+        }
     }
 
     public class Transform : Component {
@@ -51,11 +45,5 @@ namespace PhezuEngine {
         public abstract void OnDestroyed();
 
         public abstract void OnUpdate(float deltaTime);
-
-        internal void SetEntity(IntPtr ptr) {
-            GCHandle handle = GCHandle.FromIntPtr(ptr);
-
-            Entity = handle.Target as Entity;
-        }
     }
 }
