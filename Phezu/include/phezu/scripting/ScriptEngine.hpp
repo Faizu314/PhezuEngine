@@ -14,7 +14,7 @@ namespace Phezu {
 	class ScriptClass;
 	class ScriptComponent;
 	class ScriptInstance;
-	struct EntityInstance;
+	struct EntityData;
     
     struct InputFields {
         MonoClassField *W, *A, *S, *D, *Space;
@@ -80,6 +80,6 @@ namespace Phezu {
 	private:
 		std::unordered_map<std::string, ScriptClass*> m_ScriptClasses;
         std::unordered_map<NativeType, ScriptClass*> m_NativeComponentClasses;
-		std::unordered_map<uint64_t, EntityInstance*> m_EntityInstances;
+		std::unordered_map<uint64_t, EntityData*> m_EntityDatas;
 	};
 }
