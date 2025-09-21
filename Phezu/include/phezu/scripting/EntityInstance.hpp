@@ -2,22 +2,16 @@
 
 #include "scripting/MonoDefs.hpp"
 #include "scripting/ScriptClass.hpp"
-#include "scripting/ScriptEngine.hpp"
 #include "scripting/ScriptInstance.hpp"
 
-#include <vector>
-#include <unordered_map>
-
 namespace Phezu {
-	struct EntityInstance {
+	class EntityInstance : public ScriptInstance {
 	public:
-		EntityInstance(uint64_t entityID, MonoDomain* domain, ScriptClass* entityClass);
+        EntityInstance(MonoDomain* domain, ScriptClass* scriptClass);
+    public:
         EntityInstance(const EntityInstance&) = delete;
         EntityInstance& operator=(const EntityInstance&) = delete;
-	public:
-		uint64_t EntityID;
-		ScriptInstance EntityScript;
-		std::vector<ScriptInstance> BehaviourScripts;
-        std::unordered_map<NativeType, ScriptInstance> NativeComponents;
+    public:
+		void SetUlongField(MonoClassField* field, uint64_t value);
 	};
 }
