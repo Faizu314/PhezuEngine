@@ -17,7 +17,7 @@ namespace Phezu {
     struct Asset {
         GUID Guid;
         bool IsLoaded = false;
-        std::shared_ptr<void> AssetPtr;
+        void* AssetPtr;
     };
     
     class AssetManager {

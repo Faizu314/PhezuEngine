@@ -10,12 +10,12 @@ namespace Phezu {
         RenderData(Entity* entity) : DataComponent(entity), Tint(Color::White) {}
         RenderData(Entity* entity, Color tint) : DataComponent(entity), Tint(tint) {}
     public:
-        RenderData(Entity* entity, std::weak_ptr<Texture> texture) : DataComponent(entity), Sprite(texture), Tint(Color::White) {}
-        RenderData(Entity* entity, std::weak_ptr<Texture> texture, Color tint) : DataComponent(entity), Sprite(texture), Tint(tint) {}
-        RenderData(Entity* entity, std::weak_ptr<Texture> texture, Rect uvs) : DataComponent(entity), Sprite(texture), SourceRect(uvs), Tint(Color::White) {}
-        RenderData(Entity* entity, std::weak_ptr<Texture> texture, Color tint, Rect uvs) : DataComponent(entity), Sprite(texture), Tint(tint), SourceRect(uvs) {}
+        RenderData(Entity* entity, Texture* texture) : DataComponent(entity), Sprite(texture), Tint(Color::White) {}
+        RenderData(Entity* entity, Texture* texture, Color tint) : DataComponent(entity), Sprite(texture), Tint(tint) {}
+        RenderData(Entity* entity, Texture* texture, Rect uvs) : DataComponent(entity), Sprite(texture), SourceRect(uvs), Tint(Color::White) {}
+        RenderData(Entity* entity, Texture* texture, Color tint, Rect uvs) : DataComponent(entity), Sprite(texture), Tint(tint), SourceRect(uvs) {}
     public:
-        std::weak_ptr<Texture> Sprite;
+        Texture* Sprite;
         Rect SourceRect;
         Color Tint;
     };

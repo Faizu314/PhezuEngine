@@ -7,7 +7,7 @@ namespace Game {
 
         private Transform m_Transform;
         private PlayerInput m_Input;
-        private float m_Speed = 400f;
+        private float m_Speed = 800f;
 
         public override void OnCreated() {
             m_Transform = Entity.GetComponent<Transform>();
@@ -19,7 +19,23 @@ namespace Game {
         }
 
         public override void OnUpdate(float deltaTime) {
-            m_Transform.Position = m_Transform.Position + new Vector2(m_Input.MoveDir * m_Speed * deltaTime, 0f);
+            m_Transform.Position += new Vector2(m_Input.MoveDir * m_Speed * deltaTime, 0f);
+        }
+        
+        private void OnCollisionEnter(IntPtr otherEntity) {
+            Entity other = Entity.GetEntity(otherEntity);
+            
+            if (other.Tag != "Ball")
+                return;
+
+            Ball ball = other.GetComponent<Ball>();
+            
+            Vector2 myPos = m_Transform.Position;
+            Vector2 ballPos = ball.Position;
+
+            float meToBall = ballPos.X - myPos.X;
+            
+            ball.AddVelocity(new Vector2(meToBall * 10f, 0f));
         }
     }
 }

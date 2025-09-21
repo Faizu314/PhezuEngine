@@ -72,7 +72,7 @@ namespace Phezu {
             return m_LoadedAssets[guid];
         
         std::string scenePath = m_AssetMap[guid].Filepaths[0].string();
-        std::shared_ptr<Scene> scene = std::make_shared<Scene>(m_Engine);
+        Scene* scene = new Scene(m_Engine);
         
         FileStreamReader reader(scenePath);
         std::string fileContent;
@@ -84,7 +84,7 @@ namespace Phezu {
         Asset sceneAsset;
         sceneAsset.IsLoaded = true;
         sceneAsset.Guid = guid;
-        sceneAsset.AssetPtr = std::static_pointer_cast<void>(scene);
+        sceneAsset.AssetPtr = scene;
         
         m_LoadedAssets[guid] = sceneAsset;
         
@@ -99,7 +99,7 @@ namespace Phezu {
         if (m_LoadedAssets.find(guid) != m_LoadedAssets.end())
             return m_LoadedAssets[guid];
         
-        std::shared_ptr<Prefab> prefab = std::make_shared<Prefab>(m_Engine, guid);
+        Prefab* prefab = new Prefab(m_Engine, guid);
         std::string prefabPath = m_AssetMap[guid].Filepaths[0].string();
         
         FileStreamReader reader(prefabPath);
@@ -112,7 +112,7 @@ namespace Phezu {
         Asset prefabAsset;
         prefabAsset.IsLoaded = true;
         prefabAsset.Guid = guid;
-        prefabAsset.AssetPtr = std::static_pointer_cast<void>(prefab);
+        prefabAsset.AssetPtr = prefab;
         
         m_LoadedAssets[guid] = prefabAsset;
         

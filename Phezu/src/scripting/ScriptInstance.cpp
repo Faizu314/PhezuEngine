@@ -7,7 +7,7 @@
 
 namespace Phezu {
 
-	ScriptInstance::ScriptInstance(MonoDomain* domain, std::shared_ptr<ScriptClass> scriptClass)
+	ScriptInstance::ScriptInstance(MonoDomain* domain, ScriptClass* scriptClass)
 	: m_Class(scriptClass), m_OnCreateMethod(nullptr), m_OnUpdateMethod(nullptr), m_GcHandle(0) {
         
 		m_Instance = mono_object_new(domain, scriptClass->GetMonoClass());

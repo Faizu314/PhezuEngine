@@ -80,15 +80,15 @@ namespace Phezu {
         Uint64 freqMs = SDL_GetPerformanceFrequency();
         float deltaTime;
 
-        std::vector<std::weak_ptr<Entity>> staticEntitiesBuffer(ENTITIES_BUFFER_SIZE);
-        std::vector<std::weak_ptr<Entity>> dynamicEntitiesBuffer(ENTITIES_BUFFER_SIZE);
-        std::vector<std::weak_ptr<Entity>> renderEntitiesBuffer(ENTITIES_BUFFER_SIZE);
+        std::vector<Entity*> staticEntitiesBuffer(ENTITIES_BUFFER_SIZE);
+        std::vector<Entity*> dynamicEntitiesBuffer(ENTITIES_BUFFER_SIZE);
+        std::vector<Entity*> renderEntitiesBuffer(ENTITIES_BUFFER_SIZE);
         size_t renderablesCount;
         size_t staticsCount;
         size_t dynamicsCount;
         
-        std::shared_ptr<Scene> masterScene = m_SceneManager.GetMasterScene().lock();
-        std::weak_ptr<Scene> activeScene;
+        Scene* masterScene = m_SceneManager.GetMasterScene();
+        Scene* activeScene;
         
         while (m_IsRunning)
         {
@@ -109,7 +109,7 @@ namespace Phezu {
             
             activeScene = m_SceneManager.GetActiveScene();
             
-            if (auto sceneL = activeScene.lock()) {
+            if (auto sceneL = activeScene) {
                 sceneL->LogicUpdate(deltaTime);
                 sceneL->GetPhysicsEntities(staticEntitiesBuffer, dynamicEntitiesBuffer, staticsCount, dynamicsCount);
                 sceneL->GetRenderableEntities(renderEntitiesBuffer, renderablesCount);
@@ -143,13 +143,13 @@ namespace Phezu {
         SDL_Quit();
     }
     
-    std::weak_ptr<const Prefab> Engine::GetPrefab(GUID guid) {
+    const Prefab* Engine::GetPrefab(GUID guid) {
         if (!m_HasInited) {
             Log("Trying to get prefab from non inited engine");
-            return std::weak_ptr<const Prefab>();
+            return nullptr;
         }
 
         Asset prefabAsset = m_AssetManager.GetPrefabAsset(guid);
-        return std::static_pointer_cast<const Prefab>(prefabAsset.AssetPtr);
+        return static_cast<const Prefab*>(prefabAsset.AssetPtr);
     }
 }

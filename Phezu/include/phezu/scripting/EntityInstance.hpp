@@ -11,7 +11,7 @@
 namespace Phezu {
 	struct EntityInstance {
 	public:
-		EntityInstance(uint64_t entityID, MonoDomain* domain, std::shared_ptr<ScriptClass> entityClass);
+		EntityInstance(uint64_t entityID, MonoDomain* domain, ScriptClass* entityClass);
         EntityInstance(const EntityInstance&) = delete;
         EntityInstance& operator=(const EntityInstance&) = delete;
 	public:

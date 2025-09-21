@@ -40,7 +40,7 @@ namespace Phezu {
         int Init(EngineConfig& config);
         void Run();
     public:
-        std::weak_ptr<const Prefab> GetPrefab(GUID guid);
+        const Prefab* GetPrefab(GUID guid);
     public:
         SceneManager& GetSceneManager() { return m_SceneManager; }
         AssetManager& GetAssetManager() { return m_AssetManager; }

@@ -31,13 +31,13 @@ namespace Phezu {
         //}
     }
     
-    void Physics::PhysicsUpdate(const std::vector<std::weak_ptr<Entity>>& staticEntities, const std::vector<std::weak_ptr<Entity>>& dynamicEntities, size_t staticCount, size_t dynamicCount, float deltaTime) {
+    void Physics::PhysicsUpdate(const std::vector<Entity*>& staticEntities, const std::vector<Entity*>& dynamicEntities, size_t staticCount, size_t dynamicCount, float deltaTime) {
         m_DeltaTime = deltaTime;
         
         CleanCollidingEntities();
         
         for (size_t i = 0; i < dynamicCount; i++) {
-            auto dynamicEntity = dynamicEntities[i].lock();
+            auto dynamicEntity = dynamicEntities[i];
             auto trans = dynamicEntity->GetTransformData();
             auto phys = dynamicEntity->GetPhysicsData();
             trans->SetWorldPosition(trans->GetWorldPosition() + (phys->Velocity * deltaTime));
@@ -45,7 +45,7 @@ namespace Phezu {
         }
         
         for (size_t i = 0; i < dynamicCount; i++) {
-            auto dynamicEntity = dynamicEntities[i].lock();
+            auto dynamicEntity = dynamicEntities[i];
                 
             ResolveDynamicToStaticCollisions(dynamicEntity, staticEntities, staticCount);
         }
@@ -53,13 +53,13 @@ namespace Phezu {
         ResolveDynamicToDynamicCollisions(dynamicEntities, dynamicCount);
     }
     
-    void Physics::ResolveDynamicToDynamicCollisions(const std::vector<std::weak_ptr<Entity>> &dynamicEntities, size_t entitiesCount) {
+    void Physics::ResolveDynamicToDynamicCollisions(const std::vector<Entity*> &dynamicEntities, size_t entitiesCount) {
         CollisionData collisionData;
         
         for (size_t i = 0; i < entitiesCount; i++) {
             for (size_t j = i + 1; j < entitiesCount; j++) {
-                auto d1 = dynamicEntities[i].lock();
-                auto d2 = dynamicEntities[j].lock();
+                auto d1 = dynamicEntities[i];
+                auto d2 = dynamicEntities[j];
                 
                 if (!IsColliding(d1, d2, collisionData)) {
                     OnNotColliding(d1, d2);
@@ -72,7 +72,7 @@ namespace Phezu {
         }
     }
     
-    void Physics::ResolveDynamicToDynamicCollision(std::shared_ptr<Entity> d1, std::shared_ptr<Entity> d2, CollisionData& cd) {
+    void Physics::ResolveDynamicToDynamicCollision(Entity* d1, Entity* d2, CollisionData& cd) {
         glm::mat2 reflectionMat(1);
         
         float xTranslate = 0, yTranslate = 0;
@@ -127,11 +127,11 @@ namespace Phezu {
         }
     }
     
-    void Physics::ResolveDynamicToStaticCollisions(std::shared_ptr<Entity> dynamicEntity, const std::vector<std::weak_ptr<Entity>>& staticEntities, size_t staticCount) {
+    void Physics::ResolveDynamicToStaticCollisions(Entity* dynamicEntity, const std::vector<Entity*>& staticEntities, size_t staticCount) {
         CollisionData collisionData;
         
         for (size_t i = 0; i < staticCount; i++) {
-            auto staticEntity = staticEntities[i].lock();
+            auto staticEntity = staticEntities[i];
 
             if (!IsColliding(dynamicEntity, staticEntity, collisionData)) {
                 OnNotColliding(dynamicEntity, staticEntity);
@@ -157,7 +157,7 @@ namespace Phezu {
         return rect;
     }
     
-    bool Physics::IsColliding(std::shared_ptr<Entity> entityA, std::shared_ptr<Entity> entityB, CollisionData& cd) {        
+    bool Physics::IsColliding(Entity* entityA, Entity* entityB, CollisionData& cd) {
         auto transA = entityA->GetTransformData();
         auto shapeA = entityA->GetShapeData();
         auto transB = entityB->GetTransformData();
@@ -172,7 +172,7 @@ namespace Phezu {
         return overlapX && overlapY;
     }
     
-    void Physics::ResolveDynamicToStaticCollision(std::shared_ptr<Entity> dynamicEntity, std::shared_ptr<Entity> staticEntity, CollisionData& cd) {
+    void Physics::ResolveDynamicToStaticCollision(Entity* dynamicEntity, Entity* staticEntity, CollisionData& cd) {
         glm::mat2 reflectionMat(1);
         
         float xTranslate = 0, yTranslate = 0;
@@ -208,7 +208,7 @@ namespace Phezu {
         dynamicEntity->RecalculateSubtreeTransformations();
     }
     
-    void Physics::OnColliding(std::shared_ptr<Entity> a, std::shared_ptr<Entity> b) {
+    void Physics::OnColliding(Entity* a, Entity* b) {
         auto ap = a->GetPhysicsData();
         auto bp = b->GetPhysicsData();
         
@@ -224,7 +224,7 @@ namespace Phezu {
         }
     }
     
-    void Physics::OnNotColliding(std::shared_ptr<Entity> a, std::shared_ptr<Entity> b) {
+    void Physics::OnNotColliding(Entity* a, Entity* b) {
         auto ap = a->GetPhysicsData();
         auto bp = b->GetPhysicsData();
         

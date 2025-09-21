@@ -23,8 +23,8 @@ namespace Phezu {
         void OnEndOfFrame();
         void LoadScene(size_t buildIndex);
         void LoadScene(const std::string& sceneName);
-        std::weak_ptr<Scene> GetActiveScene() const { return m_ActiveScene; }
-        std::weak_ptr<Scene> GetMasterScene() const { return m_MasterScene; }
+        Scene* GetActiveScene() const { return m_ActiveScene; }
+        Scene* GetMasterScene() const { return m_MasterScene; }
     public:
         template <typename T>
         void SubscribeToOnSceneLoaded(T* subscriber, void (T::*handler)(void)) {
@@ -42,8 +42,8 @@ namespace Phezu {
         Engine* m_Engine;
     private:
         BuildScenesConfig m_BuildScenesConfig;
-        std::shared_ptr<Scene> m_MasterScene;
-        std::shared_ptr<Scene> m_ActiveScene;
+        Scene* m_MasterScene;
+        Scene* m_ActiveScene;
     private:
         size_t m_SceneToLoad;
         bool m_LoadSceneAfterFrame;

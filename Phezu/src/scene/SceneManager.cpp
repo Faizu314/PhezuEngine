@@ -10,7 +10,7 @@ namespace Phezu {
         AssetManager& assetManager = m_Engine->GetAssetManager();
         m_BuildScenesConfig = assetManager.GetBuildScenesConfig();
         auto sceneAsset = assetManager.GetSceneAsset(m_BuildScenesConfig.MasterScene);
-        m_MasterScene = std::static_pointer_cast<Scene>(sceneAsset.AssetPtr);
+        m_MasterScene = static_cast<Scene*>(sceneAsset.AssetPtr);
     }
 
     void SceneManager::OnStartGame() {
@@ -49,7 +49,7 @@ namespace Phezu {
             m_ActiveScene->Unload();
         
         auto sceneAsset = m_Engine->GetAssetManager().GetSceneAsset(m_BuildScenesConfig.BuildScenes[m_SceneToLoad]);
-        m_ActiveScene = std::static_pointer_cast<Scene>(sceneAsset.AssetPtr);
+        m_ActiveScene = static_cast<Scene*>(sceneAsset.AssetPtr);
         m_ActiveScene->Load();
         m_LoadSceneAfterFrame = false;
         
