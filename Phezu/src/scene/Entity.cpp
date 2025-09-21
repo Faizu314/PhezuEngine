@@ -23,18 +23,6 @@ namespace Phezu {
             delete m_PhysicsData;
     }
     
-    uint64_t Entity::GetEntityID() const {
-        return m_EntityID;
-    }
-    
-    
-    void Entity::SetActive(bool isActive) {
-        m_IsActive = isActive;
-    }
-
-    bool Entity::GetActive() const {
-        return m_IsActive;
-    }
 
     TransformData* Entity::GetTransformData() {
         return &m_TransformData;
@@ -84,19 +72,11 @@ namespace Phezu {
         return m_Parent->GetTransformData();
     }
 
-    size_t Entity::GetChildCount() {
-        return m_Children.size();
-    }
-
     Entity* Entity::GetChild(size_t childIndex) {
         if (childIndex >= m_Children.size())
             return nullptr;
         
         return m_Children[childIndex];
-    }
-    
-    bool Entity::IsDirty() {
-        return m_TransformData.GetIsDirty();
     }
     
     void Entity::AddChild(Entity* child) {
@@ -106,38 +86,47 @@ namespace Phezu {
     void Entity::RecalculateSubtreeTransformations() {
         m_TransformData.RecalculateLocalToWorld();
         
-        for (auto child_ : m_Children) {
-            auto child = child_;
+        for (auto child : m_Children)
             child->RecalculateSubtreeTransformations();
-        }
     }
     
     void Entity::SetParent(Entity* parent) {
-        if (parent == this)
+        if (parent == nullptr) {
+            RemoveParent();
+            return;
+        }
+        if (parent == m_Parent)
             return;
         
-        SetParentInternal(m_Scene->GetEntity(m_EntityID), parent);
-    }
-    
-    //TODO: I need an internal AddChild(Entity* other) function. Don't need to use scene to get me a smart pointer of this
-    
-    void SetParentInternal(Entity* _this, Entity* parent) {
-            _this->m_Parent = parent;
-            parent->AddChild(_this);
-            _this->RecalculateSubtreeTransformations();
+        // Check if parenting would be cyclic
+        Entity* currParent = parent;
+        while (currParent != nullptr) {
+            if (currParent == this)
+                return;
+            
+            currParent = currParent->m_Parent;
+        }
+        
+        m_Parent->OnChildRemoved(this);
+        m_Parent = parent;
+        m_Parent->AddChild(this);
+        RecalculateSubtreeTransformations();
     }
     
     void Entity::RemoveParent() {
-        //TODO: 
+        if (m_Parent == nullptr)
+            return;
+        
+        m_Parent->OnChildRemoved(this);
+        m_Parent = nullptr;
     }
     
     void Entity::OnDestroyed() {
         if (m_Parent != nullptr)
-            m_Parent->OnChildDestroyed();
+            m_Parent->OnChildRemoved(this);
     }
     
-    void Entity::OnChildDestroyed() {
-        //TODO: 
-        // have to fix this function
+    void Entity::OnChildRemoved(const Entity* removedChild) {
+        m_Children.erase(std::remove(m_Children.begin(), m_Children.end(), removedChild));
     }
 }
