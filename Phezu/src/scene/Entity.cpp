@@ -88,9 +88,9 @@ namespace Phezu {
         return m_Children.size();
     }
 
-    std::weak_ptr<Entity> Entity::GetChild(size_t childIndex) {
+    Entity* Entity::GetChild(size_t childIndex) {
         if (childIndex >= m_Children.size())
-            return std::weak_ptr<Entity>();
+            return nullptr;
         
         return m_Children[childIndex];
     }
@@ -99,7 +99,7 @@ namespace Phezu {
         return m_TransformData.GetIsDirty();
     }
     
-    void Entity::AddChild(std::weak_ptr<Entity> child) {
+    void Entity::AddChild(Entity* child) {
         m_Children.push_back(child);
     }
     
@@ -107,28 +107,24 @@ namespace Phezu {
         m_TransformData.RecalculateLocalToWorld();
         
         for (auto child_ : m_Children) {
-            auto child = child_.lock();
+            auto child = child_;
             child->RecalculateSubtreeTransformations();
         }
     }
     
-    void Entity::SetParent(std::weak_ptr<Entity> parent) {
-        if (auto parentL = parent.lock())
-            if (parentL.get() == this)
-                return;
+    void Entity::SetParent(Entity* parent) {
+        if (parent == this)
+            return;
         
         SetParentInternal(m_Scene->GetEntity(m_EntityID), parent);
     }
     
     //TODO: I need an internal AddChild(Entity* other) function. Don't need to use scene to get me a smart pointer of this
     
-    void SetParentInternal(std::weak_ptr<Entity> _this, std::weak_ptr<Entity> parent) {
-        auto _thisL = _this.lock();
-        if (auto parentL = parent.lock()) {
-            _thisL->m_Parent = parentL.get();
-            parentL->AddChild(_this);
-            _thisL->RecalculateSubtreeTransformations();
-        }
+    void SetParentInternal(Entity* _this, Entity* parent) {
+            _this->m_Parent = parent;
+            parent->AddChild(_this);
+            _this->RecalculateSubtreeTransformations();
     }
     
     void Entity::RemoveParent() {
@@ -141,11 +137,7 @@ namespace Phezu {
     }
     
     void Entity::OnChildDestroyed() {
-        for (int i = 0; i < m_Children.size(); i++) {
-            if (m_Children[i].expired()) {
-                m_Children.erase(m_Children.begin() + i);
-                return;
-            }
-        }
+        //TODO: 
+        // have to fix this function
     }
 }

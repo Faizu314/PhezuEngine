@@ -23,15 +23,15 @@ namespace Phezu {
 
 	static Data* s_Data = nullptr;
 
-	std::shared_ptr<Entity> GetEntity(uint64_t entityID) {
+	Entity* GetEntity(uint64_t entityID) {
 		SceneManager sceneManager = s_Data->Engine->GetSceneManager();
-		std::shared_ptr<Entity> entity;
+		Entity* entity;
 
-		if (auto scene = sceneManager.GetActiveScene().lock()) {
-			entity = scene->GetEntity(entityID).lock();
+		if (auto scene = sceneManager.GetActiveScene()) {
+			entity = scene->GetEntity(entityID);
 		}
-		else if (auto scene = sceneManager.GetMasterScene().lock()) {
-			entity = scene->GetEntity(entityID).lock();
+		else if (auto scene = sceneManager.GetMasterScene()) {
+			entity = scene->GetEntity(entityID);
 		}
 
 		return entity;
@@ -126,7 +126,7 @@ namespace Phezu {
 	}
 
 	void Transform_GetPosition(uint64_t entityID, glm::vec2* position) {
-		std::shared_ptr<Entity> entity = GetEntity(entityID);
+		Entity* entity = GetEntity(entityID);
 
 		if (entity) {
 			Vector2 pos = entity->GetTransformData()->GetWorldPosition();
@@ -136,7 +136,7 @@ namespace Phezu {
 	}
 
 	void Transform_SetPosition(uint64_t entityID, glm::vec2* position) {
-		std::shared_ptr<Entity> entity = GetEntity(entityID);
+		Entity* entity = GetEntity(entityID);
 
 		if (entity) {
 			entity->GetTransformData()->SetWorldPosition(Vector2(position->x, position->y));
@@ -144,7 +144,7 @@ namespace Phezu {
 	}
     
     void Physics_GetVelocity(uint64_t entityID, glm::vec2* velocity) {
-        std::shared_ptr<Entity> entity = GetEntity(entityID);
+        Entity* entity = GetEntity(entityID);
 
         if (entity) {
             Vector2 vel = entity->GetPhysicsData()->Velocity;
@@ -154,7 +154,7 @@ namespace Phezu {
     }
 
     void Physics_SetVelocity(uint64_t entityID, glm::vec2* velocity) {
-        std::shared_ptr<Entity> entity = GetEntity(entityID);
+        Entity* entity = GetEntity(entityID);
 
         if (entity) {
             entity->GetPhysicsData()->Velocity = Vector2(velocity->x, velocity->y);

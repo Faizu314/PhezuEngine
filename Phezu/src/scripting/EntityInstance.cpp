@@ -3,6 +3,6 @@
 
 namespace Phezu {
 
-	EntityInstance::EntityInstance(uint64_t entityID, MonoDomain* domain, std::shared_ptr<ScriptClass> entityClass)
+	EntityInstance::EntityInstance(uint64_t entityID, MonoDomain* domain, ScriptClass* entityClass)
 		: EntityID(entityID), EntityScript(domain, entityClass) {}
 }

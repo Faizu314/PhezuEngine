@@ -45,19 +45,19 @@ namespace Phezu {
     public:
         Scene* GetSceneContext() const { return m_Scene; }
         TransformData* GetParent() const;
-        void SetParent(std::weak_ptr<Entity> parent);
+        void SetParent(Entity* parent);
         void RemoveParent();
         size_t GetChildCount();
-        std::weak_ptr<Entity> GetChild(size_t childIndex);
+        Entity* GetChild(size_t childIndex);
     private:
         void OnDestroyed();
         void OnChildDestroyed();
-        void AddChild(std::weak_ptr<Entity> child);
+        void AddChild(Entity* child);
         void RecalculateSubtreeTransformations();
     private:
         Scene* m_Scene;
         Entity* m_Parent;
-        std::vector<std::weak_ptr<Entity>> m_Children;
+        std::vector<Entity*> m_Children;
     private:
         TransformData m_TransformData;
         ShapeData* m_ShapeData;
@@ -71,7 +71,7 @@ namespace Phezu {
         bool m_IsActive;
         std::string m_Tag;
         
-        friend void SetParentInternal(std::weak_ptr<Entity> _this, std::weak_ptr<Entity> child);
+        friend void SetParentInternal(Entity* _this, Entity* child);
         friend class Scene;
         friend class Physics;
         friend void Destroy(Entity* entity);

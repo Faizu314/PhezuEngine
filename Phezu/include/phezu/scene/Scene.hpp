@@ -13,21 +13,21 @@ namespace Phezu {
     class Entity;
     class Prefab;
     
-    class Scene : public std::enable_shared_from_this<Scene> {
+    class Scene {
     public:
         Scene() = delete;
         Scene(Engine* engine);
         Scene(Engine* engine, const std::string& name);
     public:
-        std::weak_ptr<Entity> CreateEntity();
-        std::weak_ptr<Entity> CreateEntity(GUID prefabGuid);
-        std::weak_ptr<Entity> GetEntity(uint64_t entityID) const;
+        Entity* CreateEntity();
+        Entity* CreateEntity(GUID prefabGuid);
+        Entity* GetEntity(uint64_t entityID) const;
         void DestroyEntity(uint64_t entityID);
         void Load();
         void LogicUpdate(float deltaTime);
         void UpdateHierarchy();
-        void GetPhysicsEntities(std::vector<std::weak_ptr<Entity>>& staticEntities, std::vector<std::weak_ptr<Entity>>& dynamicEntities, size_t& staticIndex, size_t& dynamicIndex) const;
-        void GetRenderableEntities(std::vector<std::weak_ptr<Entity>>& entities, size_t& count) const;
+        void GetPhysicsEntities(std::vector<Entity*>& staticEntities, std::vector<Entity*>& dynamicEntities, size_t& staticIndex, size_t& dynamicIndex) const;
+        void GetRenderableEntities(std::vector<Entity*>& entities, size_t& count) const;
         void BeginUnload();
         void Unload();
         long long unsigned int GetFrameCount() const;
@@ -42,7 +42,7 @@ namespace Phezu {
         Blueprint m_SceneEntities;
         std::string m_Name;
         bool m_IsLoaded;
-        std::unordered_map<uint64_t, std::shared_ptr<Entity>> m_RuntimeEntities;
+        std::unordered_map<uint64_t, Entity*> m_RuntimeEntities;
         std::vector<uint64_t> m_EntitiesToDestroy;
     };
 }

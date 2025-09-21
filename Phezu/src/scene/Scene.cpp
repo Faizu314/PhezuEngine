@@ -15,19 +15,19 @@ namespace Phezu {
     Scene::Scene(Engine* engine) : m_Engine(engine), m_IsLoaded(false) { }
     Scene::Scene(Engine* engine, const std::string& name) : m_Engine(engine), m_Name(name), m_IsLoaded(false) { }
     
-    std::weak_ptr<Entity> Scene::CreateEntity() {
-        std::shared_ptr<Entity> entity = std::make_shared<Entity>(this);
+    Entity* Scene::CreateEntity() {
+        Entity* entity = new Entity(this);
         m_RuntimeEntities.insert(std::make_pair(entity->GetEntityID(), entity));
         
         return entity;
     }
     
-    std::weak_ptr<Entity> Scene::CreateEntity(GUID prefabGuid) {
-        auto prefab = m_Engine->GetPrefab(prefabGuid).lock();
+    Entity* Scene::CreateEntity(GUID prefabGuid) {
+        auto prefab = m_Engine->GetPrefab(prefabGuid);
         
         if (!prefab) {
             //TODO: add asserts
-            return std::weak_ptr<Entity>();
+            return nullptr;
         }
         
         auto entity = prefab->Instantiate(this);
@@ -35,12 +35,12 @@ namespace Phezu {
         return entity;
     }
     
-    std::weak_ptr<Entity> Scene::GetEntity(uint64_t entityID) const {
+    Entity* Scene::GetEntity(uint64_t entityID) const {
         try {
             return m_RuntimeEntities.at(entityID);
         }
         catch (const std::out_of_range&) {
-            return std::weak_ptr<Entity>();
+            return nullptr;
         }
     }
     
@@ -60,7 +60,7 @@ namespace Phezu {
         size_t childCount = it->second->GetChildCount();
         
         for (size_t i = 0; i < childCount; i++) {
-            if (auto child = it->second->GetChild(i).lock())
+            if (auto child = it->second->GetChild(i))
                 DestroyEntityInternal(child->GetEntityID());
         }
         
@@ -102,7 +102,7 @@ namespace Phezu {
         }
     }
     
-    void Scene::GetPhysicsEntities(std::vector<std::weak_ptr<Entity>>& staticEntities, std::vector<std::weak_ptr<Entity>>& dynamicEntities, size_t& staticIndex, size_t& dynamicIndex) const {
+    void Scene::GetPhysicsEntities(std::vector<Entity*>& staticEntities, std::vector<Entity*>& dynamicEntities, size_t& staticIndex, size_t& dynamicIndex) const {
         for (auto it = m_RuntimeEntities.begin(); it != m_RuntimeEntities.end(); it++) {
             auto entity = (*it).second;
             auto physicsData = entity->GetPhysicsData();
@@ -123,7 +123,7 @@ namespace Phezu {
         }
     }
     
-    void Scene::GetRenderableEntities(std::vector<std::weak_ptr<Entity>>& entities, size_t& index) const {
+    void Scene::GetRenderableEntities(std::vector<Entity*>& entities, size_t& index) const {
         for (auto it = m_RuntimeEntities.begin(); it != m_RuntimeEntities.end(); it++) {
             auto entity = (*it).second;
             if (entity->GetRenderData() != nullptr && entity->GetShapeData() != nullptr) {

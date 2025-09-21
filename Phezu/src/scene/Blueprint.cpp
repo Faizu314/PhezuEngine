@@ -119,7 +119,7 @@ namespace Phezu {
         }
     }
     
-    std::shared_ptr<Entity> Blueprint::Instantiate(Scene* scene) const {
+    Entity* Blueprint::Instantiate(Scene* scene) const {
         BlueprintRegistry registry;
         
         /*-----– First Pass -------*/
@@ -142,7 +142,7 @@ namespace Phezu {
             const BlueprintEntry& entry = *m_PrefabEntries[i];
             
             uint64_t prefabGuid = GetProperty<uint64_t>("SourcePrefab", entry, overrides);
-            const Blueprint& prefabBlueprint = m_Engine->GetPrefab(prefabGuid).lock()->GetBlueprint();
+            const Blueprint& prefabBlueprint = m_Engine->GetPrefab(prefabGuid)->GetBlueprint();
             
             PrefabOverrides prefabOverrides = entry.Properties.at("Overrides").get<PrefabOverrides>();
             prefabBlueprint.InstantiateEntitiesAndComponents(scene, registry, entry.FileID, prefabOverrides);
@@ -160,7 +160,7 @@ namespace Phezu {
             
             EntryRef parentRef = GetProperty<EntryRef>("Parent", entry, overrides);
             
-            auto entity = scene->CreateEntity().lock();
+            auto entity = scene->CreateEntity();
             entities.insert(std::make_pair(entry.FileID, entity));
             entity->SetTag(GetProperty<std::string>("Tag", entry, overrides));
 
@@ -184,7 +184,7 @@ namespace Phezu {
             if (parentRef.Guid == m_Guid && overrides.RemovedEntities.find(parentRef.FileID) != overrides.RemovedEntities.end())
                 continue;
             
-            std::shared_ptr<Entity> parentEntity;
+            Entity* parentEntity;
             if (parentRef.Guid == m_Guid)
                 parentEntity = registry[registryKey].Entities[parentRef.FileID];
             else
@@ -257,7 +257,7 @@ namespace Phezu {
             if (overrides.RemovedComponents.find(entry.FileID) != overrides.RemovedComponents.end())
                 continue;
             
-            std::shared_ptr<Entity> parentEntity;
+            Entity* parentEntity;
             if (parentRef.Guid == m_Guid)
                 parentEntity = registry[registryKey].Entities[parentRef.FileID];
             else
@@ -282,7 +282,7 @@ namespace Phezu {
             
             uint64_t prefabGuid = GetProperty<uint64_t>("SourcePrefab", entry, overrides);
             uint64_t parentFileID = GetProperty<uint64_t>("Parent", entry, overrides);
-            const Blueprint& prefabBlueprint = m_Engine->GetPrefab(prefabGuid).lock()->GetBlueprint();
+            const Blueprint& prefabBlueprint = m_Engine->GetPrefab(prefabGuid)->GetBlueprint();
             
             PrefabOverrides prefabOverrides = entry.Properties.at("Overrides").get<PrefabOverrides>();
             prefabBlueprint.BuildHierarchyAndInitializeScripts(scene, registry, entry.FileID, prefabOverrides);
@@ -305,7 +305,7 @@ namespace Phezu {
             auto entity = entities[entry.FileID];
             
             if (parentRef.FileID != 0) {
-                std::shared_ptr<Entity> parentEntity;
+                Entity* parentEntity;
                 if (parentRef.Guid == m_Guid)
                     parentEntity = entities[parentRef.FileID];
                 else

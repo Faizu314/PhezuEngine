@@ -85,11 +85,11 @@ namespace Phezu {
         GetScriptClasses();
     }
 
-    void ScriptEngine::OnEntityCreated(std::shared_ptr<Entity> entity) {
+    void ScriptEngine::OnEntityCreated(Entity* entity) {
         auto entityID = entity->GetEntityID();
         
-        std::shared_ptr<EntityInstance> entityInstance =
-            std::make_shared<EntityInstance>(entity->GetEntityID(), m_RuntimeDomain, m_EntityClass);
+        EntityInstance* entityInstance =
+            new EntityInstance(entity->GetEntityID(), m_RuntimeDomain, m_EntityClass);
         entityInstance->EntityScript.SetUlongField(m_EntityIdField, entity->GetEntityID());
         m_EntityInstances[entity->GetEntityID()] = entityInstance;
         
@@ -124,7 +124,7 @@ namespace Phezu {
         }
     }
 
-    void ScriptEngine::OnEntityDestroyed(std::shared_ptr<Entity> entity) {
+    void ScriptEngine::OnEntityDestroyed(Entity* entity) {
         auto entityInstance = m_EntityInstances[entity->GetEntityID()];
 
         for (size_t i = 0; i < entityInstance->BehaviourScripts.size(); i++) {
@@ -195,14 +195,14 @@ namespace Phezu {
     }
     
     void ScriptEngine::GetEngineClasses() {
-        m_ObjectClass = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "Object", ScriptClassType::Object);
-        m_ComponentClass = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "Component", ScriptClassType::Component);
-        m_BehaviourComponentClass = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "BehaviourComponent", ScriptClassType::BehaviourComponent);
+        m_ObjectClass = new ScriptClass(m_CoreAssembly, "PhezuEngine", "Object", ScriptClassType::Object);
+        m_ComponentClass = new ScriptClass(m_CoreAssembly, "PhezuEngine", "Component", ScriptClassType::Component);
+        m_BehaviourComponentClass = new ScriptClass(m_CoreAssembly, "PhezuEngine", "BehaviourComponent", ScriptClassType::BehaviourComponent);
         m_ComponentEntitySetter = m_ComponentClass->GetMonoMethod("SetEntity", 1);
-        m_EntityClass = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "Entity", ScriptClassType::Entity);
+        m_EntityClass = new ScriptClass(m_CoreAssembly, "PhezuEngine", "Entity", ScriptClassType::Entity);
         
-        m_NativeComponentClasses[NativeType::Transform] = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "Transform", ScriptClassType::NativeComponent);
-        m_NativeComponentClasses[NativeType::Physics] = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "Physics", ScriptClassType::NativeComponent);
+        m_NativeComponentClasses[NativeType::Transform] = new ScriptClass(m_CoreAssembly, "PhezuEngine", "Transform", ScriptClassType::NativeComponent);
+        m_NativeComponentClasses[NativeType::Physics] = new ScriptClass(m_CoreAssembly, "PhezuEngine", "Physics", ScriptClassType::NativeComponent);
     }
     
     void ScriptEngine::GetScriptClasses() {
@@ -222,7 +222,7 @@ namespace Phezu {
             const char* nameSpace = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAMESPACE]);
             const char* name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
 
-            auto monoClass = std::make_shared<ScriptClass>(m_CoreAssembly, nameSpace, name, ScriptClassType::ScriptComponent);
+            auto monoClass = new ScriptClass(m_CoreAssembly, nameSpace, name, ScriptClassType::ScriptComponent);
 
             if (monoClass->GetMonoClass() == m_BehaviourComponentClass->GetMonoClass())
                 continue;
@@ -237,7 +237,7 @@ namespace Phezu {
     }
     
     void ScriptEngine::GetInputClassAndFields() {
-        std::shared_ptr<ScriptClass> inputClass = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "Input", ScriptClassType::CSharpClass);
+        ScriptClass* inputClass = new ScriptClass(m_CoreAssembly, "PhezuEngine", "Input", ScriptClassType::CSharpClass);
         m_InputClassVTable = mono_class_vtable(m_RuntimeDomain, inputClass->GetMonoClass());
         mono_runtime_class_init(m_InputClassVTable);
         

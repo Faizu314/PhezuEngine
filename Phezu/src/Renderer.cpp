@@ -89,7 +89,7 @@ namespace Phezu {
         SDL_RenderClear(m_RendererPtr);
     }
     
-    void Renderer::DrawEntities(const std::vector<std::weak_ptr<Entity>>& renderableEntities, size_t count, const Color& bg) {
+    void Renderer::DrawEntities(const std::vector<Entity*>& renderableEntities, size_t count, const Color& bg) {
         int index = 0;
         for (auto& entity : renderableEntities) {
             if (index >= count)
@@ -99,14 +99,12 @@ namespace Phezu {
         }
     }
     
-    void Renderer::DrawEntity(std::weak_ptr<Entity> entity) {
-        auto entityL = entity.lock();
-        
+    void Renderer::DrawEntity(Entity* entity) {
         SDL_Rect dest;
         
-        TransformData* transformData = entityL->GetTransformData();
-        ShapeData* shapeData = entityL->GetShapeData();
-        RenderData* renderData = entityL->GetRenderData();
+        TransformData* transformData = entity->GetTransformData();
+        ShapeData* shapeData = entity->GetShapeData();
+        RenderData* renderData = entity->GetRenderData();
         
         if (shapeData == nullptr || renderData == nullptr)
             return;
@@ -124,14 +122,14 @@ namespace Phezu {
         
         SDL_Texture* texture = m_DefaultTex;
         SDL_Color tint;
-        entityL->GetRenderData()->Tint.ConvertToSDLColor(tint);
+        entity->GetRenderData()->Tint.ConvertToSDLColor(tint);
         
-        if (auto tex = entityL->GetRenderData()->Sprite.lock())
-            texture = *tex.get();
+        if (auto tex = entity->GetRenderData()->Sprite)
+            texture = *tex;
         
         //TODO: add equality operator in Rect to return SDL_Rect
         SDL_Rect srcRect;
-        Rect uvs = entityL->GetRenderData()->SourceRect;
+        Rect uvs = entity->GetRenderData()->SourceRect;
         srcRect.x = uvs.x;
         srcRect.y = uvs.y;
         srcRect.w = uvs.w;

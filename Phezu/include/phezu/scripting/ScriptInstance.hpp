@@ -9,7 +9,7 @@
 namespace Phezu {
 	class ScriptInstance {
 	public:
-		ScriptInstance(MonoDomain* domain, std::shared_ptr<ScriptClass> scriptClass);
+		ScriptInstance(MonoDomain* domain, ScriptClass* scriptClass);
         ScriptInstance(ScriptInstance&& other) noexcept;
         ScriptInstance& operator=(ScriptInstance&& other) noexcept;
         ~ScriptInstance();
@@ -30,7 +30,7 @@ namespace Phezu {
 		MonoObject* GetMonoObject() { return m_Instance; }
         uint32_t GetMonoGcHandle() { return m_GcHandle; }
 	private:
-		std::shared_ptr<ScriptClass> m_Class;
+		ScriptClass* m_Class;
         uint32_t m_GcHandle;
         MonoObject* m_Instance;
         MonoMethod* m_OnCreateMethod;

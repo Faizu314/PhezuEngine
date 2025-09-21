@@ -36,14 +36,14 @@ namespace Phezu {
         //How do we ensure a unique file gets created for a unique list of entities
     private:
         struct Registry {
-            std::unordered_map<uint64_t, std::shared_ptr<Entity>> Entities;
+            std::unordered_map<uint64_t, Entity*> Entities;
             std::unordered_map<uint64_t, DataComponent*> Components;
-            std::shared_ptr<Entity> RootEntity;
+            Entity* RootEntity;
         };
         using BlueprintRegistry = std::unordered_map<RegistryKey, Registry>;
     public:
         void Initialize(Engine* engine, GUID guid);
-        std::shared_ptr<Entity> Instantiate(Scene* scene) const;
+        Entity* Instantiate(Scene* scene) const;
     private:
         void InstantiateEntitiesAndComponents(Scene* scene, BlueprintRegistry& registry, uint64_t instanceID = 0, PrefabOverrides overrides = PrefabOverrides()) const;
         void BuildHierarchyAndInitializeScripts(Scene* scene, BlueprintRegistry& registry, uint64_t instanceID = 0, PrefabOverrides overrides = PrefabOverrides()) const;

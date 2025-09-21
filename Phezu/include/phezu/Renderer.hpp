@@ -59,10 +59,10 @@ namespace Phezu {
         ~Renderer();
     public:
         void ClearFrame(const Color& bg = Color::Black);
-        void DrawEntities(const std::vector<std::weak_ptr<Entity>>& renderableEntities, size_t count, const Color& bg = Color::Black);
+        void DrawEntities(const std::vector<Entity*>& renderableEntities, size_t count, const Color& bg = Color::Black);
         void RenderFrame();
     private:
-        void DrawEntity(std::weak_ptr<Entity> entity);
+        void DrawEntity(Entity* entity);
         Vector2 WorldToSdlPosition(const Vector2& worldPos) const;
     private:
         Engine* m_Engine;
@@ -72,5 +72,5 @@ namespace Phezu {
         SDL_Texture* m_IntermediateTex;
     };
     
-    std::shared_ptr<Texture> LoadTexture(const Renderer& renderer);
+    Texture* LoadTexture(const Renderer& renderer);
 }

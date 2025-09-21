@@ -42,8 +42,8 @@ namespace Phezu {
 		ScriptEngine(Engine* engine);
 	public:
 		void Init();
-		void OnEntityCreated(std::shared_ptr<Entity> entity);
-		void OnEntityDestroyed(std::shared_ptr<Entity> entity);
+		void OnEntityCreated(Entity* entity);
+		void OnEntityDestroyed(Entity* entity);
         void PreUpdate();
 		void OnUpdate(float deltaTime);
         void FirePhysicsCollisionEvent(uint64_t entityA, uint64_t entityB, PhysicsEventType eventType);
@@ -67,10 +67,10 @@ namespace Phezu {
 		MonoDomain* m_RuntimeDomain;
 		MonoAssembly* m_CoreAssembly;
 	private:
-        std::shared_ptr<ScriptClass> m_ObjectClass;
-        std::shared_ptr<ScriptClass> m_ComponentClass;
-        std::shared_ptr<ScriptClass> m_BehaviourComponentClass;
-        std::shared_ptr<ScriptClass> m_EntityClass;
+        ScriptClass* m_ObjectClass;
+        ScriptClass* m_ComponentClass;
+        ScriptClass* m_BehaviourComponentClass;
+        ScriptClass* m_EntityClass;
     private:
         MonoVTable* m_InputClassVTable;
         InputFields m_InputFields;
@@ -78,8 +78,8 @@ namespace Phezu {
 		MonoClassField* m_EntityIdField;
 		MonoMethod* m_ComponentEntitySetter;
 	private:
-		std::unordered_map<std::string, std::shared_ptr<ScriptClass>> m_ScriptClasses;
-        std::unordered_map<NativeType, std::shared_ptr<ScriptClass>> m_NativeComponentClasses;
-		std::unordered_map<uint64_t, std::shared_ptr<EntityInstance>> m_EntityInstances;
+		std::unordered_map<std::string, ScriptClass*> m_ScriptClasses;
+        std::unordered_map<NativeType, ScriptClass*> m_NativeComponentClasses;
+		std::unordered_map<uint64_t, EntityInstance*> m_EntityInstances;
 	};
 }
