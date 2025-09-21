@@ -48,6 +48,7 @@ namespace Phezu {
         void RemoveParent();
         size_t GetChildCount() { return m_Children.size(); }
         Entity* GetChild(size_t childIndex);
+        void Destroy();
     private:
         void OnDestroyed();
         void OnChildRemoved(const Entity* removedChild);

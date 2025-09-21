@@ -124,6 +124,12 @@ namespace Phezu {
 
 		return scriptInstance->GetMonoGcHandle();
 	}
+    
+    void Entity_Destroy(uint64_t entityID) {
+        auto entity = GetEntity(entityID);
+
+        entity->Destroy();
+    }
 
 	void Transform_GetPosition(uint64_t entityID, glm::vec2* position) {
 		Entity* entity = GetEntity(entityID);
@@ -171,6 +177,7 @@ namespace Phezu {
         mono_add_internal_call("PhezuEngine.InternalCalls::Entity_GetTag", reinterpret_cast<const void*>(&Entity_GetTag));
         mono_add_internal_call("PhezuEngine.InternalCalls::Entity_HasComponent", reinterpret_cast<const void*>(&Entity_HasComponent));
         mono_add_internal_call("PhezuEngine.InternalCalls::Entity_GetComponent", reinterpret_cast<const void*>(&Entity_GetComponent));
+        mono_add_internal_call("PhezuEngine.InternalCalls::Entity_Destroy", reinterpret_cast<const void*>(&Entity_Destroy));
         
 		mono_add_internal_call("PhezuEngine.InternalCalls::Transform_GetPosition", reinterpret_cast<const void*>(&Transform_GetPosition));
 		mono_add_internal_call("PhezuEngine.InternalCalls::Transform_SetPosition", reinterpret_cast<const void*>(&Transform_SetPosition));

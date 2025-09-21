@@ -13,6 +13,8 @@ namespace PhezuEngine {
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern IntPtr Entity_GetComponent(ulong entityID, IntPtr componentType);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Entity_Destroy(ulong entityID);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Transform_GetPosition(ulong entityID, out Vector2 position);
