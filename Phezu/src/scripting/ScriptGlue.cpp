@@ -23,15 +23,6 @@ namespace Phezu {
 
 	static Data* s_Data = nullptr;
 
-	enum class NativeType {
-		None,
-		TransformData,
-		ShapeData,
-		RenderData,
-		PhysicsData,
-		ScriptComponent
-	};
-
 	std::shared_ptr<Entity> GetEntity(uint64_t entityID) {
 		SceneManager sceneManager = s_Data->Engine->GetSceneManager();
 		std::shared_ptr<Entity> entity;
@@ -53,13 +44,13 @@ namespace Phezu {
 		outFullname = nameSpace + "." + name;
 
 		if (outFullname == "PhezuEngine.Transform")
-			return NativeType::TransformData;
+			return NativeType::Transform;
 		else if (outFullname == "PhezuEngine.Shape")
-			return NativeType::ShapeData;
+			return NativeType::Shape;
 		else if (outFullname == "PhezuEngine.Renderer")
-			return NativeType::RenderData;
-		else if (outFullname == "PhezuEngine.RigidBody")
-			return NativeType::PhysicsData;
+			return NativeType::Renderer;
+		else if (outFullname == "PhezuEngine.Physics")
+			return NativeType::Physics;
 		else if (mono_class_is_subclass_of(monoClass, s_Data->ScriptEngine->GetBehaviourComponentClass(), false))
 			return NativeType::ScriptComponent;
 		
@@ -80,19 +71,19 @@ namespace Phezu {
 		NativeType nativeType = MonoToNativeType(monoType, classFullname);
 
 		switch (nativeType) {
-			case NativeType::TransformData:
+			case NativeType::Transform:
 			{
 				return true;
 			}
-			case NativeType::ShapeData:
+			case NativeType::Shape:
 			{
 				return entity->GetShapeData() != nullptr;
 			}
-			case NativeType::RenderData:
+			case NativeType::Renderer:
 			{
 				return entity->GetRenderData() != nullptr;
 			}
-			case NativeType::PhysicsData:
+			case NativeType::Physics:
 			{
 				return entity->GetPhysicsData() != nullptr;
 			}
@@ -108,19 +99,23 @@ namespace Phezu {
 		return false;
 	}
 
-	intptr_t Entity_GetComponent(uint64_t entityID, MonoType* monoType) {
+	uint32_t Entity_GetComponent(uint64_t entityID, MonoType* monoType) {
 		auto entity = GetEntity(entityID);
 
 		std::string classFullname;
 		NativeType nativeType = MonoToNativeType(monoType, classFullname);
-
-		if (nativeType != NativeType::ScriptComponent) {
-			Log("Trying to get a native component as a C# class\n");
+        
+		if (nativeType == NativeType::None) {
+            Log("Mono type %s not recognized", classFullname.c_str());
 			return 0;
 		}
 
-		ScriptInstance* scriptInstance = 
-			s_Data->ScriptEngine->GetScriptInstance(entityID, classFullname);
+        ScriptInstance* scriptInstance = nullptr;
+        
+        if (nativeType == NativeType::ScriptComponent)
+			scriptInstance = s_Data->ScriptEngine->GetBehaviourScriptInstance(entityID, classFullname);
+        else
+            scriptInstance = s_Data->ScriptEngine->GetNativeComponentInstance(entityID, nativeType);
 
 		if (scriptInstance == nullptr) {
 			Log("Unable to find script component: %s on entity: %i\n", classFullname.c_str(), entityID);

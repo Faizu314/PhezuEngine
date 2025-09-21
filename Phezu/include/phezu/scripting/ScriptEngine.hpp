@@ -26,6 +26,17 @@ namespace Phezu {
         CollisionExit
     };
     
+    enum class NativeType {
+        None,
+        Transform,
+        Shape,
+        Renderer,
+        Physics,
+        ScriptComponent
+    };
+    
+    std::string ToString(NativeType t);
+    
 	class ScriptEngine {
 	public:
 		ScriptEngine(Engine* engine);
@@ -39,33 +50,36 @@ namespace Phezu {
 		void Shutdown();
 	public:
 		MonoClass* GetBehaviourComponentClass();
-		ScriptInstance* GetScriptInstance(uint64_t entityID, const std::string& classFullname);
+		ScriptInstance* GetBehaviourScriptInstance(uint64_t entityID, const std::string& classFullname);
+        ScriptInstance* GetNativeComponentInstance(uint64_t entityID, const NativeType componentType);
 	private:
 		void InitMono();
 		MonoAssembly* LoadAssembly(const std::string& assemblyPath);
         void GetInputClassAndFields();
+        void GetEngineClasses();
 		void GetScriptClasses();
     private:
         void PrintAssemblyClasses(MonoAssembly* assembly);
 	private:
 		Engine* m_Engine;
 		MonoLogger m_MonoLogger;
-		MonoDomain* m_RootDomain;
-		MonoDomain* m_AppDomain;
+		MonoDomain* m_EngineDomain;
+		MonoDomain* m_RuntimeDomain;
 		MonoAssembly* m_CoreAssembly;
 	private:
-		std::shared_ptr<ScriptClass> m_ObjectClass;
-		std::shared_ptr<ScriptClass> m_EntityClass;
-		std::shared_ptr<ScriptClass> m_BehaviourComponentClass;
+        std::shared_ptr<ScriptClass> m_ObjectClass;
+        std::shared_ptr<ScriptClass> m_ComponentClass;
+        std::shared_ptr<ScriptClass> m_BehaviourComponentClass;
+        std::shared_ptr<ScriptClass> m_EntityClass;
     private:
         MonoVTable* m_InputClassVTable;
         InputFields m_InputFields;
 	private:
-		MonoMethod* m_ObjectGcHandleGetter;
 		MonoClassField* m_EntityIdField;
-		MonoMethod* m_BehaviourComponentEntitySetter;
+		MonoMethod* m_ComponentEntitySetter;
 	private:
 		std::unordered_map<std::string, std::shared_ptr<ScriptClass>> m_ScriptClasses;
+        std::unordered_map<NativeType, std::shared_ptr<ScriptClass>> m_NativeComponentClasses;
 		std::unordered_map<uint64_t, std::shared_ptr<EntityInstance>> m_EntityInstances;
 	};
 }

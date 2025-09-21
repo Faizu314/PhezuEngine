@@ -3,22 +3,23 @@
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
+#include <mono/metadata/object.h>
 
 namespace Phezu {
 
-	ScriptInstance::ScriptInstance(MonoDomain* domain, std::shared_ptr<ScriptClass> scriptClass, MonoMethod* gcHandleGetter)
-	: m_Class(scriptClass), m_OnCreateMethod(nullptr), m_OnUpdateMethod(nullptr), m_IntPtr(0) {
+	ScriptInstance::ScriptInstance(MonoDomain* domain, std::shared_ptr<ScriptClass> scriptClass)
+	: m_Class(scriptClass), m_OnCreateMethod(nullptr), m_OnUpdateMethod(nullptr), m_GcHandle(0) {
+        
 		m_Instance = mono_object_new(domain, scriptClass->GetMonoClass());
 
-		if (m_Instance == nullptr)
-		{
-			Log("Error instantiating mono class");
-		}
+        if (m_Instance == nullptr)
+        {
+            Log("Error instantiating mono class %s", scriptClass->GetFullname().c_str());
+            return;
+        }
 
-		mono_runtime_object_init(m_Instance);
-
-		MonoObject* result = mono_runtime_invoke(gcHandleGetter, m_Instance, nullptr, nullptr);
-		m_IntPtr = *(intptr_t*)mono_object_unbox(result);
+        m_GcHandle = mono_gchandle_new(m_Instance, false);
+        mono_runtime_object_init(m_Instance);
 
 		if (scriptClass->GetScriptClassType() == ScriptClassType::ScriptComponent) {
 			m_OnCreateMethod = scriptClass->GetMonoMethod("OnCreated", 0);
@@ -29,6 +30,51 @@ namespace Phezu {
             m_OnCollisionExitMethod = scriptClass->GetMonoMethod("OnCollisionExit", 1);
 		}
 	}
+    
+    ScriptInstance::ScriptInstance(ScriptInstance&& other) noexcept {
+        m_Class = other.m_Class;
+        m_GcHandle = other.m_GcHandle;
+        m_Instance = other.m_Instance;
+        m_OnCreateMethod = other.m_OnCreateMethod;
+        m_OnUpdateMethod = other.m_OnUpdateMethod;
+        m_OnCollisionEnterMethod = other.m_OnCollisionEnterMethod;
+        m_OnCollisionStayMethod = other.m_OnCollisionStayMethod;
+        m_OnCollisionExitMethod = other.m_OnCollisionExitMethod;
+        
+        other.m_Class = nullptr;
+        other.m_GcHandle = 0;
+        other.m_Instance = nullptr;
+        other.m_OnCreateMethod = nullptr;
+        other.m_OnUpdateMethod = nullptr;
+        other.m_OnCollisionEnterMethod = nullptr;
+        other.m_OnCollisionStayMethod = nullptr;
+        other.m_OnCollisionExitMethod = nullptr;
+    }
+    
+    ScriptInstance& ScriptInstance::operator=(ScriptInstance&& other) noexcept {
+        m_Class = other.m_Class;
+        m_GcHandle = other.m_GcHandle;
+        m_Instance = other.m_Instance;
+        m_OnCreateMethod = other.m_OnCreateMethod;
+        m_OnUpdateMethod = other.m_OnUpdateMethod;
+        m_OnCollisionEnterMethod = other.m_OnCollisionEnterMethod;
+        m_OnCollisionStayMethod = other.m_OnCollisionStayMethod;
+        m_OnCollisionExitMethod = other.m_OnCollisionExitMethod;
+        
+        other.m_Class = nullptr;
+        other.m_GcHandle = 0;
+        other.m_Instance = nullptr;
+        other.m_OnCreateMethod = nullptr;
+        other.m_OnUpdateMethod = nullptr;
+        other.m_OnCollisionEnterMethod = nullptr;
+        other.m_OnCollisionStayMethod = nullptr;
+        other.m_OnCollisionExitMethod = nullptr;
+    }
+    
+    ScriptInstance::~ScriptInstance() {
+        if (m_GcHandle > 0)
+            mono_gchandle_free(m_GcHandle);
+    }
 
 	void ScriptInstance::InvokeOnCreate() {
 		MonoObject* exception = nullptr;
@@ -65,7 +111,7 @@ namespace Phezu {
 		}
 	}
     
-    void ScriptInstance::TryInvokeOnCollisionEnter(intptr_t otherEntity) {
+    void ScriptInstance::TryInvokeOnCollisionEnter(uint32_t otherEntity) {
         if (m_OnCollisionEnterMethod == nullptr)
             return;
         
@@ -88,7 +134,7 @@ namespace Phezu {
         }
     }
     
-    void ScriptInstance::TryInvokeOnCollisionStay(intptr_t otherEntity) {
+    void ScriptInstance::TryInvokeOnCollisionStay(uint32_t otherEntity) {
         if (m_OnCollisionStayMethod == nullptr)
             return;
         
@@ -111,7 +157,7 @@ namespace Phezu {
         }
     }
     
-    void ScriptInstance::TryInvokeOnCollisionExit(intptr_t otherEntity) {
+    void ScriptInstance::TryInvokeOnCollisionExit(uint32_t otherEntity) {
         if (m_OnCollisionExitMethod == nullptr)
             return;
         
@@ -134,7 +180,7 @@ namespace Phezu {
         }
     }
 
-	void ScriptInstance::SetEntityProperty(MonoMethod* propertySetter, intptr_t value) {
+	void ScriptInstance::SetEntityProperty(MonoMethod* propertySetter, uint32_t value) {
 		MonoObject* exception = nullptr;
 
 		void* params[] =

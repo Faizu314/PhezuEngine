@@ -47,15 +47,27 @@ namespace Phezu {
         return buffer;
     }
 
+    std::string ToString(NativeType t) {
+        switch (t) {
+            case NativeType::None:   return "None";
+            case NativeType::Transform: return "Transform";
+            case NativeType::Physics:  return "Physics";
+            case NativeType::Shape: return "Shape";
+            case NativeType::Renderer: return "Renderer";
+            case NativeType::ScriptComponent: return "ScriptComponent";
+        }
+        return "Unknown";
+    }
+    
     std::string GetMonoClassFullname(const std::string& nameSpace, const std::string& className) {
         if (nameSpace.size() == 0)
             return className;
         return nameSpace + "." + className;
     }
 
-    ScriptEngine::ScriptEngine(Engine* engine) : m_Engine(engine), m_RootDomain(nullptr), 
-        m_AppDomain(nullptr), m_CoreAssembly(nullptr), m_ObjectGcHandleGetter(nullptr),
-        m_EntityIdField(nullptr), m_BehaviourComponentEntitySetter(nullptr) {}
+    ScriptEngine::ScriptEngine(Engine* engine) : m_Engine(engine), m_EngineDomain(nullptr), 
+        m_RuntimeDomain(nullptr), m_CoreAssembly(nullptr),
+        m_EntityIdField(nullptr), m_ComponentEntitySetter(nullptr) {}
 
     void ScriptEngine::Init() {
         InitMono();
@@ -71,27 +83,42 @@ namespace Phezu {
         m_CoreAssembly = LoadAssembly(scriptCoreDllPath.string());
 
         GetScriptClasses();
-        PrintAssemblyClasses(m_CoreAssembly);
     }
 
     void ScriptEngine::OnEntityCreated(std::shared_ptr<Entity> entity) {
-        std::shared_ptr<EntityInstance> entityInstance = 
-            std::make_shared<EntityInstance>(entity->GetEntityID(), m_AppDomain, m_EntityClass, m_ObjectGcHandleGetter);
+        auto entityID = entity->GetEntityID();
+        
+        std::shared_ptr<EntityInstance> entityInstance =
+            std::make_shared<EntityInstance>(entity->GetEntityID(), m_RuntimeDomain, m_EntityClass);
         entityInstance->EntityScript.SetUlongField(m_EntityIdField, entity->GetEntityID());
         m_EntityInstances[entity->GetEntityID()] = entityInstance;
-
+        
+        // Create Native Components
+        
+        ScriptInstance transform(m_RuntimeDomain, m_NativeComponentClasses[NativeType::Transform]);
+        transform.SetEntityProperty(m_ComponentEntitySetter, entityInstance->EntityScript.GetMonoGcHandle());
+        entityInstance->NativeComponents.emplace(NativeType::Transform, std::move(transform));
+        
+        if (entity->GetPhysicsData() != nullptr) {
+            ScriptInstance physics(m_RuntimeDomain, m_NativeComponentClasses[NativeType::Physics]);
+            physics.SetEntityProperty(m_ComponentEntitySetter, entityInstance->EntityScript.GetMonoGcHandle());
+            entityInstance->NativeComponents.emplace(NativeType::Physics, std::move(physics));
+        }
+        
+        // Create Script Components
+        
         size_t compCount = entity->GetScriptComponentCount();
 
         for (size_t i = 0; i < compCount; i++) {
             ScriptComponent* comp = entity->GetScriptComponent(i);
             //TODO: Log error if script class not found
             auto scriptClass = m_ScriptClasses[comp->GetScriptClassFullname()];
-            entityInstance->BehaviourScripts.emplace_back(m_AppDomain, scriptClass, m_ObjectGcHandleGetter);
+            entityInstance->BehaviourScripts.emplace_back(m_RuntimeDomain, scriptClass);
 
             entityInstance->BehaviourScripts[i].SetEntityProperty(
-                m_BehaviourComponentEntitySetter, entityInstance->EntityScript.GetMonoGcHandle());
+                m_ComponentEntitySetter, entityInstance->EntityScript.GetMonoGcHandle());
         }
-
+        
         for (size_t i = 0; i < compCount; i++) {
             entityInstance->BehaviourScripts[i].InvokeOnCreate();
         }
@@ -134,15 +161,15 @@ namespace Phezu {
         
         mono_config_parse(NULL);
         
-        m_RootDomain = mono_jit_init("MyScriptRuntime");
-        if (m_RootDomain == nullptr)
+        m_EngineDomain = mono_jit_init("PhezuEngineDomain");
+        if (m_EngineDomain == nullptr)
         {
             Log("Error initializing mono jit\n");
             return;
         }
 
-        m_AppDomain = mono_domain_create_appdomain("MyAppDomain", nullptr);
-        mono_domain_set(m_AppDomain, true);
+        m_RuntimeDomain = mono_domain_create_appdomain("PhezuRuntimeDomain", nullptr);
+        mono_domain_set(m_RuntimeDomain, true);
     }
 
     MonoAssembly* ScriptEngine::LoadAssembly(const std::string& assemblyPath) {
@@ -167,18 +194,26 @@ namespace Phezu {
         return assembly;
     }
     
+    void ScriptEngine::GetEngineClasses() {
+        m_ObjectClass = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "Object", ScriptClassType::Object);
+        m_ComponentClass = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "Component", ScriptClassType::Component);
+        m_BehaviourComponentClass = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "BehaviourComponent", ScriptClassType::BehaviourComponent);
+        m_ComponentEntitySetter = m_ComponentClass->GetMonoMethod("SetEntity", 1);
+        m_EntityClass = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "Entity", ScriptClassType::Entity);
+        
+        m_NativeComponentClasses[NativeType::Transform] = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "Transform", ScriptClassType::NativeComponent);
+        m_NativeComponentClasses[NativeType::Physics] = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "Physics", ScriptClassType::NativeComponent);
+    }
+    
     void ScriptEngine::GetScriptClasses() {
         MonoImage* image = mono_assembly_get_image(m_CoreAssembly);
         const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
         int32_t numTypes = mono_table_info_get_rows(typeDefinitionsTable);
 
-        m_ObjectClass = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "Object", ScriptClassType::Object);
-        m_EntityClass = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "Entity", ScriptClassType::Entity);
-        m_ObjectGcHandleGetter = m_ObjectClass->GetMonoMethod("GetGcHandle", 0);
-        m_EntityIdField = m_EntityClass->GetMonoClassField("ID");
-        m_BehaviourComponentClass = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "BehaviourComponent", ScriptClassType::BehaviourComponent);
-        m_BehaviourComponentEntitySetter = m_BehaviourComponentClass->GetMonoMethod("SetEntity", 1);
+        GetEngineClasses();
         
+        m_EntityIdField = m_EntityClass->GetMonoClassField("ID");
+
         for (int32_t i = 0; i < numTypes; i++)
         {
             uint32_t cols[MONO_TYPEDEF_SIZE];
@@ -203,7 +238,7 @@ namespace Phezu {
     
     void ScriptEngine::GetInputClassAndFields() {
         std::shared_ptr<ScriptClass> inputClass = std::make_shared<ScriptClass>(m_CoreAssembly, "PhezuEngine", "Input", ScriptClassType::CSharpClass);
-        m_InputClassVTable = mono_class_vtable(m_AppDomain, inputClass->GetMonoClass());
+        m_InputClassVTable = mono_class_vtable(m_RuntimeDomain, inputClass->GetMonoClass());
         mono_runtime_class_init(m_InputClassVTable);
         
         m_InputFields.W = inputClass->GetMonoClassField("_W");
@@ -258,7 +293,7 @@ namespace Phezu {
         ScriptGlue::Destroy();
     }
 
-    ScriptInstance* ScriptEngine::GetScriptInstance(uint64_t entityID, const std::string& classFullname) {
+    ScriptInstance* ScriptEngine::GetBehaviourScriptInstance(uint64_t entityID, const std::string& classFullname) {
         if (m_EntityInstances.find(entityID) == m_EntityInstances.end()) {
             Log("Entity not found");
             return nullptr;
@@ -271,8 +306,25 @@ namespace Phezu {
                 return &entityInstance->BehaviourScripts[i];
         }
 
-        Log("Script component on Entity not found\n");
+        Log("Behaviour Script %s on Entity not found\n", classFullname.c_str());
+        
         return nullptr;
+    }
+    
+    ScriptInstance* ScriptEngine::GetNativeComponentInstance(uint64_t entityID, const NativeType componentType) {
+        if (m_EntityInstances.find(entityID) == m_EntityInstances.end()) {
+            Log("Entity not found");
+            return nullptr;
+        }
+
+        auto entityInstance = m_EntityInstances.at(entityID);
+        
+        if (entityInstance->NativeComponents.find(componentType) == entityInstance->NativeComponents.end()) {
+            Log("Native Component %s on Entity not found\n", ToString(componentType).c_str());
+            return nullptr;
+        }
+        
+        return &entityInstance->NativeComponents.at(componentType);
     }
 
     MonoClass* ScriptEngine::GetBehaviourComponentClass() {

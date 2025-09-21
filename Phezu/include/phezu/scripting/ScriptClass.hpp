@@ -9,8 +9,10 @@ namespace Phezu {
 
 		//Engine types
 		Object,
-		Entity,
-		BehaviourComponent,
+        Entity,
+        Component,
+        NativeComponent,
+        BehaviourComponent,
         CSharpClass,
 
 		//User types

@@ -9,28 +9,34 @@
 namespace Phezu {
 	class ScriptInstance {
 	public:
-		ScriptInstance(MonoDomain* domain, std::shared_ptr<ScriptClass> scriptClass, MonoMethod* gcHandleGetter);
+		ScriptInstance(MonoDomain* domain, std::shared_ptr<ScriptClass> scriptClass);
+        ScriptInstance(ScriptInstance&& other) noexcept;
+        ScriptInstance& operator=(ScriptInstance&& other) noexcept;
+        ~ScriptInstance();
+    public:
+        ScriptInstance(const ScriptInstance&) = delete;
+        ScriptInstance& operator=(const ScriptInstance&) = delete;
 	public:
 		void InvokeOnCreate();
 		void InvokeOnUpdate(float deltaTime);
     public:
-        void TryInvokeOnCollisionEnter(intptr_t otherEntity);
-        void TryInvokeOnCollisionStay(intptr_t otherEntity);
-        void TryInvokeOnCollisionExit(intptr_t otherEntity);
+        void TryInvokeOnCollisionEnter(uint32_t otherEntity);
+        void TryInvokeOnCollisionStay(uint32_t otherEntity);
+        void TryInvokeOnCollisionExit(uint32_t otherEntity);
     public:
-		void SetEntityProperty(MonoMethod* propertySetter, intptr_t value);
+		void SetEntityProperty(MonoMethod* propertySetter, uint32_t value);
 		void SetUlongField(MonoClassField* field, uint64_t value);
 		std::string GetFullname() { return m_Class->GetFullname(); }
 		MonoObject* GetMonoObject() { return m_Instance; }
-		intptr_t GetMonoGcHandle() { return m_IntPtr; }
+        uint32_t GetMonoGcHandle() { return m_GcHandle; }
 	private:
 		std::shared_ptr<ScriptClass> m_Class;
-		MonoObject* m_Instance;
-		MonoMethod* m_OnCreateMethod;
-		MonoMethod* m_OnUpdateMethod;
+        uint32_t m_GcHandle;
+        MonoObject* m_Instance;
+        MonoMethod* m_OnCreateMethod;
+        MonoMethod* m_OnUpdateMethod;
         MonoMethod* m_OnCollisionEnterMethod;
         MonoMethod* m_OnCollisionStayMethod;
         MonoMethod* m_OnCollisionExitMethod;
-		intptr_t m_IntPtr;
 	};
 }
