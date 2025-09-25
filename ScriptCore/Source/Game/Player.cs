@@ -9,13 +9,9 @@ namespace Game {
         private PlayerInput m_Input;
         private float m_Speed = 800f;
 
-        private void OnCreated() {
+        private void OnCreate() {
             m_Transform = Entity.GetComponent<Transform>();
             m_Input = Entity.GetComponent<PlayerInput>();
-        }
-
-        private void OnDestroyed() {
-            Console.WriteLine("Player.OnDestroyed");
         }
 
         private void OnUpdate(float deltaTime) {

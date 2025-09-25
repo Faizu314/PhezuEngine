@@ -13,6 +13,10 @@ namespace PhezuEngine {
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern IntPtr Entity_GetComponent(ulong entityID, IntPtr componentType);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern IntPtr Entity_Instantiate(ulong guid);
+        
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Entity_Destroy(ulong entityID);
 

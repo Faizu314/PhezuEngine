@@ -6,14 +6,6 @@ namespace Game {
 
         public float MoveDir;
 
-        private void OnCreated() {
-
-        }
-
-        private void OnDestroyed() {
-
-        }
-
         private void OnUpdate(float deltaTime) {
             MoveDir = 0f;
 
