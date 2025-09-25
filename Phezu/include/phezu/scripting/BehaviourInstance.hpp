@@ -16,6 +16,7 @@ namespace Phezu {
 	public:
 		void InvokeOnCreate();
 		void InvokeOnUpdate(float deltaTime);
+        void InvokeOnDestroy();
     public:
         void TryInvokeOnCollisionEnter(uint32_t otherEntity);
         void TryInvokeOnCollisionStay(uint32_t otherEntity);
@@ -23,6 +24,7 @@ namespace Phezu {
 	private:
         MonoMethod* m_OnCreateMethod;
         MonoMethod* m_OnUpdateMethod;
+        MonoMethod* m_OnDestroyMethod;
         MonoMethod* m_OnCollisionEnterMethod;
         MonoMethod* m_OnCollisionStayMethod;
         MonoMethod* m_OnCollisionExitMethod;

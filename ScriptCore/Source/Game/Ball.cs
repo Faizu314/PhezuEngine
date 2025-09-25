@@ -12,18 +12,18 @@ namespace Game {
         private Physics m_Physics;
         private float m_Speed;
 
-        public override void OnCreated() {
+        private void OnCreated() {
             m_Transform = Entity.GetComponent<Transform>();
             m_Physics = Entity.GetComponent<Physics>();
             m_Physics.Velocity = new Vector2(400f, -420f);
             m_Speed = m_Physics.Velocity.Magnitude();
         }
 
-        public override void OnDestroyed() {
+        private void OnDestroyed() {
             Console.WriteLine("Player.OnDestroyed");
         }
 
-        public override void OnUpdate(float deltaTime)
+        private void OnUpdate(float deltaTime)
         {
             
         }

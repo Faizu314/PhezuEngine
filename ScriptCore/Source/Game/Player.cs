@@ -9,16 +9,16 @@ namespace Game {
         private PlayerInput m_Input;
         private float m_Speed = 800f;
 
-        public override void OnCreated() {
+        private void OnCreated() {
             m_Transform = Entity.GetComponent<Transform>();
             m_Input = Entity.GetComponent<PlayerInput>();
         }
 
-        public override void OnDestroyed() {
+        private void OnDestroyed() {
             Console.WriteLine("Player.OnDestroyed");
         }
 
-        public override void OnUpdate(float deltaTime) {
+        private void OnUpdate(float deltaTime) {
             m_Transform.Position += new Vector2(m_Input.MoveDir * m_Speed * deltaTime, 0f);
         }
         

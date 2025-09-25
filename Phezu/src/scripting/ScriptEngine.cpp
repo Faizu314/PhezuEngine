@@ -128,9 +128,7 @@ namespace Phezu {
         auto entityData = m_EntityDatas[entity->GetEntityID()];
 
         for (size_t i = 0; i < entityData->BehaviourComponents.size(); i++) {
-            //Invoke On Destroy
-            
-            //entityData->BehaviourScripts[i].InvokeOnCreate();
+            entityData->BehaviourComponents[i].InvokeOnDestroy();
         }
 
         m_EntityDatas.erase(entity->GetEntityID());
