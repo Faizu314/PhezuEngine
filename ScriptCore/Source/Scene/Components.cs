@@ -41,9 +41,6 @@ namespace PhezuEngine {
     }
 
     public abstract class BehaviourComponent : Component {
-        public abstract void OnCreated();
-        public abstract void OnDestroyed();
-
-        public abstract void OnUpdate(float deltaTime);
+        
     }
 }

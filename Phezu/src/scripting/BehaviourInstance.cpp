@@ -11,6 +11,7 @@ namespace Phezu {
     : ComponentInstance(domain, scriptClass), m_OnCreateMethod(nullptr), m_OnUpdateMethod(nullptr), m_OnCollisionEnterMethod(nullptr), m_OnCollisionStayMethod(nullptr), m_OnCollisionExitMethod(nullptr) {
         m_OnCreateMethod = scriptClass->GetMonoMethod("OnCreated", 0);
         m_OnUpdateMethod = scriptClass->GetMonoMethod("OnUpdate", 1);
+        m_OnDestroyMethod = scriptClass->GetMonoMethod("OnDestroyed", 0);
         
         m_OnCollisionEnterMethod = scriptClass->GetMonoMethod("OnCollisionEnter", 1);
         m_OnCollisionStayMethod = scriptClass->GetMonoMethod("OnCollisionStay", 1);
@@ -85,6 +86,21 @@ namespace Phezu {
 			mono_free(exceptionCStr);
 		}
 	}
+    
+    void BehaviourInstance::InvokeOnDestroy() {
+        MonoObject* exception = nullptr;
+
+        mono_runtime_invoke(m_OnDestroyMethod, m_Instance, nullptr, &exception);
+
+        if (exception) {
+            MonoString* exceptionString = mono_object_to_string(exception, nullptr);
+            char* exceptionCStr = mono_string_to_utf8(exceptionString);
+
+            Log("Mono Exception: %s\n", exceptionCStr);
+
+            mono_free(exceptionCStr);
+        }
+    }
     
     void BehaviourInstance::TryInvokeOnCollisionEnter(uint32_t otherEntity) {
         if (m_OnCollisionEnterMethod == nullptr)

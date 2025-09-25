@@ -6,15 +6,15 @@ namespace Game {
 
         public float MoveDir;
 
-        public override void OnCreated() {
+        private void OnCreated() {
 
         }
 
-        public override void OnDestroyed() {
+        private void OnDestroyed() {
 
         }
 
-        public override void OnUpdate(float deltaTime) {
+        private void OnUpdate(float deltaTime) {
             MoveDir = 0f;
 
             if (Input.A)
