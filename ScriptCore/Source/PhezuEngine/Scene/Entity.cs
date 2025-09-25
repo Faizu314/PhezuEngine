@@ -17,7 +17,12 @@ namespace PhezuEngine {
             
             return entity;
         }
-        
+
+        public static Entity Instantiate(PrefabRef prefab) {
+            IntPtr entityRef = InternalCalls.Entity_Instantiate(prefab.Guid);
+            return GetEntity(entityRef);
+        }
+
         public string Tag {
             get {
                 return InternalCalls.Entity_GetTag(ID);

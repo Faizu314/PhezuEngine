@@ -12,20 +12,11 @@ namespace Game {
         private Physics m_Physics;
         private float m_Speed;
 
-        private void OnCreated() {
+        private void OnCreate() {
             m_Transform = Entity.GetComponent<Transform>();
             m_Physics = Entity.GetComponent<Physics>();
             m_Physics.Velocity = new Vector2(400f, -420f);
             m_Speed = m_Physics.Velocity.Magnitude();
-        }
-
-        private void OnDestroyed() {
-            Console.WriteLine("Player.OnDestroyed");
-        }
-
-        private void OnUpdate(float deltaTime)
-        {
-            
         }
         
         private void OnCollisionEnter(IntPtr otherEntity) {
