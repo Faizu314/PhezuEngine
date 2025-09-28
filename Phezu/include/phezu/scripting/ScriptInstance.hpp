@@ -17,8 +17,12 @@ namespace Phezu {
         ScriptInstance& operator=(const ScriptInstance&) = delete;
     public:
 		std::string GetFullname() { return m_Class->GetFullname(); }
+        ScriptClass* GetScriptClass() { return m_Class; }
 		MonoObject* GetMonoObject() { return m_Instance; }
         uint32_t GetMonoGcHandle() { return m_GcHandle; }
+    public:
+        void SetUlongField(MonoClassField* field, uint64_t value);
+        void SetClassRefField(MonoClassField* field, MonoObject* value);
 	protected:
         ScriptClass* m_Class;
         MonoObject* m_Instance;

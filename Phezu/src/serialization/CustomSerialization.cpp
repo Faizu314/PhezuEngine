@@ -37,6 +37,20 @@ namespace Phezu {
     
     
     
+    void from_json(const nlohmann::json& j, ScriptField& obj) {
+        obj.Type = j.value("Type", ScriptFieldType::None);
+        obj.Value = j["Value"];
+    }
+    
+    void to_json(nlohmann::json& j, const ScriptField& obj) {
+        j = nlohmann::json{
+            {"Type", obj.Type},
+            {"Value", obj.Value}
+        };
+    }
+    
+    
+    
     void from_json(const nlohmann::json& j, Vector2& v) {
         v.Set(j.value("x", 0.0f), j.value("y", 0.0f));
     }

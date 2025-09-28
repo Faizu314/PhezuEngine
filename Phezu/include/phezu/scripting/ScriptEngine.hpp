@@ -40,6 +40,10 @@ namespace Phezu {
 	class ScriptEngine {
 	public:
 		ScriptEngine(Engine* engine);
+    public:
+        ScriptEngine() = delete;
+        ScriptEngine(const ScriptEngine&) = delete;
+        ScriptEngine& operator=(const ScriptEngine&) = delete;
 	public:
 		void Init();
 		void OnEntityCreated(Entity* entity);
@@ -52,6 +56,7 @@ namespace Phezu {
 		MonoClass* GetBehaviourComponentClass();
 		ScriptInstance* GetBehaviourScriptInstance(uint64_t entityID, const std::string& classFullname);
         ScriptInstance* GetEngineComponentInstance(uint64_t entityID, const ManagedType componentType);
+        uint32_t GetEntityScriptInstanceGcHandle(uint64_t entityID);
 	private:
 		void InitMono();
 		MonoAssembly* LoadAssembly(const std::string& assemblyPath);
@@ -80,6 +85,6 @@ namespace Phezu {
 	private:
 		std::unordered_map<std::string, ScriptClass*> m_ScriptClasses;
         std::unordered_map<ManagedType, ScriptClass*> m_EngineComponentClasses;
-		std::unordered_map<uint64_t, EntityScriptingConext*> m_EntityDatas;
+		std::unordered_map<uint64_t, EntityScriptingConext*> m_Entities;
 	};
 }

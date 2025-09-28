@@ -46,6 +46,14 @@ namespace Phezu {
         return *this;
     }
     
+    void ScriptInstance::SetUlongField(MonoClassField* field, uint64_t value) {
+        mono_field_set_value(m_Instance, field, &value);
+    }
+    
+    void ScriptInstance::SetClassRefField(MonoClassField* field, MonoObject* value) {
+        mono_field_set_value(m_Instance, field, &value);
+    }
+    
     ScriptInstance::~ScriptInstance() {
         if (m_GcHandle > 0)
             mono_gchandle_free(m_GcHandle);

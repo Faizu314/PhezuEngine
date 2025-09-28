@@ -14,6 +14,9 @@ namespace Phezu {
         BehaviourInstance(const BehaviourInstance&) = delete;
         BehaviourInstance& operator=(const BehaviourInstance&) = delete;
 	public:
+        bool HasOnCreate() { return m_OnCreateMethod != nullptr; }
+        bool HasOnUpdate() { return m_OnUpdateMethod != nullptr; }
+        bool HasOnDestroy() { return m_OnDestroyMethod != nullptr; }
 		void InvokeOnCreate();
 		void InvokeOnUpdate(float deltaTime);
         void InvokeOnDestroy();

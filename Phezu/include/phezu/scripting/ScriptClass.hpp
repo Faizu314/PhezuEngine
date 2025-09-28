@@ -11,7 +11,7 @@ namespace Phezu {
 		Object,
         Entity,
         Component,
-        NativeComponent,
+        EngineComponent,
         BehaviourComponent,
         CSharpClass,
 

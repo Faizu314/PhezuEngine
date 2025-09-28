@@ -9,8 +9,4 @@ namespace Phezu {
 
     EntityInstance::EntityInstance(MonoDomain* domain, ScriptClass* scriptClass)
 	: ScriptInstance(domain, scriptClass) {}
-    
-    void EntityInstance::SetUlongField(MonoClassField* field, uint64_t value) {
-        mono_field_set_value(m_Instance, field, &value);
-    }
 };

@@ -72,12 +72,6 @@ namespace Phezu {
     
     void Scene::Load() {
         m_SceneEntities.Instantiate(this);
-        
-        ScriptEngine& scriptEngine = m_Engine->GetScriptEngine();
-
-        for (auto it = m_RuntimeEntities.begin(); it != m_RuntimeEntities.end(); it++) {
-            scriptEngine.OnEntityCreated(it->second);
-        }
 
         m_IsLoaded = true;
         

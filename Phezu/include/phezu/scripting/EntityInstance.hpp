@@ -11,7 +11,5 @@ namespace Phezu {
     public:
         EntityInstance(const EntityInstance&) = delete;
         EntityInstance& operator=(const EntityInstance&) = delete;
-    public:
-		void SetUlongField(MonoClassField* field, uint64_t value);
 	};
 }
