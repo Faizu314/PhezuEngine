@@ -9,12 +9,26 @@
 
 namespace Phezu {
     
+    enum class ScriptFieldType {
+        None = 0,
+        Int,
+        Float,
+        Bool,
+        AssetRef,
+        RuntimeRef,
+    };
+    
     struct EntryRef {
         uint64_t Guid;
         uint64_t InstanceID;
         uint64_t FileID;
     };
+    struct ScriptField {
+        ScriptFieldType Type;
+        nlohmann::json Value;
+    };
     using EntryOverrides = std::unordered_map<std::string, nlohmann::json>;
+    using ScriptOverrides = std::unordered_map<std::string, ScriptField>;
     struct PrefabOverrides {
         std::unordered_set<uint64_t> RemovedEntities; //A file will only save the entities it removed
         std::unordered_set<uint64_t> RemovedComponents; //A file will only save the components it removed
@@ -30,6 +44,12 @@ namespace Phezu {
     void from_json(const nlohmann::json& j, PrefabOverrides& obj);
     
     void to_json(nlohmann::json& j, const PrefabOverrides& obj);
+    
+    
+    
+    void from_json(const nlohmann::json& j, ScriptField& obj);
+    
+    void to_json(nlohmann::json& j, const ScriptField& obj);
     
     
     

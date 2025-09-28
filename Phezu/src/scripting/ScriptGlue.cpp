@@ -125,6 +125,11 @@ namespace Phezu {
 		return scriptInstance->GetMonoGcHandle();
 	}
     
+    uint32_t Entity_Instantiate(GUID prefabGuid) {
+        Entity* entity = s_Data->Engine->GetSceneManager().GetActiveScene()->CreateEntity(prefabGuid);
+        return s_Data->ScriptEngine->GetEntityScriptInstanceGcHandle(entity->GetEntityID());
+    }
+    
     void Entity_Destroy(uint64_t entityID) {
         auto entity = GetEntity(entityID);
 
@@ -177,6 +182,7 @@ namespace Phezu {
         mono_add_internal_call("PhezuEngine.InternalCalls::Entity_GetTag", reinterpret_cast<const void*>(&Entity_GetTag));
         mono_add_internal_call("PhezuEngine.InternalCalls::Entity_HasComponent", reinterpret_cast<const void*>(&Entity_HasComponent));
         mono_add_internal_call("PhezuEngine.InternalCalls::Entity_GetComponent", reinterpret_cast<const void*>(&Entity_GetComponent));
+        mono_add_internal_call("PhezuEngine.InternalCalls::Entity_Instantiate", reinterpret_cast<const void*>(&Entity_Instantiate));
         mono_add_internal_call("PhezuEngine.InternalCalls::Entity_Destroy", reinterpret_cast<const void*>(&Entity_Destroy));
         
 		mono_add_internal_call("PhezuEngine.InternalCalls::Transform_GetPosition", reinterpret_cast<const void*>(&Transform_GetPosition));

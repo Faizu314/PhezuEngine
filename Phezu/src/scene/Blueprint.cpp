@@ -4,6 +4,7 @@
 #include "scene/components/ShapeData.hpp"
 #include "scene/components/RenderData.hpp"
 #include "scene/components/PhysicsData.hpp"
+#include "scripting/ScriptInstance.hpp"
 #include "nlohmann/json.hpp"
 #include "scene/Prefab.hpp"
 #include "Engine.hpp"
@@ -32,19 +33,28 @@ namespace Phezu {
     }
 
     nlohmann::json GetProperty(const std::string& propertyName, const BlueprintEntry& entry, const PrefabOverrides& prefabOverrides) {
-        if (prefabOverrides.EntryOverrides.find(entry.FileID) == prefabOverrides.EntryOverrides.end())
-            return entry.Properties.at(propertyName);
+        if (prefabOverrides.EntryOverrides.find(entry.FileID) == prefabOverrides.EntryOverrides.end()) {
+            if (entry.Properties.find(propertyName) != entry.Properties.end())
+                return entry.Properties.at(propertyName);
+            else
+                return nlohmann::json();
+        }
 
         auto& propertyOverrides = prefabOverrides.EntryOverrides.at(entry.FileID);
-        if (propertyOverrides.find(propertyName) == propertyOverrides.end())
-            return entry.Properties.at(propertyName);
+        if (propertyOverrides.find(propertyName) == propertyOverrides.end()) {
+            if (entry.Properties.find(propertyName) != entry.Properties.end())
+                return entry.Properties.at(propertyName);
+            else
+                return nlohmann::json();
+        }
 
         return propertyOverrides.at(propertyName);
     }
 
     template<typename T>
     T GetProperty(const std::string& propertyName, const BlueprintEntry& entry, const PrefabOverrides& prefabOverrides) {
-        return GetProperty(propertyName, entry, prefabOverrides).get<T>();
+        auto j = GetProperty(propertyName, entry, prefabOverrides);
+        return j.is_null() ? T{} : j.get<T>();
     }
     
     
@@ -125,6 +135,8 @@ namespace Phezu {
         /*-----– First Pass -------*/
         
         InstantiateEntitiesAndComponents(scene, registry);
+        
+        OnEntitiesCreated(registry);
         
         /*-----– Second Pass -------*/
         
@@ -270,6 +282,16 @@ namespace Phezu {
         }
     }
     
+    void Blueprint::OnEntitiesCreated(BlueprintRegistry& registry) const {
+        ScriptEngine& scriptEngine = m_Engine->GetScriptEngine();
+        
+        for (const auto& [registryKey, fileRegistry] : registry) {
+            for (const auto& [fileID, entity] : fileRegistry.Entities) {
+                scriptEngine.OnEntityCreated(entity);
+            }
+        }
+    }
+    
     void Blueprint::BuildHierarchyAndInitializeScripts(Scene* scene, BlueprintRegistry& registry, uint64_t instanceID, PrefabOverrides overrides) const {
         RegistryKey registryKey(instanceID, m_Guid);
         
@@ -322,7 +344,17 @@ namespace Phezu {
         for (size_t i = 0; i < m_ScriptEntries.size(); i++) {
             const BlueprintEntry& entry = *m_ScriptEntries[i];
             
-            //add after script field references
+            std::string classFullname = GetProperty<std::string>("Fullname", entry, overrides);
+            
+            uint64_t entityID = components[entry.FileID]->GetEntity()->GetEntityID();
+            
+            ScriptOverrides scriptOverrides = GetProperty<ScriptOverrides>("Overrides", entry, overrides);
+            
+            ScriptInstance* script = m_Engine->GetScriptEngine().GetBehaviourScriptInstance(entityID, classFullname);
+            
+            for (const auto& [name, field] : scriptOverrides) {
+                
+            }
         }
     }
 }

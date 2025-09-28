@@ -9,9 +9,9 @@ namespace Phezu {
 
     BehaviourInstance::BehaviourInstance(MonoDomain* domain, ScriptClass* scriptClass)
     : ComponentInstance(domain, scriptClass), m_OnCreateMethod(nullptr), m_OnUpdateMethod(nullptr), m_OnCollisionEnterMethod(nullptr), m_OnCollisionStayMethod(nullptr), m_OnCollisionExitMethod(nullptr) {
-        m_OnCreateMethod = scriptClass->GetMonoMethod("OnCreated", 0);
+        m_OnCreateMethod = scriptClass->GetMonoMethod("OnCreate", 0);
         m_OnUpdateMethod = scriptClass->GetMonoMethod("OnUpdate", 1);
-        m_OnDestroyMethod = scriptClass->GetMonoMethod("OnDestroyed", 0);
+        m_OnDestroyMethod = scriptClass->GetMonoMethod("OnDestroy", 0);
         
         m_OnCollisionEnterMethod = scriptClass->GetMonoMethod("OnCollisionEnter", 1);
         m_OnCollisionStayMethod = scriptClass->GetMonoMethod("OnCollisionStay", 1);
