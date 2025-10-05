@@ -12,13 +12,13 @@
 #include <unordered_map>
 
 namespace Phezu {
-	struct EntityScriptingConext {
+	struct EntityScriptingContext {
 	public:
-        EntityScriptingConext(uint64_t entityID, MonoDomain* domain, ScriptClass* entityClass)
+        EntityScriptingContext(uint64_t entityID, MonoDomain* domain, ScriptClass* entityClass)
         : EntityID(entityID), EntityScript(domain, entityClass) { }
     public:
-        EntityScriptingConext(const EntityScriptingConext&) = delete;
-        EntityScriptingConext& operator=(const EntityScriptingConext&) = delete;
+        EntityScriptingContext(const EntityScriptingContext&) = delete;
+        EntityScriptingContext& operator=(const EntityScriptingContext&) = delete;
 	public:
 		uint64_t EntityID;
     public:

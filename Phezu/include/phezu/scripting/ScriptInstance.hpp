@@ -21,8 +21,13 @@ namespace Phezu {
 		MonoObject* GetMonoObject() { return m_Instance; }
         uint32_t GetMonoGcHandle() { return m_GcHandle; }
     public:
+        // Primitive Fields
         void SetUlongField(MonoClassField* field, uint64_t value);
-        void SetClassRefField(MonoClassField* field, MonoObject* value);
+    public:
+        void SetStructField(MonoClassField* field, std::byte* data);
+    public:
+        void SetInstanceRefField(MonoClassField* field, uint32_t gcHandle);
+        void SetAssetRefField(MonoClassField* field, uint64_t guid);
 	protected:
         ScriptClass* m_Class;
         MonoObject* m_Instance;

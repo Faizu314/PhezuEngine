@@ -47,6 +47,7 @@ namespace Phezu {
     private:
         void InstantiateEntitiesAndComponents(Scene* scene, BlueprintRegistry& registry, uint64_t instanceID = 0, PrefabOverrides overrides = PrefabOverrides()) const;
         void OnEntitiesCreated(BlueprintRegistry& registry) const;
+        void OnScriptsInitialized(BlueprintRegistry& registry) const;
         void BuildHierarchyAndInitializeScripts(Scene* scene, BlueprintRegistry& registry, uint64_t instanceID = 0, PrefabOverrides overrides = PrefabOverrides()) const;
     private:
         std::vector<const BlueprintEntry*> m_EntityEntries;

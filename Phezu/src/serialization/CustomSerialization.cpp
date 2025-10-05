@@ -38,13 +38,13 @@ namespace Phezu {
     
     
     void from_json(const nlohmann::json& j, ScriptField& obj) {
-        obj.Type = j.value("Type", ScriptFieldType::None);
+        obj.Type = static_cast<ScriptFieldType>(j.value("Type", 0));
         obj.Value = j["Value"];
     }
     
     void to_json(nlohmann::json& j, const ScriptField& obj) {
         j = nlohmann::json{
-            {"Type", obj.Type},
+            {"Type", static_cast<int>(obj.Type)},
             {"Value", obj.Value}
         };
     }

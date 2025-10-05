@@ -121,6 +121,23 @@
                     }
                 }
             }
+        },
+
+        {
+            "FileID": 507,
+            "TypeID": 7,
+            "TypeName": "PrefabRef",
+            "Properties": {
+                "SourcePrefab": 5,
+                "Parent": 0,
+                "Overrides": {
+                "EntryOverrides": {
+                    "501": {
+                        "Position": { "x": 0, "y": 0 }
+                        }
+                    }
+                }
+            }
         }
     ]
 }

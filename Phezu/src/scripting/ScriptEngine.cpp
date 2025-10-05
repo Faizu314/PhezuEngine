@@ -5,7 +5,7 @@
 #include "scripting/ScriptGlue.hpp"
 #include "scripting/ScriptClass.hpp"
 #include "scripting/ScriptInstance.hpp"
-#include "scripting/EntityScriptingConext.hpp"
+#include "scripting/EntityScriptingContext.hpp"
 #include "scene/Scene.hpp"
 #include "scene/Entity.hpp"
 
@@ -85,11 +85,11 @@ namespace Phezu {
         GetScriptClasses();
     }
 
-    void ScriptEngine::OnEntityCreated(Entity* entity) {
+    void ScriptEngine::CreateManagedScripts(Entity* entity) {
         auto entityID = entity->GetEntityID();
         
-        EntityScriptingConext* entityData =
-            new EntityScriptingConext(entity->GetEntityID(), m_RuntimeDomain, m_EntityClass);
+        EntityScriptingContext* entityData =
+            new EntityScriptingContext(entity->GetEntityID(), m_RuntimeDomain, m_EntityClass);
         entityData->EntityScript.SetUlongField(m_EntityIdField, entity->GetEntityID());
         m_Entities[entity->GetEntityID()] = entityData;
         
@@ -118,8 +118,12 @@ namespace Phezu {
             entityData->BehaviourComponents[i].SetEntityProperty(
                 m_ComponentEntitySetter, entityData->EntityScript.GetMonoGcHandle());
         }
+    }
+    
+    void ScriptEngine::InitializeManagedScripts(Entity* entity) {
+        EntityScriptingContext* entityData = m_Entities[entity->GetEntityID()];
         
-        for (size_t i = 0; i < compCount; i++) {
+        for (size_t i = 0; i < entity->GetScriptComponentCount(); i++) {
             if (entityData->BehaviourComponents[i].HasOnCreate())
                 entityData->BehaviourComponents[i].InvokeOnCreate();
         }

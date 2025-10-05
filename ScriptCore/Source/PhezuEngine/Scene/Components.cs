@@ -3,10 +3,11 @@ using System.Runtime.InteropServices;
 
 namespace PhezuEngine {
 
-    public class Component : Object {
-        public Entity Entity { get; internal set; }
+    public abstract class Component : Object {
+        public Entity Entity { get; private set; }
+        public Entity m_Entity;
         
-        internal void SetEntity(IntPtr ptr) {
+        private void SetEntity(IntPtr ptr) {
             GCHandle handle = GCHandle.FromIntPtr(ptr);
 
             Entity = handle.Target as Entity;

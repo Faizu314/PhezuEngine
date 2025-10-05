@@ -15,7 +15,7 @@ namespace Phezu {
         Float,
         Bool,
         AssetRef,
-        RuntimeRef,
+        InstanceRef,
     };
     
     struct EntryRef {

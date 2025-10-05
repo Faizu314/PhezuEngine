@@ -50,8 +50,12 @@ namespace Phezu {
         mono_field_set_value(m_Instance, field, &value);
     }
     
-    void ScriptInstance::SetClassRefField(MonoClassField* field, MonoObject* value) {
-        mono_field_set_value(m_Instance, field, &value);
+    void ScriptInstance::SetInstanceRefField(MonoClassField* field, uint32_t gcHandle) {
+        mono_field_set_value(m_Instance, field, &gcHandle);
+    }
+    
+    void ScriptInstance::SetAssetRefField(MonoClassField* field, uint64_t guid) {
+        mono_field_set_value(m_Instance, field, &guid);
     }
     
     ScriptInstance::~ScriptInstance() {
