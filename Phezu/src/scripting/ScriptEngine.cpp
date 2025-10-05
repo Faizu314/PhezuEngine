@@ -151,7 +151,6 @@ namespace Phezu {
     }
 
     void ScriptEngine::OnUpdate(float deltaTime) {
-        return;
         for (auto it = m_Entities.begin(); it != m_Entities.end(); it++) {
             auto entityData = it->second;
 
