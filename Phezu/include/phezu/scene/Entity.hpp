@@ -42,6 +42,8 @@ namespace Phezu {
         PhysicsData* AddPhysicsData(bool isStatic);
         ScriptComponent* AddScriptComponent(const std::string& classFullname);
     public:
+        void RemoveScriptComponent(const std::string& classFullname);
+    public:
         Scene* GetSceneContext() const { return m_Scene; }
         TransformData* GetParent() const;
         void SetParent(Entity* parent);
@@ -64,7 +66,7 @@ namespace Phezu {
         RenderData* m_RenderData;
         PhysicsData* m_PhysicsData;
     private:
-        std::vector<ScriptComponent> m_ScriptComponents;
+        std::vector<ScriptComponent*> m_ScriptComponents;
     private:
         static uint64_t s_EntitiesCount;
         uint64_t m_EntityID;

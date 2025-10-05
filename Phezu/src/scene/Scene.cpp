@@ -39,12 +39,8 @@ namespace Phezu {
     }
     
     Entity* Scene::GetEntity(uint64_t entityID) const {
-        try {
-            return m_RuntimeEntities.at(entityID);
-        }
-        catch (const std::out_of_range&) {
-            return nullptr;
-        }
+        auto it = m_RuntimeEntities.find(entityID);
+        return it != m_RuntimeEntities.end() ? it->second : nullptr;
     }
     
     void Scene::DestroyEntity(uint64_t entityID) {

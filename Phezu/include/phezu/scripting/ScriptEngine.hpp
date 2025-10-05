@@ -2,6 +2,8 @@
 
 #include "scripting/MonoLogger.hpp"
 #include "scripting/MonoDefs.hpp"
+#include "scripting/ScriptDefs.hpp"
+#include "scripting/EntityScriptingContext.hpp"
 
 #include <string>
 #include <unordered_map>
@@ -15,25 +17,6 @@ namespace Phezu {
 	class ScriptComponent;
 	class ScriptInstance;
 	struct EntityScriptingContext;
-    
-    struct InputFields {
-        MonoClassField *W, *A, *S, *D, *Space;
-    };
-    
-    enum class PhysicsEventType {
-        CollisionEnter,
-        CollisionStay,
-        CollisionExit
-    };
-    
-    enum class ManagedType {
-        None,
-        Transform,
-        Shape,
-        Renderer,
-        Physics,
-        ScriptComponent
-    };
     
     std::string ToString(ManagedType t);
     
@@ -57,6 +40,8 @@ namespace Phezu {
 		MonoClass* GetBehaviourComponentClass();
 		ScriptInstance* GetBehaviourScriptInstance(uint64_t entityID, const std::string& classFullname);
         ScriptInstance* GetEngineComponentInstance(uint64_t entityID, const ManagedType componentType);
+        void RemoveBehaviourScriptInstance(uint64_t entityID, const std::string& classFullname);
+        void RemoveEngineComponentInstance(uint64_t entityID, const std::string& classFullname);
         uint32_t GetEntityScriptInstanceGcHandle(uint64_t entityID);
 	private:
 		void InitMono();
@@ -86,6 +71,6 @@ namespace Phezu {
 	private:
 		std::unordered_map<std::string, ScriptClass*> m_ScriptClasses;
         std::unordered_map<ManagedType, ScriptClass*> m_EngineComponentClasses;
-		std::unordered_map<uint64_t, EntityScriptingContext*> m_Entities;
+		std::unordered_map<uint64_t, EntityScriptingContext> m_Entities;
 	};
 }

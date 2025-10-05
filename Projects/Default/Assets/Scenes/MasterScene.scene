@@ -10,10 +10,10 @@
                 "SourcePrefab": 6,
                 "Parent": 0,
                 "Overrides": {
-                "EntryOverrides": {
-                    "501": {
-                        "Position": { "x": 400, "y": 0 },
-                        "Scale": { "x": 1, "y": 600 }
+                	"EntryOverrides": {
+                    	"501": {
+                        	"Position": { "x": 400, "y": 0 },
+                        	"Scale": { "x": 1, "y": 600 }
                         }
                     }
                 }
@@ -27,10 +27,10 @@
                 "SourcePrefab": 6,
                 "Parent": 0,
                 "Overrides": {
-                "EntryOverrides": {
-                    "501": {
-                        "Position": { "x": -400, "y": 0 },
-                        "Scale": { "x": 1, "y": 600 }
+                	"EntryOverrides": {
+                    	"501": {
+                        	"Position": { "x": -400, "y": 0 },
+                        	"Scale": { "x": 1, "y": 600 }
                         }
                     }
                 }
@@ -44,10 +44,10 @@
                 "SourcePrefab": 6,
                 "Parent": 0,
                 "Overrides": {
-                "EntryOverrides": {
-                    "501": {
-                        "Position": { "x": 0, "y": 300 },
-                        "Scale": { "x": 800, "y": 1 }
+                	"EntryOverrides": {
+                    	"501": {
+                        	"Position": { "x": 0, "y": 300 },
+                        	"Scale": { "x": 800, "y": 1 }
                         }
                     }
                 }
@@ -61,10 +61,10 @@
                 "SourcePrefab": 6,
                 "Parent": 0,
                 "Overrides": {
-                "EntryOverrides": {
-                    "501": {
-                        "Position": { "x": 0, "y": -300 },
-                        "Scale": { "x": 800, "y": 1 }
+                	"EntryOverrides": {
+                    	"501": {
+                        	"Position": { "x": 0, "y": -300 },
+                        	"Scale": { "x": 800, "y": 1 }
                         }
                     }
                 }
@@ -80,9 +80,9 @@
                 "SourcePrefab": 2,
                 "Parent": 0,
                 "Overrides": {
-                "EntryOverrides": {
-                    "501": {
-                        "Position": { "x": 0, "y": -200 }
+                	"EntryOverrides": {
+                    	"501": {
+                        	"Position": { "x": 0, "y": -200 }
                         }
                     }
                 }
@@ -97,9 +97,9 @@
                 "SourcePrefab": 3,
                 "Parent": 0,
                 "Overrides": {
-                "EntryOverrides": {
-                    "501": {
-                        "Position": { "x": 0, "y": 200 }
+                	"EntryOverrides": {
+                    	"501": {
+                        	"Position": { "x": 0, "y": 200 }
                         }
                     }
                 }
@@ -114,9 +114,9 @@
                 "SourcePrefab": 4,
                 "Parent": 0,
                 "Overrides": {
-                "EntryOverrides": {
-                    "501": {
-                        "Position": { "x": 0, "y": 0 }
+                	"EntryOverrides": {
+                    	"501": {
+                        	"Position": { "x": 0, "y": 0 }
                         }
                     }
                 }
@@ -131,9 +131,9 @@
                 "SourcePrefab": 5,
                 "Parent": 0,
                 "Overrides": {
-                "EntryOverrides": {
-                    "501": {
-                        "Position": { "x": 0, "y": 0 }
+                	"EntryOverrides": {
+                    	"501": {
+                        	"Position": { "x": 0, "y": 0 }
                         }
                     }
                 }

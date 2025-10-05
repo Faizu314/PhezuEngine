@@ -48,6 +48,13 @@ namespace PhezuEngine {
             return InternalCalls.Entity_HasComponent(ID, type.TypeHandle.Value);
         }
 
+        public void RemoveComponent<T>() where T : Component
+        {
+            Type type = typeof(T);
+            
+            InternalCalls.Entity_RemoveComponent(ID, type.TypeHandle.Value);
+        }
+
         public void Destroy()
         {
             InternalCalls.Entity_Destroy(ID);

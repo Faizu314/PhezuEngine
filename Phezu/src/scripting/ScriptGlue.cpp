@@ -125,6 +125,20 @@ namespace Phezu {
 		return scriptInstance->GetMonoGcHandle();
 	}
     
+    void Entity_RemoveComponent(uint64_t entityID, MonoType* monoType) {
+        auto entity = GetEntity(entityID);
+
+        std::string classFullname;
+        ManagedType managedType = MonoToNativeType(monoType, classFullname);
+        
+        if (managedType == ManagedType::None) {
+            Log("Mono type %s not recognized", classFullname.c_str());
+            return;
+        }
+        
+        s_Data->ScriptEngine->RemoveBehaviourScriptInstance(entityID, classFullname);
+    }
+    
     uint32_t Entity_Instantiate(GUID prefabGuid) {
         Entity* entity = s_Data->Engine->GetSceneManager().GetMasterScene()->CreateEntity(prefabGuid);
         return s_Data->ScriptEngine->GetEntityScriptInstanceGcHandle(entity->GetEntityID());
@@ -182,6 +196,7 @@ namespace Phezu {
         mono_add_internal_call("PhezuEngine.InternalCalls::Entity_GetTag", reinterpret_cast<const void*>(&Entity_GetTag));
         mono_add_internal_call("PhezuEngine.InternalCalls::Entity_HasComponent", reinterpret_cast<const void*>(&Entity_HasComponent));
         mono_add_internal_call("PhezuEngine.InternalCalls::Entity_GetComponent", reinterpret_cast<const void*>(&Entity_GetComponent));
+        mono_add_internal_call("PhezuEngine.InternalCalls::Entity_RemoveComponent", reinterpret_cast<const void*>(&Entity_RemoveComponent));
         mono_add_internal_call("PhezuEngine.InternalCalls::Entity_Instantiate", reinterpret_cast<const void*>(&Entity_Instantiate));
         mono_add_internal_call("PhezuEngine.InternalCalls::Entity_Destroy", reinterpret_cast<const void*>(&Entity_Destroy));
         
