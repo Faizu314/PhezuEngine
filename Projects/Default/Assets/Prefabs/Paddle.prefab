@@ -64,8 +64,8 @@
             "TypeID": 6,
             "TypeName": "Script",
             "Properties": {
-            "Parent": { "Guid": 2, "InstanceID": 0, "FileID": 500 },
-                "Fullname": "Game.PlayerInput"
+                 "Parent": { "Guid": 2, "InstanceID": 0, "FileID": 500 },
+                 "Fullname": "Game.PlayerInput"
             }
         }
     ]

@@ -6,8 +6,12 @@ namespace Phezu {
     
     class DataComponent {
     public:
-        DataComponent() = delete;
         DataComponent(Entity* entity) : m_Entity(entity) {}
+        DataComponent(DataComponent&& other) noexcept : m_Entity(other.m_Entity) {}
+    public:
+        DataComponent() = delete;
+        DataComponent(const DataComponent&) = delete;
+        DataComponent& operator=(const DataComponent&) = delete;
     public:
         Entity* GetEntity() const { return m_Entity; }
     protected:

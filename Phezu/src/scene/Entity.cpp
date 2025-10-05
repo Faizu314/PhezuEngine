@@ -33,7 +33,7 @@ namespace Phezu {
         if (index < 0 || index >= m_ScriptComponents.size())
             return nullptr;
 
-        return &m_ScriptComponents[index];
+        return m_ScriptComponents[index];
     }
 
     ShapeData* Entity::AddShapeData() {
@@ -52,13 +52,22 @@ namespace Phezu {
     }
 
     ScriptComponent* Entity::AddScriptComponent(const std::string& classFullname) {
-        m_ScriptComponents.emplace_back(this, classFullname);
-        return &m_ScriptComponents[m_ScriptComponents.size() - 1];
+        m_ScriptComponents.push_back(new ScriptComponent(this, classFullname));
+        return m_ScriptComponents[m_ScriptComponents.size() - 1];
+    }
+    
+    void Entity::RemoveScriptComponent(const std::string& classFullname) {
+        for (size_t i = 0; i < m_ScriptComponents.size(); i++) {
+            if (m_ScriptComponents[i]->GetScriptClassFullname() == classFullname) {
+                m_ScriptComponents.erase(m_ScriptComponents.begin() + i);
+                return;
+            }
+        }
     }
 
     bool Entity::HasScriptComponent(const std::string& classFullname) {
         for (size_t i = 0; i < m_ScriptComponents.size(); i++) {
-            if (m_ScriptComponents[i].GetScriptClassFullname() == classFullname)
+            if (m_ScriptComponents[i]->GetScriptClassFullname() == classFullname)
                 return true;
         }
 

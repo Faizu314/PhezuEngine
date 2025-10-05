@@ -1,9 +1,7 @@
 #pragma once
 
-#include "scripting/MonoDefs.hpp"
-#include "scripting/ScriptClass.hpp"
 #include "scripting/ScriptEngine.hpp"
-
+#include "scripting/ScriptClass.hpp"
 #include "scripting/EntityInstance.hpp"
 #include "scripting/BehaviourInstance.hpp"
 #include "scripting/ComponentInstance.hpp"
