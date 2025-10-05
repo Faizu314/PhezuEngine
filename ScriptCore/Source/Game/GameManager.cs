@@ -1,3 +1,4 @@
+using System;
 using PhezuEngine;
 using System.Collections.Generic;
 
@@ -12,6 +13,17 @@ namespace Game
         private void OnCreate()
         {
             m_Bricks = new();
+            
+            Entity brick = Entity.Instantiate(m_BrickPrefabRef);
+            Console.WriteLine("Brick Created: " + brick.ID);
+            
+            var transform = brick.GetComponent<Transform>();
+            transform.Position = new Vector2(0f, 100f);
+        }
+
+        private void OnUpdate(float deltaTime)
+        {
+            Console.WriteLine("PrefabRef Update: " + m_BrickPrefabRef.Guid);
         }
 
         private void LoadLevel(int[,] levelData)

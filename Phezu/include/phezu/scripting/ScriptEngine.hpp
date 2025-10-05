@@ -14,7 +14,7 @@ namespace Phezu {
 	class ScriptClass;
 	class ScriptComponent;
 	class ScriptInstance;
-	struct EntityScriptingConext;
+	struct EntityScriptingContext;
     
     struct InputFields {
         MonoClassField *W, *A, *S, *D, *Space;
@@ -46,7 +46,8 @@ namespace Phezu {
         ScriptEngine& operator=(const ScriptEngine&) = delete;
 	public:
 		void Init();
-		void OnEntityCreated(Entity* entity);
+		void CreateManagedScripts(Entity* entity);
+        void InitializeManagedScripts(Entity* entity);
 		void OnEntityDestroyed(Entity* entity);
         void PreUpdate();
 		void OnUpdate(float deltaTime);
@@ -85,6 +86,6 @@ namespace Phezu {
 	private:
 		std::unordered_map<std::string, ScriptClass*> m_ScriptClasses;
         std::unordered_map<ManagedType, ScriptClass*> m_EngineComponentClasses;
-		std::unordered_map<uint64_t, EntityScriptingConext*> m_Entities;
+		std::unordered_map<uint64_t, EntityScriptingContext*> m_Entities;
 	};
 }

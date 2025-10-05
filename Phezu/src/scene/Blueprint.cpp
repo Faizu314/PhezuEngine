@@ -141,6 +141,8 @@ namespace Phezu {
         /*-----– Second Pass -------*/
         
         BuildHierarchyAndInitializeScripts(scene, registry);
+        
+        OnScriptsInitialized(registry);
 
         return registry[RegistryKey(0, m_Guid)].RootEntity;
     }
@@ -287,7 +289,7 @@ namespace Phezu {
         
         for (const auto& [registryKey, fileRegistry] : registry) {
             for (const auto& [fileID, entity] : fileRegistry.Entities) {
-                scriptEngine.OnEntityCreated(entity);
+                scriptEngine.CreateManagedScripts(entity);
             }
         }
     }
@@ -352,8 +354,26 @@ namespace Phezu {
             
             ScriptInstance* script = m_Engine->GetScriptEngine().GetBehaviourScriptInstance(entityID, classFullname);
             
-            for (const auto& [name, field] : scriptOverrides) {
+            for (const auto& [name, fieldData] : scriptOverrides) {
+                MonoClassField* field = script->GetScriptClass()->GetMonoClassField(name);
                 
+                switch (fieldData.Type) {
+                    case ScriptFieldType::AssetRef:
+                        uint64_t value = fieldData.Value.get<uint64_t>();
+                        script->SetAssetRefField(field, value);
+                        break;
+                }
+            }
+             
+        }
+    }
+    
+    void Blueprint::OnScriptsInitialized(BlueprintRegistry& registry) const {
+        ScriptEngine& scriptEngine = m_Engine->GetScriptEngine();
+        
+        for (const auto& [registryKey, fileRegistry] : registry) {
+            for (const auto& [fileID, entity] : fileRegistry.Entities) {
+                scriptEngine.InitializeManagedScripts(entity);
             }
         }
     }

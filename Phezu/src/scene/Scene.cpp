@@ -17,6 +17,7 @@ namespace Phezu {
     
     Entity* Scene::CreateEntity() {
         Entity* entity = new Entity(this);
+        
         m_RuntimeEntities.insert(std::make_pair(entity->GetEntityID(), entity));
         
         return entity;
@@ -32,6 +33,8 @@ namespace Phezu {
         
         auto entity = prefab->Instantiate(this);
         
+        entity->RecalculateSubtreeTransformations();
+                
         return entity;
     }
     

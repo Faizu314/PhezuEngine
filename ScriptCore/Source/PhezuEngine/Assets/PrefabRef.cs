@@ -1,7 +1,17 @@
+using System.Runtime.InteropServices;
+
 namespace PhezuEngine {
  
-    public class PrefabRef : AssetRef {
-
-        public PrefabRef(ulong guid) : base(guid) {}
+    [StructLayout(LayoutKind.Sequential)]
+    public struct PrefabRef : IAssetRef {
+        
+        internal ulong Guid => m_Guid;
+        private readonly ulong m_Guid;
+        
+        public PrefabRef(ulong guid)
+        {
+            m_Guid = guid;
+        }
     }
+    
 }
