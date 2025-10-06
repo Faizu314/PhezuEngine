@@ -35,6 +35,9 @@ namespace PhezuEngine {
             
             IntPtr compPtr = InternalCalls.Entity_GetComponent(ID, type.TypeHandle.Value);
 
+            if (compPtr == IntPtr.Zero)
+                return null;
+            
             GCHandle handle = GCHandle.FromIntPtr(compPtr);
             
             return (T)handle.Target;

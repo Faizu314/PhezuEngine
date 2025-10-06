@@ -64,6 +64,8 @@ namespace Phezu {
         return mono_string_new(mono_domain_get(), tag.c_str());
     }
 
+    /*----Entity-Internal-Calls----*/
+    
 	bool Entity_HasComponent(uint64_t entityID, MonoType* monoType) {
 		auto entity = GetEntity(entityID);
 
@@ -150,6 +152,8 @@ namespace Phezu {
         entity->Destroy();
     }
 
+    /*----Transform-Internal-Calls----*/
+    
 	void Transform_GetPosition(uint64_t entityID, glm::vec2* position) {
 		Entity* entity = GetEntity(entityID);
 
@@ -167,6 +171,8 @@ namespace Phezu {
 			entity->GetTransformData()->SetWorldPosition(Vector2(position->x, position->y));
 		}
 	}
+    
+    /*----Physics-Internal-Calls----*/
     
     void Physics_GetVelocity(uint64_t entityID, glm::vec2* velocity) {
         Entity* entity = GetEntity(entityID);
@@ -186,6 +192,8 @@ namespace Phezu {
         }
     }
 
+    
+    
 	void ScriptGlue::Init(Engine* engine, ScriptEngine* scriptEngine) {
 		s_Data = new Data();
 		s_Data->Engine = engine;

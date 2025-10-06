@@ -3,8 +3,6 @@
 #include "Engine.hpp"
 #include "Logger.hpp"
 #include "scripting/ScriptGlue.hpp"
-#include "scripting/ScriptClass.hpp"
-#include "scripting/ScriptInstance.hpp"
 #include "scene/Scene.hpp"
 #include "scene/Entity.hpp"
 
@@ -64,9 +62,7 @@ namespace Phezu {
         return nameSpace + "." + className;
     }
 
-    ScriptEngine::ScriptEngine(Engine* engine) : m_Engine(engine), m_EngineDomain(nullptr), 
-        m_RuntimeDomain(nullptr), m_CoreAssembly(nullptr),
-        m_EntityIdField(nullptr), m_ComponentEntitySetter(nullptr) {}
+    ScriptEngine::ScriptEngine(Engine* engine) : m_Engine(engine), m_EngineDomain(nullptr), m_RuntimeDomain(nullptr), m_CoreAssembly(nullptr), m_ObjectClass(nullptr), m_ComponentClass(nullptr), m_BehaviourComponentClass(nullptr), m_EntityClass(nullptr), m_InputClassVTable(nullptr), m_EntityIdField(nullptr), m_ComponentEntitySetter(nullptr) {}
 
     void ScriptEngine::Init() {
         InitMono();
@@ -142,8 +138,6 @@ namespace Phezu {
     }
     
     void ScriptEngine::PreUpdate() {
-        bool a = m_Engine->GetInput().A;
-        
         mono_field_static_set_value(m_InputClassVTable, m_InputFields.W, (void*)&(m_Engine->GetInput().W));
         mono_field_static_set_value(m_InputClassVTable, m_InputFields.A, (void*)&(m_Engine->GetInput().A));
         mono_field_static_set_value(m_InputClassVTable, m_InputFields.S, (void*)&(m_Engine->GetInput().S));
@@ -173,8 +167,8 @@ namespace Phezu {
             Log("Error initializing mono jit\n");
             return;
         }
-
-        m_RuntimeDomain = mono_domain_create_appdomain("PhezuRuntimeDomain", nullptr);
+        
+        m_RuntimeDomain = mono_domain_create_appdomain(const_cast<char*>("PhezuRuntimeDomain"), nullptr);
         mono_domain_set(m_RuntimeDomain, true);
     }
 

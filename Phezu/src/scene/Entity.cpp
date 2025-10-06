@@ -22,11 +22,6 @@ namespace Phezu {
         if (m_PhysicsData != nullptr)
             delete m_PhysicsData;
     }
-    
-
-    TransformData* Entity::GetTransformData() {
-        return &m_TransformData;
-    }
 
     ScriptComponent* Entity::GetScriptComponent(size_t index)
     {
@@ -96,11 +91,11 @@ namespace Phezu {
         m_Children.push_back(child);
     }
     
-    void Entity::RecalculateSubtreeTransformations() {
+    void Entity::RecalculateSubtreeTransforms() {
         m_TransformData.RecalculateLocalToWorld();
         
         for (auto child : m_Children)
-            child->RecalculateSubtreeTransformations();
+            child->RecalculateSubtreeTransforms();
     }
     
     void Entity::SetParent(Entity* parent) {
@@ -123,7 +118,7 @@ namespace Phezu {
         m_Parent->OnChildRemoved(this);
         m_Parent = parent;
         m_Parent->AddChild(this);
-        RecalculateSubtreeTransformations();
+        RecalculateSubtreeTransforms();
     }
     
     void Entity::RemoveParent() {

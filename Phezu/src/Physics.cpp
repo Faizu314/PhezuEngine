@@ -41,7 +41,7 @@ namespace Phezu {
             auto trans = dynamicEntity->GetTransformData();
             auto phys = dynamicEntity->GetPhysicsData();
             trans->SetWorldPosition(trans->GetWorldPosition() + (phys->Velocity * deltaTime));
-            dynamicEntity->RecalculateSubtreeTransformations();
+            dynamicEntity->RecalculateSubtreeTransforms();
         }
         
         for (size_t i = 0; i < dynamicCount; i++) {
@@ -109,21 +109,21 @@ namespace Phezu {
         if ((phys1->Velocity.SqrLength() > 0 && phys2->Velocity.SqrLength() > 0) || (phys1->Velocity.SqrLength() == 0 && phys2->Velocity.SqrLength() == 0)) {
             auto trans1 = d1->GetTransformData();
             trans1->SetLocalPosition(trans1->GetLocalPosition() + Vector2(xTranslate / 2, yTranslate / 2));
-            d1->RecalculateSubtreeTransformations();
+            d1->RecalculateSubtreeTransforms();
             
             auto trans2 = d2->GetTransformData();
             trans2->SetLocalPosition(trans2->GetLocalPosition() + Vector2(-xTranslate / 2, -yTranslate / 2));
-            d2->RecalculateSubtreeTransformations();
+            d2->RecalculateSubtreeTransforms();
         }
         else if (phys1->Velocity.SqrLength() > 0) {
             auto trans1 = d1->GetTransformData();
             trans1->SetLocalPosition(trans1->GetLocalPosition() + Vector2(xTranslate, yTranslate));
-            d1->RecalculateSubtreeTransformations();
+            d1->RecalculateSubtreeTransforms();
         }
         else {
             auto trans2 = d2->GetTransformData();
             trans2->SetLocalPosition(trans2->GetLocalPosition() + Vector2(-xTranslate, -yTranslate));
-            d2->RecalculateSubtreeTransformations();
+            d2->RecalculateSubtreeTransforms();
         }
     }
     
@@ -205,7 +205,7 @@ namespace Phezu {
         phys->Velocity = Vector2(reflectedVel.x, reflectedVel.y);
         
         trans->SetLocalPosition(trans->GetLocalPosition() + Vector2(xTranslate, yTranslate));
-        dynamicEntity->RecalculateSubtreeTransformations();
+        dynamicEntity->RecalculateSubtreeTransforms();
     }
     
     void Physics::OnColliding(Entity* a, Entity* b) {

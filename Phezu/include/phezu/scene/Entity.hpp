@@ -29,20 +29,19 @@ namespace Phezu {
         const std::string& GetTag() { return m_Tag; }
         void SetTag(const std::string& tag) { m_Tag = tag; }
     public:
-        TransformData* GetTransformData();
+        TransformData* GetTransformData() { return &m_TransformData; }
         ShapeData* GetShapeData() const { return m_ShapeData; }
         RenderData* GetRenderData() const { return m_RenderData; }
         PhysicsData* GetPhysicsData() const { return m_PhysicsData; }
         ScriptComponent* GetScriptComponent(size_t index);
         size_t GetScriptComponentCount() const { return m_ScriptComponents.size(); }
         bool HasScriptComponent(const std::string& classFullname);
+        void RemoveScriptComponent(const std::string& classFullname);
     public:
         ShapeData* AddShapeData();
         RenderData* AddRenderData(Color tint = Color::White);
         PhysicsData* AddPhysicsData(bool isStatic);
         ScriptComponent* AddScriptComponent(const std::string& classFullname);
-    public:
-        void RemoveScriptComponent(const std::string& classFullname);
     public:
         Scene* GetSceneContext() const { return m_Scene; }
         TransformData* GetParent() const;
@@ -55,7 +54,7 @@ namespace Phezu {
         void OnDestroyed();
         void OnChildRemoved(const Entity* removedChild);
         void AddChild(Entity* child);
-        void RecalculateSubtreeTransformations();
+        void RecalculateSubtreeTransforms();
     private:
         Scene* m_Scene;
         Entity* m_Parent;
@@ -65,7 +64,6 @@ namespace Phezu {
         ShapeData* m_ShapeData;
         RenderData* m_RenderData;
         PhysicsData* m_PhysicsData;
-    private:
         std::vector<ScriptComponent*> m_ScriptComponents;
     private:
         static uint64_t s_EntitiesCount;

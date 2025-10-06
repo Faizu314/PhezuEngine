@@ -25,6 +25,9 @@ namespace Game {
                 return;
 
             Ball ball = other.GetComponent<Ball>();
+
+            if (ball == null)
+                return;
             
             Vector2 myPos = m_Transform.Position;
             Vector2 ballPos = ball.Position;
