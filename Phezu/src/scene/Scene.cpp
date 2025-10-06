@@ -33,7 +33,7 @@ namespace Phezu {
         
         auto entity = prefab->Instantiate(this);
         
-        entity->RecalculateSubtreeTransformations();
+        entity->RecalculateSubtreeTransforms();
                 
         return entity;
     }
@@ -90,7 +90,7 @@ namespace Phezu {
     void Scene::UpdateHierarchy() {
         for (auto entity : m_RuntimeEntities) {
             if (entity.second->IsDirty()) {
-                entity.second->RecalculateSubtreeTransformations();
+                entity.second->RecalculateSubtreeTransforms();
             }
         }
     }
