@@ -37,7 +37,7 @@ namespace Phezu {
 		return entity;
 	}
 
-	ManagedType MonoToNativeType(MonoType* monoType, std::string& outFullname) {
+	ManagedType MonoToManagedType(MonoType* monoType, std::string& outFullname) {
 		MonoClass* monoClass = mono_type_get_class(monoType);
 		std::string nameSpace = mono_class_get_namespace(monoClass);
 		std::string name = mono_class_get_name(monoClass);
@@ -59,7 +59,7 @@ namespace Phezu {
     
     MonoString* Entity_GetTag(uint64_t entityID) {
         auto entity = GetEntity(entityID);
-        const std::string& tag = entity->GetTag();
+        const std::string& tag = entity->Tag;
         
         return mono_string_new(mono_domain_get(), tag.c_str());
     }
@@ -70,7 +70,7 @@ namespace Phezu {
 		auto entity = GetEntity(entityID);
 
 		std::string classFullname;
-		ManagedType managedType = MonoToNativeType(monoType, classFullname);
+		ManagedType managedType = MonoToManagedType(monoType, classFullname);
 
 		switch (managedType) {
 			case ManagedType::Transform:
@@ -79,15 +79,15 @@ namespace Phezu {
 			}
 			case ManagedType::Shape:
 			{
-				return entity->GetShapeData() != nullptr;
+                return entity->HasDataComponent(ComponentType::Shape);
 			}
 			case ManagedType::Renderer:
 			{
-				return entity->GetRenderData() != nullptr;
+                return entity->HasDataComponent(ComponentType::Render);
 			}
 			case ManagedType::Physics:
 			{
-				return entity->GetPhysicsData() != nullptr;
+                return entity->HasDataComponent(ComponentType::Physics);
 			}
 			case ManagedType::ScriptComponent:
 			{
@@ -105,7 +105,7 @@ namespace Phezu {
 		auto entity = GetEntity(entityID);
 
 		std::string classFullname;
-		ManagedType managedType = MonoToNativeType(monoType, classFullname);
+		ManagedType managedType = MonoToManagedType(monoType, classFullname);
         
 		if (managedType == ManagedType::None) {
             Log("Mono type %s not recognized", classFullname.c_str());
@@ -131,7 +131,7 @@ namespace Phezu {
         auto entity = GetEntity(entityID);
 
         std::string classFullname;
-        ManagedType managedType = MonoToNativeType(monoType, classFullname);
+        ManagedType managedType = MonoToManagedType(monoType, classFullname);
         
         if (managedType == ManagedType::None) {
             Log("Mono type %s not recognized", classFullname.c_str());
@@ -158,7 +158,9 @@ namespace Phezu {
 		Entity* entity = GetEntity(entityID);
 
 		if (entity) {
-			Vector2 pos = entity->GetTransformData()->GetWorldPosition();
+            TransformData* transform = dynamic_cast<TransformData*>(entity->GetDataComponent(ComponentType::Transform));
+            
+			Vector2 pos = transform->GetWorldPosition();
 			position->x = pos.X();
 			position->y = pos.Y();
 		}
@@ -168,7 +170,9 @@ namespace Phezu {
 		Entity* entity = GetEntity(entityID);
 
 		if (entity) {
-			entity->GetTransformData()->SetWorldPosition(Vector2(position->x, position->y));
+            TransformData* transform = dynamic_cast<TransformData*>(entity->GetDataComponent(ComponentType::Transform));
+            
+            transform->SetWorldPosition(Vector2(position->x, position->y));
 		}
 	}
     
@@ -178,7 +182,9 @@ namespace Phezu {
         Entity* entity = GetEntity(entityID);
 
         if (entity) {
-            Vector2 vel = entity->GetPhysicsData()->Velocity;
+            PhysicsData* physics = dynamic_cast<PhysicsData*>(entity->GetDataComponent(ComponentType::Physics));
+            
+            Vector2 vel = physics->Velocity;
             velocity->x = vel.X();
             velocity->y = vel.Y();
         }
@@ -188,7 +194,9 @@ namespace Phezu {
         Entity* entity = GetEntity(entityID);
 
         if (entity) {
-            entity->GetPhysicsData()->Velocity = Vector2(velocity->x, velocity->y);
+            PhysicsData* physics = dynamic_cast<PhysicsData*>(entity->GetDataComponent(ComponentType::Physics));
+            
+            physics->Velocity = Vector2(velocity->x, velocity->y);
         }
     }
 

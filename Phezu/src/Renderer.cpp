@@ -49,7 +49,7 @@ namespace Phezu {
     }
     
     Renderer::Renderer(Engine* engine, const Window& window)
-    : m_Engine(engine), m_WorldToSdl(glm::mat3(1, 0, 0, 0, -1,  0,  window.GetWidth() / 2.0,  window.GetHeight() / 2.0, 1))
+    : m_Engine(engine), m_ScreenToSdl(glm::mat3(1, 0, 0, 0, -1,  0,  window.GetWidth() / 2.0,  window.GetHeight() / 2.0, 1))
     {
         m_RendererPtr = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
@@ -72,12 +72,12 @@ namespace Phezu {
         SDL_DestroyRenderer(m_RendererPtr);
     }
     
-    Vector2 Renderer::WorldToSdlPosition(const Vector2& worldPos) const {
+    Vector2 Renderer::ScreenToSdlPosition(const Vector2& worldPos) const {
         int roundedX = RoundToPixel(worldPos.X());
         int roundedY = RoundToPixel(worldPos.Y());
         
         glm::vec3 worldPos3(roundedX, roundedY, 1.0);
-        glm::vec3 sdlPos3 = m_WorldToSdl * worldPos3;
+        glm::vec3 sdlPos3 = m_ScreenToSdl * worldPos3;
         
         return Vector2(sdlPos3.x, sdlPos3.y);
     }
@@ -102,9 +102,9 @@ namespace Phezu {
     void Renderer::DrawEntity(Entity* entity) {
         SDL_Rect dest;
         
-        TransformData* transformData = entity->GetTransformData();
-        ShapeData* shapeData = entity->GetShapeData();
-        RenderData* renderData = entity->GetRenderData();
+        TransformData* transformData = dynamic_cast<TransformData*>(entity->GetDataComponent(ComponentType::Transform));
+        ShapeData* shapeData = dynamic_cast<ShapeData*>(entity->GetDataComponent(ComponentType::Shape));
+        RenderData* renderData = dynamic_cast<RenderData*>(entity->GetDataComponent(ComponentType::Render));
         
         if (shapeData == nullptr || renderData == nullptr)
             return;
@@ -115,21 +115,24 @@ namespace Phezu {
         Vector2 upRightWorld = transformData->LocalToWorldPoint(upRightLocal);
         Vector2 downLeftWorld = transformData->LocalToWorldPoint(downLeftLocal);
         
-        Vector2 upRightSdl = WorldToSdlPosition(upRightWorld);
-        Vector2 downLeftSdl = WorldToSdlPosition(downLeftWorld);
+        //world to view (relative to camera position)
+        //view to screen (convert from world units to pixels using camera size and resolution)
+        
+        Vector2 upRightSdl = ScreenToSdlPosition(upRightWorld);
+        Vector2 downLeftSdl = ScreenToSdlPosition(downLeftWorld);
         
         GetSdlRect(dest, downLeftSdl, upRightSdl);
         
         SDL_Texture* texture = m_DefaultTex;
         SDL_Color tint;
-        entity->GetRenderData()->Tint.ConvertToSDLColor(tint);
+        renderData->Tint.ConvertToSDLColor(tint);
         
-        if (auto tex = entity->GetRenderData()->Sprite)
+        if (auto tex = renderData->Sprite)
             texture = *tex;
         
         //TODO: add equality operator in Rect to return SDL_Rect
         SDL_Rect srcRect;
-        Rect uvs = entity->GetRenderData()->SourceRect;
+        Rect uvs = renderData->SourceRect;
         srcRect.x = uvs.x;
         srcRect.y = uvs.y;
         srcRect.w = uvs.w;

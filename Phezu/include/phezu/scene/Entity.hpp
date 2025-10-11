@@ -3,6 +3,7 @@
 #include <vector>
 #include <typeindex>
 #include <string>
+#include <unordered_map>
 
 #include "Renderer.hpp"
 #include "scene/components/TransformData.hpp"
@@ -10,9 +11,6 @@
 
 namespace Phezu {
     
-    class ShapeData;
-    class RenderData;
-    class PhysicsData;
     class Scene;
     class Physics;
     
@@ -22,26 +20,21 @@ namespace Phezu {
         Entity(Scene* scene);
         ~Entity();
     public:
+        bool IsActive;
+        std::string Tag;
+    public:
         uint64_t GetEntityID() const { return m_EntityID; }
-        void SetActive(bool isActive) { m_IsActive = isActive; }
-        bool GetActive() const { return m_IsActive; }
-        bool IsDirty() {return m_TransformData.GetIsDirty(); }
-        const std::string& GetTag() { return m_Tag; }
-        void SetTag(const std::string& tag) { m_Tag = tag; }
+        bool IsDirty() { return m_TransformData.GetIsDirty(); }
     public:
-        TransformData* GetTransformData() { return &m_TransformData; }
-        ShapeData* GetShapeData() const { return m_ShapeData; }
-        RenderData* GetRenderData() const { return m_RenderData; }
-        PhysicsData* GetPhysicsData() const { return m_PhysicsData; }
-        ScriptComponent* GetScriptComponent(size_t index);
-        size_t GetScriptComponentCount() const { return m_ScriptComponents.size(); }
-        bool HasScriptComponent(const std::string& classFullname);
-        void RemoveScriptComponent(const std::string& classFullname);
-    public:
-        ShapeData* AddShapeData();
-        RenderData* AddRenderData(Color tint = Color::White);
-        PhysicsData* AddPhysicsData(bool isStatic);
+        DataComponent* AddDataComponent(ComponentType componentType);
+        DataComponent* GetDataComponent(ComponentType componentType);
+        void RemoveDataComponent(ComponentType componentType);
+        bool HasDataComponent(ComponentType componentType) const;
         ScriptComponent* AddScriptComponent(const std::string& classFullname);
+        ScriptComponent* GetScriptComponent(size_t index);
+        void RemoveScriptComponent(const std::string& classFullname);
+        size_t GetScriptComponentCount() const { return m_ScriptComponents.size(); }
+        bool HasScriptComponent(const std::string& classFullname) const;
     public:
         Scene* GetSceneContext() const { return m_Scene; }
         TransformData* GetParent() const;
@@ -57,19 +50,15 @@ namespace Phezu {
         void RecalculateSubtreeTransforms();
     private:
         Scene* m_Scene;
+        uint64_t m_EntityID;
         Entity* m_Parent;
         std::vector<Entity*> m_Children;
     private:
         TransformData m_TransformData;
-        ShapeData* m_ShapeData;
-        RenderData* m_RenderData;
-        PhysicsData* m_PhysicsData;
+        std::unordered_map<ComponentType, DataComponent*> m_DataComponents;
         std::vector<ScriptComponent*> m_ScriptComponents;
     private:
         static uint64_t s_EntitiesCount;
-        uint64_t m_EntityID;
-        bool m_IsActive;
-        std::string m_Tag;
         
         friend class Scene;
         friend class Physics;

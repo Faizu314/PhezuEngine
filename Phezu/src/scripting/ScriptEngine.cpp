@@ -96,7 +96,7 @@ namespace Phezu {
         transform.SetEntityProperty(m_ComponentEntitySetter, entityData.EntityScript.GetMonoGcHandle());
         entityData.EngineComponents.emplace(ManagedType::Transform, std::move(transform));
         
-        if (entity->GetPhysicsData() != nullptr) {
+        if (entity->HasDataComponent(ComponentType::Physics)) {
             ComponentInstance physics(m_RuntimeDomain, m_EngineComponentClasses[ManagedType::Physics]);
             physics.SetEntityProperty(m_ComponentEntitySetter, entityData.EntityScript.GetMonoGcHandle());
             entityData.EngineComponents.emplace(ManagedType::Physics, std::move(physics));

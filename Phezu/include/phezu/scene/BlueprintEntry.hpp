@@ -9,13 +9,18 @@ namespace Phezu {
     
     enum class EntryType : uint16_t {
         Invalid = 0,
+        
         Entity = 1,
+        
+        // Engine Components
         TransformData = 2,
         ShapeData = 3,
         RenderData = 4,
         PhysicsData = 5,
-        Script = 6,
-        PrefabRef = 7,
+        Camera = 6,
+        
+        Script = 101,
+        PrefabRef = 102,
     };
     
     class BlueprintEntry {

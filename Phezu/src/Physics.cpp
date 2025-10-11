@@ -38,8 +38,8 @@ namespace Phezu {
         
         for (size_t i = 0; i < dynamicCount; i++) {
             auto dynamicEntity = dynamicEntities[i];
-            auto trans = dynamicEntity->GetTransformData();
-            auto phys = dynamicEntity->GetPhysicsData();
+            TransformData* trans = dynamic_cast<TransformData*>(dynamicEntity->GetDataComponent(ComponentType::Transform));
+            PhysicsData* phys = dynamic_cast<PhysicsData*>(dynamicEntity->GetDataComponent(ComponentType::Physics));
             trans->SetWorldPosition(trans->GetWorldPosition() + (phys->Velocity * deltaTime));
             dynamicEntity->RecalculateSubtreeTransforms();
         }
@@ -98,8 +98,8 @@ namespace Phezu {
             reflectionMat[1].y = -1;
         }
         
-        auto phys1 = d1->GetPhysicsData();
-        auto phys2 = d2->GetPhysicsData();
+        auto* phys1 = dynamic_cast<PhysicsData*>(d1->GetDataComponent(ComponentType::Physics));
+        auto* phys2 = dynamic_cast<PhysicsData*>(d2->GetDataComponent(ComponentType::Physics));
         
         glm::vec reflectedVel1 = reflectionMat * phys1->Velocity;
         glm::vec reflectedVel2 = reflectionMat * phys2->Velocity;
@@ -107,21 +107,21 @@ namespace Phezu {
         phys2->Velocity = Vector2(reflectedVel2.x, reflectedVel2.y);
         
         if ((phys1->Velocity.SqrLength() > 0 && phys2->Velocity.SqrLength() > 0) || (phys1->Velocity.SqrLength() == 0 && phys2->Velocity.SqrLength() == 0)) {
-            auto trans1 = d1->GetTransformData();
+            auto trans1 = dynamic_cast<TransformData*>(d1->GetDataComponent(ComponentType::Transform));
             trans1->SetLocalPosition(trans1->GetLocalPosition() + Vector2(xTranslate / 2, yTranslate / 2));
             d1->RecalculateSubtreeTransforms();
             
-            auto trans2 = d2->GetTransformData();
+            auto trans2 = dynamic_cast<TransformData*>(d2->GetDataComponent(ComponentType::Transform));
             trans2->SetLocalPosition(trans2->GetLocalPosition() + Vector2(-xTranslate / 2, -yTranslate / 2));
             d2->RecalculateSubtreeTransforms();
         }
         else if (phys1->Velocity.SqrLength() > 0) {
-            auto trans1 = d1->GetTransformData();
+            auto trans1 = dynamic_cast<TransformData*>(d1->GetDataComponent(ComponentType::Transform));
             trans1->SetLocalPosition(trans1->GetLocalPosition() + Vector2(xTranslate, yTranslate));
             d1->RecalculateSubtreeTransforms();
         }
         else {
-            auto trans2 = d2->GetTransformData();
+            auto trans2 = dynamic_cast<TransformData*>(d2->GetDataComponent(ComponentType::Transform));
             trans2->SetLocalPosition(trans2->GetLocalPosition() + Vector2(-xTranslate, -yTranslate));
             d2->RecalculateSubtreeTransforms();
         }
@@ -158,10 +158,10 @@ namespace Phezu {
     }
     
     bool Physics::IsColliding(Entity* entityA, Entity* entityB, CollisionData& cd) {
-        auto transA = entityA->GetTransformData();
-        auto shapeA = entityA->GetShapeData();
-        auto transB = entityB->GetTransformData();
-        auto shapeB = entityB->GetShapeData();
+        auto transA = dynamic_cast<TransformData*>(entityA->GetDataComponent(ComponentType::Transform));
+        auto shapeA = dynamic_cast<ShapeData*>(entityA->GetDataComponent(ComponentType::Shape));
+        auto transB = dynamic_cast<TransformData*>(entityB->GetDataComponent(ComponentType::Transform));
+        auto shapeB = dynamic_cast<ShapeData*>(entityB->GetDataComponent(ComponentType::Shape));
 
         cd.A = GetWorldRectFromTransformAndShapeData(transA, shapeA);
         cd.B = GetWorldRectFromTransformAndShapeData(transB, shapeB);
@@ -198,8 +198,8 @@ namespace Phezu {
             reflectionMat[1].y = -1;
         }
         
-        auto trans = dynamicEntity->GetTransformData();
-        auto phys = dynamicEntity->GetPhysicsData();
+        auto trans = dynamic_cast<TransformData*>(dynamicEntity->GetDataComponent(ComponentType::Transform));
+        auto phys = dynamic_cast<PhysicsData*>(dynamicEntity->GetDataComponent(ComponentType::Physics));
         
         glm::vec reflectedVel = reflectionMat * phys->Velocity;
         phys->Velocity = Vector2(reflectedVel.x, reflectedVel.y);
@@ -209,8 +209,8 @@ namespace Phezu {
     }
     
     void Physics::OnColliding(Entity* a, Entity* b) {
-        auto ap = a->GetPhysicsData();
-        auto bp = b->GetPhysicsData();
+        auto ap = dynamic_cast<PhysicsData*>(a->GetDataComponent(ComponentType::Physics));
+        auto bp = dynamic_cast<PhysicsData*>(b->GetDataComponent(ComponentType::Physics));
         
         Collision cA(bp);
         Collision cB(ap);
@@ -225,8 +225,8 @@ namespace Phezu {
     }
     
     void Physics::OnNotColliding(Entity* a, Entity* b) {
-        auto ap = a->GetPhysicsData();
-        auto bp = b->GetPhysicsData();
+        auto ap = dynamic_cast<PhysicsData*>(a->GetDataComponent(ComponentType::Physics));
+        auto bp = dynamic_cast<PhysicsData*>(b->GetDataComponent(ComponentType::Physics));
         
         Collision cA(bp);
         Collision cB(ap);
