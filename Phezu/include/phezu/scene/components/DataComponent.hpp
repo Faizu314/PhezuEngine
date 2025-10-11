@@ -4,6 +4,15 @@ namespace Phezu {
     
     class Entity;
     
+    enum class ComponentType {
+        None = 0,
+        Transform,
+        Shape,
+        Render,
+        Physics,
+        Camera,
+    };
+    
     class DataComponent {
     public:
         DataComponent(Entity* entity) : m_Entity(entity) {}
@@ -12,6 +21,7 @@ namespace Phezu {
         DataComponent() = delete;
         DataComponent(const DataComponent&) = delete;
         DataComponent& operator=(const DataComponent&) = delete;
+        virtual ~DataComponent() = default; 
     public:
         Entity* GetEntity() const { return m_Entity; }
     protected:

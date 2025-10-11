@@ -176,7 +176,7 @@ namespace Phezu {
             
             auto entity = scene->CreateEntity();
             entities.insert(std::make_pair(entry.FileID, entity));
-            entity->SetTag(GetProperty<std::string>("Tag", entry, overrides));
+            entity->Tag = GetProperty<std::string>("Tag", entry, overrides);
 
             if (parentRef.FileID == 0)
                 registry[registryKey].RootEntity = entity;
@@ -210,7 +210,7 @@ namespace Phezu {
                     Vector2 position = GetProperty<Vector2>("Position", entry, overrides);
                     Vector2 scale = GetProperty<Vector2>("Scale", entry, overrides);
                     
-                    auto transform = parentEntity->GetTransformData();
+                    auto transform = dynamic_cast<TransformData*>(parentEntity->GetDataComponent(ComponentType::Transform));
                     transform->SetLocalPosition(position);
                     transform->SetLocalScale(scale);
                     components[entry.FileID] = transform;
@@ -222,7 +222,7 @@ namespace Phezu {
                     Vector2 pivot = GetProperty<Vector2>("Pivot", entry, overrides);
                     Vector2 size = GetProperty<Vector2>("Size", entry, overrides);
                     
-                    auto shapeData = parentEntity->AddShapeData();
+                    auto shapeData = dynamic_cast<ShapeData*>(parentEntity->AddDataComponent(ComponentType::Shape));
                     shapeData->Set(pivot, size);
                     components[entry.FileID] = shapeData;
 
@@ -233,7 +233,7 @@ namespace Phezu {
                     Color tint = GetProperty<Color>("Tint", entry, overrides);
                     Rect sourceRect = GetProperty<Rect>("SourceRect", entry, overrides);
                     
-                    auto renderData = parentEntity->AddRenderData();
+                    auto renderData = dynamic_cast<RenderData*>(parentEntity->AddDataComponent(ComponentType::Render));
                     renderData->Tint = tint;
                     renderData->SourceRect = sourceRect;
                     components[entry.FileID] = renderData;
@@ -245,7 +245,7 @@ namespace Phezu {
                     bool isStatic = GetProperty<bool>("IsStatic", entry, overrides);
                     Vector2 velocity = GetProperty<Vector2>("Velocity", entry, overrides);
                     
-                    auto physicsData = parentEntity->AddPhysicsData(isStatic);
+                    auto physicsData = dynamic_cast<PhysicsData*>(parentEntity->AddDataComponent(ComponentType::Physics));
                     physicsData->Velocity = velocity;
                     components[entry.FileID] = physicsData;
                     

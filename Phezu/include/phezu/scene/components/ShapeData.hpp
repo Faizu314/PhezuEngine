@@ -17,11 +17,11 @@ namespace Phezu {
             DownRight = 4,
         };
     public:
-        ShapeData(Entity* entity, const Vector2& pivot = Vector2::Zero, const Vector2& size = Vector2::One);
+        ShapeData(Entity* entity, Vector2 pivot = Vector2::Zero, Vector2 size = Vector2::One);
     public:
-        void SetPivot(const Vector2& pivot);
-        void SetSize(const Vector2& size);
-        void Set(const Vector2& pivot, const Vector2& size);
+        void SetPivot(Vector2 pivot);
+        void SetSize(Vector2 size);
+        void Set(Vector2 pivot, Vector2 size);
     public:
         Vector2 GetVertexPosition(VertexType vertexType) const;
     private:

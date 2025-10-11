@@ -10,17 +10,13 @@ namespace Phezu {
     
     class Physics;
     class BehaviourComponent;
-    struct Collision;
     
     class PhysicsData : public DataComponent {
     public:
-        PhysicsData(Entity* entity, bool isStatic) : DataComponent(entity), m_IsStatic(isStatic) {}
-    public:
-        bool IsStatic() const { return m_IsStatic; }
+        PhysicsData(Entity* entity, bool isStatic = false, Vector2 velocity = Vector2::Zero) : DataComponent(entity), IsStatic(isStatic), Velocity(velocity) {}
     public:
         Vector2 Velocity;
-    private:
-        const bool m_IsStatic;
+        bool IsStatic;
         
         friend Physics;
     };

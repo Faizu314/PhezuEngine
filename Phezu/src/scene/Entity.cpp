@@ -3,24 +3,22 @@
 #include "scene/components/ShapeData.hpp"
 #include "scene/components/RenderData.hpp"
 #include "scene/components/PhysicsData.hpp"
+#include "scene/components/CameraData.hpp"
 #include "scene/components/ScriptComponent.hpp"
+
+#include "Logger.hpp"
 
 namespace Phezu {
     
     uint64_t Entity::s_EntitiesCount = 0;
     
-    Entity::Entity(Scene* scene) : m_Scene(scene), m_TransformData(this), m_ShapeData(nullptr), m_RenderData(nullptr), m_PhysicsData(nullptr), m_Parent(nullptr), m_IsActive(true), m_Tag("Default") {
+    Entity::Entity(Scene* scene) : m_Scene(scene), m_TransformData(this), m_Parent(nullptr), IsActive(true), Tag("Default") {
         m_EntityID = s_EntitiesCount;
         s_EntitiesCount++;
     }
     
     Entity::~Entity() {
-        if (m_ShapeData != nullptr)
-            delete m_ShapeData;
-        if (m_RenderData != nullptr)
-            delete m_RenderData;
-        if (m_PhysicsData != nullptr)
-            delete m_PhysicsData;
+        
     }
 
     ScriptComponent* Entity::GetScriptComponent(size_t index)
@@ -31,19 +29,67 @@ namespace Phezu {
         return m_ScriptComponents[index];
     }
 
-    ShapeData* Entity::AddShapeData() {
-        m_ShapeData = new ShapeData(this);
-        return m_ShapeData;
+    DataComponent* Entity::AddDataComponent(ComponentType componentType) {
+        if (HasDataComponent(componentType)) {
+            Log("Native component of type %i already added to entity", componentType);
+            return nullptr;
+        }
+        
+        DataComponent* component;
+        
+        switch (componentType) {
+            case ComponentType::Transform:
+                Log("Trying to add Transform component to entity");
+                return nullptr;
+            case ComponentType::Shape:
+                component = new ShapeData(this);
+                break;
+            case ComponentType::Render:
+                component = new RenderData(this);
+                break;
+            case ComponentType::Physics:
+                component = new PhysicsData(this);
+                break;
+            case ComponentType::Camera:
+                component = new CameraData(this);
+                break;
+            default:
+                return nullptr;
+        }
+        
+        m_DataComponents.insert(std::make_pair(componentType, component));
+        
+        return component;
     }
-
-    RenderData* Entity::AddRenderData(Color tint) {
-        m_RenderData = new RenderData(this, tint);
-        return m_RenderData;
+    
+    DataComponent* Entity::GetDataComponent(ComponentType componentType) {
+        if (!HasDataComponent(componentType)) {
+            Log("Native component of type %i does not exist on entity", componentType);
+            return nullptr;
+        }
+        
+        if (componentType == ComponentType::Transform)
+            return &m_TransformData;
+        
+        return m_DataComponents.at(componentType);
     }
-
-    PhysicsData* Entity::AddPhysicsData(bool isStatic) {
-        m_PhysicsData = new PhysicsData(this, isStatic);
-        return m_PhysicsData;
+    
+    void Entity::RemoveDataComponent(ComponentType componentType) {
+        if (!HasDataComponent(componentType)) {
+            Log("Trying to remove data component of type %i that does not exist", componentType);
+            return;
+        }
+        
+        delete m_DataComponents[componentType];
+        
+        m_DataComponents.erase(componentType);
+    }
+    
+    bool Entity::HasDataComponent(ComponentType componentType) const {
+        if (componentType == ComponentType::Transform)
+            return true;
+        
+        return m_DataComponents.find(componentType) != m_DataComponents.end();
     }
 
     ScriptComponent* Entity::AddScriptComponent(const std::string& classFullname) {
@@ -60,7 +106,7 @@ namespace Phezu {
         }
     }
 
-    bool Entity::HasScriptComponent(const std::string& classFullname) {
+    bool Entity::HasScriptComponent(const std::string& classFullname) const {
         for (size_t i = 0; i < m_ScriptComponents.size(); i++) {
             if (m_ScriptComponents[i]->GetScriptClassFullname() == classFullname)
                 return true;
@@ -73,7 +119,7 @@ namespace Phezu {
         if (m_Parent == nullptr)
             return nullptr;
         
-        return m_Parent->GetTransformData();
+        return dynamic_cast<TransformData*>(m_Parent->GetDataComponent(ComponentType::Transform));
     }
 
     Entity* Entity::GetChild(size_t childIndex) {

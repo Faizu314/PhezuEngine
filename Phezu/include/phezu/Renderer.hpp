@@ -62,11 +62,11 @@ namespace Phezu {
         void RenderFrame();
     private:
         void DrawEntity(Entity* entity);
-        Vector2 WorldToSdlPosition(const Vector2& worldPos) const;
+        Vector2 ScreenToSdlPosition(const Vector2& worldPos) const;
     private:
         Engine* m_Engine;
         SDL_Renderer* m_RendererPtr;
-        glm::mat3 m_WorldToSdl;
+        glm::mat3 m_ScreenToSdl;
         SDL_Texture* m_DefaultTex;
         SDL_Texture* m_IntermediateTex;
     };

@@ -98,15 +98,20 @@ namespace Phezu {
     void Scene::GetPhysicsEntities(std::vector<Entity*>& staticEntities, std::vector<Entity*>& dynamicEntities, size_t& staticIndex, size_t& dynamicIndex) const {
         for (auto it = m_RuntimeEntities.begin(); it != m_RuntimeEntities.end(); it++) {
             auto entity = (*it).second;
-            auto physicsData = entity->GetPhysicsData();
-            if (physicsData && physicsData->IsStatic() && entity->GetShapeData() != nullptr) {
+            
+            if (!entity->HasDataComponent(ComponentType::Physics) ||
+                !entity->HasDataComponent(ComponentType::Shape))
+                continue;
+            
+            auto physicsData = dynamic_cast<PhysicsData*>(entity->GetDataComponent(ComponentType::Physics));
+            if (physicsData->IsStatic) {
                 if (staticIndex < staticEntities.size())
                     staticEntities[staticIndex] = entity;
                 else
                     staticEntities.push_back(entity);
                 staticIndex++;
             }
-            else if (physicsData && !physicsData->IsStatic() && entity->GetShapeData() != nullptr) {
+            else if (!physicsData->IsStatic) {
                 if (dynamicIndex < dynamicEntities.size())
                     dynamicEntities[dynamicIndex] = entity;
                 else
@@ -119,7 +124,7 @@ namespace Phezu {
     void Scene::GetRenderableEntities(std::vector<Entity*>& entities, size_t& index) const {
         for (auto it = m_RuntimeEntities.begin(); it != m_RuntimeEntities.end(); it++) {
             auto entity = (*it).second;
-            if (entity->GetRenderData() != nullptr && entity->GetShapeData() != nullptr) {
+            if (entity->HasDataComponent(ComponentType::Render) && entity->HasDataComponent(ComponentType::Shape)) {
                 if (index < entities.size())
                     entities[index] = entity;
                 else

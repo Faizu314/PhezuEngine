@@ -7,7 +7,7 @@ namespace Phezu {
     
     class TransformData : public DataComponent {
     public:
-        TransformData(Entity* entity);
+        TransformData(Entity* entity, Vector2 localPosition = Vector2::Zero, Vector2 localScale = Vector2::One);
     public:
         Vector2 GetLocalPosition() { return m_LocalPosition; }
         Vector2 GetWorldPosition() const;

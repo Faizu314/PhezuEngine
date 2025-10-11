@@ -5,17 +5,17 @@
 
 namespace Phezu {
 
-    ShapeData::ShapeData(Entity* entity, const Vector2& pivot, const Vector2& size) : DataComponent(entity), m_Pivot(pivot), m_Size(size) {}
+    ShapeData::ShapeData(Entity* entity, Vector2 pivot, Vector2 size) : DataComponent(entity), m_Pivot(pivot), m_Size(size) {}
     
-    void ShapeData::SetPivot(const Vector2& pivot) {
-        memcpy(&m_Pivot, &pivot, sizeof(Vector2));
+    void ShapeData::SetPivot(Vector2 pivot) {
+        std::memcpy(&m_Pivot, &pivot, sizeof(Vector2));
     }
     
-    void ShapeData::SetSize(const Vector2& size) {
-        memcpy(&m_Size, &size, sizeof(Vector2));
+    void ShapeData::SetSize(Vector2 size) {
+        std::memcpy(&m_Size, &size, sizeof(Vector2));
     }
     
-    void ShapeData::Set(const Vector2& pivot, const Vector2& size) {
+    void ShapeData::Set(Vector2 pivot, Vector2 size) {
         SetPivot(pivot);
         SetSize(size);
     }
