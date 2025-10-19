@@ -6,16 +6,17 @@
 
 namespace Phezu {
 
-	ScriptClass::ScriptClass(MonoAssembly* assembly, const std::string& classNamespace, const std::string& className, ScriptClassType scriptClassType)
-	: m_ClassName(className), m_Namespace(classNamespace), m_ScriptClassType(scriptClassType) {
-		MonoImage* image = mono_assembly_get_image(assembly);
-		m_Class = mono_class_from_name(image, classNamespace.c_str(), className.c_str());
-
-		if (m_Class == nullptr)
-		{
-			Log("Error getting mono class from name: %s.%s", classNamespace.c_str(), className.c_str());
-		}
-	}
+	ScriptClass::ScriptClass(MonoClass* monoClass, const std::string& classNamespace, const std::string& className, ScriptClassType scriptClassType) : m_Class(monoClass), m_ClassName(className), m_Namespace(classNamespace), m_ScriptClassType(scriptClassType) {}
+    
+    ScriptClass* ScriptClass::TryCreate(MonoAssembly* assembly, const std::string &classNamespace, const std::string &className, ScriptClassType scriptClassType) {
+        MonoImage* image = mono_assembly_get_image(assembly);
+        MonoClass* monoClass = mono_class_from_name(image, classNamespace.c_str(), className.c_str());
+        
+        if (monoClass == nullptr)
+            return nullptr;
+        
+        return new ScriptClass(monoClass, classNamespace, className, scriptClassType);
+    }
 
 	MonoMethod* ScriptClass::GetMonoMethod(const std::string& methodName, int paramterCount) {
 		MonoMethod* method = mono_class_get_method_from_name(m_Class, methodName.c_str(), paramterCount);
