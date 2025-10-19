@@ -27,7 +27,7 @@
             "Properties": {
                 "Parent": { "Guid": 4, "InstanceID": 0, "FileID": 500 },
                 "Pivot": { "x": 0, "y": 0 },
-                "Size": { "x": 1, "y": 1 }
+                "Size": { "x": 0.5, "y": 0.5 }
             }
         },
         {
