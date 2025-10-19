@@ -7,7 +7,8 @@ namespace Game {
 
         private Transform m_Transform;
         private PlayerInput m_Input;
-        private float m_Speed = 10f;
+        private float m_Speed = 20f;
+        private float m_InputFactor = 20f;
 
         private void OnCreate() {
             m_Transform = Entity.GetComponent<Transform>();
@@ -28,13 +29,10 @@ namespace Game {
 
             if (ball == null)
                 return;
-            
-            Vector2 myPos = m_Transform.Position;
-            Vector2 ballPos = ball.Position;
 
-            float meToBall = ballPos.X - myPos.X;
+            Vector2 inputComponent = new Vector2(m_Input.MoveDir * m_InputFactor, 0f);
             
-            ball.AddVelocity(new Vector2(meToBall * 10f, 0f));
+            ball.AddVelocity(inputComponent);
         }
     }
 }

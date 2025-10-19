@@ -12,10 +12,12 @@ namespace Game {
         private Physics m_Physics;
         private float m_Speed;
 
+        private const float THRESHOLD = 0.5f;
+
         private void OnCreate() {
             m_Transform = Entity.GetComponent<Transform>();
             m_Physics = Entity.GetComponent<Physics>();
-            m_Physics.Velocity = new Vector2(10f, -12f);
+            m_Physics.Velocity = new Vector2(20f, -22f);
             m_Speed = m_Physics.Velocity.Magnitude();
         }
         
@@ -31,6 +33,11 @@ namespace Game {
         public void AddVelocity(Vector2 velocity)
         {
             Vector2 vel = m_Physics.Velocity + velocity;
+            vel.Normalize();
+            if (vel.X > THRESHOLD)
+                vel.X = THRESHOLD;
+            if (vel.X < -THRESHOLD)
+                vel.X = -THRESHOLD;
             vel.Normalize();
             vel *= m_Speed;
             
