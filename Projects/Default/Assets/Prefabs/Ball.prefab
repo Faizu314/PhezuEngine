@@ -52,7 +52,7 @@
         },
         {
             "FileID": 505,
-            "TypeID": 6,
+            "TypeID": 101,
             "TypeName": "Script",
             "Properties": {
                 "Parent": { "Guid": 4, "InstanceID": 0, "FileID": 500 },
