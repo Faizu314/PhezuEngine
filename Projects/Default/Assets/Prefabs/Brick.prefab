@@ -49,6 +49,15 @@
                 "IsStatic": true,
                 "Velocity": { "x": 0, "y": 0 }
             }
+        },
+	    {
+            "FileID": 505,
+            "TypeID": 101,
+            "TypeName": "Script",
+            "Properties": {
+                "Parent": { "Guid": 3, "InstanceID": 0, "FileID": 500 },
+                "Fullname": "Game.Brick"
+            }
         }
     ]
 }

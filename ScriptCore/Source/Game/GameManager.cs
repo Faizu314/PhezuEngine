@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace Game
 {
-    public class GameManager : BehaviourComponent
+    public class GameManager : BehaviourComponent, IBrickListener
     {
-        private LevelData[] Levels = new LevelData[1] {
-            new LevelData()
+        private LevelData[] Levels = new LevelData[] {
+            new()
             {
-                GridData = new int[,]
+                GridData = new[,]
                 {
                     { 1, 1, 1, 1, 1, 1, 1 },
                 },
@@ -18,13 +18,14 @@ namespace Game
         };
         
         private PrefabRef m_BrickPrefabRef;
-        private List<Entity> m_Bricks;
+        private List<Brick> m_Bricks;
+        private int m_CurrentLevel;
 
         private void OnCreate()
         {
             m_Bricks = new();
 
-            LoadLevel(0);
+            LoadLevel(m_CurrentLevel);
         }
 
         private void LoadLevel(int levelIndex)
@@ -44,8 +45,9 @@ namespace Game
                         case 0:
                             continue;
                         case 1:
-                            Entity brick = Entity.Instantiate(m_BrickPrefabRef);
-                            brick.GetComponent<Transform>().Position = worldPos;
+                            Entity brickEntity = Entity.Instantiate(m_BrickPrefabRef);
+                            Brick brick = brickEntity.GetComponent<Brick>();
+                            brick.Initialize(this, worldPos);
                             m_Bricks.Add(brick);
                             break;
                     }
@@ -53,10 +55,29 @@ namespace Game
             }
         }
 
+        void IBrickListener.OnBrickDestroyed(Brick brick)
+        {
+            m_Bricks.Remove(brick);
+            
+            CheckLevelComplete();
+        }
+
+        private void CheckLevelComplete()
+        {
+            if (m_Bricks.Count > 0)
+                return;
+            
+            UnloadLevel();
+
+            m_CurrentLevel++;
+
+            LoadLevel(m_CurrentLevel % Levels.Length);
+        }
+        
         private void UnloadLevel()
         {
             foreach (var brick in m_Bricks)
-                brick.Destroy();
+                brick.Entity.Destroy();
             m_Bricks.Clear();
         }
 
