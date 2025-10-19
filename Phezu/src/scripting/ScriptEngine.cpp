@@ -195,14 +195,14 @@ namespace Phezu {
     }
     
     void ScriptEngine::GetEngineClasses() {
-        m_ObjectClass = new ScriptClass(m_CoreAssembly, "PhezuEngine", "Object", ScriptClassType::Object);
-        m_ComponentClass = new ScriptClass(m_CoreAssembly, "PhezuEngine", "Component", ScriptClassType::Component);
-        m_BehaviourComponentClass = new ScriptClass(m_CoreAssembly, "PhezuEngine", "BehaviourComponent", ScriptClassType::BehaviourComponent);
+        m_ObjectClass = ScriptClass::TryCreate(m_CoreAssembly, "PhezuEngine", "Object", ScriptClassType::Object);
+        m_ComponentClass = ScriptClass::TryCreate(m_CoreAssembly, "PhezuEngine", "Component", ScriptClassType::Component);
+        m_BehaviourComponentClass = ScriptClass::TryCreate(m_CoreAssembly, "PhezuEngine", "BehaviourComponent", ScriptClassType::BehaviourComponent);
         m_ComponentEntitySetter = m_ComponentClass->GetMonoMethod("SetEntity", 1);
-        m_EntityClass = new ScriptClass(m_CoreAssembly, "PhezuEngine", "Entity", ScriptClassType::Entity);
+        m_EntityClass = ScriptClass::TryCreate(m_CoreAssembly, "PhezuEngine", "Entity", ScriptClassType::Entity);
         
-        m_EngineComponentClasses[ManagedType::Transform] = new ScriptClass(m_CoreAssembly, "PhezuEngine", "Transform", ScriptClassType::EngineComponent);
-        m_EngineComponentClasses[ManagedType::Physics] = new ScriptClass(m_CoreAssembly, "PhezuEngine", "Physics", ScriptClassType::EngineComponent);
+        m_EngineComponentClasses[ManagedType::Transform] = ScriptClass::TryCreate(m_CoreAssembly, "PhezuEngine", "Transform", ScriptClassType::EngineComponent);
+        m_EngineComponentClasses[ManagedType::Physics] = ScriptClass::TryCreate(m_CoreAssembly, "PhezuEngine", "Physics", ScriptClassType::EngineComponent);
     }
     
     void ScriptEngine::GetScriptClasses() {
@@ -222,9 +222,9 @@ namespace Phezu {
             const char* nameSpace = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAMESPACE]);
             const char* name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
 
-            auto monoClass = new ScriptClass(m_CoreAssembly, nameSpace, name, ScriptClassType::ScriptComponent);
+            auto monoClass = ScriptClass::TryCreate(m_CoreAssembly, nameSpace, name, ScriptClassType::ScriptComponent);
 
-            if (monoClass->GetMonoClass() == m_BehaviourComponentClass->GetMonoClass())
+            if (monoClass == nullptr || monoClass->GetMonoClass() == m_BehaviourComponentClass->GetMonoClass())
                 continue;
             if (!mono_class_is_subclass_of(monoClass->GetMonoClass(), m_BehaviourComponentClass->GetMonoClass(), false))
                 continue;
@@ -237,7 +237,7 @@ namespace Phezu {
     }
     
     void ScriptEngine::GetInputClassAndFields() {
-        ScriptClass* inputClass = new ScriptClass(m_CoreAssembly, "PhezuEngine", "Input", ScriptClassType::CSharpClass);
+        ScriptClass* inputClass = ScriptClass::TryCreate(m_CoreAssembly, "PhezuEngine", "Input", ScriptClassType::CSharpClass);
         m_InputClassVTable = mono_class_vtable(m_RuntimeDomain, inputClass->GetMonoClass());
         mono_runtime_class_init(m_InputClassVTable);
         

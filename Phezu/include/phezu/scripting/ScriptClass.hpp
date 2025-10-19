@@ -20,8 +20,8 @@ namespace Phezu {
 	};
 
 	class ScriptClass {
-	public:
-		ScriptClass(MonoAssembly* assembly, const std::string& classNamespace, const std::string& className, ScriptClassType scriptClassType);
+	private:
+		ScriptClass(MonoClass* monoClass, const std::string& classNamespace, const std::string& className, ScriptClassType scriptClassType);
 	public:
 		MonoClass* GetMonoClass() { return m_Class; }
 		MonoMethod* GetMonoMethod(const std::string& methodName, int paramterCount);
@@ -29,6 +29,8 @@ namespace Phezu {
 		MonoClassField* GetMonoClassField(const std::string& fieldName);
 		ScriptClassType GetScriptClassType() { return m_ScriptClassType; }
 		std::string GetFullname() { return m_Namespace + "." + m_ClassName; }
+    public:
+        static ScriptClass* TryCreate(MonoAssembly* assembly, const std::string& classNamespace, const std::string& className, ScriptClassType scriptClassType);
 	private:
 		std::string m_Namespace;
 		std::string m_ClassName;
