@@ -5,25 +5,23 @@ namespace Game
 {
     public class GameManager : BehaviourComponent
     {
-        private LevelData[] Levels;
+        private LevelData[] Levels = new LevelData[1] {
+            new LevelData()
+            {
+                GridData = new int[,]
+                {
+                    { 1, 1, 1, 1, 1, 1, 1 },
+                },
+                CellSize = new Vector2(3.1f, 0.8f),
+                TopLeft = new Vector2(-9f, 9f)
+            }
+        };
+        
         private PrefabRef m_BrickPrefabRef;
         private List<Entity> m_Bricks;
 
         private void OnCreate()
         {
-           Levels = new LevelData[1] {
-                new LevelData()
-                {
-                    GridData = new int[,]
-                    {
-                        { 0, 0, 0, 1 },
-                        { 1, 1, 0, 0 }
-                    },
-                    CellSize = new Vector2(3.1f, 1.1f),
-                    TopLeft = new Vector2(-8f, 9f)
-                }
-            };
-            
             m_Bricks = new();
 
             LoadLevel(0);
