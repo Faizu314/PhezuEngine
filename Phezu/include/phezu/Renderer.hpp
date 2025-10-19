@@ -16,6 +16,8 @@ namespace Phezu {
     class Window;
     class Entity;
     class Vector2;
+    class CameraData;
+    class TransformData;
     
     class Texture {
     private:
@@ -60,6 +62,7 @@ namespace Phezu {
         void ClearFrame(const Color& bg = Color::Black);
         void DrawEntities(const std::vector<Entity*>& renderableEntities, size_t count, const Color& bg = Color::Black);
         void RenderFrame();
+        void SetActiveCamera(CameraData* camera);
     private:
         void DrawEntity(Entity* entity);
         Vector2 ScreenToSdlPosition(const Vector2& worldPos) const;
@@ -69,7 +72,9 @@ namespace Phezu {
         glm::mat3 m_ScreenToSdl;
         SDL_Texture* m_DefaultTex;
         SDL_Texture* m_IntermediateTex;
+        CameraData* m_Camera;
+        TransformData* m_CameraTransform;
+        float m_ScreenHeight;
+        float m_ScreenWidth;
     };
-    
-    Texture* LoadTexture(const Renderer& renderer);
 }

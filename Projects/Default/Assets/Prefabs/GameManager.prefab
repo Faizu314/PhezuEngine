@@ -30,7 +30,7 @@
                 "Overrides": {
                     "m_BrickPrefabRef": {
                         "Type": 4,
-                        "Value": 4
+                        "Value": 3
                     }
                 }
             }

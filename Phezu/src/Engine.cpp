@@ -74,6 +74,7 @@ namespace Phezu {
         
         m_IsRunning = true;
         
+        m_Renderer->SetActiveCamera(m_SceneManager.GetActiveCamera());
         m_SceneManager.OnStartGame();
         
         Uint64 prevTime = SDL_GetPerformanceCounter();

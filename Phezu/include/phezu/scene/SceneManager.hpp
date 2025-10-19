@@ -12,6 +12,7 @@ namespace Phezu {
     class Engine;
     class Scene;
     class Entity;
+    class CameraData;
     
     class SceneManager {
     public:
@@ -23,8 +24,10 @@ namespace Phezu {
         void OnEndOfFrame();
         void LoadScene(size_t buildIndex);
         void LoadScene(const std::string& sceneName);
+    public:
         Scene* GetActiveScene() const { return m_ActiveScene; }
         Scene* GetMasterScene() const { return m_MasterScene; }
+        CameraData* GetActiveCamera() const { return m_ActiveCamera; }
     public:
         Entity* FindEntity(uint64_t entityID);
     private:
@@ -33,6 +36,7 @@ namespace Phezu {
         BuildScenesConfig m_BuildScenesConfig;
         Scene* m_MasterScene;
         Scene* m_ActiveScene;
+        CameraData* m_ActiveCamera;
     private:
         size_t m_SceneToLoad;
         bool m_LoadSceneAfterFrame;
