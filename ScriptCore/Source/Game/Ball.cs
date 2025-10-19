@@ -15,7 +15,7 @@ namespace Game {
         private void OnCreate() {
             m_Transform = Entity.GetComponent<Transform>();
             m_Physics = Entity.GetComponent<Physics>();
-            m_Physics.Velocity = new Vector2(400f, -420f);
+            m_Physics.Velocity = new Vector2(10f, -12f);
             m_Speed = m_Physics.Velocity.Magnitude();
         }
         

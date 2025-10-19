@@ -247,6 +247,7 @@ namespace Phezu {
                     
                     auto physicsData = dynamic_cast<PhysicsData*>(parentEntity->AddDataComponent(ComponentType::Physics));
                     physicsData->Velocity = velocity;
+                    physicsData->IsStatic = isStatic;
                     components[entry.FileID] = physicsData;
                     
                     break;

@@ -4,6 +4,7 @@
 #include "scene/components/TransformData.hpp"
 #include "scene/components/ShapeData.hpp"
 #include "scene/components/RenderData.hpp"
+#include "scene/components/CameraData.hpp"
 #include "maths/Math.hpp"
 #include "Logger.hpp"
 
@@ -59,6 +60,9 @@ namespace Phezu {
             exit(1);
         }
         
+        m_ScreenWidth = window.GetWidth();
+        m_ScreenHeight = window.GetHeight();
+        
         m_DefaultTex = SDL_CreateTexture(m_RendererPtr, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 1, 1);
         SDL_SetRenderTarget(m_RendererPtr, m_DefaultTex);
         SDL_SetRenderDrawColor(m_RendererPtr, 255, 255, 255, 255);
@@ -72,9 +76,14 @@ namespace Phezu {
         SDL_DestroyRenderer(m_RendererPtr);
     }
     
-    Vector2 Renderer::ScreenToSdlPosition(const Vector2& worldPos) const {
-        int roundedX = RoundToPixel(worldPos.X());
-        int roundedY = RoundToPixel(worldPos.Y());
+    void Renderer::SetActiveCamera(CameraData* camera) {
+        m_Camera = camera;
+        m_CameraTransform = dynamic_cast<TransformData*>(camera->GetEntity()->GetDataComponent(ComponentType::Transform));
+    }
+    
+    Vector2 Renderer::ScreenToSdlPosition(const Vector2& screenPos) const {
+        int roundedX = RoundToPixel(screenPos.X());
+        int roundedY = RoundToPixel(screenPos.Y());
         
         glm::vec3 worldPos3(roundedX, roundedY, 1.0);
         glm::vec3 sdlPos3 = m_ScreenToSdl * worldPos3;
@@ -109,17 +118,25 @@ namespace Phezu {
         if (shapeData == nullptr || renderData == nullptr)
             return;
         
+        Vector2 camPosition = m_CameraTransform->GetWorldPosition();
+        float aspectRatio = static_cast<float>(m_ScreenWidth) / m_ScreenHeight;
+        float vSize = m_Camera->Size * 2.0;
+        float hSize = vSize * aspectRatio;
+        
         Vector2 upRightLocal = shapeData->GetVertexPosition(ShapeData::VertexType::UpRight);
         Vector2 downLeftLocal = shapeData->GetVertexPosition(ShapeData::VertexType::DownLeft);
         
         Vector2 upRightWorld = transformData->LocalToWorldPoint(upRightLocal);
         Vector2 downLeftWorld = transformData->LocalToWorldPoint(downLeftLocal);
         
-        //world to view (relative to camera position)
-        //view to screen (convert from world units to pixels using camera size and resolution)
+        Vector2 upRightView = upRightWorld - camPosition;
+        Vector2 downLeftView = downLeftWorld - camPosition;
+
+        Vector2 upRightScreen = Vector2(upRightView.X() * m_ScreenWidth / hSize, upRightView.Y() * m_ScreenHeight / vSize);
+        Vector2 downLeftScreen = Vector2(downLeftView.X() * m_ScreenWidth / hSize, downLeftView.Y() * m_ScreenHeight / vSize);
         
-        Vector2 upRightSdl = ScreenToSdlPosition(upRightWorld);
-        Vector2 downLeftSdl = ScreenToSdlPosition(downLeftWorld);
+        Vector2 upRightSdl = ScreenToSdlPosition(upRightScreen);
+        Vector2 downLeftSdl = ScreenToSdlPosition(downLeftScreen);
         
         GetSdlRect(dest, downLeftSdl, upRightSdl);
         

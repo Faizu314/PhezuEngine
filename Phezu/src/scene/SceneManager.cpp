@@ -1,5 +1,7 @@
 #include "scene/SceneManager.hpp"
 #include "scene/Scene.hpp"
+#include "scene/Entity.hpp"
+#include "scene/components/CameraData.hpp"
 #include "Engine.hpp"
 
 namespace Phezu {
@@ -11,6 +13,9 @@ namespace Phezu {
         m_BuildScenesConfig = assetManager.GetBuildScenesConfig();
         auto sceneAsset = assetManager.GetSceneAsset(m_BuildScenesConfig.MasterScene);
         m_MasterScene = static_cast<Scene*>(sceneAsset.AssetPtr);
+        
+        auto cameraEntity = m_MasterScene->CreateEntity();
+        m_ActiveCamera = dynamic_cast<CameraData*>(cameraEntity->AddDataComponent(ComponentType::Camera));
     }
 
     void SceneManager::OnStartGame() {

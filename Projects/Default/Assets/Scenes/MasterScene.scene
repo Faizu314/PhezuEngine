@@ -12,7 +12,7 @@
                 "Overrides": {
                 	"EntryOverrides": {
                     	"501": {
-                        	"Position": { "x": 400, "y": 0 },
+                        	"Position": { "x": 14, "y": 0 },
                         	"Scale": { "x": 1, "y": 600 }
                         }
                     }
@@ -29,7 +29,7 @@
                 "Overrides": {
                 	"EntryOverrides": {
                     	"501": {
-                        	"Position": { "x": -400, "y": 0 },
+                        	"Position": { "x": -14, "y": 0 },
                         	"Scale": { "x": 1, "y": 600 }
                         }
                     }
@@ -46,8 +46,8 @@
                 "Overrides": {
                 	"EntryOverrides": {
                     	"501": {
-                        	"Position": { "x": 0, "y": 300 },
-                        	"Scale": { "x": 800, "y": 1 }
+                        	"Position": { "x": 0, "y": 10.5 },
+                        	"Scale": { "x": 600, "y": 1 }
                         }
                     }
                 }
@@ -63,8 +63,8 @@
                 "Overrides": {
                 	"EntryOverrides": {
                     	"501": {
-                        	"Position": { "x": 0, "y": -300 },
-                        	"Scale": { "x": 800, "y": 1 }
+                        	"Position": { "x": 0, "y": -11 },
+                        	"Scale": { "x": 600, "y": 1 }
                         }
                     }
                 }
@@ -82,7 +82,7 @@
                 "Overrides": {
                 	"EntryOverrides": {
                     	"501": {
-                        	"Position": { "x": 0, "y": -200 }
+                        	"Position": { "x": 0, "y": -8 }
                         }
                     }
                 }
@@ -99,7 +99,7 @@
                 "Overrides": {
                 	"EntryOverrides": {
                     	"501": {
-                        	"Position": { "x": 0, "y": 200 }
+                        	"Position": { "x": 0, "y": 8 }
                         }
                     }
                 }
