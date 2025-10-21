@@ -18,13 +18,16 @@ namespace Game
         };
         
         private PrefabRef m_BrickPrefabRef;
+        private PrefabRef m_BallPrefab;
         private List<Brick> m_Bricks;
+        private Ball m_Ball;
         private int m_CurrentLevel;
 
         private void OnCreate()
         {
             m_Bricks = new();
-
+            m_Ball = Entity.Instantiate(m_BallPrefab).GetComponent<Ball>();
+            
             LoadLevel(m_CurrentLevel);
         }
 
@@ -53,6 +56,8 @@ namespace Game
                     }
                 }
             }
+            
+            m_Ball.Reset(new Vector2(40f, 42f));
         }
 
         void IBrickListener.OnBrickDestroyed(Brick brick)

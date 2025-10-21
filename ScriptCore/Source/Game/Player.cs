@@ -7,7 +7,7 @@ namespace Game {
 
         private Transform m_Transform;
         private PlayerInput m_Input;
-        private float m_Speed = 20f;
+        private float m_Speed = 50f;
         private float m_InputFactor = 20f;
 
         private void OnCreate() {

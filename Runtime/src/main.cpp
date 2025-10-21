@@ -1,5 +1,5 @@
-#include "Application.hpp"
 #include "Phezu.hpp"
+#include "Application.hpp"
 
 Phezu::Engine& engine = Phezu::CreateEngine();
 
