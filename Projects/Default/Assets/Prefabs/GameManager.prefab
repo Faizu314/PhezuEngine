@@ -31,6 +31,10 @@
                     "m_BrickPrefabRef": {
                         "Type": 4,
                         "Value": 3
+                    },
+					"m_BallPrefab": {
+                        "Type": 4,
+                        "Value": 4
                     }
                 }
             }

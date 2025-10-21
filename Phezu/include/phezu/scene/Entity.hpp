@@ -28,6 +28,7 @@ namespace Phezu {
     public:
         DataComponent* AddDataComponent(ComponentType componentType);
         DataComponent* GetDataComponent(ComponentType componentType);
+        TransformData* GetTransformData() { return &m_TransformData; }
         void RemoveDataComponent(ComponentType componentType);
         bool HasDataComponent(ComponentType componentType) const;
         ScriptComponent* AddScriptComponent(const std::string& classFullname);

@@ -8,33 +8,46 @@ namespace Phezu {
         RecalculateLocalToWorld();
     }
     
-    void TransformData::SetLocalPosition(const Vector2& position) {
+    void TransformData::SetLocalPosition(Vector2 position) {
         m_LocalPosition = position;
         m_IsDirty = true;
     }
 
-    void TransformData::SetWorldPosition(const Vector2& position) {
-        glm::vec3 worldPos(position.X(), position.Y(), 1);
-        glm::vec3 localPos = glm::inverse(m_LocalToWorld) * worldPos;
-        m_LocalPosition.Set(localPos.x, localPos.y);
+    void TransformData::SetWorldPosition(Vector2 position) {
+        TransformData* parent = m_Entity->GetParent();
+        
+        if (parent == nullptr)
+            m_LocalPosition = position;
+        else
+            m_LocalPosition = parent->WorldToLocalPoint(position);
+        
         m_IsDirty = true;
     }
     
     Vector2 TransformData::GetWorldPosition() const {
-        glm::vec3 localPos(m_LocalPosition.X(), m_LocalPosition.Y(), 1);
-        glm::vec3 worldPos = m_LocalToWorld * localPos;
-        return Vector2(worldPos.x, worldPos.y);
+        TransformData* parent = m_Entity->GetParent();
+        
+        if (parent == nullptr)
+            return m_LocalPosition;
+        
+        return parent->LocalToWorldPoint(m_LocalPosition);
     }
     
-    void TransformData::SetLocalScale(const Vector2 &scale) {
+    void TransformData::SetLocalScale(Vector2 scale) {
         m_LocalScale = scale;
         m_IsDirty = true;
     }
     
-    Vector2 TransformData::LocalToWorldPoint(const Vector2& point) const {
-        glm::vec3 point3(point.X(), point.Y(), 1);
-        glm::vec3 worldPoint3 = m_LocalToWorld * point3;
-        return Vector2(worldPoint3.x, worldPoint3.y);
+    Vector2 TransformData::LocalToWorldPoint(Vector2 localPoint) const {
+        glm::vec3 point3(localPoint.X(), localPoint.Y(), 1);
+        glm::vec3 worldPoint = m_LocalToWorld * point3;
+        return Vector2(worldPoint.x, worldPoint.y);
+    }
+    
+    Vector2 TransformData::WorldToLocalPoint(Vector2 worldPoint) const {
+        glm::vec3 point3(worldPoint.X(), worldPoint.Y(), 1);
+        glm::vec3 localPoint = m_WorldToLocal * point3;
+        return Vector2(localPoint.x, localPoint.y);
     }
     
     void TransformData::RecalculateLocalToWorld() {
@@ -53,6 +66,8 @@ namespace Phezu {
             m_LocalToWorld = localTransform;
         else
             m_LocalToWorld = m_Entity->GetParent()->m_LocalToWorld * localTransform;
+        
+        m_WorldToLocal = glm::inverse(m_LocalToWorld);
         
         m_IsDirty = false;
     }

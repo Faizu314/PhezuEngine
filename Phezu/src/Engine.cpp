@@ -13,6 +13,7 @@
 
 namespace Phezu {
     
+    static const float MAX_DELTA_TIME = 1.0 / 240.0;
     static const size_t ENTITIES_BUFFER_SIZE = 128;
 
     Engine* Engine::s_Instance = nullptr;
@@ -61,6 +62,7 @@ namespace Phezu {
     float GetDeltaTime(Uint64& prevTime, Uint64& freqMs) {
         Uint64 currTime = SDL_GetPerformanceCounter();
         float deltaTime = (currTime - prevTime) / (float)freqMs;
+        deltaTime = std::min(deltaTime, MAX_DELTA_TIME);
         prevTime = SDL_GetPerformanceCounter();
         
         return deltaTime;
