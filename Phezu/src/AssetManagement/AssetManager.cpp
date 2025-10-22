@@ -27,12 +27,6 @@ namespace Phezu {
     
     void AssetManager::LoadAssetMap(const std::filesystem::path& assetsFolder) {
         LoadAssetsInDirectory(assetsFolder);
-        
-        for (const auto& entry : std::filesystem::directory_iterator(assetsFolder)) {
-            if (entry.is_directory()) {
-                LoadAssetsInDirectory(entry.path());
-            }
-        }
     }
     
     void AssetManager::LoadAssetsInDirectory(const std::filesystem::path& folder) {
@@ -50,6 +44,9 @@ namespace Phezu {
                 assetPath.replace_extension("");
                 AssetRef& assetRef = m_AssetMap[metaData.Guid];
                 assetRef.Filepaths.push_back(assetPath);
+            }
+            else if (entry.is_directory()) {
+                LoadAssetsInDirectory(entry.path());
             }
         }
     }
