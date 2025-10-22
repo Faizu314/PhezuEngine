@@ -99,6 +99,8 @@ namespace Phezu {
         for (auto it = m_RuntimeEntities.begin(); it != m_RuntimeEntities.end(); it++) {
             auto entity = (*it).second;
             
+            if (!entity->IsActive)
+                continue;
             if (!entity->HasDataComponent(ComponentType::Physics) ||
                 !entity->HasDataComponent(ComponentType::Shape))
                 continue;
@@ -124,13 +126,18 @@ namespace Phezu {
     void Scene::GetRenderableEntities(std::vector<Entity*>& entities, size_t& index) const {
         for (auto it = m_RuntimeEntities.begin(); it != m_RuntimeEntities.end(); it++) {
             auto entity = (*it).second;
-            if (entity->HasDataComponent(ComponentType::Render) && entity->HasDataComponent(ComponentType::Shape)) {
-                if (index < entities.size())
-                    entities[index] = entity;
-                else
-                    entities.push_back(entity);
-                index++;
-            }
+            
+            if (!entity->IsActive)
+                continue;
+            if (!entity->HasDataComponent(ComponentType::Render) ||
+                !entity->HasDataComponent(ComponentType::Shape))
+                continue;
+            
+            if (index < entities.size())
+                entities[index] = entity;
+            else
+                entities.push_back(entity);
+            index++;
         }
     }
     
