@@ -5,6 +5,7 @@
 
 #include "scene/Scene.hpp"
 #include "scene/components/PhysicsData.hpp"
+#include "scene/components/RenderData.hpp"
 #include "scene/Entity.hpp"
 #include "maths/Math.hpp"
 
@@ -200,7 +201,25 @@ namespace Phezu {
         }
     }
 
+    void Renderer_GetTint(uint64_t entityID, Color* tint) {
+        Entity* entity = GetEntity(entityID);
+        
+        if (entity) {
+            RenderData* render = dynamic_cast<RenderData*>(entity->GetDataComponent(ComponentType::Render));
+            
+            *tint = render->Tint;
+        }
+    }
     
+    void Renderer_SetTint(uint64_t entityID, Color* tint) {
+        Entity* entity = GetEntity(entityID);
+        
+        if (entity) {
+            RenderData* render = dynamic_cast<RenderData*>(entity->GetDataComponent(ComponentType::Render));
+            
+            render->Tint = *tint;
+        }
+    }
     
 	void ScriptGlue::Init(Engine* engine, ScriptEngine* scriptEngine) {
 		s_Data = new Data();
@@ -221,6 +240,9 @@ namespace Phezu {
         
         mono_add_internal_call("PhezuEngine.InternalCalls::Physics_GetVelocity", reinterpret_cast<const void*>(&Physics_GetVelocity));
         mono_add_internal_call("PhezuEngine.InternalCalls::Physics_SetVelocity", reinterpret_cast<const void*>(&Physics_SetVelocity));
+        
+        mono_add_internal_call("PhezuEngine.InternalCalls::Renderer_GetTint", reinterpret_cast<const void*>(&Renderer_GetTint));
+        mono_add_internal_call("PhezuEngine.InternalCalls::Renderer_SetTint", reinterpret_cast<const void*>(&Renderer_SetTint));
 	}
 
 	void ScriptGlue::Destroy() {

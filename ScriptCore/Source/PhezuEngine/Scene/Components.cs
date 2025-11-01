@@ -38,7 +38,23 @@ namespace PhezuEngine {
                 InternalCalls.Physics_SetVelocity(Entity.ID, ref value);
             }
         }
-    
+    }
+
+    public class Renderer : Component
+    {
+        public Color Tint
+        {
+            get
+            {
+                InternalCalls.Renderer_GetTint(Entity.ID, out Color tint);
+                return tint;
+            }
+
+            set
+            {
+                InternalCalls.Renderer_SetTint(Entity.ID, ref value);
+            }
+        }
     }
 
     public abstract class BehaviourComponent : Component {

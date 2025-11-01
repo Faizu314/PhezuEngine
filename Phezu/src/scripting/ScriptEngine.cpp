@@ -102,6 +102,12 @@ namespace Phezu {
             entityData.EngineComponents.emplace(ManagedType::Physics, std::move(physics));
         }
         
+        if (entity->HasDataComponent(ComponentType::Render)) {
+            ComponentInstance renderer(m_RuntimeDomain, m_EngineComponentClasses[ManagedType::Renderer]);
+            renderer.SetEntityProperty(m_ComponentEntitySetter, entityData.EntityScript.GetMonoGcHandle());
+            entityData.EngineComponents.emplace(ManagedType::Renderer, std::move(renderer));
+        }
+        
         // Create Script Components
         
         size_t compCount = entity->GetScriptComponentCount();
@@ -203,6 +209,7 @@ namespace Phezu {
         
         m_EngineComponentClasses[ManagedType::Transform] = ScriptClass::TryCreate(m_CoreAssembly, "PhezuEngine", "Transform", ScriptClassType::EngineComponent);
         m_EngineComponentClasses[ManagedType::Physics] = ScriptClass::TryCreate(m_CoreAssembly, "PhezuEngine", "Physics", ScriptClassType::EngineComponent);
+        m_EngineComponentClasses[ManagedType::Renderer] = ScriptClass::TryCreate(m_CoreAssembly, "PhezuEngine", "Renderer", ScriptClassType::EngineComponent);
     }
     
     void ScriptEngine::GetScriptClasses() {
