@@ -28,11 +28,12 @@ namespace Game {
         
         private void OnCollisionEnter(IntPtr otherEntity) {
             Entity other = Entity.GetEntity(otherEntity);
-            
-            if (other.Tag != "Brick")
+            Brick brick = other.GetComponent<Brick>();
+
+            if (brick == null)
                 return;
 
-            other.Destroy();
+            brick.OnHit();
         }
 
         public void AddVelocity(Vector2 velocity)

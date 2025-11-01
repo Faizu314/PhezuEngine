@@ -9,8 +9,8 @@ namespace PhezuEngine {
         public float Y;
 
         public Vector2(float x, float y) {
-            this.X = x;
-            this.Y = y;
+            X = x;
+            Y = y;
         }
 
         public float Magnitude()
