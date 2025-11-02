@@ -7,6 +7,7 @@ namespace PhezuEngine {
         internal static bool _D;
         internal static bool _Space;
         
+        public static bool Any => _W || _A || _S || _D || _Space;
         public static bool W => _W;
         public static bool A => _A;
         public static bool S => _S;
