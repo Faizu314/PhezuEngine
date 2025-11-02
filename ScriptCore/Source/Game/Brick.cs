@@ -19,6 +19,8 @@ namespace Game
         private int m_TotalHealth;
         private int m_CurrentHealth;
         private bool m_IsUnbreakable;
+        
+        public bool IsUnbreakable => m_IsUnbreakable;
 
         private void OnCreate()
         {

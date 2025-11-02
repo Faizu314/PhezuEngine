@@ -32,9 +32,13 @@
                         "Type": 4,
                         "Value": 3
                     },
-					"m_BallPrefab": {
+					"m_BallPrefabRef": {
                         "Type": 4,
                         "Value": 4
+                    },
+                    "m_PlayerPrefabRef": {
+                        "Type": 4,
+                        "Value": 2
                     }
                 }
             }

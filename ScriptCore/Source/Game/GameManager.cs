@@ -6,24 +6,59 @@ namespace Game
     public class GameManager : BehaviourComponent, IBrickListener
     {
         private PrefabRef m_BrickPrefabRef;
-        private PrefabRef m_BallPrefab;
+        private PrefabRef m_BallPrefabRef;
+        private PrefabRef m_PlayerPrefabRef;
+        
         private List<Brick> m_Bricks;
         private Ball m_Ball;
-        private int m_CurrentLevel;
+        private Player m_Player;
+        private int m_CurrentLevel = 0;
+        private bool m_IsWaitingForNextInput;
+        private bool m_IsWaitingToStart;
 
         private void OnCreate()
         {
             m_Bricks = new();
-            m_Ball = Entity.Instantiate(m_BallPrefab).GetComponent<Ball>();
+            m_Ball = Entity.Instantiate(m_BallPrefabRef).GetComponent<Ball>();
+            m_Player = Entity.Instantiate(m_PlayerPrefabRef).GetComponent<Player>();
             
             LoadLevel(m_CurrentLevel);
         }
 
+        private void OnUpdate(float deltaTime) {
+            if (m_IsWaitingForNextInput) {
+                if (!Input.Any) {
+                    m_IsWaitingForNextInput = false;
+                    m_IsWaitingToStart = true;
+                }
+                return;
+            }
+
+            if (!m_IsWaitingToStart) {
+                if (Input.Space) {
+                    UnloadLevel();
+                    m_CurrentLevel++;
+                    LoadLevel(m_CurrentLevel % Level.Levels.Length);
+                }
+                return;
+            }
+
+            if (Input.Any) {
+                StartLevel();
+                m_IsWaitingToStart = false;
+            }
+        }
+
+        private void StartLevel() {
+            m_Ball.Start(new Vector2(40f, 42f));
+            m_Player.Start();
+        }
+        
         private void LoadLevel(int levelIndex)
         {
-            Vector2 topLeft = Level.TopLeft;
-            Vector2 cellSize = Level.CellSize;
             int[,] grid = Level.Levels[levelIndex].GridData;
+            Vector2 topLeft = GetTopLeftPosition(grid.GetLength(1));
+            Vector2 cellSize = Level.CellSize;
 
             for (int x = 0; x < grid.GetLength(1); x++)
             {
@@ -37,8 +72,17 @@ namespace Game
                     CreateBrick(brickData);
                 }
             }
-            
-            m_Ball.Reset(new Vector2(40f, 42f));
+
+            m_Ball.Stop();
+            m_Player.Stop();
+            m_IsWaitingForNextInput = true;
+        }
+
+        private Vector2 GetTopLeftPosition(int columnCount) {
+            return new Vector2(
+                -(columnCount - 1) * Level.CellSize.X / 2f,
+                Level.MaxY
+            );
         }
 
         private BrickData GetBrickData(int encoding, Vector2 worldPos) {
@@ -71,15 +115,24 @@ namespace Game
         void IBrickListener.OnBrickDestroyed(Brick brick)
         {
             m_Bricks.Remove(brick);
-            
-            CheckLevelComplete();
+
+            if (CheckLevelComplete())
+                LoadNextLevel();
         }
 
-        private void CheckLevelComplete()
+        private bool CheckLevelComplete()
         {
-            if (m_Bricks.Count > 0)
-                return;
-            
+            if (m_Bricks.Count > 0) {
+                foreach (var brick in m_Bricks) {
+                    if (!brick.IsUnbreakable)
+                        return false;
+                }
+            }
+
+            return true;
+        }
+
+        private void LoadNextLevel() {
             UnloadLevel();
 
             m_CurrentLevel++;

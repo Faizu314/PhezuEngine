@@ -19,11 +19,15 @@ namespace Game {
             m_Physics = Entity.GetComponent<Physics>();
         }
 
-        public void Reset(Vector2 velocity)
-        {
-            m_Transform.Position = new(0f, 0f);
+        public void Stop() {
+            m_Transform.Position = Vector2.Zero;
+            m_Physics.Velocity = Vector2.Zero;
+            m_Speed = 0f;
+        }
+
+        public void Start(Vector2 velocity) {
             m_Physics.Velocity = velocity;
-            m_Speed = m_Physics.Velocity.Magnitude();
+            m_Speed = velocity.Magnitude();
         }
         
         private void OnCollisionEnter(IntPtr otherEntity) {
