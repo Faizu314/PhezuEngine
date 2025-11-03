@@ -43,6 +43,10 @@ set(PHEZU_ALL_HEADERS
 add_library(Phezu STATIC ${PHEZU_ALL_SOURCES} ${PHEZU_ALL_HEADERS})
 set_target_properties(Phezu PROPERTIES OUTPUT_NAME Phezu PREFIX "")
 
+if (WIN32)
+    target_compile_definitions(Phezu PRIVATE NOMINMAX)
+endif()
+
 target_include_directories(Phezu PUBLIC ${CMAKE_SOURCE_DIR}/Phezu/include/phezu)
 target_include_directories(Phezu PUBLIC ${CMAKE_SOURCE_DIR}/Phezu/include/common)
 
