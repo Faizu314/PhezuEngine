@@ -28,12 +28,12 @@ endif()
 # Generate Defines Header
 
 add_custom_command(
-    OUTPUT "${RUNTIME_DEFINES_HEADER}"
     COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/Runtime/Generated"
-    COMMAND ${CMAKE_COMMAND} -DOUT_FILE="${RUNTIME_DEFINES_HEADER}"
-                             -DSCRIPT_PATH="${SCRIPT_CORE_DLL_RELATIVE_PATH}"
-                             -DMONO_PATH="${MONO_CORE_LIBS_RELATIVE_PATH}"
-                             -P "${CMAKE_SOURCE_DIR}/CMake/GenerateRuntimeHeader.cmake"
+    OUTPUT "${RUNTIME_DEFINES_HEADER}"
+    COMMAND ${CMAKE_COMMAND} -DOUT_FILE=${RUNTIME_DEFINES_HEADER}
+                             -DSCRIPT_PATH=${SCRIPT_CORE_DLL_RELATIVE_PATH}
+                             -DMONO_PATH=${MONO_CORE_LIBS_RELATIVE_PATH}
+                             -P "${CMAKE_SOURCE_DIR}/Runtime/GenerateRuntimeHeader.cmake"
     VERBATIM
 )
 
@@ -54,10 +54,23 @@ add_custom_command(TARGET Runtime POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory "${MONO_CORE_LIBS_DEST_DIR}"
     COMMAND ${CMAKE_COMMAND} -E make_directory "${SCRIPT_CORE_DLL_DEST_DIR}"
 
-    COMMAND rsync -a --links "${LIB_SRC_DIR}/" "${LIB_DEST_DIR}"
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SRC_DIR}" "${PROJ_DEST_DIR}"
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${MONO_CORE_LIBS_SRC_DIR}" "${MONO_CORE_LIBS_DEST_DIR}"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${SCRIPT_CORE_DLL_SRC_DIR}/Phezu-ScriptCore.dll" "${SCRIPT_CORE_DLL_DEST_DIR}/Phezu-ScriptCore.dll"
 )
+
+if(APPLE)
+    add_custom_command(TARGET Runtime POST_BUILD
+        DEPENDS "${RUNTIME_DEFINES_HEADER}"
+
+        COMMAND rsync -a --links "${LIB_SRC_DIR}/" "${LIB_DEST_DIR}"
+    )
+elseif(WIN32)
+    add_custom_command(TARGET Runtime POST_BUILD
+        DEPENDS "${RUNTIME_DEFINES_HEADER}"
+
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${LIB_SRC_DIR}" "${LIB_DEST_DIR}"
+    )
+endif()
 
 add_dependencies(Runtime ScriptCore)
