@@ -163,7 +163,7 @@ namespace Phezu {
     }
 
     void ScriptEngine::InitMono() {
-        mono_set_assemblies_path(m_Engine->GetMonoCoreLibsPath().c_str());
+        mono_set_assemblies_path(m_Engine->GetMonoCoreLibsPath().u8string().c_str());
         
         mono_config_parse(NULL);
         
@@ -339,7 +339,7 @@ namespace Phezu {
     void ScriptEngine::RemoveBehaviourScriptInstance(uint64_t entityID, const std::string& classFullname) {
         if (m_Entities.find(entityID) == m_Entities.end()) {
             Log("Entity not found for behaviour script: %s", classFullname.c_str());
-            return nullptr;
+            return;
         }
 
         auto entity = m_Engine->GetSceneManager().FindEntity(entityID);
