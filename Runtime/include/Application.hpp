@@ -20,11 +20,11 @@ namespace PhezuRuntime {
     }
     
     std::filesystem::path GetScriptCoreDllPath(const char* argv[]) {
-        return GetExePath(argv) / SCRIPT_CORE_DLL_RELATIVE_PATH;
+        return GetExePath(argv) / "../MonoAssemblies";
     }
     
     std::filesystem::path GetMonoCoreLibsPath(const char* argv[]) {
-        return GetExePath(argv) / MONO_CORE_LIBS_RELATIVE_PATH;
+        return GetExePath(argv) / "../MonoCoreLibs/mono";
     }
         
 #elif _WIN32
@@ -36,15 +36,15 @@ namespace PhezuRuntime {
     }
 
     std::filesystem::path GetProjectPath() {
-        return GetExePath();
+        return GetExePath() / "Project";
     }
     
     std::filesystem::path GetScriptCoreDllPath() {
-        return GetExePath() / SCRIPT_CORE_DLL_RELATIVE_PATH;
+        return GetExePath();
     }
     
     std::filesystem::path GetMonoCoreLibsPath() {
-        return GetExePath() / MONO_CORE_LIBS_RELATIVE_PATH;
+        return GetExePath() / "mono" / "lib" / "4.5";
     }
     
 #endif
