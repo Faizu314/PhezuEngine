@@ -37,6 +37,7 @@ add_custom_command(TARGET Runtime POST_BUILD
 
     COMMAND ${CMAKE_COMMAND} 
         -DSRC_DIR="${MONO_CORE_LIBS_SRC_DIR}" 
+        -DCHECK_DIR="${MONO_CORE_LIBS_DEST_DIR}/mono"
         -DDEST_DIR="${MONO_CORE_LIBS_DEST_DIR}" 
         -P "${CMAKE_CURRENT_SOURCE_DIR}/CopyIfMissing.cmake"
 )
