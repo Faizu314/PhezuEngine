@@ -1,0 +1,7 @@
+if (NOT IS_DIRECTORY "${DEST_DIR}")
+    message(STATUS "Copying from ${SRC_DIR} to ${DEST_DIR}")
+    file(MAKE_DIRECTORY "${DEST_DIR}")
+    file(COPY "${SRC_DIR}" DESTINATION "${DEST_DIR}")
+else()
+    message(STATUS "Destination ${DEST_DIR} already exist - skipping copy")
+endif()
