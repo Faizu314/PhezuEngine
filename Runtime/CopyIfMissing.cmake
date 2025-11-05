@@ -1,4 +1,4 @@
-if (NOT IS_DIRECTORY "${DEST_DIR}")
+if (NOT IS_DIRECTORY "${CHECK_DIR}")
     message(STATUS "Copying from ${SRC_DIR} to ${DEST_DIR}")
     file(MAKE_DIRECTORY "${DEST_DIR}")
     file(COPY "${SRC_DIR}" DESTINATION "${DEST_DIR}")
