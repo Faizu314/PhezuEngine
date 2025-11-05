@@ -3,10 +3,8 @@ project(Runtime)
 file(GLOB_RECURSE RUNTIME_SOURCES "${CMAKE_SOURCE_DIR}/Runtime/src/*.cpp")
 file(GLOB_RECURSE RUNTIME_HEADERS "${CMAKE_SOURCE_DIR}/Runtime/include/*.hpp")
 
-set(RUNTIME_DEFINES_HEADER "${CMAKE_BINARY_DIR}/Runtime/Generated/RuntimeDefines.hpp")
-
 if (APPLE)
-    add_executable(Runtime ${RUNTIME_SOURCES} ${RUNTIME_HEADERS} "${RUNTIME_DEFINES_HEADER}")
+    add_executable(Runtime ${RUNTIME_SOURCES} ${RUNTIME_HEADERS})
     
     set(CMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "")
     set(CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_REQUIRED "NO")
@@ -21,32 +19,13 @@ if (APPLE)
         MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist"
     )
 elseif (WIN32)
-    add_executable(Runtime WIN32 ${RUNTIME_SOURCES} ${RUNTIME_HEADERS} "${RUNTIME_DEFINES_HEADER}")
+    add_executable(Runtime WIN32 ${RUNTIME_SOURCES} ${RUNTIME_HEADERS})
 endif()
 
-
-# Generate Defines Header
-
-add_custom_command(
-    COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/Runtime/Generated"
-    OUTPUT "${RUNTIME_DEFINES_HEADER}"
-    COMMAND ${CMAKE_COMMAND} -DOUT_FILE=${RUNTIME_DEFINES_HEADER}
-                             -DSCRIPT_PATH=${SCRIPT_CORE_DLL_RELATIVE_PATH}
-                             -DMONO_PATH=${MONO_CORE_LIBS_RELATIVE_PATH}
-                             -P "${CMAKE_SOURCE_DIR}/Runtime/GenerateRuntimeHeader.cmake"
-    VERBATIM
-)
-
-# Generate Defines Header
-
-
 target_include_directories(Runtime PUBLIC ${CMAKE_SOURCE_DIR}/Runtime/include)
-target_include_directories(Runtime PUBLIC ${CMAKE_BINARY_DIR}/Runtime/Generated)
 target_link_libraries(Runtime PRIVATE Phezu)
 
 add_custom_command(TARGET Runtime POST_BUILD
-    DEPENDS "${RUNTIME_DEFINES_HEADER}"
-
     COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJ_DEST_DIR}"
     
     COMMAND ${CMAKE_COMMAND} -E make_directory "${LIB_DEST_DIR}"
@@ -61,14 +40,11 @@ add_custom_command(TARGET Runtime POST_BUILD
 
 if(APPLE)
     add_custom_command(TARGET Runtime POST_BUILD
-        DEPENDS "${RUNTIME_DEFINES_HEADER}"
 
         COMMAND rsync -a --links "${LIB_SRC_DIR}/" "${LIB_DEST_DIR}"
     )
 elseif(WIN32)
     add_custom_command(TARGET Runtime POST_BUILD
-        DEPENDS "${RUNTIME_DEFINES_HEADER}"
-
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${LIB_SRC_DIR}" "${LIB_DEST_DIR}"
     )
 endif()
