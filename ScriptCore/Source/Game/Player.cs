@@ -7,7 +7,7 @@ namespace Game {
 
         private Transform m_Transform;
         private PlayerInput m_Input;
-        private float m_Speed = 70f;
+        private float m_Speed = 30f;
         private float m_AngleHitFactor = 20f;
         private float m_PositionY = -8f;
         private bool m_IsStopped;
