@@ -38,7 +38,7 @@ namespace Phezu {
         int length = vsnprintf(s_LogBuffer, LOG_BUFFER_SIZE, msg, args);
         s_LogBuffer[LOG_BUFFER_SIZE - 1] = '\0';
         std::cout << s_LogBuffer;
-#elif
+#elif __APPLE__
         vprintf(msg, args);
 #endif
 
