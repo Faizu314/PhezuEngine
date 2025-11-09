@@ -1,7 +1,7 @@
 project(Runtime)
 
-file(GLOB_RECURSE RUNTIME_SOURCES "${CMAKE_SOURCE_DIR}/Runtime/src/*.cpp")
-file(GLOB_RECURSE RUNTIME_HEADERS "${CMAKE_SOURCE_DIR}/Runtime/include/*.hpp")
+file(GLOB_RECURSE RUNTIME_SOURCES "${CMAKE_SOURCE_DIR}/Runtime/Source/*.cpp")
+file(GLOB_RECURSE RUNTIME_HEADERS "${CMAKE_SOURCE_DIR}/Runtime/Include/*.hpp")
 
 if (APPLE)
     add_executable(Runtime ${RUNTIME_SOURCES} ${RUNTIME_HEADERS})

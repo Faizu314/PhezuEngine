@@ -1,22 +1,22 @@
 project(Phezu)
 
-file(GLOB PHEZU_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/src/*.cpp")
-file(GLOB PHEZU_ASSET_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/src/AssetManagement/*.cpp")
-file(GLOB PHEZU_MATH_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/src/maths/*.cpp")
-file(GLOB PHEZU_SCENE_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/src/scene/*.cpp")
-file(GLOB PHEZU_COMP_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/src/scene/components/*.cpp")
-file(GLOB PHEZU_SERIALIZE_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/src/serialization/*.cpp")
-file(GLOB PHEZU_SCRIPTING_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/src/scripting/*.cpp")
+file(GLOB PHEZU_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/Source/*.cpp")
+file(GLOB PHEZU_ASSET_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/Source/AssetManagement/*.cpp")
+file(GLOB PHEZU_MATH_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/Source/Maths/*.cpp")
+file(GLOB PHEZU_SCENE_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/Source/Scene/*.cpp")
+file(GLOB PHEZU_COMP_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/Source/Scene/Components/*.cpp")
+file(GLOB PHEZU_SERIALIZE_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/Source/Serialization/*.cpp")
+file(GLOB PHEZU_SCRIPTING_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/Source/Scripting/*.cpp")
 
-file(GLOB PHEZU_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/*.hpp")
-file(GLOB PHEZU_ASSET_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/AssetManagement/*.hpp")
-file(GLOB PHEZU_MATH_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/maths/*.hpp")
-file(GLOB PHEZU_SCENE_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/scene/*.hpp")
-file(GLOB PHEZU_COMP_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/scene/components/*.hpp")
-file(GLOB PHEZU_SERIALIZE_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/serialization/*.hpp")
-file(GLOB PHEZU_SCRIPTING_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/include/phezu/scripting/*.hpp")
+file(GLOB PHEZU_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/Include/*.hpp")
+file(GLOB PHEZU_ASSET_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/Include/AssetManagement/*.hpp")
+file(GLOB PHEZU_MATH_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/Include/Maths/*.hpp")
+file(GLOB PHEZU_SCENE_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/Include/Scene/*.hpp")
+file(GLOB PHEZU_COMP_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/Include/Scene/Components/*.hpp")
+file(GLOB PHEZU_SERIALIZE_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/Include/Serialization/*.hpp")
+file(GLOB PHEZU_SCRIPTING_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/Include/Scripting/*.hpp")
 
-file(GLOB_RECURSE PHEZU_VENDOR_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/vendor/*.cpp")
+file(GLOB_RECURSE PHEZU_VENDOR_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/Vendor/src/*.cpp")
 
 set(PHEZU_ALL_SOURCES
     ${PHEZU_SOURCES}
@@ -47,8 +47,8 @@ if (WIN32)
     target_compile_definitions(Phezu PRIVATE NOMINMAX)
 endif()
 
-target_include_directories(Phezu PUBLIC ${CMAKE_SOURCE_DIR}/Phezu/include/phezu)
-target_include_directories(Phezu PUBLIC ${CMAKE_SOURCE_DIR}/Phezu/include/common)
+target_include_directories(Phezu PUBLIC ${CMAKE_SOURCE_DIR}/Phezu/Include)
+target_include_directories(Phezu PUBLIC ${CMAKE_SOURCE_DIR}/Phezu/Vendor/include/common)
 
 source_group("Header Files" FILES ${PHEZU_HEADERS})
 source_group("Header Files\\AssetManagement" FILES ${PHEZU_ASSET_HEADERS})
@@ -68,7 +68,7 @@ source_group("Source Files\\Scripting" FILES ${PHEZU_SCRIPTING_SOURCES})
 
 
 if (APPLE)
-    target_include_directories(Phezu PRIVATE ${CMAKE_SOURCE_DIR}/Phezu/include/mac)
+    target_include_directories(Phezu PRIVATE ${CMAKE_SOURCE_DIR}/Phezu/Vendor/include/mac)
     target_link_libraries(Phezu PRIVATE
         "-F${LIB_SRC_DIR}"
         "-framework SDL2"
@@ -77,7 +77,7 @@ if (APPLE)
         "-framework Mono"
     )
 elseif (WIN32)
-    target_include_directories(Phezu PRIVATE ${CMAKE_SOURCE_DIR}/Phezu/include/windows)
+    target_include_directories(Phezu PRIVATE ${CMAKE_SOURCE_DIR}/Phezu/Vendor/include/windows)
     target_link_libraries(Phezu PRIVATE
         "${LIB_SRC_DIR}/SDL2.lib"
         "${LIB_SRC_DIR}/SDL2_image.lib"
