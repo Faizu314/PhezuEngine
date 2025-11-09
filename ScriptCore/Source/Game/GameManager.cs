@@ -50,7 +50,7 @@ namespace Game
         }
 
         private void StartLevel() {
-            m_Ball.Start(new Vector2(40f, 42f));
+            m_Ball.Start(new Vector2(15f, 18f));
             m_Player.Start();
         }
         
