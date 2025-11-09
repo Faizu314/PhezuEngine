@@ -1,6 +1,5 @@
 #pragma once
 
-#include "scripting/MonoLogger.hpp"
 #include "scripting/MonoDefs.hpp"
 #include "scripting/ScriptDefs.hpp"
 #include "scripting/EntityScriptingContext.hpp"
@@ -45,6 +44,7 @@ namespace Phezu {
         uint32_t GetEntityScriptInstanceGcHandle(uint64_t entityID);
 	private:
 		void InitMono();
+		void ShutdownMono();
 		MonoAssembly* LoadAssembly(const std::string& assemblyPath);
         void GetInputClassAndFields();
         void GetEngineClasses();
@@ -53,7 +53,6 @@ namespace Phezu {
         void PrintAssemblyClasses(MonoAssembly* assembly);
 	private:
 		Engine* m_Engine;
-		MonoLogger m_MonoLogger;
 		MonoDomain* m_EngineDomain;
 		MonoDomain* m_RuntimeDomain;
 		MonoAssembly* m_CoreAssembly;
