@@ -32,9 +32,8 @@
 *.out
 *.app
 
-# Don't ignore .exe files in the Vendor/Windows/CMake/bin
-!Vendor/windows/cmake/bin/*.exe
-!Vendor/mac/mono/lib/4.5/*.exe
+# Don't ignore .exe files in the Vendor folder
+!Vendor/**/*.exe
 
 #mac finder
 *.DS_Store
