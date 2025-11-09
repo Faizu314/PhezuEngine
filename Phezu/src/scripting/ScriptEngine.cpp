@@ -44,6 +44,13 @@ namespace Phezu {
         return buffer;
     }
 
+    void MonoLog(const char* log_domain, const char* log_level, const char* message, mono_bool fatal, void* userData) {
+        Log("Domain : %s\n", log_domain);
+        Log("Level  : %s\n", log_level);
+        Log("Message: %s\n", message);
+        Log("Fatal  : %s\n\n", fatal ? "true" : "false");
+    }
+
     std::string ToString(ManagedType t) {
         switch (t) {
             case ManagedType::None: return "None";
@@ -66,8 +73,6 @@ namespace Phezu {
 
     void ScriptEngine::Init() {
         InitMono();
-        
-        m_MonoLogger.Init();
 
         ScriptGlue::Init(m_Engine, this);
         
@@ -78,6 +83,40 @@ namespace Phezu {
         m_CoreAssembly = LoadAssembly(scriptCoreDllPath.string());
 
         GetScriptClasses();
+    }
+
+    void ScriptEngine::InitMono() {
+        mono_trace_set_level_string("debug");
+        mono_trace_set_log_handler(MonoLog, nullptr);
+
+        mono_set_assemblies_path(m_Engine->GetMonoCoreLibsPath().u8string().c_str());
+
+        mono_config_parse(NULL);
+
+        m_EngineDomain = mono_jit_init("PhezuEngineDomain");
+        if (m_EngineDomain == nullptr)
+        {
+            Log("Error initializing mono jit\n");
+            return;
+        }
+
+        m_RuntimeDomain = mono_domain_create_appdomain(const_cast<char*>("PhezuRuntimeDomain"), nullptr);
+        mono_domain_set(m_RuntimeDomain, true);
+    }
+
+    void ScriptEngine::ShutdownMono() {
+        if (m_RuntimeDomain)
+        {
+            mono_domain_set(m_EngineDomain, false);
+            mono_domain_unload(m_RuntimeDomain);
+            m_RuntimeDomain = nullptr;
+        }
+
+        if (m_EngineDomain)
+        {
+            mono_jit_cleanup(m_EngineDomain);
+            m_EngineDomain = nullptr;
+        }
     }
 
     void ScriptEngine::CreateManagedScripts(Entity* entity) {
@@ -160,22 +199,6 @@ namespace Phezu {
                     entityData.BehaviourComponents[i].InvokeOnUpdate(deltaTime);
             }
         }
-    }
-
-    void ScriptEngine::InitMono() {
-        mono_set_assemblies_path(m_Engine->GetMonoCoreLibsPath().u8string().c_str());
-        
-        mono_config_parse(NULL);
-        
-        m_EngineDomain = mono_jit_init("PhezuEngineDomain");
-        if (m_EngineDomain == nullptr)
-        {
-            Log("Error initializing mono jit\n");
-            return;
-        }
-        
-        m_RuntimeDomain = mono_domain_create_appdomain(const_cast<char*>("PhezuRuntimeDomain"), nullptr);
-        mono_domain_set(m_RuntimeDomain, true);
     }
 
     MonoAssembly* ScriptEngine::LoadAssembly(const std::string& assemblyPath) {
@@ -296,8 +319,8 @@ namespace Phezu {
     }
 
     void ScriptEngine::Shutdown() {
-        m_MonoLogger.Destroy();
         ScriptGlue::Destroy();
+        ShutdownMono();
     }
     
     //----Script-Glue-Functions----//
