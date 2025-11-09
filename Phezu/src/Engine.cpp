@@ -45,6 +45,8 @@ namespace Phezu {
             return 4;
         }
 
+        InitLogger();
+
         m_HasInited = true;
         m_ExePath = config.AllPaths.ExePath;
         m_ProjectPath = config.AllPaths.ProjectPath;
