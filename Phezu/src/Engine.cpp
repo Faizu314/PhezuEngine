@@ -13,7 +13,8 @@
 
 namespace Phezu {
     
-    static const float MAX_DELTA_TIME = 1.0 / 240.0;
+    static const float MAX_DELTA_TIME = 1.0f / 20.0f;
+    static const float TARGET_FRAME_TIME = 1.0f / 60.0f;
     static const size_t ENTITIES_BUFFER_SIZE = 128;
 
     Engine* Engine::s_Instance = nullptr;
@@ -34,7 +35,7 @@ namespace Phezu {
             return 2;
         }
 
-        if (IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG) < 0){
+        if (IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG) < 0) {
             Log("Couldn't initialize SDL Image: %s\n", SDL_GetError());
             return 3;
         }
@@ -63,7 +64,7 @@ namespace Phezu {
         Uint64 currTime = SDL_GetPerformanceCounter();
         float deltaTime = (currTime - prevTime) / (float)freqMs;
         deltaTime = std::min(deltaTime, MAX_DELTA_TIME);
-        prevTime = SDL_GetPerformanceCounter();
+        prevTime = currTime;
         
         return deltaTime;
     }
@@ -79,7 +80,7 @@ namespace Phezu {
         m_Renderer->SetActiveCamera(m_SceneManager.GetActiveCamera());
         m_SceneManager.OnStartGame();
         
-        Uint64 prevTime = SDL_GetPerformanceCounter();
+        Uint64 frameStartTime = SDL_GetPerformanceCounter();
         Uint64 freqMs = SDL_GetPerformanceFrequency();
         float deltaTime;
 
@@ -104,8 +105,8 @@ namespace Phezu {
 
             m_Renderer->ClearFrame();
             
-            deltaTime = GetDeltaTime(prevTime, freqMs);
-            
+            deltaTime = GetDeltaTime(frameStartTime, freqMs);
+
             masterScene->LogicUpdate(deltaTime);
             masterScene->GetPhysicsEntities(staticEntitiesBuffer, dynamicEntitiesBuffer, staticsCount, dynamicsCount);
             masterScene->GetRenderableEntities(renderEntitiesBuffer, renderablesCount);
@@ -125,6 +126,14 @@ namespace Phezu {
             m_Renderer->RenderFrame();
             
             m_SceneManager.OnEndOfFrame();
+
+            float frameDuration = (SDL_GetPerformanceCounter() - frameStartTime) * 1000.0f;
+
+            if (frameDuration < TARGET_FRAME_TIME)
+            {
+                double delayMs = TARGET_FRAME_TIME - frameDuration;
+                SDL_Delay((Uint32)delayMs);
+            }
             
             m_FrameCount++;
         }
