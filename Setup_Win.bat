@@ -48,6 +48,16 @@ if exist "%VS_PATH_2022_X86%\Community" (
     exit 1
 )
 
+echo Compatible Visual Studio installation found: %GENERATOR%
+
+set /p USER_INPUT="Build Visual Studio solution files? (Y/N) "
+
+if /i "%USER_INPUT%"=="N" (
+    echo Exiting.
+    pause
+    exit 1
+)
+
 if not exist "Build" (
     mkdir "Build"
 )
@@ -71,11 +81,11 @@ if %ERRORLEVEL% neq 0 (
     exit 1
 )
 
-set /p USER_INPUT="Do you want to run Breakout? You will find exe at /Build/Release/Game.exe (Y/N)? "
+set /p USER_INPUT="Run sample game? You will find the exe at /Build/Runtime/Release/Runtime.exe (Y/N)? "
 
 if /i "%USER_INPUT%"=="Y" (
-    echo Running Game.exe...
-    start Release\Game.exe
+    echo Running Runtime.exe...
+    start Runtime\Release\Runtime.exe
 ) else (
     echo Exiting. Game not launched.
 )
