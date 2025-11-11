@@ -1,5 +1,17 @@
 @echo off
 
+rem List of critical DLLs
+set DLLS=mono-2.0-sgen.dll ole32.dll KERNEL32.dll SHELL32.dll VCRUNTIME140.dll api-ms-win-crt-runtime-l1-1-0.dll api-ms-win-crt-stdio-l1-1-0.dll api-ms-win-crt-string-l1-1-0.dll api-ms-win-crt-heap-l1-1-0.dll api-ms-win-crt-math-l1-1-0.dll api-ms-win-crt-locale-l1-1-0.dll mscoree.dll
+
+for %%d in (%DLLS%) do (
+    where %%d >nul 2>&1
+    if %ERRORLEVEL% neq 0 (
+        echo MISSING: %%d
+    ) else (
+        echo Found: %%d
+    )
+)
+
 if /i "%~1"=="--auto" (
     set AUTO_MODE=1
 ) else (
@@ -21,48 +33,27 @@ if %ERRORLEVEL% neq 0 (
 
 set BUILD_COMMAND=%CMAKE_COMMAND% --build . --config Release
 
-set VS_PATH_2022_X86=C:\Program Files (x86)\Microsoft Visual Studio\2022
 set VS_PATH_2022_X64=C:\Program Files\Microsoft Visual Studio\2022
-set VS_PATH_2019_X86=C:\Program Files (x86)\Microsoft Visual Studio\2019
 set VS_PATH_2019_X64=C:\Program Files\Microsoft Visual Studio\2019
-set VS_PATH_2017_X86=C:\Program Files (x86)\Microsoft Visual Studio\2017
 set VS_PATH_2017_X64=C:\Program Files\Microsoft Visual Studio\2017
 
 echo Checking if Visual Studio exists at the following locations:
-echo %VS_PATH_2022_X86%\Community
 echo %VS_PATH_2022_X64%\Community
-echo %VS_PATH_2019_X86%\Community
 echo %VS_PATH_2019_X64%\Community
-echo %VS_PATH_2017_X86%\Community
 echo %VS_PATH_2017_X64%\Community
-echo %VS_PATH_2022_X86%\Enterprise
 echo %VS_PATH_2022_X64%\Enterprise
-echo %VS_PATH_2019_X86%\Enterprise
 echo %VS_PATH_2019_X64%\Enterprise
-echo %VS_PATH_2017_X86%\Enterprise
 echo %VS_PATH_2017_X64%\Enterprise
 
-if exist "%VS_PATH_2022_X86%\Community" (
-    set GENERATOR=Visual Studio 17 2022
-) else if exist "%VS_PATH_2022_X64%\Community" (
-    set GENERATOR=Visual Studio 17 2022
-) else if exist "%VS_PATH_2022_X86%\Enterprise" (
+if exist "%VS_PATH_2022_X64%\Community" (
     set GENERATOR=Visual Studio 17 2022
 ) else if exist "%VS_PATH_2022_X64%\Enterprise" (
     set GENERATOR=Visual Studio 17 2022
-) else if exist "%VS_PATH_2019_X86%\Community" (
-    set GENERATOR=Visual Studio 16 2019
 ) else if exist "%VS_PATH_2019_X64%\Community" (
-    set GENERATOR=Visual Studio 16 2019
-) else if exist "%VS_PATH_2019_X86%\Enterprise" (
     set GENERATOR=Visual Studio 16 2019
 ) else if exist "%VS_PATH_2019_X64%\Enterprise" (
     set GENERATOR=Visual Studio 16 2019
-) else if exist "%VS_PATH_2017_X86%\Community" (
-    set GENERATOR=Visual Studio 15 2017
 ) else if exist "%VS_PATH_2017_X64%\Community" (
-    set GENERATOR=Visual Studio 15 2017
-) else if exist "%VS_PATH_2017_X86%\Enterprise" (
     set GENERATOR=Visual Studio 15 2017
 ) else if exist "%VS_PATH_2017_X64%\Enterprise" (
     set GENERATOR=Visual Studio 15 2017
