@@ -1,5 +1,11 @@
 @echo off
 
+if /i "%~1"=="--auto" (
+    set AUTO_MODE=1
+) else (
+    set AUTO_MODE=0
+)
+
 set "CMAKE_COMMAND="%CD%\Vendor\Windows\CMake\bin\cmake.exe""
 
 echo Using CMake command: %CMAKE_COMMAND%
@@ -29,18 +35,36 @@ echo %VS_PATH_2019_X86%\Community
 echo %VS_PATH_2019_X64%\Community
 echo %VS_PATH_2017_X86%\Community
 echo %VS_PATH_2017_X64%\Community
+echo %VS_PATH_2022_X86%\Enterprise
+echo %VS_PATH_2022_X64%\Enterprise
+echo %VS_PATH_2019_X86%\Enterprise
+echo %VS_PATH_2019_X64%\Enterprise
+echo %VS_PATH_2017_X86%\Enterprise
+echo %VS_PATH_2017_X64%\Enterprise
 
 if exist "%VS_PATH_2022_X86%\Community" (
     set GENERATOR=Visual Studio 17 2022
 ) else if exist "%VS_PATH_2022_X64%\Community" (
     set GENERATOR=Visual Studio 17 2022
+) else if exist "%VS_PATH_2022_X86%\Enterprise" (
+    set GENERATOR=Visual Studio 17 2022
+) else if exist "%VS_PATH_2022_X64%\Enterprise" (
+    set GENERATOR=Visual Studio 17 2022
 ) else if exist "%VS_PATH_2019_X86%\Community" (
     set GENERATOR=Visual Studio 16 2019
 ) else if exist "%VS_PATH_2019_X64%\Community" (
     set GENERATOR=Visual Studio 16 2019
+) else if exist "%VS_PATH_2019_X86%\Enterprise" (
+    set GENERATOR=Visual Studio 16 2019
+) else if exist "%VS_PATH_2019_X64%\Enterprise" (
+    set GENERATOR=Visual Studio 16 2019
 ) else if exist "%VS_PATH_2017_X86%\Community" (
     set GENERATOR=Visual Studio 15 2017
 ) else if exist "%VS_PATH_2017_X64%\Community" (
+    set GENERATOR=Visual Studio 15 2017
+) else if exist "%VS_PATH_2017_X86%\Enterprise" (
+    set GENERATOR=Visual Studio 15 2017
+) else if exist "%VS_PATH_2017_X64%\Enterprise" (
     set GENERATOR=Visual Studio 15 2017
 ) else (
     echo No compatible Visual Studio version found, exiting.
@@ -50,7 +74,11 @@ if exist "%VS_PATH_2022_X86%\Community" (
 
 echo Compatible Visual Studio installation found: %GENERATOR%
 
-set /p USER_INPUT="Build Visual Studio solution files? (Y/N) "
+if %AUTO_MODE%==1 (
+    set USER_INPUT=Y
+) else (
+    set /p USER_INPUT="Build Visual Studio solution files? (Y/N) "
+)
 
 if /i "%USER_INPUT%"=="N" (
     echo Exiting.
@@ -81,7 +109,11 @@ if %ERRORLEVEL% neq 0 (
     exit 1
 )
 
-set /p USER_INPUT="Run sample game? You will find the exe at /Build/Runtime/Release/Runtime.exe (Y/N)? "
+if %AUTO_MODE%==1 (
+    set USER_INPUT=N
+) else (
+    set /p USER_INPUT="Run sample game? You will find the exe at /Build/Runtime/Release/Runtime.exe (Y/N)? "
+)
 
 if /i "%USER_INPUT%"=="Y" (
     echo Running Runtime.exe...
