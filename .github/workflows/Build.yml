@@ -18,13 +18,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install Visual C++ 2015-2022 Redistributable
+        run: choco install vcredist2015 -y
+
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.2
+
       - name: Run setup script
         shell: cmd
         run: call Setup_Win.bat --auto
-        
-      - name: Upload build artifacts
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-output
-          path: build/
