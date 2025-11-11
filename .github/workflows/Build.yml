@@ -20,7 +20,7 @@ jobs:
 
       - name: Run setup script
         shell: cmd
-        run: call Setup_Win.bat
+        run: call Setup_Win.bat --auto
         
       - name: Upload build artifacts
         if: success()
