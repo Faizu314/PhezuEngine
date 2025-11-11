@@ -14,6 +14,11 @@ for %%d in (%DLLS%) do (
 
 set MONO_PATH=%CD%\Vendor\windows\mono\lib\4.5
 
+if not exist "%CD%\Vendor\windows\mono\lib\4.5" (
+    echo Mono lib folder not found!
+    exit /b 1
+)
+
 if /i "%~1"=="--auto" (
     set AUTO_MODE=1
 ) else (
