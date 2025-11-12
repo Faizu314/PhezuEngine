@@ -10,7 +10,13 @@ jobs:
     runs-on: macos-latest
 
     steps:
+      - name: Checkout repository
       - uses: actions/checkout@v4
+      
+      - name: Install mono
+        run: brew install mono
+      
+      - name: Run setup script
       - shell: bash
         run: |
           chmod +x Setup_Mac.sh
