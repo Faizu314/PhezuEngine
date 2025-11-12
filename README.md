@@ -77,7 +77,8 @@ brew install mono
 ---
 
 ## 🎮 Demo
-> *(Add a screenshot or GIF of the Breakout game here — even a still image of the running game window works wonders.)*
+![BreakoutPreview](./BreakoutPreview.png)
+> *This is a preview of the sample breakout game.*
 
 ---
 
