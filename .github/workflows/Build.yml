@@ -20,7 +20,7 @@ jobs:
 
       - name: Build C# Scripts
         shell: cmd
-        working-directory: "%GITHUB_WORKSPACE%/ScriptCore"
+        working-directory: ${{ github.workspace }}\ScriptCore
         run: |
           ../Vendor/windows/mono/bin/mono.exe ../Vendor/windows/mono/lib/4.5/csc.exe \
           -target:library \
