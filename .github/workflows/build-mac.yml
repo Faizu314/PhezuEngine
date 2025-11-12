@@ -11,14 +11,14 @@ jobs:
 
     steps:
       - name: Checkout repository
-      - uses: actions/checkout@v4
+        uses: actions/checkout@v4
       
       - name: Install mono
-      - shell: bash
+        shell: bash
         run: brew install mono 6.14.1
       
       - name: Run setup script
-      - shell: bash
+        shell: bash
         run: |
           chmod +x Setup_Mac.sh
           ./Setup_Mac.sh --auto
