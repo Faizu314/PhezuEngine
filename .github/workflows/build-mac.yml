@@ -15,7 +15,7 @@ jobs:
       
       - name: Install mono
         shell: bash
-        run: brew install mono 6.14.1
+        run: brew install mono
       
       - name: Run setup script
         shell: bash
