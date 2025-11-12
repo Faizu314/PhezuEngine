@@ -22,7 +22,7 @@ jobs:
         shell: cmd
         working-directory: ${{ github.workspace }}\ScriptCore
         run: |
-          ../Vendor/windows/mono/bin/mono.exe ../Vendor/windows/mono/lib/4.5/csc.exe \
+          "../Vendor/windows/mono/bin/mono.exe" "../Vendor/windows/mono/lib/4.5/csc.exe" \
           -target:library \
           -out:Build/bin/Phezu-ScriptCore.dll \
           Source/*.cs
