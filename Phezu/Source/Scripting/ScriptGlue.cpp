@@ -1,13 +1,13 @@
 #include "Engine.hpp"
-#include "scripting/ScriptEngine.hpp"
-#include "scripting/ScriptGlue.hpp"
-#include "scripting/ScriptInstance.hpp"
+#include "Scripting/ScriptEngine.hpp"
+#include "Scripting/ScriptGlue.hpp"
+#include "Scripting/ScriptInstance.hpp"
 
-#include "scene/Scene.hpp"
-#include "scene/components/PhysicsData.hpp"
-#include "scene/components/RenderData.hpp"
-#include "scene/Entity.hpp"
-#include "maths/Math.hpp"
+#include "Scene/Scene.hpp"
+#include "Scene/Components/PhysicsData.hpp"
+#include "Scene/Components/RenderData.hpp"
+#include "Scene/Entity.hpp"
+#include "Maths/Math.hpp"
 
 #include "Logger.hpp"
 

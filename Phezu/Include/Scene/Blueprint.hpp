@@ -5,9 +5,9 @@
 #include <unordered_map>
 #include <unordered_set>
 #include "nlohmann/json.hpp"
-#include "scene/BlueprintEntry.hpp"
-#include "scene/components/DataComponent.hpp"
-#include "serialization/CustomSerialization.hpp"
+#include "Scene/BlueprintEntry.hpp"
+#include "Scene/Components/DataComponent.hpp"
+#include "Serialization/CustomSerialization.hpp"
 
 namespace Phezu {
     

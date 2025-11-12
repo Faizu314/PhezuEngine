@@ -1,7 +1,7 @@
-#include "scene/SceneManager.hpp"
-#include "scene/Scene.hpp"
-#include "scene/Entity.hpp"
-#include "scene/components/CameraData.hpp"
+#include "Scene/SceneManager.hpp"
+#include "Scene/Scene.hpp"
+#include "Scene/Entity.hpp"
+#include "Scene/Components/CameraData.hpp"
 #include "Engine.hpp"
 
 namespace Phezu {

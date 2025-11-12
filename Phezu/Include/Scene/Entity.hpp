@@ -6,8 +6,8 @@
 #include <unordered_map>
 
 #include "Renderer.hpp"
-#include "scene/components/TransformData.hpp"
-#include "scene/components/ScriptComponent.hpp"
+#include "Scene/Components/TransformData.hpp"
+#include "Scene/Components/ScriptComponent.hpp"
 
 namespace Phezu {
     

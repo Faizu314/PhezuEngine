@@ -3,8 +3,8 @@
 #include <vector>
 #include <unordered_map>
 #include <string>
-#include "maths/Math.hpp"
-#include "scene/Blueprint.hpp"
+#include "Maths/Math.hpp"
+#include "Scene/Blueprint.hpp"
 
 namespace Phezu {
     

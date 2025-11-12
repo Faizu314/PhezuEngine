@@ -1,5 +1,5 @@
-#include "scene/Entity.hpp"
-#include "scene/components/TransformData.hpp"
+#include "Scene/Entity.hpp"
+#include "Scene/Components/TransformData.hpp"
 #include "glm/glm.hpp"
 
 namespace Phezu {

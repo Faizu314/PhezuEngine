@@ -1,6 +1,6 @@
 #pragma once
 
-#include "scene/components/DataComponent.hpp"
+#include "Scene/Components/DataComponent.hpp"
 
 #include <string>
 

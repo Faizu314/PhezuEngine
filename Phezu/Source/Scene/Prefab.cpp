@@ -1,4 +1,4 @@
-#include "scene/Prefab.hpp"
+#include "Scene/Prefab.hpp"
 #include "nlohmann/json.hpp"
 
 namespace Phezu {

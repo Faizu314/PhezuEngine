@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Renderer.hpp"
-#include "scene/components/DataComponent.hpp"
+#include "Scene/Components/DataComponent.hpp"
 
 namespace Phezu {
     

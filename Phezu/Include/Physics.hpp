@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "glm/glm.hpp"
-#include "maths/Math.hpp"
+#include "Maths/Math.hpp"
 
 namespace Phezu {
     

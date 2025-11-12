@@ -1,10 +1,10 @@
 #include "AssetManagement/AssetManager.hpp"
 #include "Engine.hpp"
 #include "AssetManagement/MetaData.hpp"
-#include "scene/Scene.hpp"
-#include "scene/Blueprint.hpp"
-#include "scene/Prefab.hpp"
-#include "serialization/FileStream.hpp"
+#include "Scene/Scene.hpp"
+#include "Scene/Blueprint.hpp"
+#include "Scene/Prefab.hpp"
+#include "Serialization/FileStream.hpp"
 #include "Logger.hpp"
 #include <filesystem>
 

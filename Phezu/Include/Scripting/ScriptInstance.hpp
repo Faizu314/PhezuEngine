@@ -1,7 +1,7 @@
 #pragma once
 
-#include "scripting/MonoDefs.hpp"
-#include "scripting/ScriptClass.hpp"
+#include "Scripting/MonoDefs.hpp"
+#include "Scripting/ScriptClass.hpp"
 
 #include <string>
 

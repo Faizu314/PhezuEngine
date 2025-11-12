@@ -1,4 +1,4 @@
-#include "scripting/ScriptInstance.hpp"
+#include "Scripting/ScriptInstance.hpp"
 #include "Logger.hpp"
 
 #include "mono/jit/jit.h"

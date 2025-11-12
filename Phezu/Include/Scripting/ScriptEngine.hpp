@@ -1,8 +1,8 @@
 #pragma once
 
-#include "scripting/MonoDefs.hpp"
-#include "scripting/ScriptDefs.hpp"
-#include "scripting/EntityScriptingContext.hpp"
+#include "Scripting/MonoDefs.hpp"
+#include "Scripting/ScriptDefs.hpp"
+#include "Scripting/EntityScriptingContext.hpp"
 
 #include <string>
 #include <unordered_map>

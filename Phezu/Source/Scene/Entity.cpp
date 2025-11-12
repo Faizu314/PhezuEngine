@@ -1,10 +1,10 @@
-#include "scene/Entity.hpp"
-#include "scene/Scene.hpp"
-#include "scene/components/ShapeData.hpp"
-#include "scene/components/RenderData.hpp"
-#include "scene/components/PhysicsData.hpp"
-#include "scene/components/CameraData.hpp"
-#include "scene/components/ScriptComponent.hpp"
+#include "Scene/Entity.hpp"
+#include "Scene/Scene.hpp"
+#include "Scene/Components/ShapeData.hpp"
+#include "Scene/Components/RenderData.hpp"
+#include "Scene/Components/PhysicsData.hpp"
+#include "Scene/Components/CameraData.hpp"
+#include "Scene/Components/ScriptComponent.hpp"
 
 #include "Logger.hpp"
 
