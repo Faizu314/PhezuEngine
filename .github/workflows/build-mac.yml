@@ -1,0 +1,17 @@
+name: Build Mac
+
+on:
+  push:
+    branches: [ "dev" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - shell: bash
+        run: |
+          chmod +x Setup_Mac.sh
+          ./Setup_Mac.sh --auto
