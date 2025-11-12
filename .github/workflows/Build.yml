@@ -20,7 +20,7 @@ jobs:
 
       - name: Change directory to ScriptCore
         shell: cmd
-        run: cd "%GITHUB_WORKSPACE%\ScriptCore"
+        run: cd "%GITHUB_WORKSPACE%/ScriptCore"
 
       - name: Build C# Scripts
         shell: cmd
