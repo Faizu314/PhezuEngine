@@ -1,24 +1,5 @@
 @echo off
 
-rem List of critical DLLs
-set DLLS=mono-2.0-sgen.dll ole32.dll KERNEL32.dll SHELL32.dll VCRUNTIME140.dll api-ms-win-crt-runtime-l1-1-0.dll api-ms-win-crt-stdio-l1-1-0.dll api-ms-win-crt-string-l1-1-0.dll api-ms-win-crt-heap-l1-1-0.dll api-ms-win-crt-math-l1-1-0.dll api-ms-win-crt-locale-l1-1-0.dll mscoree.dll
-
-for %%d in (%DLLS%) do (
-    where %%d >nul 2>&1
-    if %ERRORLEVEL% neq 0 (
-        echo MISSING: %%d
-    ) else (
-        echo Found: %%d
-    )
-)
-
-set MONO_PATH=%CD%\Vendor\windows\mono\lib\4.5
-
-if not exist "%CD%\Vendor\windows\mono\lib\4.5" (
-    echo Mono lib folder not found!
-    exit /b 1
-)
-
 if /i "%~1"=="--auto" (
     set AUTO_MODE=1
 ) else (

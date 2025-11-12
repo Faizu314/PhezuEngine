@@ -43,7 +43,7 @@ namespace PhezuRuntime {
     }
     
     std::filesystem::path GetMonoCoreLibsPath() {
-        return GetExePath() / "mono" / "lib" / "4.5";
+        return GetExePath() / "mono" / "lib" / "mono" / "4.5";
     }
     
 #endif
