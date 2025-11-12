@@ -1,11 +1,11 @@
 # PhezuEngine
 
 **A lightweight 2D Game Engine built in C++ with C# scripting.**  
-Created as a personal learning project to understand engine architecture while keeping the code simple and educational.
+Created as a personal learning project to understand engine architecture. There is a strong focus to keep the codebase as simple and readable as possible so others can use this as a learning resource.
 
 ---
 
-## 🚀 Features
+## Features
 - **C# scripting** through Mono integration  
 - **Prefab system** with nesting and overrides
 - **Physics system** (axis-aligned boxes only)
@@ -15,7 +15,7 @@ Created as a personal learning project to understand engine architecture while k
 
 ---
 
-## 📚 Goals
+## Goals
 - Make engine programming **easy and accessible** for learners  
 - Enable creation of **simple classic games** like *Pac-Man, Breakout, Tetris, Snake,* or *Pocket Tanks*  
 - Keep the **codebase simple and readable**  
@@ -23,13 +23,13 @@ Created as a personal learning project to understand engine architecture while k
 
 ---
 
-## 🧩 Dependencies
+## Dependencies
 - [Mono](https://www.mono-project.com/) Used for scripting
 - [SDL2](https://www.libsdl.org/) Used for rendering, windows and input (Planned to be removed)  
 
 ---
 
-## 💻 Windows Setup
+## Windows Setup
 **Requirements**
 - Visual Studio installation  
 
@@ -41,7 +41,7 @@ Created as a personal learning project to understand engine architecture while k
 
 ---
 
-## 🍎 macOS Setup (Experimental)
+## macOS Setup (Experimental)
 > ⚠️ macOS support is **not officially maintained** and may require manual setup.
 
 **Requirements**
@@ -59,16 +59,16 @@ brew install mono
 
 ---
 
-## 🗺️ Roadmap
-- [ ] Separate DLLs for engine and user scripts  
-- [ ] Remove SDL2 dependency  
-- [ ] Add support for primitives and rotation  
-- [ ] Sprite rendering
-- [ ] Editor application (Much Later)
+## Roadmap
+- Separate DLLs for engine and user scripts  
+- Remove SDL2 dependency  
+- Add support for primitives and rotation  
+- Sprite rendering
+- Editor application (Much Later)
 
 ---
 
-## 🧠 Technical Overview
+## Technical Overview
 - Written in **C++17**
 - Uses **CMake** for cross-platform builds  
 - Mono integration for **runtime C# scripting**  
@@ -76,13 +76,9 @@ brew install mono
 
 ---
 
-## 🎮 Demo
+## Demo
 ![BreakoutPreview](./BreakoutPreview.png)
 > *This is a preview of the sample breakout game.*
 
 ---
-
-## 🤝 About the Project
-This project is part of my personal journey into engine development.  
-I’m sharing it publicly so that others can explore and learn from it.
 
