@@ -1,51 +1,87 @@
 # PhezuEngine
 
-Dependencies
+**A lightweight 2D Game Engine built in C++ with C# scripting.**  
+Created as a personal learning project to understand engine architecture while keeping the code simple and educational.
 
-	1) Mono
-	2) SDL2
+---
 
-# Windows
-Requirements
+## 🚀 Features
+- **C# scripting** through Mono integration  
+- **Prefab system** with nesting and overrides
+- **Physics system** (axis-aligned boxes only)
+- **Asset Management** of scene and prefab files
+- **Basic rendering** of colored boxes  
+- **Minimal dependencies** and clean, readable architecture
 
-	1) Visual Studio Installation	
- 
-Instructions
+---
 
-	1) Download/Clone and double click Setup_Win.bat
-	
-# Mac (Not officially supported)
-Requirements
+## 📚 Goals
+- Make engine programming **easy and accessible** for learners  
+- Enable creation of **simple classic games** like *Pac-Man, Breakout, Tetris, Snake,* or *Pocket Tanks*  
+- Keep the **codebase simple and readable**  
+- Maintain **as few dependencies as possible**
 
-	1) Mono Installation (brew install mono)
-   
-Instructions
+---
 
-	1) Download and open terminal at the root directory
-	2) run the command ./Setup_Mac.sh
-	⚠️ Note: Mac setup has been tested in a local development environment but has not been verified in a production or release environment. macOS support is experimental and may require manual setup or adjustments.
+## 🧩 Dependencies
+- [Mono](https://www.mono-project.com/) Used for scripting
+- [SDL2](https://www.libsdl.org/) Used for rendering, windows and input (Planned to be removed)  
 
-# Description
-This is a 2D Game Engine with a sample Breakout game.
-This project is for my personal learning but my aim is to make it a good learning resource for people who want to try engine development.
+---
 
-# Goal of the Project
-    
-    1) Make engine programming easy and accessible to understand
-    2) Be able to create extremely simple games like pac man, breakout, tetris, snake, pocket tanks etc
-    3) Keep the code base extremely simple
-	4) Have as few dependencies as possible
+## 💻 Windows Setup
+**Requirements**
+- Visual Studio installation  
 
-# Engine Features
+**Instructions**
+```bash
+1. Clone or download the repository
+2. Double-click Setup_Win.bat
+```
 
-    1) C# scripting using mono
-    2) Prefab system with nesting and overrides
-    3) Physics with axis aligned boxes
-    4) Rendering boxes with a solid color
+---
 
-# Roadmap
-    
-    1) Have a separate dll for engine and user scripts
-    1) Remove SDL2 as a dependency
-    2) Add support for primitive shapes and rotation
-    3) Add sprites
+## 🍎 macOS Setup (Experimental)
+> ⚠️ macOS support is **not officially maintained** and may require manual setup.
+
+**Requirements**
+```bash
+brew install mono
+```
+
+**Instructions**
+```bash
+1. Open Terminal at the root directory
+2. Run ./Setup_Mac.sh
+```
+
+⚠️ *Tested in a local development environment, but not verified in a production or release setup.*
+
+---
+
+## 🗺️ Roadmap
+- [ ] Separate DLLs for engine and user scripts  
+- [ ] Remove SDL2 dependency  
+- [ ] Add support for primitives and rotation  
+- [ ] Sprite rendering
+- [ ] Editor application (Much Later)
+
+---
+
+## 🧠 Technical Overview
+- Written in **C++17**
+- Uses **CMake** for cross-platform builds  
+- Mono integration for **runtime C# scripting**  
+- Has complete separation of project and engine files.  
+
+---
+
+## 🎮 Demo
+> *(Add a screenshot or GIF of the Breakout game here — even a still image of the running game window works wonders.)*
+
+---
+
+## 🤝 About the Project
+This project is part of my personal journey into engine development.  
+I’m sharing it publicly so that others can explore and learn from it.
+
