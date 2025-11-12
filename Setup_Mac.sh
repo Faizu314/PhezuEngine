@@ -48,7 +48,7 @@ else
     echo "CMake has been built locally. Using CMake at: $CmakePath"
 fi
 
-echo "Environment setup complete! Proceeding to build engine and game..."
+echo "Environment setup complete! Proceeding to build engine and sample game..."
 
 mkdir -p Build
 cd Build || exit
@@ -59,27 +59,27 @@ if [ -d "/Applications/Xcode.app" ]; then
     if "$CmakePath" .. -G "Xcode"; then
         echo "Xcode generator succeeded. Proceeding with build."
         xcodebuild -configuration Release
-        executable_path="Release/Game.app"
+        executable_path="Runtime/Release/Runtime.app"
     else
         echo "Xcode generator failed. Falling back to Unix Makefiles generator..."
         "$CmakePath" .. -G "Unix Makefiles"
         make
-        executable_path="Game.app"
+        executable_path="Runtime/Runtime.app"
     fi
 else
     echo "Xcode IDE not detected. Using Unix Makefiles generator..."
 
     "$CmakePath" .. -G "Unix Makefiles"
     make
-    executable_path="Game.app"
+    executable_path="Runtime/Runtime.app"
 fi
 
-read -p "Do you want to run the Breakout? You will find the app bundle at Build/$executable_path (Y/N): " user_input
+read -p "Do you want to run the sample game? You will find the app bundle at Build/$executable_path (Y/N): " user_input
 
 user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
 
 if [[ "$user_input" == "y" ]]; then
-    echo "Running Breakout game..."
+    echo "Running sample game..."
     open "$executable_path"
 else
     echo "Exiting. Game not launched."
