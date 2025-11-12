@@ -3,7 +3,7 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
-#include "maths/Math.hpp"
+#include "Maths/Math.hpp"
 #include "Renderer.hpp"
 #include "nlohmann/json.hpp"
 

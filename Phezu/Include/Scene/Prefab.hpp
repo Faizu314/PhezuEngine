@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "scene/Blueprint.hpp"
+#include "Scene/Blueprint.hpp"
 #include "GUID.hpp"
 
 namespace Phezu {

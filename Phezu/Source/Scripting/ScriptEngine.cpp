@@ -1,10 +1,10 @@
-#include "scripting/ScriptEngine.hpp"
+#include "Scripting/ScriptEngine.hpp"
 
 #include "Engine.hpp"
 #include "Logger.hpp"
-#include "scripting/ScriptGlue.hpp"
-#include "scene/Scene.hpp"
-#include "scene/Entity.hpp"
+#include "Scripting/ScriptGlue.hpp"
+#include "Scene/Scene.hpp"
+#include "Scene/Entity.hpp"
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "maths/Math.hpp"
-#include "scene/components/DataComponent.hpp"
+#include "Maths/Math.hpp"
+#include "Scene/Components/DataComponent.hpp"
 
 namespace Phezu {
     

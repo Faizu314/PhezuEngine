@@ -3,8 +3,8 @@
 #include "Engine.hpp"
 #include "Window.hpp"
 #include "Renderer.hpp"
-#include "scene/Scene.hpp"
-#include "scene/Prefab.hpp"
+#include "Scene/Scene.hpp"
+#include "Scene/Prefab.hpp"
 #include "Logger.hpp"
 
 #include "SDL2/SDL.h"

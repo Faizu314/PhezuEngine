@@ -2,9 +2,9 @@
 
 #include "Input.hpp"
 #include "Physics.hpp"
-#include "scene/SceneManager.hpp"
+#include "Scene/SceneManager.hpp"
 #include "AssetManagement/AssetManager.hpp"
-#include "scripting/ScriptEngine.hpp"
+#include "Scripting/ScriptEngine.hpp"
 
 #include <filesystem>
 

@@ -1,4 +1,4 @@
-#include "scene/BlueprintEntry.hpp"
+#include "Scene/BlueprintEntry.hpp"
 
 namespace Phezu {
     

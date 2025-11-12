@@ -1,4 +1,4 @@
-#include "scripting/ComponentInstance.hpp"
+#include "Scripting/ComponentInstance.hpp"
 #include "Logger.hpp"
 
 #include "mono/jit/jit.h"

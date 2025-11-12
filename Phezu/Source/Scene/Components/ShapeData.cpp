@@ -1,5 +1,5 @@
-#include "scene/Entity.hpp"
-#include "scene/components/ShapeData.hpp"
+#include "Scene/Entity.hpp"
+#include "Scene/Components/ShapeData.hpp"
 
 #include <cstring>
 

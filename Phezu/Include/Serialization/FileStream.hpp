@@ -2,7 +2,7 @@
 
 #include <string>
 #include <fstream>
-#include "serialization/Stream.hpp"
+#include "Serialization/Stream.hpp"
 
 namespace Phezu {
     

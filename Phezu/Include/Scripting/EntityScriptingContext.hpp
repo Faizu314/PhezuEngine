@@ -1,10 +1,10 @@
 #pragma once
 
-#include "scripting/ScriptEngine.hpp"
-#include "scripting/ScriptClass.hpp"
-#include "scripting/EntityInstance.hpp"
-#include "scripting/BehaviourInstance.hpp"
-#include "scripting/ComponentInstance.hpp"
+#include "Scripting/ScriptEngine.hpp"
+#include "Scripting/ScriptClass.hpp"
+#include "Scripting/EntityInstance.hpp"
+#include "Scripting/BehaviourInstance.hpp"
+#include "Scripting/ComponentInstance.hpp"
 
 #include <vector>
 #include <unordered_map>

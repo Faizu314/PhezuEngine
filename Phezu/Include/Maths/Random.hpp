@@ -1,6 +1,6 @@
 #pragma once
 
-#include "maths/Math.hpp"
+#include "Maths/Math.hpp"
 
 namespace Phezu {
     

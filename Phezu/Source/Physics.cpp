@@ -1,8 +1,8 @@
 #include "Physics.hpp"
 #include "Engine.hpp"
-#include "scene/Entity.hpp"
-#include "scene/components/PhysicsData.hpp"
-#include "scene/components/ShapeData.hpp"
+#include "Scene/Entity.hpp"
+#include "Scene/Components/PhysicsData.hpp"
+#include "Scene/Components/ShapeData.hpp"
 
 #include <algorithm>
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "scripting/MonoDefs.hpp"
+#include "Scripting/MonoDefs.hpp"
 #include <string>
 
 namespace Phezu {

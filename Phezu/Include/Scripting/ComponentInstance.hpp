@@ -1,8 +1,8 @@
 #pragma once
 
-#include "scripting/MonoDefs.hpp"
-#include "scripting/ScriptClass.hpp"
-#include "scripting/ScriptInstance.hpp"
+#include "Scripting/MonoDefs.hpp"
+#include "Scripting/ScriptClass.hpp"
+#include "Scripting/ScriptInstance.hpp"
 
 #include <string>
 
