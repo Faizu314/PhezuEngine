@@ -15,7 +15,7 @@ namespace Phezu {
     
     AssetManager::AssetManager(Engine* engine) : m_Engine(engine) {}
     
-    void AssetManager::Init(std::filesystem::path projectPath) {
+    void AssetManager::Init(const std::filesystem::path& projectPath) {
         std::filesystem::path assetsFolder = projectPath / ASSET_RELATIVE_PATH;
         std::filesystem::path buildScenesConfigPath = projectPath / BUILD_SCENE_RELATIVE_PATH;
 
