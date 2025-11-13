@@ -6,7 +6,7 @@
 
 #include <filesystem>
 
-namespace PhezuRuntime {
+namespace Phezu::Runtime {
     
 #if __APPLE__
         

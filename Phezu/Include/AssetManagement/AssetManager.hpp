@@ -25,7 +25,7 @@ namespace Phezu {
         AssetManager() = delete;
         AssetManager(Engine* engine);
     public:
-        void Init(std::filesystem::path projectPath);
+        void Init(const std::filesystem::path& projectPath);
         Asset GetSceneAsset(GUID guid);
         Asset GetPrefabAsset(GUID guid);
         BuildScenesConfig GetBuildScenesConfig() { return m_BuildScenesConfig; }

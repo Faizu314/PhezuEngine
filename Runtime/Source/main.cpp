@@ -13,10 +13,10 @@ Phezu::EngineConfig engineConfig {
 
 int main(int argc, const char* argv[]) {
     engineConfig.AllPaths = {
-        .ExePath = PhezuRuntime::GetExePath(argv),
-        .ProjectPath = PhezuRuntime::GetProjectPath(argv),
-        .ScriptCoreDllPath = PhezuRuntime::GetScriptCoreDllPath(argv),
-        .MonoCoreLibsPath = PhezuRuntime::GetMonoCoreLibsPath(argv)
+        .ExePath = Phezu::Runtime::GetExePath(argv),
+        .ProjectPath = Phezu::Runtime::GetProjectPath(argv),
+        .ScriptCoreDllPath = Phezu::Runtime::GetScriptCoreDllPath(argv),
+        .MonoCoreLibsPath = Phezu::Runtime::GetMonoCoreLibsPath(argv)
     };
     
     if (engine.Init(engineConfig) != 0)
@@ -29,10 +29,10 @@ int main(int argc, const char* argv[]) {
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow) {
     engineConfig.AllPaths = {
-        PhezuRuntime::GetExePath(),
-        PhezuRuntime::GetProjectPath(),
-        PhezuRuntime::GetScriptCoreDllPath(),
-        PhezuRuntime::GetMonoCoreLibsPath()
+        Phezu::Runtime::GetExePath(),
+        Phezu::Runtime::GetProjectPath(),
+        Phezu::Runtime::GetScriptCoreDllPath(),
+        Phezu::Runtime::GetMonoCoreLibsPath()
     };
     
     if (engine.Init(engineConfig) != 0)
