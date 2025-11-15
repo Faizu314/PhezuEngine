@@ -14,10 +14,10 @@ namespace Phezu::Editor {
         void ExecuteCommand(const Command& command);
         void Destroy();
     private:
-        void TryOpenProject(std::filesystem::path projectPath);
-        void TryBuild();
+        void TryOpenProject(const std::filesystem::path& projectPath);
+        void TryBuild(const std::filesystem::path& projectPath);
         void CloseProject();
-        void GetScriptsPathRecursively(const std::filesystem::path& directory);
+        void GetFilesPathRecursively(const std::filesystem::path& directory);
     private:
         Project* m_OpenedProject;
     };

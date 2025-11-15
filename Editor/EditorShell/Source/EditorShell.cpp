@@ -18,13 +18,14 @@ namespace Phezu::Editor {
                 break;
             }
             case CommandType::Build: {
-                TryBuild();
+                std::filesystem::path buildDir = command.Arguments[0];
+                TryBuild(buildDir);
                 break;
             }
         }
     }
 
-    void EditorShell::TryOpenProject(std::filesystem::path projectPath) {
+    void EditorShell::TryOpenProject(const std::filesystem::path& projectPath) {
         if (!std::filesystem::exists(projectPath)) {
             printf("Invalid path: %ls\n", projectPath.c_str());
             return;
@@ -37,16 +38,29 @@ namespace Phezu::Editor {
         m_OpenedProject = new Project();
         m_OpenedProject->Path = projectPath;
 
-        GetScriptsPathRecursively(projectPath);
+        GetFilesPathRecursively(projectPath);
     }
 
-    void EditorShell::TryBuild() {
+    void EditorShell::TryBuild(const std::filesystem::path& buildDir) {
+        if (m_OpenedProject == nullptr) {
+            printf("No project opened\n");
+            return;
+        }
+
         std::ostringstream stringBuilder;
 
-        stringBuilder << CSHARP_BUILD_COMMAND << " -target:library -out:Game.dll ";
+        stringBuilder << "mkdir \"" << buildDir.string() << "\"";
+        std::system(stringBuilder.str().c_str());
+        stringBuilder.str("");
 
-        for (int i = 0; i < m_OpenedProject->Scripts.size(); i++) {
-            stringBuilder << "\"" << m_OpenedProject->Scripts[i].string() << "\" ";
+        stringBuilder << "mkdir \"" << buildDir.string() << "/Assets\"";
+        std::system(stringBuilder.str().c_str());
+        stringBuilder.str("");
+
+        stringBuilder << CSHARP_BUILD_COMMAND << " -target:library -out:" << buildDir.string() << "/Game.dll ";
+
+        for (int i = 0; i < m_OpenedProject->ScriptFiles.size(); i++) {
+            stringBuilder << "\"" << m_OpenedProject->ScriptFiles[i].string() << "\" ";
         }
 
         stringBuilder << "-reference:\"" << SCRIPT_CORE_DLL_SRC_DIR << "/Phezu-ScriptCore.dll\"";
@@ -54,6 +68,30 @@ namespace Phezu::Editor {
         printf("Executing Command: %s\n", stringBuilder.str().c_str());
 
         std::system(stringBuilder.str().c_str());
+
+        std::string dest = (buildDir / "Assets").string();
+
+        for (int i = 0; i < m_OpenedProject->PrefabFiles.size(); i++) {
+            stringBuilder.str("");
+            stringBuilder << "copy \"" << m_OpenedProject->PrefabFiles[i].string() << "\" ";
+            stringBuilder << "\"" << dest << "\"";
+
+            std::system(stringBuilder.str().c_str());
+        }
+        for (int i = 0; i < m_OpenedProject->SceneFiles.size(); i++) {
+            stringBuilder.str("");
+            stringBuilder << "copy \"" << m_OpenedProject->SceneFiles[i].string() << "\" ";
+            stringBuilder << "\"" << dest << "\"";
+
+            std::system(stringBuilder.str().c_str());
+        }
+        for (int i = 0; i < m_OpenedProject->ConfigFiles.size(); i++) {
+            stringBuilder.str("");
+            stringBuilder << "copy \"" << m_OpenedProject->ConfigFiles[i].string() << "\" ";
+            stringBuilder << "\"" << dest << "\"";
+
+            std::system(stringBuilder.str().c_str());
+        }
     }
 
     void EditorShell::CloseProject() {
@@ -64,13 +102,37 @@ namespace Phezu::Editor {
         m_OpenedProject = nullptr;
     }
 
-    void EditorShell::GetScriptsPathRecursively(const std::filesystem::path& folder) {
+    void EditorShell::GetFilesPathRecursively(const std::filesystem::path& folder) {
         for (const auto& entry : std::filesystem::directory_iterator(folder)) {
-            if (entry.is_regular_file() && entry.path().extension() == ".cs") {
-                m_OpenedProject->Scripts.push_back(entry);
+            if (entry.is_regular_file()) {
+                if (entry.path().extension() == ".cs") {
+                    m_OpenedProject->ScriptFiles.push_back(entry);
+                }
+                else if (entry.path().extension() == ".scene") {
+                    m_OpenedProject->SceneFiles.push_back(entry);
+                }
+                else if (entry.path().extension() == ".prefab") {
+                    m_OpenedProject->PrefabFiles.push_back(entry);
+                }
+                else if (entry.path().extension() == ".config") {
+                    m_OpenedProject->ConfigFiles.push_back(entry);
+                }
+                else if (entry.path().extension() == ".meta") {
+                    std::filesystem::path stem = entry.path().stem();
+
+                    if (stem.extension() == ".scene") {
+                        m_OpenedProject->SceneFiles.push_back(entry);
+                    }
+                    else if (stem.extension() == ".prefab") {
+                        m_OpenedProject->PrefabFiles.push_back(entry);
+                    }
+                    else if (stem.extension() == ".config") {
+                        m_OpenedProject->ConfigFiles.push_back(entry);
+                    }
+                }
             }
             else if (entry.is_directory()) {
-                GetScriptsPathRecursively(entry.path());
+                GetFilesPathRecursively(entry.path());
             }
         }
     }

@@ -25,8 +25,14 @@ namespace Phezu::Editor {
                     index = i + 1;
                     break;
                 }
+                if (i == input.size() - 1) {
+                    type = input.substr(index, i - index + 1);
+                    return;
+                }
             }
         }
+
+        std::transform(type.begin(), type.end(), type.begin(), ::tolower);
 
         state = false; // false -> string not started, true -> string started
         for (int i = index; i < input.size(); i++) {
@@ -62,12 +68,18 @@ namespace Phezu::Editor {
             commandObj.Type = CommandType::Exit;
             return;
         }
-        if (commandType == "build" && tokens.empty()) {
-            commandObj.Type = CommandType::Build;
-            return;
-        }
-        if (commandType == "open" && tokens.size() == 1) {
-            commandObj.Type = CommandType::Open;
+        if (tokens.size() == 1) {
+            if (commandType == "build") {
+                commandObj.Type = CommandType::Build;
+            }
+            else if (commandType == "open") {
+                commandObj.Type = CommandType::Open;
+            }
+            else {
+                commandObj.Type = CommandType::Invalid;
+                return;
+            }
+
             std::filesystem::path path(tokens[0]);
             commandObj.Arguments[0] = new char[tokens[0].size() + 1];
             std::memcpy(commandObj.Arguments[0], tokens[0].data(), tokens[0].size());

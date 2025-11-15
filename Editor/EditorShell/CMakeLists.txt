@@ -33,3 +33,5 @@ add_custom_target(EditorDefinesHeader
 
 add_dependencies(EditorShell EditorDefinesHeader)
 add_dependencies(EditorShell ScriptCore)
+add_dependencies(EditorShell Runtime)
+add_dependencies(EditorShell Phezu)
