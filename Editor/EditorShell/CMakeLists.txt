@@ -15,6 +15,7 @@ set(EDITOR_DEFINES_HEADER "${CMAKE_BINARY_DIR}/Editor/Generated/EditorDefines.hp
 if (WIN32)
     set(ESCAPED_CSHARP_BUILD_COMMAND "\"${MONO_EXECUTABLE} ${CSHARP_COMPILER}\"")
     set(ESCAPED_DLL_SRC "\"${SCRIPT_CORE_DLL_SRC_DIR}\"")
+    set(ESCAPED_RUNTIME_EXE_DIR "\"$<TARGET_FILE_DIR:Runtime>\"")
 endif()
 
 add_custom_command(
@@ -23,6 +24,7 @@ add_custom_command(
         COMMAND ${CMAKE_COMMAND} -DOUT_FILE=${EDITOR_DEFINES_HEADER}
         -DCSHARP_BUILD_COMMAND=${ESCAPED_CSHARP_BUILD_COMMAND}
         -DSCRIPT_CORE_DLL_SRC_DIR=${ESCAPED_DLL_SRC}
+        -DRUNTIME_EXE_DIR=${ESCAPED_RUNTIME_EXE_DIR}
         -P "${CMAKE_SOURCE_DIR}/Editor/EditorShell/GenerateEditorDefinesHeader.cmake"
         VERBATIM
 )
