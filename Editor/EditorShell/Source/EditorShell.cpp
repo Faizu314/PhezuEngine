@@ -1,9 +1,12 @@
 #include "EditorShell.hpp"
 #include "Project.hpp"
+#include "EditorDefines.hpp"
+
+#include <sstream>
 
 namespace Phezu::Editor {
 
-    EditorShell::EditorShell() = default;
+    EditorShell::EditorShell() : m_OpenedProject(nullptr) {}
 
     void EditorShell::ExecuteCommand(const Command& command) {
         printf("Executing command of type %i\n", command.Type);
@@ -15,7 +18,7 @@ namespace Phezu::Editor {
                 break;
             }
             case CommandType::Build: {
-
+                TryBuild();
                 break;
             }
         }
@@ -38,7 +41,19 @@ namespace Phezu::Editor {
     }
 
     void EditorShell::TryBuild() {
+        std::ostringstream stringBuilder;
 
+        stringBuilder << CSHARP_BUILD_COMMAND << " -target:library -out:Game.dll ";
+
+        for (int i = 0; i < m_OpenedProject->Scripts.size(); i++) {
+            stringBuilder << "\"" << m_OpenedProject->Scripts[i].string() << "\" ";
+        }
+
+        stringBuilder << "-reference:\"" << SCRIPT_CORE_DLL_SRC_DIR << "/Phezu-ScriptCore.dll\"";
+
+        printf("Executing Command: %s\n", stringBuilder.str().c_str());
+
+        std::system(stringBuilder.str().c_str());
     }
 
     void EditorShell::CloseProject() {

@@ -13,7 +13,8 @@ target_include_directories(EditorShell PUBLIC ${CMAKE_BINARY_DIR}/Editor/Generat
 set(EDITOR_DEFINES_HEADER "${CMAKE_BINARY_DIR}/Editor/Generated/EditorDefines.hpp")
 
 if (WIN32)
-set(ESCAPED_CSHARP_BUILD_COMMAND "\"${MONO_EXECUTABLE} ${CSHARP_COMPILER}\"")
+    set(ESCAPED_CSHARP_BUILD_COMMAND "\"${MONO_EXECUTABLE} ${CSHARP_COMPILER}\"")
+    set(ESCAPED_DLL_SRC "\"${SCRIPT_CORE_DLL_SRC_DIR}\"")
 endif()
 
 add_custom_command(
@@ -21,6 +22,7 @@ add_custom_command(
         OUTPUT "${EDITOR_DEFINES_HEADER}"
         COMMAND ${CMAKE_COMMAND} -DOUT_FILE=${EDITOR_DEFINES_HEADER}
         -DCSHARP_BUILD_COMMAND=${ESCAPED_CSHARP_BUILD_COMMAND}
+        -DSCRIPT_CORE_DLL_SRC_DIR=${ESCAPED_DLL_SRC}
         -P "${CMAKE_SOURCE_DIR}/Editor/EditorShell/GenerateEditorDefinesHeader.cmake"
         VERBATIM
 )
@@ -30,3 +32,4 @@ add_custom_target(EditorDefinesHeader
 )
 
 add_dependencies(EditorShell EditorDefinesHeader)
+add_dependencies(EditorShell ScriptCore)
