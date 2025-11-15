@@ -1,5 +1,4 @@
 #include "AssetManagement/AssetManager.hpp"
-#include "Engine.hpp"
 #include "AssetManagement/MetaData.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/Blueprint.hpp"
@@ -10,17 +9,15 @@
 
 namespace Phezu {
     
-    static const char* ASSET_RELATIVE_PATH = "Assets";
     static const char* BUILD_SCENE_RELATIVE_PATH = "buildscenes.config";
     
     AssetManager::AssetManager(Engine* engine) : m_Engine(engine) {}
     
     void AssetManager::Init(const std::filesystem::path& projectPath) {
-        std::filesystem::path assetsFolder = projectPath / ASSET_RELATIVE_PATH;
         std::filesystem::path buildScenesConfigPath = projectPath / BUILD_SCENE_RELATIVE_PATH;
 
-        if (std::filesystem::exists(assetsFolder) && std::filesystem::exists(buildScenesConfigPath)) {
-            LoadAssetMap(assetsFolder);
+        if (std::filesystem::exists(projectPath) && std::filesystem::exists(buildScenesConfigPath)) {
+            LoadAssetMap(projectPath);
             LoadBuildScenesConfig(buildScenesConfigPath);
         }
     }
