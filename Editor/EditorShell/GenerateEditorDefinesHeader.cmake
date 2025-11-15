@@ -1,2 +1,3 @@
 file(WRITE "${OUT_FILE}" "#pragma once\n\n")
 file(APPEND "${OUT_FILE}" "#define CSHARP_BUILD_COMMAND ${CSHARP_BUILD_COMMAND}\n")
+file(APPEND "${OUT_FILE}" "#define SCRIPT_CORE_DLL_SRC_DIR ${SCRIPT_CORE_DLL_SRC_DIR}\n")
