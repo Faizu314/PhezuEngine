@@ -3,6 +3,7 @@
 #include "EditorDefines.hpp"
 
 #include <sstream>
+#include <windows.h>
 
 namespace Phezu::Editor {
 
@@ -47,50 +48,57 @@ namespace Phezu::Editor {
             return;
         }
 
-        std::ostringstream stringBuilder;
+        std::filesystem::create_directory(buildDir);
+        std::filesystem::create_directory(buildDir / "Assets");
 
-        stringBuilder << "mkdir \"" << buildDir.string() << "\"";
-        std::system(stringBuilder.str().c_str());
-        stringBuilder.str("");
+        {
+            std::ostringstream stringBuilder;
 
-        stringBuilder << "mkdir \"" << buildDir.string() << "/Assets\"";
-        std::system(stringBuilder.str().c_str());
-        stringBuilder.str("");
+            stringBuilder << CSHARP_BUILD_COMMAND << " -target:library -out:\"" << buildDir.string() << "/Game.dll\" ";
 
-        stringBuilder << CSHARP_BUILD_COMMAND << " -target:library -out:" << buildDir.string() << "/Game.dll ";
+            for (int i = 0; i < m_OpenedProject->ScriptFiles.size(); i++) {
+                stringBuilder << "\"" << m_OpenedProject->ScriptFiles[i].string() << "\" ";
+            }
 
-        for (int i = 0; i < m_OpenedProject->ScriptFiles.size(); i++) {
-            stringBuilder << "\"" << m_OpenedProject->ScriptFiles[i].string() << "\" ";
+            stringBuilder << "-reference:\"" << SCRIPT_CORE_DLL_SRC_DIR << "/Phezu-ScriptCore.dll\"";
+
+            printf("Executing Command: %s\n", stringBuilder.str().c_str());
+
+            std::system(stringBuilder.str().c_str());
         }
 
-        stringBuilder << "-reference:\"" << SCRIPT_CORE_DLL_SRC_DIR << "/Phezu-ScriptCore.dll\"";
-
-        printf("Executing Command: %s\n", stringBuilder.str().c_str());
-
-        std::system(stringBuilder.str().c_str());
-
-        std::string dest = (buildDir / "Assets").string();
+        std::filesystem::path dest = buildDir / "Assets";
 
         for (int i = 0; i < m_OpenedProject->PrefabFiles.size(); i++) {
-            stringBuilder.str("");
-            stringBuilder << "copy \"" << m_OpenedProject->PrefabFiles[i].string() << "\" ";
-            stringBuilder << "\"" << dest << "\"";
-
-            std::system(stringBuilder.str().c_str());
+            std::filesystem::copy(m_OpenedProject->PrefabFiles[i], dest, std::filesystem::copy_options::overwrite_existing);
         }
         for (int i = 0; i < m_OpenedProject->SceneFiles.size(); i++) {
-            stringBuilder.str("");
-            stringBuilder << "copy \"" << m_OpenedProject->SceneFiles[i].string() << "\" ";
-            stringBuilder << "\"" << dest << "\"";
-
-            std::system(stringBuilder.str().c_str());
+            std::filesystem::copy(m_OpenedProject->SceneFiles[i], dest, std::filesystem::copy_options::overwrite_existing);
         }
         for (int i = 0; i < m_OpenedProject->ConfigFiles.size(); i++) {
-            stringBuilder.str("");
-            stringBuilder << "copy \"" << m_OpenedProject->ConfigFiles[i].string() << "\" ";
-            stringBuilder << "\"" << dest << "\"";
+            std::filesystem::copy(m_OpenedProject->ConfigFiles[i], dest, std::filesystem::copy_options::overwrite_existing);
+        }
 
-            std::system(stringBuilder.str().c_str());
+        std::filesystem::path exeDir = RUNTIME_EXE_DIR;
+
+        std::filesystem::create_directory(buildDir / "mono");
+        std::filesystem::copy(exeDir / "mono", buildDir / "mono", std::filesystem::copy_options::recursive | std::filesystem::copy_options::skip_existing);
+
+        const char* toCopy[10] = {
+            "Phezu-ScriptCore.dll",
+            "mono-2.0-sgen.dll",
+            "mono-2.0-sgen.lib",
+            "Runtime.exe",
+            "SDL2.dll",
+            "SDL2.lib",
+            "SDL2_image.dll",
+            "SDL2_image.lib",
+            "SDL2_ttf.dll",
+            "SDL2_ttf.lib"
+        };
+
+        for (int i = 0; i < 10; i++) {
+            std::filesystem::copy(exeDir / toCopy[i], buildDir, std::filesystem::copy_options::skip_existing);
         }
     }
 
