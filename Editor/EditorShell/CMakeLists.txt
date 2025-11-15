@@ -12,12 +12,15 @@ target_include_directories(EditorShell PUBLIC ${CMAKE_BINARY_DIR}/Editor/Generat
 
 set(EDITOR_DEFINES_HEADER "${CMAKE_BINARY_DIR}/Editor/Generated/EditorDefines.hpp")
 
+if (WIN32)
+set(ESCAPED_CSHARP_BUILD_COMMAND "\"${MONO_EXECUTABLE} ${CSHARP_COMPILER}\"")
+endif()
+
 add_custom_command(
         COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/Editor/Generated"
         OUTPUT "${EDITOR_DEFINES_HEADER}"
         COMMAND ${CMAKE_COMMAND} -DOUT_FILE=${EDITOR_DEFINES_HEADER}
-        -DCSHARP_BUILD_COMMAND=${CSHARP_BUILD_COMMAND}
-        -DPROJECT_SRC_DIR=${PROJECT_SRC_DIR}
+        -DCSHARP_BUILD_COMMAND=${ESCAPED_CSHARP_BUILD_COMMAND}
         -P "${CMAKE_SOURCE_DIR}/Editor/EditorShell/GenerateEditorDefinesHeader.cmake"
         VERBATIM
 )
