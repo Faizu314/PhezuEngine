@@ -2,7 +2,7 @@ project(ScriptCore)
 
 file(GLOB_RECURSE SCRIPT_CORE_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/Source/*.cs")
 
-add_custom_target(ScriptCore ALL
+add_custom_target(ScriptCore
     COMMAND ${CMAKE_COMMAND} -E make_directory "${SCRIPT_CORE_DLL_SRC_DIR}"
     COMMAND ${CSHARP_BUILD_COMMAND}
         -target:library
