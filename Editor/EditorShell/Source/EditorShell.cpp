@@ -9,16 +9,25 @@ namespace Phezu::Editor {
         printf("Executing command of type %i\n", command.Type);
 
         switch (command.Type) {
-            case CommandType::Open:
+            case CommandType::Open: {
                 std::filesystem::path projectPath = command.Arguments[0];
-                OpenProject(projectPath);
+                TryOpenProject(projectPath);
                 break;
+            }
+            case CommandType::Build: {
+
+                break;
+            }
         }
     }
 
-    void EditorShell::OpenProject(std::filesystem::path projectPath) {
+    void EditorShell::TryOpenProject(std::filesystem::path projectPath) {
         if (!std::filesystem::exists(projectPath)) {
             printf("Invalid path: %ls\n", projectPath.c_str());
+            return;
+        }
+        if (m_OpenedProject != nullptr) {
+            printf("Project already open at %ls\n", m_OpenedProject->Path.c_str());
             return;
         }
 
@@ -26,6 +35,10 @@ namespace Phezu::Editor {
         m_OpenedProject->Path = projectPath;
 
         GetScriptsPathRecursively(projectPath);
+    }
+
+    void EditorShell::TryBuild() {
+
     }
 
     void EditorShell::CloseProject() {
