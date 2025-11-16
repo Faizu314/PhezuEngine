@@ -49,12 +49,12 @@ namespace Phezu {
 
         m_HasInited = true;
         m_ExePath = config.AllPaths.ExePath;
-        m_ProjectPath = config.AllPaths.ProjectPath;
+        m_AssetsPath = config.AllPaths.AssetsPath;
         m_ScriptCoreDllPath = config.AllPaths.ScriptCoreDllPath;
         m_MonoCoreLibsPath = config.AllPaths.MonoCoreLibsPath;
         m_Window = new Window(config.Name, config.ResolutionSettings.Width, config.ResolutionSettings.Height, config.ResolutionSettings.RenderScale);
         m_Renderer = new Renderer(this, *m_Window);
-        m_AssetManager.Init(m_ProjectPath);
+        m_AssetManager.Init(m_AssetsPath);
         m_SceneManager.Init();
         m_ScriptEngine.Init();
         Input::Init();

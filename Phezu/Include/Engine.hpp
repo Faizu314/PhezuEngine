@@ -23,7 +23,7 @@ namespace Phezu {
 
     struct Paths {
         std::filesystem::path ExePath;
-        std::filesystem::path ProjectPath;
+        std::filesystem::path AssetsPath;
         std::filesystem::path ScriptCoreDllPath;
         std::filesystem::path MonoCoreLibsPath;
     };
@@ -48,7 +48,7 @@ namespace Phezu {
         const InputData& GetInput() const { return Input::GetInput(); }
         long long unsigned int GetFrameCount() const { return m_FrameCount; }
         std::filesystem::path GetExePath() const { return m_ExePath; }
-        std::filesystem::path GetProjectPath() const { return m_ProjectPath; }
+        std::filesystem::path GetAssetsPath() const { return m_AssetsPath; }
         std::filesystem::path GetScriptCoreDllPath() const { return m_ScriptCoreDllPath; }
         std::filesystem::path GetMonoCoreLibsPath() const { return m_MonoCoreLibsPath; }
     private:
@@ -72,7 +72,7 @@ namespace Phezu {
         bool m_IsRunning;
         long long unsigned int m_FrameCount;
         std::filesystem::path m_ExePath;
-        std::filesystem::path m_ProjectPath;
+        std::filesystem::path m_AssetsPath;
         std::filesystem::path m_ScriptCoreDllPath;
         std::filesystem::path m_MonoCoreLibsPath;
     private:
