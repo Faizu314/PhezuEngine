@@ -88,18 +88,5 @@ if %ERRORLEVEL% neq 0 (
     exit 1
 )
 
-if %AUTO_MODE%==1 (
-    set USER_INPUT=N
-) else (
-    set /p USER_INPUT="Run sample game? You will find the exe at /Build/Runtime/Release/Runtime.exe (Y/N)? "
-)
-
-if /i "%USER_INPUT%"=="Y" (
-    echo Running Runtime.exe...
-    start Runtime\Release\Runtime.exe
-) else (
-    echo Exiting. Game not launched.
-)
-
 pause
 exit 0
