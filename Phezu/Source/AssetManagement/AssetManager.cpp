@@ -13,11 +13,11 @@ namespace Phezu {
     
     AssetManager::AssetManager(Engine* engine) : m_Engine(engine) {}
     
-    void AssetManager::Init(const std::filesystem::path& projectPath) {
-        std::filesystem::path buildScenesConfigPath = projectPath / BUILD_SCENE_RELATIVE_PATH;
+    void AssetManager::Init(const std::filesystem::path& assetsPath) {
+        std::filesystem::path buildScenesConfigPath = assetsPath / BUILD_SCENE_RELATIVE_PATH;
 
-        if (std::filesystem::exists(projectPath) && std::filesystem::exists(buildScenesConfigPath)) {
-            LoadAssetMap(projectPath);
+        if (std::filesystem::exists(assetsPath) && std::filesystem::exists(buildScenesConfigPath)) {
+            LoadAssetMap(assetsPath);
             LoadBuildScenesConfig(buildScenesConfigPath);
         }
     }

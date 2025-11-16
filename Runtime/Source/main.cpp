@@ -30,7 +30,7 @@ int main(int argc, const char* argv[]) {
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow) {
     engineConfig.AllPaths = {
         Phezu::Runtime::GetExePath(),
-        Phezu::Runtime::GetProjectPath(),
+        Phezu::Runtime::GetAssetsPath(),
         Phezu::Runtime::GetScriptCoreDllPath(),
         Phezu::Runtime::GetMonoCoreLibsPath()
     };

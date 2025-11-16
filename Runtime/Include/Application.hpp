@@ -10,7 +10,7 @@ namespace Phezu::Runtime {
     
 #if __APPLE__
         
-    std::filesystem::path GetProjectPath(const char* argv[]) {
+    std::filesystem::path GetAssetsPath(const char* argv[]) {
         return std::filesystem::path(argv[0]).parent_path().parent_path() / "Project";
     }
     
@@ -34,8 +34,8 @@ namespace Phezu::Runtime {
         return std::filesystem::path(path).parent_path();
     }
 
-    std::filesystem::path GetProjectPath() {
-        return GetExePath() / "Project";
+    std::filesystem::path GetAssetsPath() {
+        return GetExePath() / "Assets";
     }
     
     std::filesystem::path GetScriptCoreDllPath() {

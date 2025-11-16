@@ -39,7 +39,8 @@ namespace Phezu::Editor {
         m_OpenedProject = new Project();
         m_OpenedProject->Path = projectPath;
 
-        GetFilesPathRecursively(projectPath);
+        GetFilesPathInDirectory(projectPath);
+        GetFilesPathRecursively(projectPath / "Assets");
     }
 
     void EditorShell::TryBuild(const std::filesystem::path& buildDir) {
@@ -48,7 +49,7 @@ namespace Phezu::Editor {
             return;
         }
 
-        std::filesystem::create_directory(buildDir);
+        std::filesystem::create_directories(buildDir);
         std::filesystem::create_directory(buildDir / "Assets");
 
         {
@@ -110,8 +111,8 @@ namespace Phezu::Editor {
         m_OpenedProject = nullptr;
     }
 
-    void EditorShell::GetFilesPathRecursively(const std::filesystem::path& folder) {
-        for (const auto& entry : std::filesystem::directory_iterator(folder)) {
+    void EditorShell::GetFilesPathInDirectory(const std::filesystem::path & directory) {
+        for (const auto& entry : std::filesystem::directory_iterator(directory)) {
             if (entry.is_regular_file()) {
                 if (entry.path().extension() == ".cs") {
                     m_OpenedProject->ScriptFiles.push_back(entry);
@@ -139,7 +140,14 @@ namespace Phezu::Editor {
                     }
                 }
             }
-            else if (entry.is_directory()) {
+        }
+    }
+
+    void EditorShell::GetFilesPathRecursively(const std::filesystem::path& directory) {
+        GetFilesPathInDirectory(directory);
+
+        for (const auto& entry : std::filesystem::directory_iterator(directory)) {
+            if (entry.is_directory()) {
                 GetFilesPathRecursively(entry.path());
             }
         }
