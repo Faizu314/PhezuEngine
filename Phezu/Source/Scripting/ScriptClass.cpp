@@ -12,14 +12,19 @@ namespace Phezu {
         MonoImage* image = mono_assembly_get_image(assembly);
         MonoClass* monoClass = mono_class_from_name(image, classNamespace.c_str(), className.c_str());
         
-        if (monoClass == nullptr)
+        if (monoClass == nullptr) {
+        	MonoAssemblyName* assemblyName = mono_assembly_get_name(assembly);
+        	const char* name = mono_assembly_name_get_name(assemblyName);
+
+	        Log("Unable to find class %s.%s in assembly %s\n", classNamespace.c_str(), className.c_str(), name);
             return nullptr;
-        
+        }
+
         return new ScriptClass(monoClass, classNamespace, className, scriptClassType);
     }
 
-	MonoMethod* ScriptClass::GetMonoMethod(const std::string& methodName, int paramterCount) {
-		MonoMethod* method = mono_class_get_method_from_name(m_Class, methodName.c_str(), paramterCount);
+	MonoMethod* ScriptClass::GetMonoMethod(const std::string& methodName, int parameterCount) {
+		MonoMethod* method = mono_class_get_method_from_name(m_Class, methodName.c_str(), parameterCount);
 
 		if (method == nullptr)
 		{

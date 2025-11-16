@@ -38,24 +38,24 @@ namespace Phezu {
 	public:
 		MonoClass* GetBehaviourComponentClass();
 		ScriptInstance* GetBehaviourScriptInstance(uint64_t entityID, const std::string& classFullname);
-        ScriptInstance* GetEngineComponentInstance(uint64_t entityID, const ManagedType componentType);
+        ScriptInstance* GetEngineComponentInstance(uint64_t entityID, ManagedType componentType);
         void RemoveBehaviourScriptInstance(uint64_t entityID, const std::string& classFullname);
         void RemoveEngineComponentInstance(uint64_t entityID, const std::string& classFullname);
         uint32_t GetEntityScriptInstanceGcHandle(uint64_t entityID);
 	private:
 		void InitMono();
 		void ShutdownMono();
-		MonoAssembly* LoadAssembly(const std::string& assemblyPath);
         void GetInputClassAndFields();
         void GetEngineClasses();
 		void GetScriptClasses();
+		MonoAssembly* LoadAssembly(const std::string& assemblyPath);
     private:
         void PrintAssemblyClasses(MonoAssembly* assembly);
 	private:
 		Engine* m_Engine;
-		MonoDomain* m_EngineDomain;
-		MonoDomain* m_RuntimeDomain;
-		MonoAssembly* m_CoreAssembly;
+		MonoDomain* m_RootDomain;
+		MonoAssembly* m_EngineAssembly;
+		MonoAssembly* m_GameAssembly;
 	private:
         ScriptClass* m_ObjectClass;
         ScriptClass* m_ComponentClass;
@@ -63,7 +63,7 @@ namespace Phezu {
         ScriptClass* m_EntityClass;
     private:
         MonoVTable* m_InputClassVTable;
-        InputFields m_InputFields;
+        InputFields m_InputFields{};
 	private:
 		MonoClassField* m_EntityIdField;
 		MonoMethod* m_ComponentEntitySetter;
