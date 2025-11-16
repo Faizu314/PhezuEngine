@@ -24,11 +24,11 @@ namespace Phezu {
 		ScriptClass(MonoClass* monoClass, const std::string& classNamespace, const std::string& className, ScriptClassType scriptClassType);
 	public:
 		MonoClass* GetMonoClass() { return m_Class; }
-		MonoMethod* GetMonoMethod(const std::string& methodName, int paramterCount);
+		MonoMethod* GetMonoMethod(const std::string& methodName, int parameterCount);
 		MonoProperty* GetMonoProperty(const std::string& propertyName);
 		MonoClassField* GetMonoClassField(const std::string& fieldName);
-		ScriptClassType GetScriptClassType() { return m_ScriptClassType; }
-		std::string GetFullname() { return m_Namespace + "." + m_ClassName; }
+		ScriptClassType GetScriptClassType() const { return m_ScriptClassType; }
+		std::string GetFullname() const { return m_Namespace + "." + m_ClassName; }
     public:
         static ScriptClass* TryCreate(MonoAssembly* assembly, const std::string& classNamespace, const std::string& className, ScriptClassType scriptClassType);
 	private:

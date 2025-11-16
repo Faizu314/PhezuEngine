@@ -69,7 +69,9 @@ namespace Phezu {
         return nameSpace + "." + className;
     }
 
-    ScriptEngine::ScriptEngine(Engine* engine) : m_Engine(engine), m_EngineDomain(nullptr), m_RuntimeDomain(nullptr), m_CoreAssembly(nullptr), m_ObjectClass(nullptr), m_ComponentClass(nullptr), m_BehaviourComponentClass(nullptr), m_EntityClass(nullptr), m_InputClassVTable(nullptr), m_EntityIdField(nullptr), m_ComponentEntitySetter(nullptr) {}
+    ScriptEngine::ScriptEngine(Engine* engine) : m_Engine(engine), m_RootDomain(nullptr), m_EngineAssembly(nullptr), m_GameAssembly(nullptr), m_ObjectClass(nullptr), m_ComponentClass(nullptr), m_BehaviourComponentClass(nullptr), m_EntityClass(nullptr), m_InputClassVTable(nullptr), m_EntityIdField(nullptr), m_ComponentEntitySetter(nullptr) {
+        std::memset(&m_InputFields, 0, sizeof(m_InputFields));
+    }
 
     void ScriptEngine::Init() {
         InitMono();
@@ -77,10 +79,6 @@ namespace Phezu {
         ScriptGlue::Init(m_Engine, this);
         
         ScriptGlue::Bind();
-
-        std::filesystem::path scriptCoreDllPath = m_Engine->GetScriptCoreDllPath() / "Phezu-ScriptCore.dll";
-        
-        m_CoreAssembly = LoadAssembly(scriptCoreDllPath.string());
 
         GetScriptClasses();
     }
@@ -91,58 +89,54 @@ namespace Phezu {
 
         mono_set_assemblies_path(m_Engine->GetMonoCoreLibsPath().u8string().c_str());
 
-        mono_config_parse(NULL);
+        mono_config_parse(nullptr);
 
-        m_EngineDomain = mono_jit_init("PhezuEngineDomain");
-        if (m_EngineDomain == nullptr)
+        m_RootDomain = mono_jit_init("PhezuEngineDomain");
+        if (m_RootDomain == nullptr)
         {
             Log("Error initializing mono jit\n");
             return;
         }
 
-        m_RuntimeDomain = mono_domain_create_appdomain(const_cast<char*>("PhezuRuntimeDomain"), nullptr);
-        mono_domain_set(m_RuntimeDomain, true);
+        std::filesystem::path scriptCoreDllPath = m_Engine->GetScriptCoreDllPath() / "Phezu-ScriptCore.dll";
+
+        m_EngineAssembly = LoadAssembly(scriptCoreDllPath.string());
+
+        std::filesystem::path gameDllPath = m_Engine->GetScriptCoreDllPath() / "Game.dll";
+
+        m_GameAssembly = LoadAssembly(gameDllPath.string());
     }
 
     void ScriptEngine::ShutdownMono() {
-        if (m_RuntimeDomain)
+        if (m_RootDomain)
         {
-            mono_domain_set(m_EngineDomain, false);
-            mono_domain_unload(m_RuntimeDomain);
-            m_RuntimeDomain = nullptr;
-        }
-
-        if (m_EngineDomain)
-        {
-            mono_jit_cleanup(m_EngineDomain);
-            m_EngineDomain = nullptr;
+            mono_jit_cleanup(m_RootDomain);
+            m_RootDomain = nullptr;
         }
     }
 
     void ScriptEngine::CreateManagedScripts(Entity* entity) {
-        auto entityID = entity->GetEntityID();
-        
         m_Entities.try_emplace(
             entity->GetEntityID(),
-            entity->GetEntityID(), m_RuntimeDomain, m_EntityClass
+            entity->GetEntityID(), m_RootDomain, m_EntityClass
         );
         EntityScriptingContext& entityData = m_Entities.at(entity->GetEntityID());
         entityData.EntityScript.SetUlongField(m_EntityIdField, entity->GetEntityID());
         
         // Create Engine Components
         
-        ComponentInstance transform(m_RuntimeDomain, m_EngineComponentClasses[ManagedType::Transform]);
+        ComponentInstance transform(m_RootDomain, m_EngineComponentClasses[ManagedType::Transform]);
         transform.SetEntityProperty(m_ComponentEntitySetter, entityData.EntityScript.GetMonoGcHandle());
         entityData.EngineComponents.emplace(ManagedType::Transform, std::move(transform));
         
         if (entity->HasDataComponent(ComponentType::Physics)) {
-            ComponentInstance physics(m_RuntimeDomain, m_EngineComponentClasses[ManagedType::Physics]);
+            ComponentInstance physics(m_RootDomain, m_EngineComponentClasses[ManagedType::Physics]);
             physics.SetEntityProperty(m_ComponentEntitySetter, entityData.EntityScript.GetMonoGcHandle());
             entityData.EngineComponents.emplace(ManagedType::Physics, std::move(physics));
         }
         
         if (entity->HasDataComponent(ComponentType::Render)) {
-            ComponentInstance renderer(m_RuntimeDomain, m_EngineComponentClasses[ManagedType::Renderer]);
+            ComponentInstance renderer(m_RootDomain, m_EngineComponentClasses[ManagedType::Renderer]);
             renderer.SetEntityProperty(m_ComponentEntitySetter, entityData.EntityScript.GetMonoGcHandle());
             entityData.EngineComponents.emplace(ManagedType::Renderer, std::move(renderer));
         }
@@ -155,7 +149,7 @@ namespace Phezu {
             ScriptComponent* comp = entity->GetScriptComponent(i);
             //TODO: Log error if script class not found
             auto scriptClass = m_ScriptClasses[comp->GetScriptClassFullname()];
-            entityData.BehaviourComponents.emplace_back(m_RuntimeDomain, scriptClass);
+            entityData.BehaviourComponents.emplace_back(m_RootDomain, scriptClass);
 
             entityData.BehaviourComponents[i].SetEntityProperty(
                 m_ComponentEntitySetter, entityData.EntityScript.GetMonoGcHandle());
@@ -224,25 +218,26 @@ namespace Phezu {
     }
     
     void ScriptEngine::GetEngineClasses() {
-        m_ObjectClass = ScriptClass::TryCreate(m_CoreAssembly, "PhezuEngine", "Object", ScriptClassType::Object);
-        m_ComponentClass = ScriptClass::TryCreate(m_CoreAssembly, "PhezuEngine", "Component", ScriptClassType::Component);
-        m_BehaviourComponentClass = ScriptClass::TryCreate(m_CoreAssembly, "PhezuEngine", "BehaviourComponent", ScriptClassType::BehaviourComponent);
+        m_ObjectClass = ScriptClass::TryCreate(m_EngineAssembly, "PhezuEngine", "Object", ScriptClassType::Object);
+        m_ComponentClass = ScriptClass::TryCreate(m_EngineAssembly, "PhezuEngine", "Component", ScriptClassType::Component);
+        m_BehaviourComponentClass = ScriptClass::TryCreate(m_EngineAssembly, "PhezuEngine", "BehaviourComponent", ScriptClassType::BehaviourComponent);
+        m_EntityClass = ScriptClass::TryCreate(m_EngineAssembly, "PhezuEngine", "Entity", ScriptClassType::Entity);
+
+        m_EngineComponentClasses[ManagedType::Transform] = ScriptClass::TryCreate(m_EngineAssembly, "PhezuEngine", "Transform", ScriptClassType::EngineComponent);
+        m_EngineComponentClasses[ManagedType::Physics] = ScriptClass::TryCreate(m_EngineAssembly, "PhezuEngine", "Physics", ScriptClassType::EngineComponent);
+        m_EngineComponentClasses[ManagedType::Renderer] = ScriptClass::TryCreate(m_EngineAssembly, "PhezuEngine", "Renderer", ScriptClassType::EngineComponent);
+
+        m_EntityIdField = m_EntityClass->GetMonoClassField("ID");
         m_ComponentEntitySetter = m_ComponentClass->GetMonoMethod("SetEntity", 1);
-        m_EntityClass = ScriptClass::TryCreate(m_CoreAssembly, "PhezuEngine", "Entity", ScriptClassType::Entity);
-        
-        m_EngineComponentClasses[ManagedType::Transform] = ScriptClass::TryCreate(m_CoreAssembly, "PhezuEngine", "Transform", ScriptClassType::EngineComponent);
-        m_EngineComponentClasses[ManagedType::Physics] = ScriptClass::TryCreate(m_CoreAssembly, "PhezuEngine", "Physics", ScriptClassType::EngineComponent);
-        m_EngineComponentClasses[ManagedType::Renderer] = ScriptClass::TryCreate(m_CoreAssembly, "PhezuEngine", "Renderer", ScriptClassType::EngineComponent);
     }
     
     void ScriptEngine::GetScriptClasses() {
-        MonoImage* image = mono_assembly_get_image(m_CoreAssembly);
+        GetEngineClasses();
+        GetInputClassAndFields();
+
+        MonoImage* image = mono_assembly_get_image(m_GameAssembly);
         const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
         int32_t numTypes = mono_table_info_get_rows(typeDefinitionsTable);
-
-        GetEngineClasses();
-        
-        m_EntityIdField = m_EntityClass->GetMonoClassField("ID");
 
         for (int32_t i = 0; i < numTypes; i++)
         {
@@ -252,9 +247,9 @@ namespace Phezu {
             const char* nameSpace = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAMESPACE]);
             const char* name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
 
-            auto monoClass = ScriptClass::TryCreate(m_CoreAssembly, nameSpace, name, ScriptClassType::ScriptComponent);
+            auto monoClass = ScriptClass::TryCreate(m_GameAssembly, nameSpace, name, ScriptClassType::ScriptComponent);
 
-            if (monoClass == nullptr || monoClass->GetMonoClass() == m_BehaviourComponentClass->GetMonoClass())
+            if (monoClass == nullptr)
                 continue;
             if (!mono_class_is_subclass_of(monoClass->GetMonoClass(), m_BehaviourComponentClass->GetMonoClass(), false))
                 continue;
@@ -262,13 +257,11 @@ namespace Phezu {
             std::string fullname = GetMonoClassFullname(nameSpace, name);
             m_ScriptClasses.insert(std::make_pair(fullname, monoClass));
         }
-        
-        GetInputClassAndFields();
     }
     
     void ScriptEngine::GetInputClassAndFields() {
-        ScriptClass* inputClass = ScriptClass::TryCreate(m_CoreAssembly, "PhezuEngine", "Input", ScriptClassType::CSharpClass);
-        m_InputClassVTable = mono_class_vtable(m_RuntimeDomain, inputClass->GetMonoClass());
+        ScriptClass* inputClass = ScriptClass::TryCreate(m_EngineAssembly, "PhezuEngine", "Input", ScriptClassType::CSharpClass);
+        m_InputClassVTable = mono_class_vtable(m_RootDomain, inputClass->GetMonoClass());
         mono_runtime_class_init(m_InputClassVTable);
         
         m_InputFields.W = inputClass->GetMonoClassField("_W");
@@ -343,7 +336,7 @@ namespace Phezu {
         return nullptr;
     }
     
-    ScriptInstance* ScriptEngine::GetEngineComponentInstance(uint64_t entityID, const ManagedType componentType) {
+    ScriptInstance* ScriptEngine::GetEngineComponentInstance(uint64_t entityID, ManagedType componentType) {
         if (m_Entities.find(entityID) == m_Entities.end()) {
             Log("Entity not found for engine component of type %i", static_cast<int>(componentType));
             return nullptr;
