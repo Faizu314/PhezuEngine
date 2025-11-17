@@ -28,7 +28,7 @@ namespace Phezu {
         std::filesystem::path MonoCoreLibsPath;
     };
 
-    struct EngineConfig {
+    struct EngineArgs {
         std::string Name;
         Paths AllPaths;
         Resolution ResolutionSettings;
@@ -37,7 +37,7 @@ namespace Phezu {
     
     class Engine {
     public:
-        int Init(EngineConfig& config);
+        int Init(EngineArgs& config);
         void Run();
     public:
         const Prefab* GetPrefab(GUID guid);

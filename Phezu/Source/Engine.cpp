@@ -7,10 +7,6 @@
 #include "Scene/Prefab.hpp"
 #include "Logger.hpp"
 
-#include "SDL2/SDL.h"
-#include "SDL2/SDL_image.h"
-#include "SDL2/SDL_ttf.h"
-
 namespace Phezu {
     
     static const float MAX_DELTA_TIME = 1.0f / 20.0f;
@@ -24,25 +20,10 @@ namespace Phezu {
         m_Physics(this), m_Renderer(nullptr),
         m_Window(nullptr), m_ScriptEngine(this) {}
     
-    int Engine::Init(EngineConfig& config) {
+    int Engine::Init(EngineArgs& config) {
         if (m_HasInited) {
             Log("Trying to init engine twice");
             return 1;
-        }
-
-        if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-            Log("Couldn't initialize SDL: %s\n", SDL_GetError());
-            return 2;
-        }
-
-        if (IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG) < 0) {
-            Log("Couldn't initialize SDL Image: %s\n", SDL_GetError());
-            return 3;
-        }
-
-        if (TTF_Init() < 0) {
-            Log("Couldn't initialize SDL TTF: %s\n", SDL_GetError());
-            return 4;
         }
 
         InitLogger();
@@ -62,15 +43,6 @@ namespace Phezu {
         return 0;
     }
     
-    float GetDeltaTime(Uint64& prevTime, Uint64& freqMs) {
-        Uint64 currTime = SDL_GetPerformanceCounter();
-        float deltaTime = (currTime - prevTime) / (float)freqMs;
-        deltaTime = std::min(deltaTime, MAX_DELTA_TIME);
-        prevTime = currTime;
-        
-        return deltaTime;
-    }
-    
     void Engine::Run() {
         if (!m_HasInited || m_Window == nullptr || m_Renderer == nullptr) {
             Log("Trying to run non inited engine");
@@ -82,8 +54,8 @@ namespace Phezu {
         m_Renderer->SetActiveCamera(m_SceneManager.GetActiveCamera());
         m_SceneManager.OnStartGame();
         
-        Uint64 frameStartTime = SDL_GetPerformanceCounter();
-        Uint64 freqMs = SDL_GetPerformanceFrequency();
+        //Uint64 frameStartTime = SDL_GetPerformanceCounter();
+        //Uint64 freqMs = SDL_GetPerformanceFrequency();
         float deltaTime;
 
         std::vector<Entity*> staticEntitiesBuffer(ENTITIES_BUFFER_SIZE);
@@ -107,7 +79,7 @@ namespace Phezu {
 
             m_Renderer->ClearFrame();
             
-            deltaTime = GetDeltaTime(frameStartTime, freqMs);
+            deltaTime = 0.0f;// GetDeltaTime(frameStartTime, freqMs);
 
             masterScene->LogicUpdate(deltaTime);
             masterScene->GetPhysicsEntities(staticEntitiesBuffer, dynamicEntitiesBuffer, staticsCount, dynamicsCount);
@@ -129,13 +101,13 @@ namespace Phezu {
             
             m_SceneManager.OnEndOfFrame();
 
-            float frameDuration = (SDL_GetPerformanceCounter() - frameStartTime) * 1000.0f;
+            float frameDuration = 0.0f;//(SDL_GetPerformanceCounter() - frameStartTime) * 1000.0f;
 
-            if (frameDuration < TARGET_FRAME_TIME)
-            {
-                double delayMs = TARGET_FRAME_TIME - frameDuration;
-                SDL_Delay((Uint32)delayMs);
-            }
+            //if (frameDuration < TARGET_FRAME_TIME)
+            //{
+            //    double delayMs = TARGET_FRAME_TIME - frameDuration;
+            //    SDL_Delay((Uint32)delayMs);
+            //}
             
             m_FrameCount++;
         }
@@ -151,10 +123,6 @@ namespace Phezu {
 
         delete m_Renderer;
         delete m_Window;
-        
-        TTF_Quit();
-        IMG_Quit();
-        SDL_Quit();
     }
     
     const Prefab* Engine::GetPrefab(GUID guid) {
