@@ -5,11 +5,6 @@
 
 #include "glm/glm.hpp"
 
-struct SDL_Color;
-struct SDL_Texture;
-struct SDL_Window;
-struct SDL_Renderer;
-
 namespace Phezu {
     
     class Engine;
@@ -22,11 +17,6 @@ namespace Phezu {
     class Texture {
     private:
         Texture() = delete;
-        Texture(SDL_Texture* texture);
-    private:
-        SDL_Texture* m_Texture;
-    public:
-        operator SDL_Texture*() { return m_Texture; }
         
         friend class Renderer;
     };
@@ -46,9 +36,6 @@ namespace Phezu {
         static const Color Green;
         static const Color Red;
         static const Color Black;
-    private:
-        void ConvertToSDLColor(SDL_Color& sdlColor) const;
-        static Color FromSDLColor(const SDL_Color& sdlColor);
         
         friend class Renderer;
     };
@@ -65,13 +52,8 @@ namespace Phezu {
         void SetActiveCamera(CameraData* camera);
     private:
         void DrawEntity(Entity* entity);
-        Vector2 ScreenToSdlPosition(const Vector2& worldPos) const;
     private:
         Engine* m_Engine;
-        SDL_Renderer* m_RendererPtr;
-        glm::mat3 m_ScreenToSdl;
-        SDL_Texture* m_DefaultTex;
-        SDL_Texture* m_IntermediateTex;
         CameraData* m_Camera;
         TransformData* m_CameraTransform;
         float m_ScreenHeight;

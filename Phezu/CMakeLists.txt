@@ -71,17 +71,11 @@ if (APPLE)
     target_include_directories(Phezu PRIVATE ${CMAKE_SOURCE_DIR}/Phezu/Vendor/include/mac)
     target_link_libraries(Phezu PRIVATE
         "-F${LIB_SRC_DIR}"
-        "-framework SDL2"
-        "-framework SDL2_image"
-        "-framework SDL2_ttf"
         "-framework Mono"
     )
 elseif (WIN32)
     target_include_directories(Phezu PRIVATE ${CMAKE_SOURCE_DIR}/Phezu/Vendor/include/windows)
     target_link_libraries(Phezu PRIVATE
-        "${LIB_SRC_DIR}/SDL2.lib"
-        "${LIB_SRC_DIR}/SDL2_image.lib"
-        "${LIB_SRC_DIR}/SDL2_ttf.lib"
         "${LIB_SRC_DIR}/mono-2.0-sgen.lib"
     )
 endif()

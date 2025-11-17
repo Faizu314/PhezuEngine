@@ -3,7 +3,7 @@
 
 Phezu::Engine& engine = Phezu::CreateEngine();
 
-Phezu::EngineConfig engineConfig {
+Phezu::EngineArgs engineArgs {
     "PhezuRuntime",
     {},
     { 800, 600, 1 }
@@ -12,14 +12,14 @@ Phezu::EngineConfig engineConfig {
 #ifdef __APPLE__
 
 int main(int argc, const char* argv[]) {
-    engineConfig.AllPaths = {
+    engineArgs.AllPaths = {
         .ExePath = Phezu::Runtime::GetExePath(argv),
         .ProjectPath = Phezu::Runtime::GetProjectPath(argv),
         .ScriptCoreDllPath = Phezu::Runtime::GetScriptCoreDllPath(argv),
         .MonoCoreLibsPath = Phezu::Runtime::GetMonoCoreLibsPath(argv)
     };
     
-    if (engine.Init(engineConfig) != 0)
+    if (engine.Init(engineArgs) != 0)
         return 1;
     
     engine.Run();
@@ -28,15 +28,21 @@ int main(int argc, const char* argv[]) {
 #elif _WIN32
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow) {
-    engineConfig.AllPaths = {
+    engineArgs.AllPaths = {
         Phezu::Runtime::GetExePath(),
         Phezu::Runtime::GetAssetsPath(),
         Phezu::Runtime::GetScriptCoreDllPath(),
         Phezu::Runtime::GetMonoCoreLibsPath()
     };
+    engineArgs.WinArgs = {
+        hInstance,
+        nCmdShow
+    };
+
+    int err = engine.Init(engineArgs);
     
-    if (engine.Init(engineConfig) != 0)
-        return 1;
+    if (err != 0)
+        return err;
     
     engine.Run();
 
