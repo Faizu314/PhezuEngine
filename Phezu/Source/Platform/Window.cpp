@@ -1,5 +1,5 @@
-#include "Window.hpp"
-#include "Logger.hpp"
+#include "Platform/Window.hpp"
+#include "Platform/Logger.hpp"
 
 namespace Phezu {
 

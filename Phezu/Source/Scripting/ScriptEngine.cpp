@@ -1,7 +1,7 @@
 #include "Scripting/ScriptEngine.hpp"
 
-#include "Engine.hpp"
-#include "Logger.hpp"
+#include "Core/Engine.hpp"
+#include "Platform/Logger.hpp"
 #include "Scripting/ScriptGlue.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/Entity.hpp"

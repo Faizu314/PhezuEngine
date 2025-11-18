@@ -1,11 +1,11 @@
 #include <string>
 
-#include "Engine.hpp"
-#include "Window.hpp"
+#include "Core/Engine.hpp"
+#include "Platform/Window.hpp"
 #include "Renderer.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/Prefab.hpp"
-#include "Logger.hpp"
+#include "Platform/Logger.hpp"
 
 namespace Phezu {
     

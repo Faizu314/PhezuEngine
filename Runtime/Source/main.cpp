@@ -1,4 +1,4 @@
-#include "Phezu.hpp"
+#include "Core/Phezu.hpp"
 #include "Application.hpp"
 
 Phezu::Engine& engine = Phezu::CreateEngine();
@@ -9,7 +9,7 @@ Phezu::EngineArgs engineArgs {
     { 800, 600, 1 }
 };
 
-#ifdef __APPLE__
+#if defined(__APPLE__)
 
 int main(int argc, const char* argv[]) {
     engineArgs.AllPaths = {
@@ -25,7 +25,7 @@ int main(int argc, const char* argv[]) {
     engine.Run();
 }
 
-#elif _WIN32
+#elif defined(_WIN32)
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow) {
     engineArgs.AllPaths = {
@@ -33,10 +33,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
         Phezu::Runtime::GetAssetsPath(),
         Phezu::Runtime::GetScriptCoreDllPath(),
         Phezu::Runtime::GetMonoCoreLibsPath()
-    };
-    engineArgs.WinArgs = {
-        hInstance,
-        nCmdShow
     };
 
     int err = engine.Init(engineArgs);

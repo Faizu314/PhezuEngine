@@ -7,6 +7,8 @@ file(GLOB PHEZU_SCENE_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/Source/Scene/*.cpp")
 file(GLOB PHEZU_COMP_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/Source/Scene/Components/*.cpp")
 file(GLOB PHEZU_SERIALIZE_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/Source/Serialization/*.cpp")
 file(GLOB PHEZU_SCRIPTING_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/Source/Scripting/*.cpp")
+file(GLOB PHEZU_CORE_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/Source/Core/*.cpp")
+file(GLOB PHEZU_PLATFORM_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/Source/Platform/*.cpp")
 
 file(GLOB PHEZU_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/Include/*.hpp")
 file(GLOB PHEZU_ASSET_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/Include/AssetManagement/*.hpp")
@@ -15,6 +17,8 @@ file(GLOB PHEZU_SCENE_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/Include/Scene/*.hpp")
 file(GLOB PHEZU_COMP_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/Include/Scene/Components/*.hpp")
 file(GLOB PHEZU_SERIALIZE_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/Include/Serialization/*.hpp")
 file(GLOB PHEZU_SCRIPTING_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/Include/Scripting/*.hpp")
+file(GLOB PHEZU_CORE_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/Include/Core/*.hpp")
+file(GLOB PHEZU_PLATFORM_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/Include/Platform/*.hpp")
 
 file(GLOB_RECURSE PHEZU_VENDOR_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/Vendor/src/*.cpp")
 
@@ -27,6 +31,8 @@ set(PHEZU_ALL_SOURCES
     ${PHEZU_SERIALIZE_SOURCES}
     ${PHEZU_SCRIPTING_SOURCES}
     ${PHEZU_VENDOR_SOURCES}
+    ${PHEZU_CORE_SOURCES}
+    ${PHEZU_PLATFORM_SOURCES}
 )
 
 set(PHEZU_ALL_HEADERS
@@ -37,6 +43,8 @@ set(PHEZU_ALL_HEADERS
     ${PHEZU_SERIALIZE_HEADERS}
     ${PHEZU_SCRIPTING_HEADERS}
     ${PHEZU_COMP_HEADERS}
+    ${PHEZU_CORE_HEADERS}
+    ${PHEZU_PLATFORM_HEADERS}
 )
 
 
@@ -52,19 +60,24 @@ target_include_directories(Phezu PUBLIC ${CMAKE_SOURCE_DIR}/Phezu/Vendor/include
 
 source_group("Header Files" FILES ${PHEZU_HEADERS})
 source_group("Header Files\\AssetManagement" FILES ${PHEZU_ASSET_HEADERS})
-source_group("Header Files\\Math" FILES ${PHEZU_MATH_HEADERS})
+source_group("Header Files\\Maths" FILES ${PHEZU_MATH_HEADERS})
 source_group("Header Files\\Scene" FILES ${PHEZU_SCENE_HEADERS})
 source_group("Header Files\\Scene\\Components" FILES ${PHEZU_COMP_HEADERS})
 source_group("Header Files\\Serialization" FILES ${PHEZU_SERIALIZE_HEADERS})
 source_group("Header Files\\Scripting" FILES ${PHEZU_SCRIPTING_HEADERS})
+source_group("Header Files\\Core" FILES ${PHEZU_CORE_HEADERS})
+source_group("Header Files\\Platform" FILES ${PHEZU_PLATFORM_HEADERS})
 
 source_group("Source Files" FILES ${PHEZU_SOURCES})
 source_group("Source Files\\AssetManagement" FILES ${PHEZU_ASSET_SOURCES})
-source_group("Source Files\\Math" FILES ${PHEZU_MATH_SOURCES})
+source_group("Source Files\\Maths" FILES ${PHEZU_MATH_SOURCES})
 source_group("Source Files\\Scene" FILES ${PHEZU_SCENE_SOURCES})
 source_group("Source Files\\Scene\\Components" FILES ${PHEZU_COMP_SOURCES})
 source_group("Source Files\\Serialization" FILES ${PHEZU_SERIALIZE_SOURCES})
 source_group("Source Files\\Scripting" FILES ${PHEZU_SCRIPTING_SOURCES})
+source_group("Source Files\\Core" FILES ${PHEZU_CORE_SOURCES})
+source_group("Source Files\\Platform" FILES ${PHEZU_PLATFORM_SOURCES})
+source_group("Source Files\\Vendor" FILES ${PHEZU_VENDOR_SOURCES})
 
 
 if (APPLE)

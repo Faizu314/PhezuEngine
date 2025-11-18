@@ -1,4 +1,4 @@
-#include "Engine.hpp"
+#include "Core/Engine.hpp"
 #include "Scripting/ScriptEngine.hpp"
 #include "Scripting/ScriptGlue.hpp"
 #include "Scripting/ScriptInstance.hpp"
@@ -9,7 +9,7 @@
 #include "Scene/Entity.hpp"
 #include "Maths/Math.hpp"
 
-#include "Logger.hpp"
+#include "Platform/Logger.hpp"
 
 #include "glm/glm.hpp"
 #include <mono/jit/jit.h>
