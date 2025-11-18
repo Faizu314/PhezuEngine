@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <vector>
 #include <filesystem>
-#include "GUID.hpp"
+#include "Core/GUID.hpp"
 #include "BuildScenesConfig.hpp"
 
 namespace Phezu {

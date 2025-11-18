@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "GUID.hpp"
+#include "Core/GUID.hpp"
 
 namespace Phezu {
     struct MetaData {

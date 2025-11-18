@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Input.hpp"
+#include "Platform/Input.hpp"
 #include "Physics.hpp"
 #include "Scene/SceneManager.hpp"
 #include "AssetManagement/AssetManager.hpp"
@@ -14,7 +14,7 @@ namespace Phezu {
     class Prefab;
     class Window;
     class Renderer;
-    
+
     struct Resolution {
         int Width = 1280;
         int Height = 720;

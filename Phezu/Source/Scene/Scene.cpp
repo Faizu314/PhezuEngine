@@ -6,7 +6,7 @@
 #include "Scene/Components/PhysicsData.hpp"
 #include "Scene/Components/ScriptComponent.hpp"
 #include "Scene/Prefab.hpp"
-#include "Engine.hpp"
+#include "Core/Engine.hpp"
 
 #include <stdexcept>
 

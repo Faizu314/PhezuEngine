@@ -1,12 +1,12 @@
 #include "Renderer.hpp"
-#include "Window.hpp"
+#include "Platform/Window.hpp"
 #include "Scene/Entity.hpp"
 #include "Scene/Components/TransformData.hpp"
 #include "Scene/Components/ShapeData.hpp"
 #include "Scene/Components/RenderData.hpp"
 #include "Scene/Components/CameraData.hpp"
 #include "Maths/Math.hpp"
-#include "Logger.hpp"
+#include "Platform/Logger.hpp"
 
 #include "glm/glm.hpp"
 

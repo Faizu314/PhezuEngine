@@ -7,7 +7,7 @@
 #include "Scripting/ScriptInstance.hpp"
 #include "nlohmann/json.hpp"
 #include "Scene/Prefab.hpp"
-#include "Engine.hpp"
+#include "Core/Engine.hpp"
 
 template <>
 struct std::hash<Phezu::RegistryKey> {
