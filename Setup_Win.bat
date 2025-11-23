@@ -5,6 +5,13 @@ if /i "%~1"=="--auto" (
 ) else (
     set AUTO_MODE=0
 )
+if "%~2"=="--Release" (
+    set BUILD_CONFIG=Release
+) else if "%~2"=="--Debug" (
+    set BUILD_CONFIG=Debug
+) else if "%~2"=="" (
+    set BUILD_CONFIG=Release
+)
 
 set "CMAKE_COMMAND="%CD%\Vendor\Windows\CMake\bin\cmake.exe""
 
@@ -16,8 +23,6 @@ if %ERRORLEVEL% neq 0 (
     pause
     exit 1
 )
-
-set BUILD_COMMAND=%CMAKE_COMMAND% --build . --config Release
 
 :: Find Visual Studio installation path
 
@@ -86,7 +91,7 @@ if %ERRORLEVEL% neq 0 (
     exit 1
 )
 
-%BUILD_COMMAND%
+%CMAKE_COMMAND% --build . --config %BUILD_CONFIG%
 
 if %ERRORLEVEL% neq 0 (
     echo Build failed. Please check the errors above.
