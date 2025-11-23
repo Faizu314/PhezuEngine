@@ -9,10 +9,14 @@ jobs:
   build:
     runs-on: windows-latest
 
+    strategy:
+      matrix:
+        config: [Debug, Release]
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Run setup script
         shell: cmd
-        run: call Setup_Win.bat --auto
+        run: call Setup_Win.bat --auto --${{ matrix.config }}
