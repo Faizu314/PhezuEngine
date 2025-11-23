@@ -1,6 +1,8 @@
 #pragma once
 
-#include "Platform/Input.hpp"
+#include "Core/Input.hpp"
+#include "Core/Logger.hpp"
+#include "Core/Window.hpp"
 #include "Physics.hpp"
 #include "Scene/SceneManager.hpp"
 #include "AssetManagement/AssetManager.hpp"
@@ -12,14 +14,7 @@ namespace Phezu {
     
     class Scene;
     class Prefab;
-    class Window;
     class Renderer;
-
-    struct Resolution {
-        int Width = 1280;
-        int Height = 720;
-        int RenderScale = 1;
-    };
 
     struct Paths {
         std::filesystem::path ExePath;
@@ -29,15 +24,14 @@ namespace Phezu {
     };
 
     struct EngineArgs {
-        std::string Name;
         Paths AllPaths;
-        Resolution ResolutionSettings;
+        WindowArgs WindowArgs;
     };
 
     
     class Engine {
     public:
-        int Init(EngineArgs& config);
+        int Init(EngineArgs& args);
         void Run();
     public:
         const Prefab* GetPrefab(GUID guid);
@@ -45,7 +39,7 @@ namespace Phezu {
         SceneManager& GetSceneManager() { return m_SceneManager; }
         AssetManager& GetAssetManager() { return m_AssetManager; }
         ScriptEngine& GetScriptEngine() { return m_ScriptEngine; }
-        const InputData& GetInput() const { return Input::GetInput(); }
+        const InputData& GetInput() const { return m_Input->GetInput(); }
         long long unsigned int GetFrameCount() const { return m_FrameCount; }
         std::filesystem::path GetExePath() const { return m_ExePath; }
         std::filesystem::path GetAssetsPath() const { return m_AssetsPath; }
@@ -60,7 +54,10 @@ namespace Phezu {
     private:
         void Destroy();
     private:
-        Window* m_Window;
+        IInput* m_Input;
+        IWindow* m_Window;
+        ILogger* m_Logger;
+    private:
         Renderer* m_Renderer;
         Physics m_Physics;
     private:

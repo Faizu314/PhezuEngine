@@ -1,5 +1,5 @@
 #include "Scripting/ComponentInstance.hpp"
-#include "Platform/Logger.hpp"
+#include "Core/Logger.hpp"
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"

@@ -4,9 +4,13 @@
 Phezu::Engine& engine = Phezu::CreateEngine();
 
 Phezu::EngineArgs engineArgs {
-    "PhezuRuntime",
     {},
-    { 800, 600, 1 }
+    {
+        "PhezuRuntime",
+        800,
+        600,
+        1
+    }
 };
 
 #if defined(__APPLE__)
