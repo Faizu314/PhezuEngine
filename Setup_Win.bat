@@ -42,12 +42,12 @@ if not exist "%VSWHERE%" (
     )
 )
 
-for /f "usebackq delims=" %%i in (`"%VSWHERE%" -latest -property installationPath`) do (
+for /f "usebackq delims=" %%i in (`"%VSWHERE%" -latest -products * -requires Microsoft.VisualStudio.Workload.NativeDesktop -property installationPath`) do (
     set "VSINSTALL=%%i"
 )
 
 if "%VSINSTALL%"=="" (
-    echo Visual Studio installation not found.
+    echo Compatible Visual Studio installation not found. Component: "Desktop development with C++" required.
     pause
     exit 1
 )
