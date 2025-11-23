@@ -5,6 +5,13 @@ if /i "%~1"=="--auto" (
 ) else (
     set AUTO_MODE=0
 )
+if "%~2"=="--Release" (
+    set BUILD_CONFIG=Release
+) else if "%~2"=="--Debug" (
+    set BUILD_CONFIG=Debug
+) else if "%~2"=="" (
+    set BUILD_CONFIG=Release
+)
 
 set "CMAKE_COMMAND="%CD%\Vendor\Windows\CMake\bin\cmake.exe""
 
@@ -17,39 +24,43 @@ if %ERRORLEVEL% neq 0 (
     exit 1
 )
 
-:: CHECK VISUAL STUDIO INSTALLATION
+:: Find Visual Studio installation path
 
-set BUILD_COMMAND=%CMAKE_COMMAND% --build . --config Release
+set "VSWHERE=%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
 
-set VS_PATH_2022_X64=C:\Program Files\Microsoft Visual Studio\2022
-set VS_PATH_2019_X64=C:\Program Files\Microsoft Visual Studio\2019
-set VS_PATH_2017_X64=C:\Program Files\Microsoft Visual Studio\2017
+if not exist "%VSWHERE%" (
+    echo vswhere not found at default path.
 
-echo Checking if Visual Studio exists at the following locations:
-echo %VS_PATH_2022_X64%\Community
-echo %VS_PATH_2019_X64%\Community
-echo %VS_PATH_2017_X64%\Community
-echo %VS_PATH_2022_X64%\Enterprise
-echo %VS_PATH_2019_X64%\Enterprise
-echo %VS_PATH_2017_X64%\Enterprise
+    where vswhere.exe >nul 2>nul
+    if errorlevel 1 (
+        echo vswhere not found in PATH.
+	pause
+        exit 1
+    ) else (
+	echo vswhere found in PATH variable.
+        set "VSWHERE=vswhere.exe"
+    )
+)
 
-if exist "%VS_PATH_2022_X64%\Community" (
-    set GENERATOR=Visual Studio 17 2022
-) else if exist "%VS_PATH_2022_X64%\Enterprise" (
-    set GENERATOR=Visual Studio 17 2022
-) else if exist "%VS_PATH_2019_X64%\Community" (
-    set GENERATOR=Visual Studio 16 2019
-) else if exist "%VS_PATH_2019_X64%\Enterprise" (
-    set GENERATOR=Visual Studio 16 2019
-) else if exist "%VS_PATH_2017_X64%\Community" (
-    set GENERATOR=Visual Studio 15 2017
-) else if exist "%VS_PATH_2017_X64%\Enterprise" (
-    set GENERATOR=Visual Studio 15 2017
-) else (
-    echo No compatible Visual Studio version found, exiting.
+for /f "usebackq delims=" %%i in (`"%VSWHERE%" -latest -products * -requires Microsoft.VisualStudio.Workload.NativeDesktop -property installationPath`) do (
+    set "VSINSTALL=%%i"
+)
+
+if "%VSINSTALL%"=="" (
+    echo Compatible Visual Studio installation not found. Component: "Desktop development with C++" required.
     pause
     exit 1
 )
+
+for /f "delims=. tokens=1" %%v in ('"%VSWHERE%" -latest -property installationVersion') do (
+    set "VS_MAJOR=%%v"
+)
+
+if "%VS_MAJOR%"=="17" set "VS_YEAR=2022"
+if "%VS_MAJOR%"=="16" set "VS_YEAR=2019"
+if "%VS_MAJOR%"=="15" set "VS_YEAR=2017"
+
+set "GENERATOR=Visual Studio %VS_MAJOR% %VS_YEAR%"
 
 echo Compatible Visual Studio installation found: %GENERATOR%
 
@@ -80,7 +91,7 @@ if %ERRORLEVEL% neq 0 (
     exit 1
 )
 
-%BUILD_COMMAND%
+%CMAKE_COMMAND% --build . --config %BUILD_CONFIG%
 
 if %ERRORLEVEL% neq 0 (
     echo Build failed. Please check the errors above.
