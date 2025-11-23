@@ -8,7 +8,7 @@
 namespace Phezu {
     
     class Engine;
-    class Window;
+    class IWindow;
     class Entity;
     class Vector2;
     class CameraData;
@@ -43,7 +43,7 @@ namespace Phezu {
     class Renderer {
     public:
         Renderer() = delete;
-        Renderer(Engine* engine, const Window& window);
+        Renderer(Engine* engine, const IWindow& window);
         ~Renderer();
     public:
         void ClearFrame(const Color& bg = Color::Black);

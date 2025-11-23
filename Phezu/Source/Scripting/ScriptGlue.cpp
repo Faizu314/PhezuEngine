@@ -9,7 +9,7 @@
 #include "Scene/Entity.hpp"
 #include "Maths/Math.hpp"
 
-#include "Platform/Logger.hpp"
+#include "Core/Logger.hpp"
 
 #include "glm/glm.hpp"
 #include <mono/jit/jit.h>

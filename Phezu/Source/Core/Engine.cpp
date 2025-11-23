@@ -1,11 +1,10 @@
 #include <string>
 
 #include "Core/Engine.hpp"
-#include "Platform/Window.hpp"
 #include "Renderer.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/Prefab.hpp"
-#include "Platform/Logger.hpp"
+#include "Core/Logger.hpp"
 
 namespace Phezu {
     
@@ -20,25 +19,29 @@ namespace Phezu {
         m_Physics(this), m_Renderer(nullptr),
         m_Window(nullptr), m_ScriptEngine(this) {}
     
-    int Engine::Init(EngineArgs& config) {
+    int Engine::Init(EngineArgs& args) {
         if (m_HasInited) {
             Log("Trying to init engine twice");
             return 1;
         }
 
-        InitLogger();
-
         m_HasInited = true;
-        m_ExePath = config.AllPaths.ExePath;
-        m_AssetsPath = config.AllPaths.AssetsPath;
-        m_ScriptCoreDllPath = config.AllPaths.ScriptCoreDllPath;
-        m_MonoCoreLibsPath = config.AllPaths.MonoCoreLibsPath;
-        m_Window = new Window(config.Name, config.ResolutionSettings.Width, config.ResolutionSettings.Height, config.ResolutionSettings.RenderScale);
+        m_ExePath = args.AllPaths.ExePath;
+        m_AssetsPath = args.AllPaths.AssetsPath;
+        m_ScriptCoreDllPath = args.AllPaths.ScriptCoreDllPath;
+        m_MonoCoreLibsPath = args.AllPaths.MonoCoreLibsPath;
+
+        m_Window = CreateWindow(args.WindowArgs);
+        m_Input = CreateInput();
+        m_Logger = CreateLogger();
+
+        m_Logger->Init();
+        m_Input->Init();
+
         m_Renderer = new Renderer(this, *m_Window);
         m_AssetManager.Init(m_AssetsPath);
         m_SceneManager.Init();
         m_ScriptEngine.Init();
-        Input::Init();
         
         return 0;
     }
@@ -70,7 +73,7 @@ namespace Phezu {
         
         while (m_IsRunning)
         {
-            if (!Input::PollInput())
+            if (!m_Input->PollInput())
                 break;
             
             m_ScriptEngine.PreUpdate();
@@ -118,7 +121,7 @@ namespace Phezu {
     }
     
     void Engine::Destroy() {
-        Input::Destroy();
+        m_Input->Destroy();
         m_ScriptEngine.Shutdown();
 
         delete m_Renderer;
