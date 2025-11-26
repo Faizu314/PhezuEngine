@@ -16,17 +16,13 @@ namespace Phezu {
             std::cout.clear();
             std::cerr.clear();
         }
+
+        std::memset(m_LogBuffer, 0, LOG_BUFFER_SIZE);
     }
 
-    void LoggerWin32::Log(const char* msg, ...) {
-        va_list args;
-
-        va_start(args, msg);
-
+    void LoggerWin32::Log(const char* msg, va_list args) {
         int length = vsnprintf(m_LogBuffer, LOG_BUFFER_SIZE, msg, args);
         m_LogBuffer[LOG_BUFFER_SIZE - 1] = '\0';
         std::cout << m_LogBuffer;
-
-        va_end(args);
     }
 }
