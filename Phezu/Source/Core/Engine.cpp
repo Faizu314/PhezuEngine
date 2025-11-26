@@ -16,8 +16,8 @@ namespace Phezu {
     
     Engine::Engine() : m_HasInited(false), m_IsRunning(false),
         m_FrameCount(0), m_AssetManager(this), m_SceneManager(this),
-        m_Physics(this), m_Renderer(nullptr),
-        m_Window(nullptr), m_ScriptEngine(this) {}
+        m_Physics(this), m_Renderer(nullptr), m_Logger(nullptr),
+        m_Input(nullptr), m_Window(nullptr), m_ScriptEngine(this) {}
     
     int Engine::Init(EngineArgs& args) {
         if (m_HasInited) {
@@ -31,12 +31,16 @@ namespace Phezu {
         m_ScriptCoreDllPath = args.AllPaths.ScriptCoreDllPath;
         m_MonoCoreLibsPath = args.AllPaths.MonoCoreLibsPath;
 
-        m_Window = CreateWindow(args.WindowArgs);
+        m_Window = CreateWindow();
         m_Input = CreateInput();
         m_Logger = CreateLogger();
 
         m_Logger->Init();
         m_Input->Init();
+
+        if (m_Window->Init(args.WindowArgs) != 0) {
+            return -1;
+        }
 
         m_Renderer = new Renderer(this, *m_Window);
         m_AssetManager.Init(m_AssetsPath);
@@ -123,7 +127,9 @@ namespace Phezu {
     void Engine::Destroy() {
         m_Input->Destroy();
         m_ScriptEngine.Shutdown();
+        m_Window->Destroy();
 
+        delete m_Input;
         delete m_Renderer;
         delete m_Window;
     }

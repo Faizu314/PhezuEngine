@@ -13,10 +13,12 @@ namespace Phezu {
 
 	class IWindow {
 	public:
+		virtual int Init(const WindowArgs& args) = 0;
+		virtual void Destroy() = 0;
 		virtual int GetWidth() const = 0;
 		virtual int GetHeight() const = 0;
 		virtual int GetRenderScale() const = 0;
 	};
 
-	IWindow* CreateWindow(const WindowArgs& args);
+	IWindow* CreateWindow();
 }
