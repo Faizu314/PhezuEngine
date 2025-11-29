@@ -38,22 +38,27 @@ namespace Phezu {
 
     }
 
-    int WindowWin32::OnWindowMove(UINT flag, int width, int height) {
+    int WindowWin32::OnWindowMove() {
         return 0;
     }
 
     int WindowWin32::OnWindowResize(UINT flag, int width, int height) {
+        m_Width = width;
+        m_Height = height;
+
         return 0;
     }
 
     int WindowWin32::OnWindowClose() {
         DestroyWindow(m_WindowPtr);
+        m_WindowPtr = nullptr;
 
         return 0;
     }
 
     void WindowWin32::Destroy() {
-        DestroyWindow(m_WindowPtr);
+        if (m_WindowPtr != nullptr)
+            DestroyWindow(m_WindowPtr);
         m_WindowPtr = nullptr;
         m_Width = m_Height = m_RenderScale = 0;
     }

@@ -22,10 +22,7 @@ namespace Phezu {
 			}
 			case WM_MOVE:
 			{
-				int width = LOWORD(lParam);
-				int height = HIWORD(lParam);
-
-				return m_Window->OnWindowMove(msg, width, height);
+				return m_Window->OnWindowMove();
 			}
 			case WM_CLOSE:
 			{
@@ -61,14 +58,16 @@ namespace Phezu {
 	}
 
 
-	PlatformWin32::PlatformWin32() {
+	PlatformWin32::PlatformWin32() : m_hInstance(nullptr) {
 		m_Window = new WindowWin32();
 		m_Input = new InputWin32();
 		m_Logger = new LoggerWin32();
 	}
 
 	int PlatformWin32::Init(const WindowArgs& args) {
-		HINSTANCE hInstance = GetModuleHandle(NULL);
+		m_Logger->Init();
+
+		m_hInstance = GetModuleHandle(NULL);
 
 		const char CLASS_NAME[] = "MyWindowClass";
 
@@ -76,10 +75,7 @@ namespace Phezu {
 
 		wc.style = CS_HREDRAW | CS_VREDRAW;
 		wc.lpfnWndProc = WindowProc;
-		wc.hInstance = hInstance;
-		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-		wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-		wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+		wc.hInstance = m_hInstance;
 		wc.lpszClassName = CLASS_NAME;
 
 		ATOM atom = RegisterClass(&wc);
@@ -89,9 +85,7 @@ namespace Phezu {
 			return -1;
 		}
 
-		m_Logger->Init();
-
-		int error = m_Window->Init(args, CLASS_NAME, hInstance);
+		int error = m_Window->Init(args, CLASS_NAME, m_hInstance);
 
 		if (error != 0)
 			return error;
