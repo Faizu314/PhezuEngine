@@ -20,7 +20,7 @@ namespace Phezu {
         int GetHeight() const { return m_Height; }
         int GetRenderScale() const { return m_RenderScale; }
     public:
-        int OnWindowMove(UINT flag, int width, int height);
+        int OnWindowMove();
         int OnWindowResize(UINT flag, int width, int height);
         int OnWindowClose();
     private:

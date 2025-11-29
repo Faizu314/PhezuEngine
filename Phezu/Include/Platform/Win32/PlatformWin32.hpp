@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Platform.hpp"
+#include "Windows.h"
 
 namespace Phezu {
 
@@ -16,6 +17,8 @@ namespace Phezu {
 		void Update() override;
 	public:
 		void Log(const char* msg, va_list args) override;
+	private:
+		HINSTANCE m_hInstance;
 	};
 
 	void PrintLastWinError(const char* msg);
