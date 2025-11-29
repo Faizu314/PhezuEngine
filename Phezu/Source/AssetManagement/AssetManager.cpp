@@ -4,7 +4,7 @@
 #include "Scene/Blueprint.hpp"
 #include "Scene/Prefab.hpp"
 #include "Serialization/FileStream.hpp"
-#include "Core/Logger.hpp"
+#include "Core/Platform.hpp"
 #include <filesystem>
 
 namespace Phezu {

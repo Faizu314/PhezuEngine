@@ -4,7 +4,7 @@
 #include "Renderer.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/Prefab.hpp"
-#include "Core/Logger.hpp"
+#include "Core/Platform.hpp"
 
 namespace Phezu {
     
@@ -16,8 +16,8 @@ namespace Phezu {
     
     Engine::Engine() : m_HasInited(false), m_IsRunning(false),
         m_FrameCount(0), m_AssetManager(this), m_SceneManager(this),
-        m_Physics(this), m_Renderer(nullptr), m_Logger(nullptr),
-        m_Input(nullptr), m_Window(nullptr), m_ScriptEngine(this) {}
+        m_Physics(this), m_Renderer(nullptr), m_Platform(nullptr),
+        m_ScriptEngine(this) {}
     
     int Engine::Init(EngineArgs& args) {
         if (m_HasInited) {
@@ -31,18 +31,13 @@ namespace Phezu {
         m_ScriptCoreDllPath = args.AllPaths.ScriptCoreDllPath;
         m_MonoCoreLibsPath = args.AllPaths.MonoCoreLibsPath;
 
-        m_Window = CreateWindow();
-        m_Input = CreateInput();
-        m_Logger = CreateLogger();
+        m_Platform = CreatePlatform();
 
-        m_Logger->Init();
-        m_Input->Init();
-
-        if (m_Window->Init(args.WindowArgs) != 0) {
+        if (m_Platform->Init(args.WindowArgs) != 0) {
             return -1;
         }
 
-        m_Renderer = new Renderer(this, *m_Window);
+        m_Renderer = new Renderer(this);
         m_AssetManager.Init(m_AssetsPath);
         m_SceneManager.Init();
         m_ScriptEngine.Init();
@@ -51,7 +46,7 @@ namespace Phezu {
     }
     
     void Engine::Run() {
-        if (!m_HasInited || m_Window == nullptr || m_Renderer == nullptr) {
+        if (!m_HasInited || m_Platform == nullptr || m_Renderer == nullptr) {
             Log("Trying to run non inited engine");
             return;
         }
@@ -77,8 +72,7 @@ namespace Phezu {
         
         while (m_IsRunning)
         {
-            if (!m_Input->PollInput())
-                break;
+            m_Platform->PollEvents();
             
             m_ScriptEngine.PreUpdate();
             
@@ -103,10 +97,10 @@ namespace Phezu {
             m_Physics.PhysicsUpdate(staticEntitiesBuffer, dynamicEntitiesBuffer, staticsCount, dynamicsCount, deltaTime);
 
             m_Renderer->DrawEntities(renderEntitiesBuffer, renderablesCount);
-            
-            m_Window->Update();
 
             m_Renderer->RenderFrame();
+
+            m_Platform->Update();
             
             m_SceneManager.OnEndOfFrame();
 
@@ -127,13 +121,11 @@ namespace Phezu {
     }
     
     void Engine::Destroy() {
-        m_Input->Destroy();
         m_ScriptEngine.Shutdown();
-        m_Window->Destroy();
+        m_Platform->Destroy();
 
-        delete m_Input;
         delete m_Renderer;
-        delete m_Window;
+        delete m_Platform;
     }
     
     const Prefab* Engine::GetPrefab(GUID guid) {

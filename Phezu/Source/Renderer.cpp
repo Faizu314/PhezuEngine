@@ -1,12 +1,11 @@
 #include "Renderer.hpp"
-#include "Core/Window.hpp"
+#include "Core/Platform.hpp"
 #include "Scene/Entity.hpp"
 #include "Scene/Components/TransformData.hpp"
 #include "Scene/Components/ShapeData.hpp"
 #include "Scene/Components/RenderData.hpp"
 #include "Scene/Components/CameraData.hpp"
 #include "Maths/Math.hpp"
-#include "Core/Logger.hpp"
 
 #include "glm/glm.hpp"
 
@@ -20,11 +19,11 @@ namespace Phezu {
     Rect::Rect(int x, int y, int w, int h) : x(x), y(y), w(w), h(h) {}
     Color::Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) : r(red), g(green), b(blue), a(alpha) {}
     
-    Renderer::Renderer(Engine* engine, const IWindow& window)
+    Renderer::Renderer(Engine* engine)
     : m_Engine(engine), m_Camera(nullptr)
     {
-        m_ScreenWidth = window.GetWidth();
-        m_ScreenHeight = window.GetHeight();
+        //m_ScreenWidth = window.GetWidth();
+        //m_ScreenHeight = window.GetHeight();
     }
     
     Renderer::~Renderer() {}

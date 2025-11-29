@@ -1,24 +1,24 @@
 #pragma once
 
-#include "Core/Window.hpp"
+#include "Platform/Win32/PlatformWin32.hpp"
 
 #include <Windows.h>
 #include <string>
 
 namespace Phezu {
     
-    class WindowWin32 : public IWindow {
+    class WindowWin32 {
     public:
         WindowWin32() = default;
     public:
-        int Init(const WindowArgs& args) override;
-        void Destroy() override;
+        int Init(const WindowArgs& args, const char winClassName[], HINSTANCE hInstance);
+        void Destroy();
     public:
-        void Update() override;
+        void Update();
     public:
-        int GetWidth() const override { return m_Width; }
-        int GetHeight() const override { return m_Height; }
-        int GetRenderScale() const override { return m_RenderScale; }
+        int GetWidth() const { return m_Width; }
+        int GetHeight() const { return m_Height; }
+        int GetRenderScale() const { return m_RenderScale; }
     public:
         int OnWindowMove(UINT flag, int width, int height);
         int OnWindowResize(UINT flag, int width, int height);
