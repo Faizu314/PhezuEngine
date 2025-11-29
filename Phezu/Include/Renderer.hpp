@@ -43,7 +43,7 @@ namespace Phezu {
     class Renderer {
     public:
         Renderer() = delete;
-        Renderer(Engine* engine, const IWindow& window);
+        Renderer(Engine* engine);
         ~Renderer();
     public:
         void ClearFrame(const Color& bg = Color::Black);

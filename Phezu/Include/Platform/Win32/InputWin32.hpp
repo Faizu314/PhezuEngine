@@ -1,16 +1,15 @@
 #pragma once
 
-#include "Core/Input.hpp"
+#include "Core/Platform.hpp"
 #include "Maths/Math.hpp"
 
 namespace Phezu {
     
-    class InputWin32 : public IInput {
+    class InputWin32 {
     public:
-        void Init() override;
-        void Destroy() override;
-        bool PollInput() override;
-        const InputData& GetInput() override;
+        void Init();
+        void Destroy();
+        const InputData& GetInput();
     private:
         InputData m_InputData;
     };

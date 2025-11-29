@@ -1,0 +1,39 @@
+#pragma once
+
+#include <cstdarg>
+#include <string>
+
+#include "Maths/Math.hpp"
+
+namespace Phezu {
+
+	struct WindowArgs {
+		std::string Name;
+		int Width;
+		int Height;
+		int RenderScale;
+	};
+
+	struct InputData {
+		bool W, A, S, D;
+		bool Up, Right, Down, Left;
+		bool Space, F, G, H;
+		Vector2 MousePos;
+		bool LeftMouse, RightMouse, MiddleMouse;
+	};
+
+	class IPlatform {
+	public:
+		virtual int Init(const WindowArgs& args) = 0;
+		virtual void Destroy() = 0;
+	public:
+		virtual void PollEvents() = 0;
+		virtual void Update() = 0;
+	public:
+		virtual void Log(const char* msg, va_list args) = 0;
+		virtual const InputData& GetInput() = 0;
+	};
+
+	void Log(const char* msg, ...);
+	IPlatform* CreatePlatform();
+}

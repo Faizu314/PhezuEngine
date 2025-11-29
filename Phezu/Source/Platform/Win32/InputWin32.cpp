@@ -11,10 +11,6 @@ namespace Phezu {
     void InputWin32::Destroy() {
         memset(&m_InputData, 0, sizeof(m_InputData));
     }
-        
-    bool InputWin32::PollInput() {
-        return true;
-    }
 
     const InputData& InputWin32::GetInput() {
         return m_InputData;

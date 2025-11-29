@@ -1,8 +1,6 @@
 #pragma once
 
-#include "Core/Input.hpp"
-#include "Core/Logger.hpp"
-#include "Core/Window.hpp"
+#include "Core/Platform.hpp"
 #include "Physics.hpp"
 #include "Scene/SceneManager.hpp"
 #include "AssetManagement/AssetManager.hpp"
@@ -39,7 +37,7 @@ namespace Phezu {
         SceneManager& GetSceneManager() { return m_SceneManager; }
         AssetManager& GetAssetManager() { return m_AssetManager; }
         ScriptEngine& GetScriptEngine() { return m_ScriptEngine; }
-        const InputData& GetInput() const { return m_Input->GetInput(); }
+        const InputData& GetInput() const { return m_Platform->GetInput(); }
         long long unsigned int GetFrameCount() const { return m_FrameCount; }
         std::filesystem::path GetExePath() const { return m_ExePath; }
         std::filesystem::path GetAssetsPath() const { return m_AssetsPath; }
@@ -54,9 +52,7 @@ namespace Phezu {
     private:
         void Destroy();
     private:
-        IInput* m_Input;
-        IWindow* m_Window;
-        ILogger* m_Logger;
+        IPlatform* m_Platform;
     private:
         Renderer* m_Renderer;
         Physics m_Physics;
