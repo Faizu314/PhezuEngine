@@ -14,11 +14,15 @@ namespace Phezu {
         int Init(const WindowArgs& args) override;
         void Destroy() override;
     public:
+        void Update() override;
+    public:
         int GetWidth() const override { return m_Width; }
         int GetHeight() const override { return m_Height; }
         int GetRenderScale() const override { return m_RenderScale; }
     public:
+        int OnWindowMove(UINT flag, int width, int height);
         int OnWindowResize(UINT flag, int width, int height);
+        int OnWindowClose();
     private:
         int m_Width = 0;
         int m_Height = 0;

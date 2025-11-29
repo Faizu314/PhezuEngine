@@ -33,15 +33,26 @@ namespace Phezu {
 
     LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         switch (msg) {
-        case WM_SIZE:
-        {
-            int width = LOWORD(lParam);
-            int height = HIWORD(lParam);
+            case WM_SIZE:
+            {
+                int width = LOWORD(lParam);
+                int height = HIWORD(lParam);
 
-            return m_This->OnWindowResize(msg, width, height);
-        }
-        default:
-            return DefWindowProc(hwnd, msg, wParam, lParam);
+                return m_This->OnWindowResize(msg, width, height);
+            }
+            case WM_MOVE:
+            {
+                int width = LOWORD(lParam);
+                int height = HIWORD(lParam);
+
+                return m_This->OnWindowMove(msg, width, height);
+            }
+            case WM_CLOSE:
+            {
+                return m_This->OnWindowClose();
+            }
+            default:
+                return DefWindowProc(hwnd, msg, wParam, lParam);
         }
     }
 
@@ -97,7 +108,27 @@ namespace Phezu {
         return 0;
     }
 
+    void WindowWin32::Update() {
+        MSG msg;
+
+        while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+        {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+    }
+
+    int WindowWin32::OnWindowMove(UINT flag, int width, int height) {
+        return 0;
+    }
+
     int WindowWin32::OnWindowResize(UINT flag, int width, int height) {
+        return 0;
+    }
+
+    int WindowWin32::OnWindowClose() {
+        DestroyWindow(m_WindowPtr);
+
         return 0;
     }
 

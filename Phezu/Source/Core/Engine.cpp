@@ -104,6 +104,8 @@ namespace Phezu {
 
             m_Renderer->DrawEntities(renderEntitiesBuffer, renderablesCount);
             
+            m_Window->Update();
+
             m_Renderer->RenderFrame();
             
             m_SceneManager.OnEndOfFrame();
