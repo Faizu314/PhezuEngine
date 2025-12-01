@@ -15,8 +15,9 @@ namespace Phezu {
 		void PollEvents() override;
 		const InputData& GetInput() override;
 		void Update() override;
-	public:
 		void Log(const char* msg, va_list args) override;
+	private:
+		void CreateGraphicsContext();
 	private:
 		HINSTANCE m_hInstance;
 	};
