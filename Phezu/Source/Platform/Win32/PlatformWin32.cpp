@@ -4,7 +4,8 @@
 #include "Platform/Win32/LoggerWin32.hpp"
 
 #include <Windows.h>
-#include <gl/GL.h>
+#include "glad/khrplatform.h"
+#include "glad/glad_wgl.h"
 
 namespace Phezu {
 	
@@ -91,6 +92,14 @@ namespace Phezu {
 		if (error != 0)
 			return error;
 
+		m_Input->Init();
+
+		CreateGraphicsContext();
+
+		return 0;
+	}
+
+	void PlatformWin32::CreateGraphicsContext() {
 		HDC hdc = m_Window->GetDeviceContext();
 
 		PIXELFORMATDESCRIPTOR pfd = {};
@@ -110,23 +119,21 @@ namespace Phezu {
 		HGLRC tempContext = wglCreateContext(hdc);
 		wglMakeCurrent(hdc, tempContext);
 
-		//int attribs[] = {
-		//	WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
-		//	WGL_CONTEXT_MINOR_VERSION_ARB, 5,
-		//	WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
-		//	0
-		//};
+		PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB =
+			(PFNWGLCREATECONTEXTATTRIBSARBPROC)wglGetProcAddress("wglCreateContextAttribsARB");
 
-		//HGLRC glContext = wglCreateContextAttribsARB(hdc, 0, attribs);
+		int attribs[] = {
+			WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
+			WGL_CONTEXT_MINOR_VERSION_ARB, 5,
+			WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
+			0
+		};
 
-		//wglMakeCurrent(nullptr, nullptr);
-		//wglDeleteContext(tempContext);
+		HGLRC glContext = wglCreateContextAttribsARB(hdc, 0, attribs);
 
-		//wglMakeCurrent(hdc, glContext);
-
-		m_Input->Init();
-
-		return 0;
+		wglMakeCurrent(nullptr, nullptr);
+		wglDeleteContext(tempContext);
+		wglMakeCurrent(hdc, glContext);
 	}
 
 	void PlatformWin32::PollEvents() {
