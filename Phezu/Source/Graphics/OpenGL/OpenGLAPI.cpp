@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Graphics/OpenGL/OpenGLAPI.hpp"
+#include "glad/glad.h"
 
 namespace Phezu {
 
