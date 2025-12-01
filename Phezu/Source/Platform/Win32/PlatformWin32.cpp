@@ -4,6 +4,7 @@
 #include "Platform/Win32/LoggerWin32.hpp"
 
 #include <Windows.h>
+#include <gl/GL.h>
 
 namespace Phezu {
 	
@@ -89,6 +90,39 @@ namespace Phezu {
 
 		if (error != 0)
 			return error;
+
+		HDC hdc = m_Window->GetDeviceContext();
+
+		PIXELFORMATDESCRIPTOR pfd = {};
+		pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+		pfd.nVersion = 1;
+		pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+		pfd.iPixelType = PFD_TYPE_RGBA;
+		pfd.cColorBits = 32;
+		pfd.cDepthBits = 24;
+		pfd.cStencilBits = 8;
+		pfd.iLayerType = PFD_MAIN_PLANE;
+
+		int pixelFormat = ChoosePixelFormat(hdc, &pfd);
+
+		SetPixelFormat(hdc, pixelFormat, &pfd);
+
+		HGLRC tempContext = wglCreateContext(hdc);
+		wglMakeCurrent(hdc, tempContext);
+
+		//int attribs[] = {
+		//	WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
+		//	WGL_CONTEXT_MINOR_VERSION_ARB, 5,
+		//	WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
+		//	0
+		//};
+
+		//HGLRC glContext = wglCreateContextAttribsARB(hdc, 0, attribs);
+
+		//wglMakeCurrent(nullptr, nullptr);
+		//wglDeleteContext(tempContext);
+
+		//wglMakeCurrent(hdc, glContext);
 
 		m_Input->Init();
 
