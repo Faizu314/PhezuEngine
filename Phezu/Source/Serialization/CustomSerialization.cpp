@@ -72,16 +72,4 @@ namespace Phezu {
         j = nlohmann::json{{"r", c.r}, {"g", c.g}, {"b", c.b}, {"a", c.a}};
     }
     
-    
-    
-    void from_json(const nlohmann::json& j, Rect& r) {
-        r.x = j.value("X", 0);
-        r.y = j.value("Y", 0);
-        r.w = j.value("Width", 0);
-        r.h = j.value("Height", 0);
-    }
-
-    void to_json(nlohmann::json& j, const Rect& r) {
-        j = nlohmann::json{{"X", r.x}, {"Y", r.y}, {"Width", r.w}, {"Height", r.h}};
-    }
 }

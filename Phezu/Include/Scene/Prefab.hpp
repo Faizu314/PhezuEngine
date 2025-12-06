@@ -2,7 +2,7 @@
 
 #include <vector>
 #include "Scene/Blueprint.hpp"
-#include "Core/GUID.hpp"
+#include "Core/Types/GUID.hpp"
 
 namespace Phezu {
     

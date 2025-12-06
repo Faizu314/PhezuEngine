@@ -2,7 +2,7 @@
 
 #include <string>
 #include <vector>
-#include "Core/GUID.hpp"
+#include "Core/Types/GUID.hpp"
 
 namespace Phezu {
     struct BuildScenesConfig {

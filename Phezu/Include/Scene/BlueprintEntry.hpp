@@ -2,7 +2,7 @@
 
 #include <unordered_map>
 #include <string>
-#include "Core/GUID.hpp"
+#include "Core/Types/GUID.hpp"
 #include "nlohmann/json.hpp"
 
 namespace Phezu {
