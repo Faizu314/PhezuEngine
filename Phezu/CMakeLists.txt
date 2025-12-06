@@ -2,7 +2,15 @@ project(Phezu)
 
 file(GLOB_RECURSE PHEZU_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/Source/*.cpp")
 file(GLOB_RECURSE PHEZU_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/Include/*.hpp")
-file(GLOB_RECURSE PHEZU_VENDOR_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/Vendor/src/*.cpp")
+
+file(GLOB_RECURSE PHEZU_VENDOR_SOURCES
+    "${CMAKE_SOURCE_DIR}/Phezu/Vendor/src/*.cpp"
+    "${CMAKE_SOURCE_DIR}/Phezu/Vendor/src/*.c"
+)
+file(GLOB_RECURSE PHEZU_VENDOR_HEADERS
+    "${CMAKE_SOURCE_DIR}/Phezu/Vendor/include/*.hpp"
+    "${CMAKE_SOURCE_DIR}/Phezu/Vendor/include/*.h"
+)
 
 set(PHEZU_ALL_SOURCES
     ${PHEZU_SOURCES}
@@ -11,14 +19,15 @@ set(PHEZU_ALL_SOURCES
 
 set(PHEZU_ALL_HEADERS
     ${PHEZU_HEADERS}
+    ${PHEZU_VENDOR_HEADERS}
 )
 
 if (WIN32)
-    list(FILTER PHEZU_ALL_SOURCES EXCLUDE REGEX ".*/Mac/.*")
-    list(FILTER PHEZU_ALL_HEADERS EXCLUDE REGEX ".*/Mac/.*")
+    list(FILTER PHEZU_ALL_SOURCES EXCLUDE REGEX ".*/[Mm]ac/.*")
+    list(FILTER PHEZU_ALL_HEADERS EXCLUDE REGEX ".*/[Mm]ac/.*")
 elseif(APPLE)
-    list(FILTER PHEZU_ALL_SOURCES EXCLUDE REGEX ".*/Win32/.*")
-    list(FILTER PHEZU_ALL_HEADERS EXCLUDE REGEX ".*/Win32/.*")
+    list(FILTER PHEZU_ALL_SOURCES EXCLUDE REGEX ".*/[Ww]in32/.*")
+    list(FILTER PHEZU_ALL_HEADERS EXCLUDE REGEX ".*/[Ww]in32/.*")
 endif()
 
 add_library(Phezu STATIC ${PHEZU_ALL_SOURCES} ${PHEZU_ALL_HEADERS})
@@ -42,7 +51,7 @@ if (APPLE)
         "-framework Mono"
     )
 elseif (WIN32)
-    target_include_directories(Phezu PRIVATE ${CMAKE_SOURCE_DIR}/Phezu/Vendor/include/windows)
+    target_include_directories(Phezu PRIVATE ${CMAKE_SOURCE_DIR}/Phezu/Vendor/include/win32)
     target_link_libraries(Phezu PRIVATE
         "${LIB_SRC_DIR}/mono-2.0-sgen.lib"
         opengl32

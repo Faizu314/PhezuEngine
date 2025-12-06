@@ -13,7 +13,7 @@ if "%~2"=="--Release" (
     set BUILD_CONFIG=Release
 )
 
-set "CMAKE_COMMAND="%CD%\Vendor\Windows\CMake\bin\cmake.exe""
+set "CMAKE_COMMAND="%CD%\Vendor\win32\cmake\bin\cmake.exe""
 
 echo Using CMake command: %CMAKE_COMMAND%
 
