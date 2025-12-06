@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Renderer.hpp"
+#include "Core/Types/Color.hpp"
+#include "Core/Types/Texture.hpp"
 #include "Scene/Components/DataComponent.hpp"
 
 namespace Phezu {
@@ -10,7 +11,6 @@ namespace Phezu {
         RenderData(Entity* entity, Texture* texture = nullptr, Color tint = Color::White) : DataComponent(entity), Sprite(texture), Tint(tint) {}
     public:
         Texture* Sprite;
-        Rect SourceRect;
         Color Tint;
     };
 }

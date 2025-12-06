@@ -8,6 +8,7 @@
 #include "nlohmann/json.hpp"
 #include "Scene/Prefab.hpp"
 #include "Core/Engine.hpp"
+#include "Core/Types/Color.hpp"
 
 template <>
 struct std::hash<Phezu::RegistryKey> {
@@ -231,11 +232,9 @@ namespace Phezu {
                 case EntryType::RenderData:
                 {
                     Color tint = GetProperty<Color>("Tint", entry, overrides);
-                    Rect sourceRect = GetProperty<Rect>("SourceRect", entry, overrides);
                     
                     auto renderData = dynamic_cast<RenderData*>(parentEntity->AddDataComponent(ComponentType::Render));
                     renderData->Tint = tint;
-                    renderData->SourceRect = sourceRect;
                     components[entry.FileID] = renderData;
                     
                     break;

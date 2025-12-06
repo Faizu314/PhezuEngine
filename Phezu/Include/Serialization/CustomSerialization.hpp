@@ -4,7 +4,8 @@
 #include <unordered_map>
 #include <unordered_set>
 #include "Maths/Math.hpp"
-#include "Renderer.hpp"
+#include "Core/Types/GUID.hpp"
+#include "Core/Types/Color.hpp"
 #include "nlohmann/json.hpp"
 
 namespace Phezu {
@@ -63,9 +64,4 @@ namespace Phezu {
 
     void to_json(nlohmann::json& j, const Color& c);
     
-    
-    
-    void from_json(const nlohmann::json& j, Rect& r);
-
-    void to_json(nlohmann::json& j, const Rect& r);
 }

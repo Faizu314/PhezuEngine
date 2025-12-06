@@ -31,6 +31,6 @@ namespace Phezu {
         int m_Height = 0;
         int m_RenderScale = 0;
         HWND m_WindowPtr = nullptr;
-        HDC m_Hdc;
+        HDC m_Hdc = nullptr;
     };
 }

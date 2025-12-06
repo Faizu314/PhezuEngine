@@ -4,42 +4,16 @@
 #include <vector>
 
 #include "glm/glm.hpp"
+#include "Core/Types/Color.hpp"
 
 namespace Phezu {
     
     class Engine;
-    class IWindow;
     class Entity;
     class Vector2;
     class CameraData;
     class TransformData;
-    
-    class Texture {
-    private:
-        Texture() = delete;
-        
-        friend class Renderer;
-    };
-    
-    struct Rect {
-        Rect(int x = 0, int y = 0, int w = 1, int h = 1);
-        
-        int x, y, w, h;
-    };
-    
-    class Color {
-    public:
-        Color(uint8_t red = 255, uint8_t green = 255, uint8_t blue = 255, uint8_t alpha = 255);
-        uint8_t r, g, b, a;
-    public:
-        static const Color White;
-        static const Color Green;
-        static const Color Red;
-        static const Color Black;
-        
-        friend class Renderer;
-    };
-    
+  
     class Renderer {
     public:
         Renderer() = delete;
