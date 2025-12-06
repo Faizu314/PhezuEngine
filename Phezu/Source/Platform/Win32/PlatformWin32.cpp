@@ -154,6 +154,14 @@ namespace Phezu {
 		m_Window->Update();
 	}
 
+	void* PlatformWin32::GetOpenGLFunctionLoader() {
+		return wglGetProcAddress;
+	}
+
+	IWindow* PlatformWin32::GetWindow() {
+		return m_Window;
+	}
+
 	void PlatformWin32::Log(const char* msg, va_list args) {
 		m_Logger->Log(msg, args);
 	}

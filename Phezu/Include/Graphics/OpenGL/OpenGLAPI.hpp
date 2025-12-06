@@ -6,6 +6,6 @@ namespace Phezu {
 
 	class OpenGLAPI : public IGraphicsAPI {
 	public:
-		int Init();
+		int Init(IPlatform* platform) override;
 	};
 }

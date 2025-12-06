@@ -1,5 +1,7 @@
 #include "Graphics/Renderer/Renderer.hpp"
+#include "Graphics/GraphicsAPI.hpp"
 #include "Core/Platform.hpp"
+#include "Core/Window.hpp"
 #include "Scene/Entity.hpp"
 #include "Scene/Components/TransformData.hpp"
 #include "Scene/Components/ShapeData.hpp"
@@ -11,15 +13,25 @@
 
 namespace Phezu {
         
-    Renderer::Renderer(Engine* engine)
-    : m_Engine(engine), m_Camera(nullptr)
+    Renderer::Renderer()
+    : m_Window(nullptr), m_Camera(nullptr), m_CameraTransform(nullptr)
     {
-        //m_ScreenWidth = window.GetWidth();
-        //m_ScreenHeight = window.GetHeight();
+
     }
     
     Renderer::~Renderer() {}
     
+    void Renderer::Init(IPlatform* platform) {
+        m_Window = platform->GetWindow();
+
+        m_Api = CreateGraphicsAPI();
+        m_Api->Init(platform);
+    }
+
+    void Renderer::Destroy() {
+
+    }
+
     void Renderer::SetActiveCamera(CameraData* camera) {
         m_Camera = camera;
         m_CameraTransform = dynamic_cast<TransformData*>(camera->GetEntity()->GetDataComponent(ComponentType::Transform));
@@ -47,9 +59,12 @@ namespace Phezu {
         
         if (shapeData == nullptr || renderData == nullptr)
             return;
+
+        int screenWidth = m_Window->GetWidth();
+        int screenHeight = m_Window->GetHeight();
         
         Vector2 camPosition = m_CameraTransform->GetWorldPosition();
-        float aspectRatio = static_cast<float>(m_ScreenWidth) / m_ScreenHeight;
+        float aspectRatio = static_cast<float>(screenWidth) / screenHeight;
         float vSize = m_Camera->Size * 2.0;
         float hSize = vSize * aspectRatio;
         
@@ -62,8 +77,8 @@ namespace Phezu {
         Vector2 upRightView = upRightWorld - camPosition;
         Vector2 downLeftView = downLeftWorld - camPosition;
 
-        Vector2 upRightScreen = Vector2(upRightView.X() * m_ScreenWidth / hSize, upRightView.Y() * m_ScreenHeight / vSize);
-        Vector2 downLeftScreen = Vector2(downLeftView.X() * m_ScreenWidth / hSize, downLeftView.Y() * m_ScreenHeight / vSize);
+        Vector2 upRightScreen = Vector2(upRightView.X() * screenWidth / hSize, upRightView.Y() * screenHeight / vSize);
+        Vector2 downLeftScreen = Vector2(downLeftView.X() * screenWidth / hSize, downLeftView.Y() * screenHeight / vSize);
     }
     
     void Renderer::RenderFrame() {

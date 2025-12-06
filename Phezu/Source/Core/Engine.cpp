@@ -16,7 +16,7 @@ namespace Phezu {
     
     Engine::Engine() : m_HasInited(false), m_IsRunning(false),
         m_FrameCount(0), m_AssetManager(this), m_SceneManager(this),
-        m_Physics(this), m_Renderer(nullptr), m_Platform(nullptr),
+        m_Physics(this), m_Renderer(), m_Platform(nullptr),
         m_ScriptEngine(this) {}
     
     int Engine::Init(EngineArgs& args) {
@@ -37,7 +37,7 @@ namespace Phezu {
             return -1;
         }
 
-        m_Renderer = new Renderer(this);
+        m_Renderer.Init(m_Platform);
         m_AssetManager.Init(m_AssetsPath);
         m_SceneManager.Init();
         m_ScriptEngine.Init();
@@ -46,14 +46,14 @@ namespace Phezu {
     }
     
     void Engine::Run() {
-        if (!m_HasInited || m_Platform == nullptr || m_Renderer == nullptr) {
+        if (!m_HasInited) {
             Log("Trying to run non inited engine");
             return;
         }
         
         m_IsRunning = true;
         
-        m_Renderer->SetActiveCamera(m_SceneManager.GetActiveCamera());
+        m_Renderer.SetActiveCamera(m_SceneManager.GetActiveCamera());
         m_SceneManager.OnStartGame();
         
         //Uint64 frameStartTime = SDL_GetPerformanceCounter();
@@ -78,7 +78,7 @@ namespace Phezu {
             
             renderablesCount = staticsCount = dynamicsCount = 0;
 
-            m_Renderer->ClearFrame();
+            m_Renderer.ClearFrame();
             
             deltaTime = 0.0f;// GetDeltaTime(frameStartTime, freqMs);
 
@@ -96,9 +96,9 @@ namespace Phezu {
 
             m_Physics.PhysicsUpdate(staticEntitiesBuffer, dynamicEntitiesBuffer, staticsCount, dynamicsCount, deltaTime);
 
-            m_Renderer->DrawEntities(renderEntitiesBuffer, renderablesCount);
+            m_Renderer.DrawEntities(renderEntitiesBuffer, renderablesCount);
 
-            m_Renderer->RenderFrame();
+            m_Renderer.RenderFrame();
 
             m_Platform->Update();
             
@@ -122,9 +122,9 @@ namespace Phezu {
     
     void Engine::Destroy() {
         m_ScriptEngine.Shutdown();
+        m_Renderer.Destroy();
         m_Platform->Destroy();
 
-        delete m_Renderer;
         delete m_Platform;
     }
     

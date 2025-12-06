@@ -22,6 +22,8 @@ namespace Phezu {
 		bool LeftMouse, RightMouse, MiddleMouse;
 	};
 
+	class IWindow;
+
 	class IPlatform {
 	public:
 		virtual int Init(const WindowArgs& args) = 0;
@@ -29,6 +31,9 @@ namespace Phezu {
 	public:
 		virtual void PollEvents() = 0;
 		virtual void Update() = 0;
+	public:
+		virtual IWindow* GetWindow() = 0;
+		virtual void* GetOpenGLFunctionLoader() = 0;
 	public:
 		virtual void Log(const char* msg, va_list args) = 0;
 		virtual const InputData& GetInput() = 0;
