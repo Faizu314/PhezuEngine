@@ -1,9 +1,13 @@
 #pragma once
 
+#include "Core/Platform.hpp"
+
 namespace Phezu {
 
 	class IGraphicsAPI {
 	public:
-		//will contain functions the renderer will use to render entities
+		virtual int Init(IPlatform* platform) = 0;
 	};
+
+	IGraphicsAPI* CreateGraphicsAPI();
 }

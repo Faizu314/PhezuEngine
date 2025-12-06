@@ -4,6 +4,7 @@
 #include "Physics.hpp"
 #include "Scene/SceneManager.hpp"
 #include "AssetManagement/AssetManager.hpp"
+#include "Graphics/Renderer/Renderer.hpp"
 #include "Scripting/ScriptEngine.hpp"
 
 #include <filesystem>
@@ -12,7 +13,6 @@ namespace Phezu {
     
     class Scene;
     class Prefab;
-    class Renderer;
 
     struct Paths {
         std::filesystem::path ExePath;
@@ -54,9 +54,9 @@ namespace Phezu {
     private:
         IPlatform* m_Platform;
     private:
-        Renderer* m_Renderer;
         Physics m_Physics;
     private:
+        Renderer m_Renderer;
         SceneManager m_SceneManager;
         AssetManager m_AssetManager;
         ScriptEngine m_ScriptEngine;

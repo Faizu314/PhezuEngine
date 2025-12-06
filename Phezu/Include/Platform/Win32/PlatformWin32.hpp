@@ -5,6 +5,8 @@
 
 namespace Phezu {
 
+	class IWindow;
+
 	class PlatformWin32 : public IPlatform {
 	public:
 		PlatformWin32();
@@ -15,6 +17,8 @@ namespace Phezu {
 		void PollEvents() override;
 		const InputData& GetInput() override;
 		void Update() override;
+		IWindow* GetWindow() override;
+		void* GetOpenGLFunctionLoader() override;
 		void Log(const char* msg, va_list args) override;
 	private:
 		void CreateGraphicsContext();
