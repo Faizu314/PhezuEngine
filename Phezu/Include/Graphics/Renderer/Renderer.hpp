@@ -11,10 +11,8 @@ namespace Phezu {
     class IPlatform;
     class IWindow;
     class Entity;
-    class Vector2;
-    class CameraData;
-    class TransformData;
     class IGraphicsAPI;
+    class CameraData;
   
     class Renderer {
     public:
@@ -25,16 +23,15 @@ namespace Phezu {
         void Destroy();
     public:
         void ClearFrame(const Color& bg = Color::Black);
-        void DrawEntities(const std::vector<Entity*>& renderableEntities, size_t count, const Color& bg = Color::Black);
+        void DrawEntities(const std::vector<Entity*>& renderableEntities, size_t count, CameraData* camera);
         void RenderFrame();
-        void SetActiveCamera(CameraData* camera);
     private:
-        void DrawEntity(Entity* entity);
+        void DrawEntity(Entity* entity, CameraData* camera);
     private:
         IGraphicsAPI* m_Api;
     private:
         IWindow* m_Window;
         CameraData* m_Camera;
-        TransformData* m_CameraTransform;
+        // MUST HAVE A TARGET FRAME BUFFER
     };
 }

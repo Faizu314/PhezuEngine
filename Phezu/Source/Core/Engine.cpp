@@ -53,7 +53,6 @@ namespace Phezu {
         
         m_IsRunning = true;
         
-        m_Renderer.SetActiveCamera(m_SceneManager.GetActiveCamera());
         m_SceneManager.OnStartGame();
         
         //Uint64 frameStartTime = SDL_GetPerformanceCounter();
@@ -96,7 +95,7 @@ namespace Phezu {
 
             m_Physics.PhysicsUpdate(staticEntitiesBuffer, dynamicEntitiesBuffer, staticsCount, dynamicsCount, deltaTime);
 
-            m_Renderer.DrawEntities(renderEntitiesBuffer, renderablesCount);
+            m_Renderer.DrawEntities(renderEntitiesBuffer, renderablesCount, m_SceneManager.GetActiveCamera());
 
             m_Renderer.RenderFrame();
 

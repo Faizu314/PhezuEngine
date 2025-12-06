@@ -14,7 +14,7 @@
 namespace Phezu {
         
     Renderer::Renderer()
-    : m_Window(nullptr), m_Camera(nullptr), m_CameraTransform(nullptr)
+    : m_Api(nullptr), m_Window(nullptr), m_Camera(nullptr)
     {
 
     }
@@ -31,28 +31,24 @@ namespace Phezu {
     void Renderer::Destroy() {
 
     }
-
-    void Renderer::SetActiveCamera(CameraData* camera) {
-        m_Camera = camera;
-        m_CameraTransform = dynamic_cast<TransformData*>(camera->GetEntity()->GetDataComponent(ComponentType::Transform));
-    }
    
     
     void Renderer::ClearFrame(const Color& bg) {
 
     }
     
-    void Renderer::DrawEntities(const std::vector<Entity*>& renderableEntities, size_t count, const Color& bg) {
+    void Renderer::DrawEntities(const std::vector<Entity*>& renderableEntities, size_t count, CameraData* camera) {
         int index = 0;
         for (auto& entity : renderableEntities) {
             if (index >= count)
                 break;
-            DrawEntity(entity);
+            DrawEntity(entity, camera);
             index++;
         }
     }
     
-    void Renderer::DrawEntity(Entity* entity) {
+    void Renderer::DrawEntity(Entity* entity, CameraData* camera) {
+        TransformData* cameraTransform = dynamic_cast<TransformData*>(camera->GetEntity()->GetDataComponent(ComponentType::Transform));
         TransformData* transformData = dynamic_cast<TransformData*>(entity->GetDataComponent(ComponentType::Transform));
         ShapeData* shapeData = dynamic_cast<ShapeData*>(entity->GetDataComponent(ComponentType::Shape));
         RenderData* renderData = dynamic_cast<RenderData*>(entity->GetDataComponent(ComponentType::Render));
@@ -63,7 +59,7 @@ namespace Phezu {
         int screenWidth = m_Window->GetWidth();
         int screenHeight = m_Window->GetHeight();
         
-        Vector2 camPosition = m_CameraTransform->GetWorldPosition();
+        Vector2 camPosition = cameraTransform->GetWorldPosition();
         float aspectRatio = static_cast<float>(screenWidth) / screenHeight;
         float vSize = m_Camera->Size * 2.0;
         float hSize = vSize * aspectRatio;
