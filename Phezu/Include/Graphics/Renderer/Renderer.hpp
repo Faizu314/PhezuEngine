@@ -30,6 +30,7 @@ namespace Phezu {
     private:
         IGraphicsAPI* m_Api;
     private:
+        int m_WindowSubId;
         IWindow* m_Window;
         CameraData* m_Camera;
         // MUST HAVE A TARGET FRAME BUFFER

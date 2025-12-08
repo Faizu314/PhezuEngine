@@ -14,27 +14,27 @@
 namespace Phezu {
         
     Renderer::Renderer()
-    : m_Api(nullptr), m_Window(nullptr), m_Camera(nullptr)
-    {
-
-    }
+    : m_Api(nullptr), m_Window(nullptr), m_Camera(nullptr), m_WindowSubId(0) {}
     
     Renderer::~Renderer() {}
     
     void Renderer::Init(IPlatform* platform) {
-        m_Window = platform->GetWindow();
-
         m_Api = CreateGraphicsAPI();
         m_Api->Init(platform);
+
+        m_Window = platform->GetWindow();
+        m_WindowSubId = m_Window->RegisterWindowResizeCallback(
+            [this](int width, int height) { m_Api->SetViewport(0, 0, width, height); }
+        );
     }
 
     void Renderer::Destroy() {
-
+        m_Window->UnregisterWindowResizeCallback(m_WindowSubId);
     }
    
     
     void Renderer::ClearFrame(const Color& bg) {
-
+        m_Api->ClearFrame(bg);
     }
     
     void Renderer::DrawEntities(const std::vector<Entity*>& renderableEntities, size_t count, CameraData* camera) {
@@ -61,7 +61,7 @@ namespace Phezu {
         
         Vector2 camPosition = cameraTransform->GetWorldPosition();
         float aspectRatio = static_cast<float>(screenWidth) / screenHeight;
-        float vSize = m_Camera->Size * 2.0;
+        float vSize = m_Camera->Size * 2.0f;
         float hSize = vSize * aspectRatio;
         
         Vector2 upRightLocal = shapeData->GetVertexPosition(ShapeData::VertexType::UpRight);
@@ -75,6 +75,8 @@ namespace Phezu {
 
         Vector2 upRightScreen = Vector2(upRightView.X() * screenWidth / hSize, upRightView.Y() * screenHeight / vSize);
         Vector2 downLeftScreen = Vector2(downLeftView.X() * screenWidth / hSize, downLeftView.Y() * screenHeight / vSize);
+
+        m_Api->RenderBox(downLeftScreen, upRightScreen, renderData->Tint);
     }
     
     void Renderer::RenderFrame() {
