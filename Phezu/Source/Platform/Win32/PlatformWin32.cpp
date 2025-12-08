@@ -9,9 +9,9 @@
 
 namespace Phezu {
 	
-	static WindowWin32* m_Window;
-	static InputWin32* m_Input;
-	static LoggerWin32* m_Logger;
+	static WindowWin32* s_Window;
+	static InputWin32* s_Input;
+	static LoggerWin32* s_Logger;
 
 	LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		switch (msg) {
@@ -20,15 +20,15 @@ namespace Phezu {
 				int width = LOWORD(lParam);
 				int height = HIWORD(lParam);
 
-				return m_Window->OnWindowResize(msg, width, height);
+				return s_Window->OnWindowResize(msg, width, height);
 			}
 			case WM_MOVE:
 			{
-				return m_Window->OnWindowMove();
+				return s_Window->OnWindowMove();
 			}
 			case WM_CLOSE:
 			{
-				return m_Window->OnWindowClose();
+				return s_Window->OnWindowClose();
 			}
 			default:
 				return DefWindowProc(hwnd, msg, wParam, lParam);
@@ -61,13 +61,13 @@ namespace Phezu {
 
 
 	PlatformWin32::PlatformWin32() : m_hInstance(nullptr) {
-		m_Window = new WindowWin32();
-		m_Input = new InputWin32();
-		m_Logger = new LoggerWin32();
+		s_Window = new WindowWin32();
+		s_Input = new InputWin32();
+		s_Logger = new LoggerWin32();
 	}
 
 	int PlatformWin32::Init(const WindowArgs& args) {
-		m_Logger->Init();
+		s_Logger->Init();
 
 		m_hInstance = GetModuleHandle(NULL);
 
@@ -87,12 +87,12 @@ namespace Phezu {
 			return -1;
 		}
 
-		int error = m_Window->Init(args, CLASS_NAME, m_hInstance);
+		int error = s_Window->Init(args, CLASS_NAME, m_hInstance);
 
 		if (error != 0)
 			return error;
 
-		m_Input->Init();
+		s_Input->Init();
 
 		CreateGraphicsContext();
 
@@ -100,7 +100,7 @@ namespace Phezu {
 	}
 
 	void PlatformWin32::CreateGraphicsContext() {
-		HDC hdc = m_Window->GetDeviceContext();
+		HDC hdc = s_Window->GetDeviceContext();
 
 		PIXELFORMATDESCRIPTOR pfd = {};
 		pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
@@ -147,11 +147,11 @@ namespace Phezu {
 	}
 
 	const InputData& PlatformWin32::GetInput() {
-		return m_Input->GetInput();
+		return s_Input->GetInput();
 	}
 
 	void PlatformWin32::Update() {
-		m_Window->Update();
+		s_Window->Update();
 	}
 
 	void* PlatformWin32::GetOpenGLFunctionLoader() {
@@ -159,16 +159,16 @@ namespace Phezu {
 	}
 
 	IWindow* PlatformWin32::GetWindow() {
-		return m_Window;
+		return s_Window;
 	}
 
 	void PlatformWin32::Log(const char* msg, va_list args) {
-		m_Logger->Log(msg, args);
+		s_Logger->Log(msg, args);
 	}
 
 	void PlatformWin32::Destroy() {
-		m_Window->Destroy();
-		m_Input->Destroy();
+		s_Window->Destroy();
+		s_Input->Destroy();
 		//m_Logger->Destroy();
 	}
 }
