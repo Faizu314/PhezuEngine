@@ -15,6 +15,10 @@ namespace Phezu {
 
 	LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		switch (msg) {
+			case WM_CREATE:
+			{
+				return DefWindowProc(hwnd, msg, wParam, lParam);
+			}
 			case WM_SIZE:
 			{
 				int width = LOWORD(lParam);
