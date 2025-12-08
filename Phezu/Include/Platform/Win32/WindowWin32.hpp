@@ -5,6 +5,7 @@
 
 #include <Windows.h>
 #include <string>
+#include <unordered_map>
 
 namespace Phezu {
     
@@ -20,6 +21,8 @@ namespace Phezu {
         int GetWidth() const override { return m_Width; }
         int GetHeight() const override { return m_Height; }
         int GetRenderScale() const override { return m_RenderScale; }
+        int RegisterWindowResizeCallback(const ResizeCallback& callback) override;
+        void UnregisterWindowResizeCallback(int subscriberId) override;
     public:
         int OnWindowMove();
         int OnWindowResize(UINT flag, int width, int height);
@@ -32,5 +35,8 @@ namespace Phezu {
         int m_RenderScale = 0;
         HWND m_WindowPtr = nullptr;
         HDC m_Hdc = nullptr;
+    private:
+        int m_CurrSubscriberId = 0;
+        std::unordered_map<int, ResizeCallback> m_Subscribers;
     };
 }

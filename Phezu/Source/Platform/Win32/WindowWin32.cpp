@@ -48,7 +48,28 @@ namespace Phezu {
         m_Width = width;
         m_Height = height;
 
+        for (auto sub : m_Subscribers) {
+            sub.second(m_Width, m_Height);
+        }
+
         return 0;
+    }
+
+    int WindowWin32::RegisterWindowResizeCallback(const ResizeCallback& callback) {
+        int id = m_CurrSubscriberId;
+        m_CurrSubscriberId++;
+
+        m_Subscribers.insert(std::pair(id, callback));
+
+        return id;
+    }
+
+    void WindowWin32::UnregisterWindowResizeCallback(int subscriberId) {
+        if (m_Subscribers.find(subscriberId) == m_Subscribers.end()) {
+            return;
+        }
+
+        m_Subscribers.erase(subscriberId);
     }
 
     int WindowWin32::OnWindowClose() {
