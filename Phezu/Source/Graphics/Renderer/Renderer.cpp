@@ -14,15 +14,14 @@
 namespace Phezu {
         
     Renderer::Renderer()
-    : m_Api(nullptr), m_Window(nullptr), m_Camera(nullptr), m_WindowSubId(0) {}
+    : m_Api(nullptr), m_Window(nullptr), m_WindowSubId(0) {}
     
     Renderer::~Renderer() {}
     
-    void Renderer::Init(IPlatform* platform) {
-        m_Api = CreateGraphicsAPI();
-        m_Api->Init(platform);
+    void Renderer::Init(IWindow* window, IGraphicsAPI* graphicsApi) {
+        m_Api = graphicsApi;
+        m_Window = window;
 
-        m_Window = platform->GetWindow();
         m_WindowSubId = m_Window->RegisterWindowResizeCallback(
             [this](int width, int height) { m_Api->SetViewport(0, 0, width, height); }
         );
@@ -61,7 +60,7 @@ namespace Phezu {
         
         Vector2 camPosition = cameraTransform->GetWorldPosition();
         float aspectRatio = static_cast<float>(screenWidth) / screenHeight;
-        float vSize = m_Camera->Size * 2.0f;
+        float vSize = camera->Size * 2.0f;
         float hSize = vSize * aspectRatio;
         
         Vector2 upRightLocal = shapeData->GetVertexPosition(ShapeData::VertexType::UpRight);

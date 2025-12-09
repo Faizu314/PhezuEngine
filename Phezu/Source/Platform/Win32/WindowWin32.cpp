@@ -31,8 +31,6 @@ namespace Phezu {
 
         ShowWindow(m_WindowPtr, SW_SHOWNORMAL);
 
-        m_Hdc = GetDC(m_WindowPtr);
-
         return 0;
     }
 

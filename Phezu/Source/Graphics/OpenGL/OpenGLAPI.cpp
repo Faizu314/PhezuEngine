@@ -7,18 +7,6 @@
 
 namespace Phezu {
 
-	int OpenGLAPI::Init(IPlatform* platform) {
-		int error = gladLoadGLLoader((GLADloadproc)platform->GetOpenGLFunctionLoader());
-
-		if (error > 0) {
-			Log("Failed to initialize GLAD with error code: %i\n", error);
-
-			return error;
-		}
-
-		return 0;
-	}
-
 	void OpenGLAPI::RenderBox(Vector2 downLeftScreen, Vector2 upRightScreen, Color tint) {
 		
 	}

@@ -37,7 +37,7 @@ namespace Phezu {
             return -1;
         }
 
-        m_Renderer.Init(m_Platform);
+        m_Renderer.Init(m_Platform->GetWindow(), m_Platform->GetGraphicsApi());
         m_AssetManager.Init(m_AssetsPath);
         m_SceneManager.Init();
         m_ScriptEngine.Init();
@@ -121,6 +121,7 @@ namespace Phezu {
     
     void Engine::Destroy() {
         m_ScriptEngine.Shutdown();
+        //m_SceneManager.Shutdown();
         m_Renderer.Destroy();
         m_Platform->Destroy();
 
