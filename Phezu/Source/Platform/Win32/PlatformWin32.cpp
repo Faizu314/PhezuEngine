@@ -3,8 +3,12 @@
 #include "Platform/Win32/InputWin32.hpp"
 #include "Platform/Win32/LoggerWin32.hpp"
 
+#include "Graphics/GraphicsAPI.hpp"
+#include "Graphics/OpenGL/OpenGLAPI.hpp"
+
+#define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#include "glad/khrplatform.h"
+#include "glad/glad.h"
 #include "glad/glad_wgl.h"
 
 namespace Phezu {
@@ -12,6 +16,7 @@ namespace Phezu {
 	static WindowWin32* s_Window;
 	static InputWin32* s_Input;
 	static LoggerWin32* s_Logger;
+	static IGraphicsAPI* s_GraphicsApi;
 
 	LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		switch (msg) {
@@ -68,6 +73,7 @@ namespace Phezu {
 		s_Window = new WindowWin32();
 		s_Input = new InputWin32();
 		s_Logger = new LoggerWin32();
+		s_GraphicsApi = nullptr;
 	}
 
 	int PlatformWin32::Init(const WindowArgs& args) {
@@ -104,40 +110,73 @@ namespace Phezu {
 	}
 
 	void PlatformWin32::CreateGraphicsContext() {
-		HDC hdc = s_Window->GetDeviceContext();
+		HWND windowPtr = s_Window->GetWindowPtr();
 
-		PIXELFORMATDESCRIPTOR pfd = {};
-		pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
-		pfd.nVersion = 1;
-		pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
-		pfd.iPixelType = PFD_TYPE_RGBA;
-		pfd.cColorBits = 32;
-		pfd.cDepthBits = 24;
-		pfd.cStencilBits = 8;
-		pfd.iLayerType = PFD_MAIN_PLANE;
+		HDC hdc = GetDC(windowPtr);
 
-		int pixelFormat = ChoosePixelFormat(hdc, &pfd);
+		PIXELFORMATDESCRIPTOR desiredPixelFormat = {};
+		desiredPixelFormat.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+		desiredPixelFormat.nVersion = 1;
+		desiredPixelFormat.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+		desiredPixelFormat.iPixelType = PFD_TYPE_RGBA;
+		desiredPixelFormat.cColorBits = 32;
+		desiredPixelFormat.cAlphaBits = 8;
+		desiredPixelFormat.iLayerType = PFD_MAIN_PLANE;
 
-		SetPixelFormat(hdc, pixelFormat, &pfd);
+		int pixelFormatIndex = ChoosePixelFormat(hdc, &desiredPixelFormat);
+
+		if (pixelFormatIndex == 0) {
+			PrintLastWinError("Unable to choose pixel format");
+		}
+
+		PIXELFORMATDESCRIPTOR pixelFormat;
+
+		if (DescribePixelFormat(hdc, pixelFormatIndex, sizeof(PIXELFORMATDESCRIPTOR), &pixelFormat) == 0) {
+			PrintLastWinError("Failed to describe pixel format");
+		}
+
+		if (SetPixelFormat(hdc, pixelFormatIndex, &pixelFormat) != TRUE) {
+			PrintLastWinError("Unable to set pixel format");
+		}
 
 		HGLRC tempContext = wglCreateContext(hdc);
-		wglMakeCurrent(hdc, tempContext);
 
-		PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB =
-			(PFNWGLCREATECONTEXTATTRIBSARBPROC)wglGetProcAddress("wglCreateContextAttribsARB");
+		if (!tempContext) {
+			PrintLastWinError("Unable to create wgl context");
+		}
+
+		if (wglMakeCurrent(hdc, tempContext) != TRUE) {
+			PrintLastWinError("Unable to make context current");
+		}
+
+		gladLoadWGL(hdc);
 
 		int attribs[] = {
 			WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
 			WGL_CONTEXT_MINOR_VERSION_ARB, 5,
-			WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
+			WGL_CONTEXT_FLAGS_ARB,
+			WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
 			0
 		};
 
 		HGLRC glContext = wglCreateContextAttribsARB(hdc, 0, attribs);
 
+		if (!glContext) {
+			PrintLastWinError("Unable to create wgl context");
+		}
+
 		wglMakeCurrent(nullptr, nullptr);
 		wglDeleteContext(tempContext);
-		wglMakeCurrent(hdc, glContext);
+
+		if (!wglMakeCurrent(hdc, glContext)) {
+			PrintLastWinError("Unable to make context current");
+		}
+
+		if (!gladLoadGL()) {
+			Phezu::Log("Unable to load glad\n");
+		}
+
+		s_GraphicsApi = new OpenGLAPI();
 	}
 
 	void PlatformWin32::PollEvents() {
@@ -150,20 +189,21 @@ namespace Phezu {
 		}
 	}
 
+	IWindow* PlatformWin32::GetWindow() {
+		return s_Window;
+	}
+
 	const InputData& PlatformWin32::GetInput() {
 		return s_Input->GetInput();
 	}
 
+	IGraphicsAPI* PlatformWin32::GetGraphicsApi() {
+		return s_GraphicsApi;
+	}
+
+
 	void PlatformWin32::Update() {
 		s_Window->Update();
-	}
-
-	void* PlatformWin32::GetOpenGLFunctionLoader() {
-		return wglGetProcAddress;
-	}
-
-	IWindow* PlatformWin32::GetWindow() {
-		return s_Window;
 	}
 
 	void PlatformWin32::Log(const char* msg, va_list args) {

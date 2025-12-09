@@ -6,6 +6,7 @@
 namespace Phezu {
 
 	class IWindow;
+	class IGraphicsAPI;
 
 	class PlatformWin32 : public IPlatform {
 	public:
@@ -18,7 +19,7 @@ namespace Phezu {
 		const InputData& GetInput() override;
 		void Update() override;
 		IWindow* GetWindow() override;
-		void* GetOpenGLFunctionLoader() override;
+		IGraphicsAPI* GetGraphicsApi() override;
 		void Log(const char* msg, va_list args) override;
 	private:
 		void CreateGraphicsContext();

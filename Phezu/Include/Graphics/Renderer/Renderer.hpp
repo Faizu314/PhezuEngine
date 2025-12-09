@@ -19,7 +19,7 @@ namespace Phezu {
         Renderer();
         ~Renderer();
     public:
-        void Init(IPlatform* platform);
+        void Init(IWindow* window, IGraphicsAPI* graphicsApi);
         void Destroy();
     public:
         void ClearFrame(const Color& bg = Color::Black);
@@ -32,7 +32,6 @@ namespace Phezu {
     private:
         int m_WindowSubId;
         IWindow* m_Window;
-        CameraData* m_Camera;
         // MUST HAVE A TARGET FRAME BUFFER
     };
 }

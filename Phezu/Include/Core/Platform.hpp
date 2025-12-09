@@ -23,6 +23,7 @@ namespace Phezu {
 	};
 
 	class IWindow;
+	class IGraphicsAPI;
 
 	class IPlatform {
 	public:
@@ -33,7 +34,7 @@ namespace Phezu {
 		virtual void Update() = 0;
 	public:
 		virtual IWindow* GetWindow() = 0;
-		virtual void* GetOpenGLFunctionLoader() = 0;
+		virtual IGraphicsAPI* GetGraphicsApi() = 0;
 	public:
 		virtual void Log(const char* msg, va_list args) = 0;
 		virtual const InputData& GetInput() = 0;

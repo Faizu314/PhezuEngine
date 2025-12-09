@@ -28,13 +28,12 @@ namespace Phezu {
         int OnWindowResize(UINT flag, int width, int height);
         int OnWindowClose();
     public:
-        HDC GetDeviceContext() { return m_Hdc; }
+        HWND GetWindowPtr() { return m_WindowPtr; }
     private:
         int m_Width = 0;
         int m_Height = 0;
         int m_RenderScale = 0;
         HWND m_WindowPtr = nullptr;
-        HDC m_Hdc = nullptr;
     private:
         int m_CurrSubscriberId = 0;
         std::unordered_map<int, ResizeCallback> m_Subscribers;
