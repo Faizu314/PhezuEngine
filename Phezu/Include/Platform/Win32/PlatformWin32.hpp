@@ -25,6 +25,7 @@ namespace Phezu {
 		void CreateGraphicsContext();
 	private:
 		HINSTANCE m_hInstance;
+		HDC m_WindowHandle;
 	};
 
 	void PrintLastWinError(const char* msg);
