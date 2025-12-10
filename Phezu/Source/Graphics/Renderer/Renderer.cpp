@@ -32,8 +32,8 @@ namespace Phezu {
     }
    
     
-    void Renderer::ClearFrame(const Color& bg) {
-        m_Api->ClearFrame(bg);
+    void Renderer::ClearFrame() {
+        m_Api->ClearFrame(Color(0, 0, 0, 0));
     }
     
     void Renderer::DrawEntities(const std::vector<Entity*>& renderableEntities, size_t count, CameraData* camera) {

@@ -27,6 +27,7 @@ namespace Phezu {
 		float a = color.a / 255.0f;
 
 		glClearColor(r, g, b, a);
+		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
 

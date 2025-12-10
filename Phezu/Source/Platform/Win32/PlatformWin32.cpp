@@ -13,10 +13,10 @@
 
 namespace Phezu {
 	
-	static WindowWin32* s_Window;
-	static InputWin32* s_Input;
-	static LoggerWin32* s_Logger;
-	static IGraphicsAPI* s_GraphicsApi;
+	static WindowWin32* s_Window = nullptr;
+	static InputWin32* s_Input = nullptr;
+	static LoggerWin32* s_Logger = nullptr;
+	static IGraphicsAPI* s_GraphicsApi = nullptr;
 
 	LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		switch (msg) {
@@ -69,11 +69,10 @@ namespace Phezu {
 	}
 
 
-	PlatformWin32::PlatformWin32() : m_hInstance(nullptr) {
+	PlatformWin32::PlatformWin32() : m_hInstance(nullptr), m_WindowHandle(nullptr) {
 		s_Window = new WindowWin32();
 		s_Input = new InputWin32();
 		s_Logger = new LoggerWin32();
-		s_GraphicsApi = nullptr;
 	}
 
 	int PlatformWin32::Init(const WindowArgs& args) {
@@ -102,6 +101,8 @@ namespace Phezu {
 		if (error != 0)
 			return error;
 
+		m_WindowHandle = GetDC(s_Window->GetWindowPtr());
+
 		s_Input->Init();
 
 		CreateGraphicsContext();
@@ -110,10 +111,6 @@ namespace Phezu {
 	}
 
 	void PlatformWin32::CreateGraphicsContext() {
-		HWND windowPtr = s_Window->GetWindowPtr();
-
-		HDC hdc = GetDC(windowPtr);
-
 		PIXELFORMATDESCRIPTOR desiredPixelFormat = {};
 		desiredPixelFormat.nSize = sizeof(PIXELFORMATDESCRIPTOR);
 		desiredPixelFormat.nVersion = 1;
@@ -123,7 +120,7 @@ namespace Phezu {
 		desiredPixelFormat.cAlphaBits = 8;
 		desiredPixelFormat.iLayerType = PFD_MAIN_PLANE;
 
-		int pixelFormatIndex = ChoosePixelFormat(hdc, &desiredPixelFormat);
+		int pixelFormatIndex = ChoosePixelFormat(m_WindowHandle, &desiredPixelFormat);
 
 		if (pixelFormatIndex == 0) {
 			PrintLastWinError("Unable to choose pixel format");
@@ -131,25 +128,25 @@ namespace Phezu {
 
 		PIXELFORMATDESCRIPTOR pixelFormat;
 
-		if (DescribePixelFormat(hdc, pixelFormatIndex, sizeof(PIXELFORMATDESCRIPTOR), &pixelFormat) == 0) {
+		if (DescribePixelFormat(m_WindowHandle, pixelFormatIndex, sizeof(PIXELFORMATDESCRIPTOR), &pixelFormat) == 0) {
 			PrintLastWinError("Failed to describe pixel format");
 		}
 
-		if (SetPixelFormat(hdc, pixelFormatIndex, &pixelFormat) != TRUE) {
+		if (SetPixelFormat(m_WindowHandle, pixelFormatIndex, &pixelFormat) != TRUE) {
 			PrintLastWinError("Unable to set pixel format");
 		}
 
-		HGLRC tempContext = wglCreateContext(hdc);
+		HGLRC tempContext = wglCreateContext(m_WindowHandle);
 
 		if (!tempContext) {
 			PrintLastWinError("Unable to create wgl context");
 		}
 
-		if (wglMakeCurrent(hdc, tempContext) != TRUE) {
+		if (wglMakeCurrent(m_WindowHandle, tempContext) != TRUE) {
 			PrintLastWinError("Unable to make context current");
 		}
 
-		gladLoadWGL(hdc);
+		gladLoadWGL(m_WindowHandle);
 
 		int attribs[] = {
 			WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
@@ -159,7 +156,7 @@ namespace Phezu {
 			0
 		};
 
-		HGLRC glContext = wglCreateContextAttribsARB(hdc, 0, attribs);
+		HGLRC glContext = wglCreateContextAttribsARB(m_WindowHandle, 0, attribs);
 
 		if (!glContext) {
 			PrintLastWinError("Unable to create wgl context");
@@ -168,7 +165,7 @@ namespace Phezu {
 		wglMakeCurrent(nullptr, nullptr);
 		wglDeleteContext(tempContext);
 
-		if (!wglMakeCurrent(hdc, glContext)) {
+		if (!wglMakeCurrent(m_WindowHandle, glContext)) {
 			PrintLastWinError("Unable to make context current");
 		}
 
@@ -204,6 +201,7 @@ namespace Phezu {
 
 	void PlatformWin32::Update() {
 		s_Window->Update();
+		SwapBuffers(m_WindowHandle);
 	}
 
 	void PlatformWin32::Log(const char* msg, va_list args) {

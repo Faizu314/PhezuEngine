@@ -22,7 +22,7 @@ namespace Phezu {
         void Init(IWindow* window, IGraphicsAPI* graphicsApi);
         void Destroy();
     public:
-        void ClearFrame(const Color& bg = Color::Black);
+        void ClearFrame();
         void DrawEntities(const std::vector<Entity*>& renderableEntities, size_t count, CameraData* camera);
         void RenderFrame();
     private:
