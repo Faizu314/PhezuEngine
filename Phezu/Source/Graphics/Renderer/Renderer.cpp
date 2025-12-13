@@ -42,9 +42,10 @@ namespace Phezu {
         std::string frag =
             "#version 460 core\n"
             "out vec4 FragColor;\n"
+            "uniform vec4 tint;"
             "void main()\n"
             "{\n"
-            "   FragColor = vec4(0.5f, 1.0f, 0.2f, 1.0f);\n"
+            "   FragColor = tint;\n"
             "}\0";
 
         m_DefaultShader = m_Api->CreateShader(vert, frag);
@@ -61,10 +62,6 @@ namespace Phezu {
     }
     
     void Renderer::DrawEntities(const std::vector<Entity*>& renderableEntities, size_t count, CameraData* camera) {
-        m_Api->RenderBox(Vector2(-0.5f, -0.5f), Vector2(0.5f, 0.5f), Color::White);
-
-        return;
-
         int index = 0;
         for (auto& entity : renderableEntities) {
             if (index >= count)
@@ -105,6 +102,8 @@ namespace Phezu {
 
         Vector2 upRightNormalized = Vector2(upRightScreen.X() / (screenWidth / 2.0f), upRightScreen.Y() / (screenWidth / 2.0f));
         Vector2 downLeftNormalized = Vector2(downLeftScreen.X() / (screenWidth / 2.0f), downLeftScreen.Y() / (screenWidth / 2.0f));
+
+        m_DefaultShader->SetVec4("tint", renderData->Tint);
 
         m_Api->RenderBox(downLeftNormalized, upRightNormalized, renderData->Tint);
     }
