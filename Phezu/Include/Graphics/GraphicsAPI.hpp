@@ -4,7 +4,11 @@
 #include "Core/Types/Color.hpp"
 #include "Core/Platform.hpp"
 
+#include <string>
+
 namespace Phezu {
+
+	class IShader;
 
 	class IGraphicsAPI {
 	public:
@@ -12,5 +16,7 @@ namespace Phezu {
 	public:
 		virtual void ClearFrame(Color color) = 0;
 		virtual void RenderBox(Vector2 downLeftScreen, Vector2 upRightScreen, Color tint) = 0;
+	public:
+		virtual IShader* CreateShader(const std::string& vert, const std::string& frag) = 0;
 	};
 }
