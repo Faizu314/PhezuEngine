@@ -2,15 +2,7 @@
 
 namespace Phezu {
 
-	VertexLayout::VertexLayout() {
-
-	}
-
-	VertexLayout::~VertexLayout() {
-
-	}
-
-	void VertexLayout::Push(unsigned int count) {
-
+	void VertexLayout::Push(VertexAttributeType type) {
+		m_Attributes.push_back(type);
 	}
 }
