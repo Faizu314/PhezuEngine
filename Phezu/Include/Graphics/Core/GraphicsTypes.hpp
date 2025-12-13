@@ -7,4 +7,9 @@ namespace Phezu {
 		UInt, UInt2, UInt3, UInt4,
 		Byte, Byte2, Byte3, Byte4
 	};
+
+	enum class BufferType {
+		Static,
+		Dynamic
+	};
 }

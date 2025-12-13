@@ -12,6 +12,7 @@ namespace Phezu {
 	public:
 		void Init(const std::string& vert, const std::string& frag) override;
 		void Bind() override;
+		void Destroy() override;
 	public:
 		void SetVec4(const std::string& uniformName, Color color) override;
 	private:
