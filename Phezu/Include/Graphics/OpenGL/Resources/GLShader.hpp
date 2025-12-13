@@ -3,8 +3,8 @@
 #include <unordered_map>
 #include <string>
 
-#include "Graphics/Renderer/Shader.hpp"
 #include "glad/glad.h"
+#include "Graphics/Core/Resources/Shader.hpp"
 
 namespace Phezu {
 	

@@ -3,7 +3,7 @@
 #include "glad/glad.h"
 
 #include "Graphics/OpenGL/OpenGLAPI.hpp"
-#include "Graphics/OpenGL/GLShader.hpp"
+#include "Graphics/OpenGL/Resources/GLShader.hpp"
 #include "Core/Platform.hpp"
 
 namespace Phezu {

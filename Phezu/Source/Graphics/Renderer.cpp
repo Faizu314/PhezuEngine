@@ -1,7 +1,7 @@
-#include "Graphics/Renderer/Renderer.hpp"
-#include "Graphics/Renderer/Shader.hpp"
+#include "Graphics/Renderer.hpp"
+#include "Graphics/Core/Resources/Shader.hpp" 
 
-#include "Graphics/GraphicsAPI.hpp"
+#include "Graphics/Core/GraphicsAPI.hpp"
 
 #include "Core/Platform.hpp"
 #include "Core/Window.hpp"
@@ -19,7 +19,7 @@
 namespace Phezu {
         
     Renderer::Renderer()
-    : m_Api(nullptr), m_Window(nullptr), m_WindowSubId(0) {}
+    : m_Api(nullptr), m_Window(nullptr), m_DefaultShader(nullptr), m_WindowSubId(0) {}
     
     Renderer::~Renderer() {}
     
