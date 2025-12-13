@@ -1,12 +1,17 @@
 #include "Graphics/Renderer/Renderer.hpp"
+#include "Graphics/Renderer/Shader.hpp"
+
 #include "Graphics/GraphicsAPI.hpp"
+
 #include "Core/Platform.hpp"
 #include "Core/Window.hpp"
+
 #include "Scene/Entity.hpp"
 #include "Scene/Components/TransformData.hpp"
 #include "Scene/Components/ShapeData.hpp"
 #include "Scene/Components/RenderData.hpp"
 #include "Scene/Components/CameraData.hpp"
+
 #include "Maths/Math.hpp"
 
 #include "glm/glm.hpp"
@@ -25,6 +30,25 @@ namespace Phezu {
         m_WindowSubId = m_Window->RegisterWindowResizeCallback(
             [this](int width, int height) { m_Api->SetViewport(0, 0, width, height); }
         );
+
+        std::string vert = 
+            "#version 460 core\n"
+            "layout (location = 0) in vec3 aPos;\n"
+            "void main()\n"
+            "{\n"
+            "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+            "}\0";
+
+        std::string frag =
+            "#version 460 core\n"
+            "out vec4 FragColor;\n"
+            "void main()\n"
+            "{\n"
+            "   FragColor = vec4(0.5f, 1.0f, 0.2f, 1.0f);\n"
+            "}\0";
+
+        m_DefaultShader = m_Api->CreateShader(vert, frag);
+        m_DefaultShader->Bind();
     }
 
     void Renderer::Destroy() {
@@ -37,6 +61,10 @@ namespace Phezu {
     }
     
     void Renderer::DrawEntities(const std::vector<Entity*>& renderableEntities, size_t count, CameraData* camera) {
+        m_Api->RenderBox(Vector2(-0.5f, -0.5f), Vector2(0.5f, 0.5f), Color::White);
+
+        return;
+
         int index = 0;
         for (auto& entity : renderableEntities) {
             if (index >= count)
@@ -75,7 +103,10 @@ namespace Phezu {
         Vector2 upRightScreen = Vector2(upRightView.X() * screenWidth / hSize, upRightView.Y() * screenHeight / vSize);
         Vector2 downLeftScreen = Vector2(downLeftView.X() * screenWidth / hSize, downLeftView.Y() * screenHeight / vSize);
 
-        m_Api->RenderBox(downLeftScreen, upRightScreen, renderData->Tint);
+        Vector2 upRightNormalized = Vector2(upRightScreen.X() / (screenWidth / 2.0f), upRightScreen.Y() / (screenWidth / 2.0f));
+        Vector2 downLeftNormalized = Vector2(downLeftScreen.X() / (screenWidth / 2.0f), downLeftScreen.Y() / (screenWidth / 2.0f));
+
+        m_Api->RenderBox(downLeftNormalized, upRightNormalized, renderData->Tint);
     }
     
     void Renderer::RenderFrame() {
