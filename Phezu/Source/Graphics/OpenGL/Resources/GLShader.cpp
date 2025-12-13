@@ -1,4 +1,4 @@
-#include "Graphics/OpenGL/GLShader.hpp"
+#include "Graphics/OpenGL/Resources/GLShader.hpp"
 #include "Core/Platform.hpp"
 #include "glad/glad.h"
 
@@ -57,6 +57,12 @@ namespace Phezu {
 
 	void GLShader::Bind() {
 		glUseProgram(m_ShaderProgram);
+	}
+
+	void GLShader::Destroy() {
+		if (m_ShaderProgram != 0)
+			glDeleteProgram(m_ShaderProgram);
+		m_ShaderProgram = 0;
 	}
 
 	void GLShader::SetVec4(const std::string& uniformName, Color color) {
