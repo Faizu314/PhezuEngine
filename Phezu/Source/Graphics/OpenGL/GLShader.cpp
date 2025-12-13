@@ -58,4 +58,19 @@ namespace Phezu {
 	void GLShader::Bind() {
 		glUseProgram(m_ShaderProgram);
 	}
+
+	void GLShader::SetVec4(const std::string& uniformName, Color color) {
+		GLint location;
+
+		if (m_UniformLocations.find(uniformName) == m_UniformLocations.end()) {
+			location = glGetUniformLocation(m_ShaderProgram, uniformName.c_str());
+			m_UniformLocations.insert(std::pair(uniformName, location));
+		}
+		else {
+			location = m_UniformLocations[uniformName];
+		}
+
+		glUniform4f(location, color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, color.a / 255.0f);
+	}
+
 }

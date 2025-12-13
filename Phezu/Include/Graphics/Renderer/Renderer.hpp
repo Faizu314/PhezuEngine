@@ -13,6 +13,7 @@ namespace Phezu {
     class Entity;
     class IGraphicsAPI;
     class CameraData;
+    class IShader;
   
     class Renderer {
     public:
@@ -33,5 +34,7 @@ namespace Phezu {
         int m_WindowSubId;
         IWindow* m_Window;
         // MUST HAVE A TARGET FRAME BUFFER
+    private:
+        IShader* m_DefaultShader;
     };
 }
