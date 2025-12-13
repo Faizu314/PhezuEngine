@@ -4,7 +4,7 @@
 #include "Physics.hpp"
 #include "Scene/SceneManager.hpp"
 #include "AssetManagement/AssetManager.hpp"
-#include "Graphics/Renderer/Renderer.hpp"
+#include "Graphics/Renderer.hpp"
 #include "Scripting/ScriptEngine.hpp"
 
 #include <filesystem>

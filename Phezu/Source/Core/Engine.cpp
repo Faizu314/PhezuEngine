@@ -1,7 +1,6 @@
 #include <string>
 
 #include "Core/Engine.hpp"
-#include "Graphics/Renderer/Renderer.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/Prefab.hpp"
 #include "Core/Platform.hpp"

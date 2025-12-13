@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/GraphicsAPI.hpp"
+#include "Graphics/Core/GraphicsAPI.hpp"
 
 namespace Phezu {
 

@@ -5,7 +5,6 @@
 #include <string>
 #include <unordered_map>
 
-#include "Graphics/Renderer/Renderer.hpp"
 #include "Scene/Components/TransformData.hpp"
 #include "Scene/Components/ScriptComponent.hpp"
 

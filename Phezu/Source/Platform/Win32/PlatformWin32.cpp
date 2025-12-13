@@ -3,7 +3,7 @@
 #include "Platform/Win32/InputWin32.hpp"
 #include "Platform/Win32/LoggerWin32.hpp"
 
-#include "Graphics/GraphicsAPI.hpp"
+#include "Graphics/Core/GraphicsAPI.hpp"
 #include "Graphics/OpenGL/OpenGLAPI.hpp"
 
 #define WIN32_LEAN_AND_MEAN
