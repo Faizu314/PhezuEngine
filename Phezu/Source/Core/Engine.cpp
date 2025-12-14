@@ -96,8 +96,6 @@ namespace Phezu {
 
             m_Renderer.DrawEntities(renderEntitiesBuffer, renderablesCount, m_SceneManager.GetActiveCamera());
 
-            m_Renderer.RenderFrame();
-
             m_Platform->Update();
             
             m_SceneManager.OnEndOfFrame();
