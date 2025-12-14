@@ -1,5 +1,8 @@
 #include "Graphics/Renderer.hpp"
-#include "Graphics/Core/Resources/Shader.hpp" 
+#include "Graphics/Core/Resources/VertexBuffer.hpp" 
+#include "Graphics/Core/Resources/IndexBuffer.hpp" 
+#include "Graphics/Core/Resources/VertexArray.hpp" 
+#include "Graphics/Core/Resources/Shader.hpp"
 
 #include "Graphics/Core/GraphicsAPI.hpp"
 
@@ -50,12 +53,24 @@ namespace Phezu {
 
         m_DefaultShader = m_Api->CreateShader(vert, frag);
         m_DefaultShader->Bind();
+
+        unsigned int indices[] = {
+            0, 2, 1,
+            0, 3, 2
+        };
+
+        m_QuadIndices = m_Api->CreateIndexBuffer(indices, sizeof(indices), BufferType::Static);
+        m_QuadLayout.Push(VertexAttributeType::Float, VertexAttributeCount::Three);
     }
 
     void Renderer::Destroy() {
         m_Window->UnregisterWindowResizeCallback(m_WindowSubId);
+
+        m_QuadIndices->Destroy();
+        m_DefaultShader->Destroy();
+        delete m_QuadIndices;
+        delete m_DefaultShader;
     }
-   
     
     void Renderer::ClearFrame() {
         m_Api->ClearFrame(Color(0, 0, 0, 0));
@@ -100,14 +115,31 @@ namespace Phezu {
         Vector2 upRightScreen = Vector2(upRightView.X() * screenWidth / hSize, upRightView.Y() * screenHeight / vSize);
         Vector2 downLeftScreen = Vector2(downLeftView.X() * screenWidth / hSize, downLeftView.Y() * screenHeight / vSize);
 
-        Vector2 upRightNormalized = Vector2(upRightScreen.X() / (screenWidth / 2.0f), upRightScreen.Y() / (screenWidth / 2.0f));
-        Vector2 downLeftNormalized = Vector2(downLeftScreen.X() / (screenWidth / 2.0f), downLeftScreen.Y() / (screenWidth / 2.0f));
+        Vector2 ur = Vector2(upRightScreen.X() / (screenWidth / 2.0f), upRightScreen.Y() / (screenWidth / 2.0f));
+        Vector2 dl = Vector2(downLeftScreen.X() / (screenWidth / 2.0f), downLeftScreen.Y() / (screenWidth / 2.0f));
+
 
         m_DefaultShader->SetVec4("tint", renderData->Tint);
 
-        m_Api->RenderBox(downLeftNormalized, upRightNormalized, renderData->Tint);
-    }
-    
-    void Renderer::RenderFrame() {
+        float vertices[] = {
+             dl.X(), dl.Y(), 0.0f,
+             dl.X(), ur.Y(), 0.0f,
+             ur.X(), ur.Y(), 0.0f,
+             ur.X(), dl.Y(), 0.0f
+        };
+
+        IVertexBuffer* vertexBuffer = m_Api->CreateVertexBuffer(vertices, sizeof(vertices), BufferType::Static);
+        IVertexArray* vertexArray = m_Api->CreateVertexArray();
+
+        vertexArray->LinkVertexBuffer(vertexBuffer, m_QuadLayout);
+        vertexArray->LinkIndexBuffer(m_QuadIndices);
+        vertexArray->Bind();
+
+        m_Api->RenderQuad(6);
+
+        vertexBuffer->Destroy();
+        vertexArray->Destroy();
+        delete vertexBuffer;
+        delete vertexArray;
     }
 }

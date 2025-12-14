@@ -5,6 +5,7 @@
 
 #include "glm/glm.hpp"
 #include "Core/Types/Color.hpp"
+#include "Graphics/Core/Descriptors/VertexLayout.hpp"
 
 namespace Phezu {
     
@@ -14,6 +15,7 @@ namespace Phezu {
     class IGraphicsAPI;
     class CameraData;
     class IShader;
+    class IIndexBuffer;
   
     class Renderer {
     public:
@@ -25,7 +27,6 @@ namespace Phezu {
     public:
         void ClearFrame();
         void DrawEntities(const std::vector<Entity*>& renderableEntities, size_t count, CameraData* camera);
-        void RenderFrame();
     private:
         void DrawEntity(Entity* entity, CameraData* camera);
     private:
@@ -36,5 +37,7 @@ namespace Phezu {
         // MUST HAVE A TARGET FRAME BUFFER
     private:
         IShader* m_DefaultShader;
+        IIndexBuffer* m_QuadIndices;
+        VertexLayout m_QuadLayout;
     };
 }
