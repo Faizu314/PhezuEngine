@@ -22,24 +22,19 @@ namespace Phezu {
         Entity* CreateEntity(GUID prefabGuid);
         Entity* GetEntity(uint64_t entityID) const;
         void DestroyEntity(uint64_t entityID);
-        void Load();
         void LogicUpdate(float deltaTime);
         void UpdateHierarchy();
         void GetPhysicsEntities(std::vector<Entity*>& staticEntities, std::vector<Entity*>& dynamicEntities, size_t& staticIndex, size_t& dynamicIndex) const;
         void GetRenderableEntities(std::vector<Entity*>& entities, size_t& count) const;
         void BeginUnload();
         void Unload();
-        long long unsigned int GetFrameCount() const;
-    public:
-        void Deserialize(const std::string& data);
     private:
         void DestroyEntityInternal(uint64_t entityID);
+        void DestroyEntityInternal(Entity* entity);
     private:
         Engine* const m_Engine;
         GUID m_Guid;
-        Blueprint m_SceneEntities;
         std::string m_Name;
-        bool m_IsLoaded;
         std::unordered_map<uint64_t, Entity*> m_RuntimeEntities;
         std::vector<uint64_t> m_EntitiesToDestroy;
     };

@@ -13,8 +13,8 @@
 
 namespace Phezu {
     
-    Scene::Scene(Engine* engine) : m_Engine(engine), m_IsLoaded(false) { }
-    Scene::Scene(Engine* engine, const std::string& name) : m_Engine(engine), m_Name(name), m_IsLoaded(false) { }
+    Scene::Scene(Engine* engine) : m_Engine(engine) { }
+    Scene::Scene(Engine* engine, const std::string& name) : m_Engine(engine), m_Name(name) { }
     
     Entity* Scene::CreateEntity() {
         Entity* entity = new Entity(this);
@@ -59,27 +59,21 @@ namespace Phezu {
         if (it == m_RuntimeEntities.end())
             return;
         
-        size_t childCount = it->second->GetChildCount();
-        
-        for (size_t i = 0; i < childCount; i++) {
-            if (auto child = it->second->GetChild(i))
-                DestroyEntityInternal(child->GetEntityID());
-        }
-        
-        m_Engine->GetScriptEngine().OnEntityDestroyed(it->second);
-        it->second->OnDestroyed();
+        DestroyEntityInternal(it->second);
         
         m_RuntimeEntities.erase(it);
     }
-    
-    void Scene::Load() {
-        BlueprintRuntimeContext ctx = { &m_Engine->GetAssetManager(), &m_Engine->GetScriptEngine(), this };
 
-        BlueprintInstantiator::Instantiate(ctx, m_SceneEntities);
+    void Scene::DestroyEntityInternal(Entity* entity) {
+        size_t childCount = entity->GetChildCount();
 
-        m_IsLoaded = true;
-        
-        UpdateHierarchy();
+        for (size_t i = 0; i < childCount; i++) {
+            if (auto child = entity->GetChild(i))
+                DestroyEntityInternal(child);
+        }
+
+        m_Engine->GetScriptEngine().OnEntityDestroyed(entity);
+        entity->OnDestroyed();
     }
     
     void Scene::LogicUpdate(float deltaTime) {
@@ -147,23 +141,14 @@ namespace Phezu {
     }
     
     void Scene::BeginUnload() {
-        m_IsLoaded = false;
+
     }
     
     void Scene::Unload() {
-        m_RuntimeEntities.clear();
-        m_IsLoaded = false;
-    }
-    
-    long long unsigned int Scene::GetFrameCount() const {
-        return m_Engine->GetFrameCount();
-    }
-    
-    void Scene::Deserialize(const std::string& data) {
-        nlohmann::json j = nlohmann::json::parse(data);
+        for (auto kvp : m_RuntimeEntities) {
+            DestroyEntityInternal(kvp.second);
+        }
 
-        m_Name = j["Name"].get<std::string>();
-        m_Guid.Value = j["Guid"].get<uint64_t>();
-        m_SceneEntities.Deserialize(j);
+        m_RuntimeEntities.clear();
     }
 }

@@ -1,6 +1,6 @@
 #include "AssetManagement/AssetManager.hpp"
 #include "AssetManagement/MetaData.hpp"
-#include "Scene/Scene.hpp"
+#include "AssetManagement/SceneAsset.hpp"
 #include "AssetManagement/Blueprint.hpp"
 #include "Scene/Prefab.hpp"
 #include "Serialization/FileStream.hpp"
@@ -57,16 +57,16 @@ namespace Phezu {
         m_BuildScenesConfig.Deserialize(configString);
     }
     
-    Asset AssetManager::GetSceneAsset(GUID guid) {
+    const SceneAsset* AssetManager::GetSceneAsset(GUID guid) {
         if (m_AssetMap.find(guid) == m_AssetMap.end()) {
             Log("Scene Asset with guid: %i not found", guid.Value);
-            return Asset();
+            return nullptr;
         }
         if (m_LoadedAssets.find(guid) != m_LoadedAssets.end())
-            return m_LoadedAssets[guid];
+            return static_cast<SceneAsset*>(m_LoadedAssets[guid]);
         
         std::string scenePath = m_AssetMap[guid].Filepaths[0].string();
-        Scene* scene = new Scene(m_Engine);
+        SceneAsset* scene = new SceneAsset();
         
         FileStreamReader reader(scenePath);
         std::string fileContent;
@@ -75,14 +75,9 @@ namespace Phezu {
         
         scene->Deserialize(fileContent);
         
-        Asset sceneAsset;
-        sceneAsset.IsLoaded = true;
-        sceneAsset.Guid = guid;
-        sceneAsset.AssetPtr = scene;
+        m_LoadedAssets[guid] = scene;
         
-        m_LoadedAssets[guid] = sceneAsset;
-        
-        return sceneAsset;
+        return scene;
     }
     
     const Prefab* AssetManager::GetPrefabAsset(GUID guid) {
@@ -91,7 +86,7 @@ namespace Phezu {
             return nullptr;
         }
         if (m_LoadedAssets.find(guid) != m_LoadedAssets.end())
-            return static_cast<Prefab*>(m_LoadedAssets[guid].AssetPtr);
+            return static_cast<Prefab*>(m_LoadedAssets[guid]);
         
         Prefab* prefab = new Prefab();
         std::string prefabPath = m_AssetMap[guid].Filepaths[0].string();
@@ -103,13 +98,8 @@ namespace Phezu {
         
         prefab->Deserialize(fileContent);
         
-        Asset prefabAsset;
-        prefabAsset.IsLoaded = true;
-        prefabAsset.Guid = guid;
-        prefabAsset.AssetPtr = prefab;
+        m_LoadedAssets[guid] = prefab;
         
-        m_LoadedAssets[guid] = prefabAsset;
-        
-        return static_cast<Prefab*>(prefabAsset.AssetPtr);
+        return prefab;
     }
 }

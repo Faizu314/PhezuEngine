@@ -23,13 +23,14 @@ namespace Phezu {
         void OnStartGame();
         void OnEndOfFrame();
         void LoadScene(size_t buildIndex);
-        void LoadScene(const std::string& sceneName);
     public:
         Scene* GetActiveScene() const { return m_ActiveScene; }
         Scene* GetMasterScene() const { return m_MasterScene; }
         CameraData* GetActiveCamera() const { return m_ActiveCamera; }
     public:
         Entity* FindEntity(uint64_t entityID);
+    private:
+        Scene* LoadScene(GUID sceneGuid);
     private:
         Engine* m_Engine;
     private:

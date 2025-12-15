@@ -10,15 +10,10 @@ namespace Phezu {
     
     class Engine;
     class Prefab;
+    class SceneAsset;
     
     struct AssetRef {
         std::vector<std::filesystem::path> Filepaths;
-    };
-    
-    struct Asset {
-        GUID Guid;
-        bool IsLoaded = false;
-        void* AssetPtr;
     };
     
     class AssetManager {
@@ -27,7 +22,7 @@ namespace Phezu {
         AssetManager(Engine* engine);
     public:
         void Init(const std::filesystem::path& projectPath);
-        Asset GetSceneAsset(GUID guid);
+        const SceneAsset* GetSceneAsset(GUID guid);
         const Prefab* GetPrefabAsset(GUID guid);
         BuildScenesConfig GetBuildScenesConfig() { return m_BuildScenesConfig; }
     private:
@@ -36,7 +31,7 @@ namespace Phezu {
         void LoadBuildScenesConfig(const std::filesystem::path& buildScenesConfigPath);
     private:
         std::unordered_map<GUID, AssetRef> m_AssetMap;
-        std::unordered_map<GUID, Asset> m_LoadedAssets;
+        std::unordered_map<GUID, void*> m_LoadedAssets;
         BuildScenesConfig m_BuildScenesConfig;
     private:
         Engine* m_Engine;
