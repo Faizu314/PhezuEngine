@@ -131,7 +131,6 @@ namespace Phezu {
             return nullptr;
         }
 
-        Asset prefabAsset = m_AssetManager.GetPrefabAsset(guid);
-        return static_cast<const Prefab*>(prefabAsset.AssetPtr);
+        return m_AssetManager.GetPrefabAsset(guid);
     }
 }

@@ -1,13 +1,6 @@
-#include "Scene/BlueprintEntry.hpp"
+#include "AssetManagement/BlueprintEntry.hpp"
 
 namespace Phezu {
-    
-    void BlueprintEntry::Serialize(nlohmann::json& j) const {
-        j["FileID"] = FileID;
-        j["TypeID"] = static_cast<uint16_t>(TypeID);
-        j["TypeName"] = TypeName;
-        j["Properties"] = Properties;
-    }
     
     void BlueprintEntry::Deserialize(const nlohmann::json& j) {
         FileID = j["FileID"].get<uint64_t>();

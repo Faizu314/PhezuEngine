@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <string>
 #include "Maths/Math.hpp"
-#include "Scene/Blueprint.hpp"
+#include "AssetManagement/Blueprint.hpp"
 
 namespace Phezu {
     
@@ -31,7 +31,6 @@ namespace Phezu {
         void Unload();
         long long unsigned int GetFrameCount() const;
     public:
-        std::string Serialize() const;
         void Deserialize(const std::string& data);
     private:
         void DestroyEntityInternal(uint64_t entityID);

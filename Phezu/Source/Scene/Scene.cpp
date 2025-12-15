@@ -6,6 +6,7 @@
 #include "Scene/Components/PhysicsData.hpp"
 #include "Scene/Components/ScriptComponent.hpp"
 #include "Scene/Prefab.hpp"
+#include "Scene/BlueprintInstantiator.hpp"
 #include "Core/Engine.hpp"
 
 #include <stdexcept>
@@ -31,7 +32,9 @@ namespace Phezu {
             return nullptr;
         }
         
-        auto entity = prefab->Instantiate(this);
+        BlueprintRuntimeContext ctx = { &m_Engine->GetAssetManager(), &m_Engine->GetScriptEngine(), this };
+
+        auto entity = BlueprintInstantiator::Instantiate(ctx, prefab->GetBlueprint());
         
         entity->RecalculateSubtreeTransforms();
                 
@@ -70,7 +73,9 @@ namespace Phezu {
     }
     
     void Scene::Load() {
-        m_SceneEntities.Instantiate(this);
+        BlueprintRuntimeContext ctx = { &m_Engine->GetAssetManager(), &m_Engine->GetScriptEngine(), this };
+
+        BlueprintInstantiator::Instantiate(ctx, m_SceneEntities);
 
         m_IsLoaded = true;
         
@@ -154,22 +159,11 @@ namespace Phezu {
         return m_Engine->GetFrameCount();
     }
     
-    std::string Scene::Serialize() const {
-        nlohmann::json j;
-        
-        j["Name"] = m_Name;
-        j["Guid"] = m_Guid.Value;
-        m_SceneEntities.Serialize(j);
-
-        return j.dump(4);
-    }
-    
     void Scene::Deserialize(const std::string& data) {
         nlohmann::json j = nlohmann::json::parse(data);
 
         m_Name = j["Name"].get<std::string>();
         m_Guid.Value = j["Guid"].get<uint64_t>();
         m_SceneEntities.Deserialize(j);
-        m_SceneEntities.Initialize(m_Engine, m_Guid);
     }
 }
