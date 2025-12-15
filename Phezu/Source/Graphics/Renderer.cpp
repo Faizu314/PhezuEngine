@@ -36,10 +36,10 @@ namespace Phezu {
 
         std::string vert = 
             "#version 460 core\n"
-            "layout (location = 0) in vec3 aPos;\n"
+            "layout (location = 0) in vec2 aPos;\n"
             "void main()\n"
             "{\n"
-            "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+            "   gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0);\n"
             "}\0";
 
         std::string frag =
@@ -60,7 +60,7 @@ namespace Phezu {
         };
 
         m_QuadIndices = m_Api->CreateIndexBuffer(indices, sizeof(indices), BufferType::Static);
-        m_QuadLayout.Push(VertexAttributeType::Float, VertexAttributeCount::Three);
+        m_QuadLayout.Push(VertexAttributeType::Float, VertexAttributeCount::Two);
     }
 
     void Renderer::Destroy() {
@@ -122,10 +122,10 @@ namespace Phezu {
         m_DefaultShader->SetVec4("tint", renderData->Tint);
 
         float vertices[] = {
-             dl.X(), dl.Y(), 0.0f,
-             dl.X(), ur.Y(), 0.0f,
-             ur.X(), ur.Y(), 0.0f,
-             ur.X(), dl.Y(), 0.0f
+             dl.X(), dl.Y(),
+             dl.X(), ur.Y(),
+             ur.X(), ur.Y(),
+             ur.X(), dl.Y()
         };
 
         IVertexBuffer* vertexBuffer = m_Api->CreateVertexBuffer(vertices, sizeof(vertices), BufferType::Static);
