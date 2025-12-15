@@ -7,7 +7,7 @@
 
 namespace Phezu {
     
-    enum class EntryType : uint16_t {
+    enum class EntryType : uint8_t {
         Invalid = 0,
         
         Entity = 1,
@@ -35,7 +35,6 @@ namespace Phezu {
     public:
         std::unordered_map<std::string, nlohmann::json> Properties;
     public:
-        void Serialize(nlohmann::json& j) const;
         void Deserialize(const nlohmann::json& j);
     };
 }

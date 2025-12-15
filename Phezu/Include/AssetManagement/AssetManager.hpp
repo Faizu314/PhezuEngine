@@ -9,6 +9,7 @@
 namespace Phezu {
     
     class Engine;
+    class Prefab;
     
     struct AssetRef {
         std::vector<std::filesystem::path> Filepaths;
@@ -27,7 +28,7 @@ namespace Phezu {
     public:
         void Init(const std::filesystem::path& projectPath);
         Asset GetSceneAsset(GUID guid);
-        Asset GetPrefabAsset(GUID guid);
+        const Prefab* GetPrefabAsset(GUID guid);
         BuildScenesConfig GetBuildScenesConfig() { return m_BuildScenesConfig; }
     private:
         void LoadAssetMap(const std::filesystem::path& assetsFolder);

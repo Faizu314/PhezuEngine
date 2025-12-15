@@ -1,7 +1,7 @@
 #include "AssetManagement/AssetManager.hpp"
 #include "AssetManagement/MetaData.hpp"
 #include "Scene/Scene.hpp"
-#include "Scene/Blueprint.hpp"
+#include "AssetManagement/Blueprint.hpp"
 #include "Scene/Prefab.hpp"
 #include "Serialization/FileStream.hpp"
 #include "Core/Platform.hpp"
@@ -85,15 +85,15 @@ namespace Phezu {
         return sceneAsset;
     }
     
-    Asset AssetManager::GetPrefabAsset(GUID guid) {
+    const Prefab* AssetManager::GetPrefabAsset(GUID guid) {
         if (m_AssetMap.find(guid) == m_AssetMap.end()) {
             Log("Prefab Asset with guid: %i not found", guid.Value);
-            return Asset();
+            return nullptr;
         }
         if (m_LoadedAssets.find(guid) != m_LoadedAssets.end())
-            return m_LoadedAssets[guid];
+            return static_cast<Prefab*>(m_LoadedAssets[guid].AssetPtr);
         
-        Prefab* prefab = new Prefab(m_Engine, guid);
+        Prefab* prefab = new Prefab();
         std::string prefabPath = m_AssetMap[guid].Filepaths[0].string();
         
         FileStreamReader reader(prefabPath);
@@ -110,6 +110,6 @@ namespace Phezu {
         
         m_LoadedAssets[guid] = prefabAsset;
         
-        return prefabAsset;
+        return static_cast<Prefab*>(prefabAsset.AssetPtr);
     }
 }
