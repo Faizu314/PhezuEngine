@@ -6,12 +6,11 @@
 #include <unordered_map>
 
 #include "Scene/Components/TransformData.hpp"
-#include "Scene/Components/ScriptComponent.hpp"
 
 namespace Phezu {
     
     class Scene;
-    class Physics;
+    class ScriptComponent;
     
     class Entity {
     public:

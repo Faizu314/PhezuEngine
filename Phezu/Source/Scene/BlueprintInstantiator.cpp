@@ -1,17 +1,16 @@
-#include "Scene/BlueprintInstantiator.hpp"
-#include "Asset/Core/Asset.hpp"
+#include "nlohmann/json.hpp"
+
+#include "Core/Types/Color.hpp"
 #include "Asset/Core/AssetManager.hpp"
-#include "Asset/Blueprint/Blueprint.hpp"
 #include "Asset/Types/PrefabAsset.hpp"
+#include "Scene/BlueprintInstantiator.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/Entity.hpp"
 #include "Scene/Components/ShapeData.hpp"
 #include "Scene/Components/RenderData.hpp"
 #include "Scene/Components/PhysicsData.hpp"
+#include "Scene/Components/ScriptComponent.hpp"
 #include "Scripting/ScriptEngine.hpp"
-#include "Scripting/ScriptInstance.hpp"
-#include "nlohmann/json.hpp"
-#include "Core/Types/Color.hpp"
 
 template <>
 struct std::hash<Phezu::RegistryKey> {
@@ -215,7 +214,7 @@ namespace Phezu {
 
             std::string classFullname = GetProperty<std::string>("Fullname", entry, overrides);
 
-            auto scriptComponent = parentEntity->AddScriptComponent(classFullname);
+            ScriptComponent* scriptComponent = parentEntity->AddScriptComponent(classFullname);
             components[entry.FileID] = scriptComponent;
         }
 

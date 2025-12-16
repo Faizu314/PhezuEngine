@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Asset/Blueprint/Blueprint.hpp"
+#include "Scene/Components/DataComponent.hpp"
+#include "Serialization/CustomSerialization.hpp"
 
 namespace Phezu {
 	

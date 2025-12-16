@@ -1,7 +1,7 @@
-#include "Platform/Win32/LoggerWin32.hpp"
-
 #include <iostream>
 #include <windows.h>
+
+#include "Platform/Win32/LoggerWin32.hpp"
 
 namespace Phezu {
 

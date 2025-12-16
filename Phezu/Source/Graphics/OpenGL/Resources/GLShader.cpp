@@ -1,6 +1,5 @@
-#include "Graphics/OpenGL/Resources/GLShader.hpp"
 #include "Core/Platform.hpp"
-#include "glad/glad.h"
+#include "Graphics/OpenGL/Resources/GLShader.hpp"
 
 namespace Phezu {
 	

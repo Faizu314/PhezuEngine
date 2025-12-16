@@ -4,10 +4,10 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
+
 #include "nlohmann/json.hpp"
+#include "Core/Types/GUID.hpp"
 #include "Asset/Blueprint/BlueprintEntry.hpp"
-#include "Scene/Components/DataComponent.hpp"
-#include "Serialization/CustomSerialization.hpp"
 
 namespace Phezu {
     
@@ -28,7 +28,6 @@ namespace Phezu {
         void Deserialize(const nlohmann::json& j);
         GUID GetGuid() const { return m_Guid; }
     private:
-        Engine* m_Engine = nullptr;
         GUID m_Guid;
     };
 }

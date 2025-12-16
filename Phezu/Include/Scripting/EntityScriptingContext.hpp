@@ -1,13 +1,11 @@
 #pragma once
 
-#include "Scripting/ScriptEngine.hpp"
-#include "Scripting/ScriptClass.hpp"
+#include <vector>
+#include <unordered_map>
+
 #include "Scripting/EntityInstance.hpp"
 #include "Scripting/BehaviourInstance.hpp"
 #include "Scripting/ComponentInstance.hpp"
-
-#include <vector>
-#include <unordered_map>
 
 namespace Phezu {
 	struct EntityScriptingContext {

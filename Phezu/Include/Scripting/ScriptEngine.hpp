@@ -1,21 +1,18 @@
 #pragma once
 
+#include <string>
+#include <unordered_map>
+
 #include "Scripting/MonoDefs.hpp"
 #include "Scripting/ScriptDefs.hpp"
 #include "Scripting/EntityScriptingContext.hpp"
 
-#include <string>
-#include <unordered_map>
-
 namespace Phezu {
 
 	class Engine;
-	class Scene;
 	class Entity;
 	class ScriptClass;
-	class ScriptComponent;
 	class ScriptInstance;
-	struct EntityScriptingContext;
     
     std::string ToString(ManagedType t);
     

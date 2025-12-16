@@ -1,7 +1,5 @@
 #include "Platform/Win32/WindowWin32.hpp"
 
-#include "string.h"
-
 namespace Phezu {
 
     int WindowWin32::Init(const WindowArgs& args, const char winClassName[], HINSTANCE hInstance) {

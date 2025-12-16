@@ -1,5 +1,5 @@
-#include "Graphics/OpenGL/Resources/GLVertexArray.hpp"
 #include "Core/Platform.hpp"
+#include "Graphics/OpenGL/Resources/GLVertexArray.hpp"
 
 namespace Phezu {
 
@@ -72,7 +72,7 @@ namespace Phezu {
 
 	void GLVertexArray::ApplyVertexLayout(const VertexLayout& layout) {
 		GLsizei stride = 0;
-		GLuint offset = 0;
+		uint64_t offset = 0;
 
 		for (int i = 0; i < layout.GetAttributesCount(); i++) {
 			stride += GetVertexAttributeSize(layout.GetAttributeAt(i));

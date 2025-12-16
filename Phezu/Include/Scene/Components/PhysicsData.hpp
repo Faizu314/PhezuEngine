@@ -1,8 +1,5 @@
 #pragma once
 
-#include <functional>
-#include <unordered_map>
-
 #include "Maths/Math.hpp"
 #include "Scene/Components/DataComponent.hpp"
 

@@ -1,5 +1,6 @@
-#include "Graphics/Core/Descriptors/VertexLayout.hpp"
 #include "Core/Platform.hpp"
+
+#include "Graphics/Core/Descriptors/VertexLayout.hpp"
 
 namespace Phezu {
 

@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <vector>
 #include <filesystem>
+
 #include "Core/Types/GUID.hpp"
 #include "Asset/Core/Asset.hpp"
 #include "Asset/Configs/BuildScenesConfig.hpp"
@@ -13,9 +14,7 @@ namespace Phezu {
     class PrefabAsset;
     class SceneAsset;
     
-    struct AssetRef {
-        std::vector<std::filesystem::path> Filepaths;
-    };
+    using AssetRef = std::vector<std::filesystem::path>;
     
     class AssetManager {
     public:
@@ -50,7 +49,7 @@ namespace Phezu {
         if (asset != nullptr)
             return asset;
 
-        std::string assetPath = m_AssetMap[guid].Filepaths[0].string();
+        std::string assetPath = m_AssetMap[guid][0].string();
 
         asset = new T();
         asset->Deserialize(GetFileFromDisk(assetPath));

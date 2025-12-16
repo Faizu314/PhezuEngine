@@ -1,10 +1,10 @@
+#include <algorithm>
+
 #include "Physics.hpp"
 #include "Core/Engine.hpp"
 #include "Scene/Entity.hpp"
 #include "Scene/Components/PhysicsData.hpp"
 #include "Scene/Components/ShapeData.hpp"
-
-#include <algorithm>
 
 namespace Phezu {
     

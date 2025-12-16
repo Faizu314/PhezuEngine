@@ -1,12 +1,10 @@
 #pragma once
 
-#include "Maths/Math.hpp"
-#include "Core/Types/Color.hpp"
-#include "Core/Platform.hpp"
-
-#include "Graphics/Core/GraphicsTypes.hpp"
-
 #include <string>
+
+#include "Core/Platform.hpp"
+#include "Core/Types/Color.hpp"
+#include "Graphics/Core/GraphicsTypes.hpp"
 
 namespace Phezu {
 

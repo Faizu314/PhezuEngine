@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include "Asset/Core/Asset.hpp"
 #include "Asset/Blueprint/Blueprint.hpp"
 

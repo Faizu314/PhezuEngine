@@ -1,3 +1,9 @@
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+
+#include "glad/glad.h"
+#include "glad/glad_wgl.h"
+
 #include "Platform/Win32/PlatformWin32.hpp"
 #include "Platform/Win32/WindowWin32.hpp"
 #include "Platform/Win32/InputWin32.hpp"
@@ -5,11 +11,6 @@
 
 #include "Graphics/Core/GraphicsAPI.hpp"
 #include "Graphics/OpenGL/OpenGLAPI.hpp"
-
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#include "glad/glad.h"
-#include "glad/glad_wgl.h"
 
 namespace Phezu {
 	

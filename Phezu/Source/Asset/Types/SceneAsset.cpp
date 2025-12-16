@@ -1,5 +1,6 @@
-#include "Asset/Types/SceneAsset.hpp"
 #include "nlohmann/json.hpp"
+
+#include "Asset/Types/SceneAsset.hpp"
 
 namespace Phezu {
 

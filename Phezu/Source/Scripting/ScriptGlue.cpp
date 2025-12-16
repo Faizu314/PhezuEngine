@@ -1,19 +1,15 @@
+#include "glm/glm.hpp"
+#include <mono/jit/jit.h>
+
+#include "Core/Platform.hpp"
 #include "Core/Engine.hpp"
 #include "Scripting/ScriptEngine.hpp"
 #include "Scripting/ScriptGlue.hpp"
-#include "Scripting/ScriptInstance.hpp"
-
 #include "Scene/Scene.hpp"
+#include "Scene/Entity.hpp"
 #include "Scene/Components/PhysicsData.hpp"
 #include "Scene/Components/RenderData.hpp"
-#include "Scene/Entity.hpp"
 #include "Maths/Math.hpp"
-
-#include "Core/Platform.hpp"
-
-#include "glm/glm.hpp"
-#include <mono/jit/jit.h>
-#include "mono/metadata/object.h"
 
 namespace Phezu {
 	

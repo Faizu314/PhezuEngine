@@ -1,9 +1,9 @@
 #pragma once
 
 #include <vector>
+
 #include "Asset/Core/Asset.hpp"
 #include "Asset/Blueprint/Blueprint.hpp"
-#include "Core/Types/GUID.hpp"
 
 namespace Phezu {
     

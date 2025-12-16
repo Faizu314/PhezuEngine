@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Core/Types/Color.hpp"
-
 #include <string>
+
+#include "Core/Types/Color.hpp"
 
 namespace Phezu {
 

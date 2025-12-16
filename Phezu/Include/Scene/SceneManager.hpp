@@ -1,10 +1,5 @@
 #pragma once
 
-#include <string>
-#include <vector>
-#include <functional>
-#include <unordered_map>
-
 #include "Asset/Core/Asset.hpp"
 #include "Asset/Types/SceneAsset.hpp"
 #include "Asset/Configs/BuildScenesConfig.hpp"
@@ -13,7 +8,6 @@ namespace Phezu {
     
     class Engine;
     class Scene;
-    class Entity;
     class CameraData;
     
     class SceneManager {

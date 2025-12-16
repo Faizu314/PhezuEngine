@@ -2,7 +2,7 @@
 
 #include <unordered_map>
 #include <string>
-#include "Core/Types/GUID.hpp"
+
 #include "nlohmann/json.hpp"
 
 namespace Phezu {
@@ -29,8 +29,8 @@ namespace Phezu {
         BlueprintEntry(uint64_t fileID, EntryType typeID, std::string typeName)
         : FileID(fileID), TypeID(typeID), TypeName(typeName) {}
     public:
-        uint64_t FileID;
-        EntryType TypeID;
+        uint64_t FileID = -1;
+        EntryType TypeID = EntryType::Invalid;
         std::string TypeName;
     public:
         std::unordered_map<std::string, nlohmann::json> Properties;

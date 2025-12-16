@@ -4,6 +4,7 @@
 #include <string>
 
 #include "glad/glad.h"
+
 #include "Graphics/Core/Resources/Shader.hpp"
 
 namespace Phezu {

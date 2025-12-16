@@ -1,13 +1,13 @@
 #pragma once
 
+#include <filesystem>
+
 #include "Core/Platform.hpp"
 #include "Physics.hpp"
 #include "Scene/SceneManager.hpp"
 #include "Asset/Core/AssetManager.hpp"
 #include "Graphics/Renderer.hpp"
 #include "Scripting/ScriptEngine.hpp"
-
-#include <filesystem>
 
 namespace Phezu {
     
