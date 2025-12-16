@@ -1,4 +1,5 @@
 #include "Scene/BlueprintInstantiator.hpp"
+#include "Asset/Core/Asset.hpp"
 #include "Asset/Core/AssetManager.hpp"
 #include "Asset/Blueprint/Blueprint.hpp"
 #include "Asset/Types/PrefabAsset.hpp"
@@ -91,7 +92,8 @@ namespace Phezu {
             const BlueprintEntry& entry = bp.PrefabEntries[i];
 
             uint64_t prefabGuid = GetProperty<uint64_t>("SourcePrefab", entry, overrides);
-            const Blueprint& prefabBlueprint = context.assetManager->GetPrefabAsset(prefabGuid)->GetBlueprint();
+            AssetHandle<PrefabAsset> prefabHandle = { prefabGuid };
+            const Blueprint& prefabBlueprint = context.assetManager->GetAsset(prefabHandle)->GetBlueprint();
 
             PrefabOverrides prefabOverrides = entry.Properties.at("Overrides").get<PrefabOverrides>();
             InstantiateEntitiesAndComponents(context, prefabBlueprint, registry, entry.FileID, prefabOverrides);
@@ -255,7 +257,8 @@ namespace Phezu {
 
             uint64_t prefabGuid = GetProperty<uint64_t>("SourcePrefab", entry, overrides);
             uint64_t parentFileID = GetProperty<uint64_t>("Parent", entry, overrides);
-            const Blueprint& prefabBlueprint = context.assetManager->GetPrefabAsset(prefabGuid)->GetBlueprint();
+            AssetHandle<PrefabAsset> prefabHandle = { prefabGuid };
+            const Blueprint& prefabBlueprint = context.assetManager->GetAsset(prefabHandle)->GetBlueprint();
 
             PrefabOverrides prefabOverrides = entry.Properties.at("Overrides").get<PrefabOverrides>();
             BuildHierarchyAndInitializeScripts(context, prefabBlueprint, registry, entry.FileID, prefabOverrides);

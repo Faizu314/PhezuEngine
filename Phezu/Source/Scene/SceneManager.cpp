@@ -18,7 +18,7 @@ namespace Phezu {
     }
 
     void SceneManager::OnStartGame() {
-        LoadScene(m_BuildScenesConfig.MasterScene);
+        LoadScene(AssetHandle<SceneAsset>{ m_BuildScenesConfig.MasterScene });
 
         auto cameraEntity = m_MasterScene->CreateEntity();
         m_ActiveCamera = dynamic_cast<CameraData*>(cameraEntity->AddDataComponent(ComponentType::Camera));
@@ -37,8 +37,8 @@ namespace Phezu {
             m_ActiveScene->BeginUnload();
     }
     
-    Scene* SceneManager::LoadScene(GUID sceneGuid) {
-        const SceneAsset* masterSceneAsset = m_Engine->GetAssetManager().GetSceneAsset(sceneGuid);
+    Scene* SceneManager::LoadScene(AssetHandle<SceneAsset> sceneHandle) {
+        const SceneAsset* masterSceneAsset = m_Engine->GetAssetManager().GetAsset(sceneHandle);
         Scene* scene = new Scene(m_Engine, masterSceneAsset->GetName());
         BlueprintRuntimeContext ctx = { &m_Engine->GetAssetManager(), &m_Engine->GetScriptEngine(), scene };
         BlueprintInstantiator::Instantiate(ctx, masterSceneAsset->GetBlueprint());
@@ -55,7 +55,7 @@ namespace Phezu {
             delete m_ActiveScene;
         }
         
-        m_ActiveScene = LoadScene(m_BuildScenesConfig.BuildScenes[m_SceneToLoad]);
+        m_ActiveScene = LoadScene(AssetHandle<SceneAsset>{ m_BuildScenesConfig.BuildScenes[m_SceneToLoad] });
         m_LoadSceneAfterFrame = false;
     }
     

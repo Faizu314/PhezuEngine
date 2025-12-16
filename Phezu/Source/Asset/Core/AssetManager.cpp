@@ -56,50 +56,25 @@ namespace Phezu {
         
         m_BuildScenesConfig.Deserialize(configString);
     }
-    
-    const SceneAsset* AssetManager::GetSceneAsset(GUID guid) {
-        if (m_AssetMap.find(guid) == m_AssetMap.end()) {
-            Log("Scene Asset with guid: %i not found", guid.Value);
-            return nullptr;
-        }
-        if (m_LoadedAssets.find(guid) != m_LoadedAssets.end())
-            return static_cast<SceneAsset*>(m_LoadedAssets[guid]);
-        
-        std::string scenePath = m_AssetMap[guid].Filepaths[0].string();
-        SceneAsset* scene = new SceneAsset();
-        
-        FileStreamReader reader(scenePath);
+
+    std::string AssetManager::GetFileFromDisk(const std::filesystem::path& filePath) {
+        FileStreamReader reader(filePath.string());
         std::string fileContent;
         fileContent.resize(reader.Size());
         reader.Read(fileContent.data(), reader.Size());
-        
-        scene->Deserialize(fileContent);
-        
-        m_LoadedAssets[guid] = scene;
-        
-        return scene;
+
+        return fileContent;
     }
-    
-    const PrefabAsset* AssetManager::GetPrefabAsset(GUID guid) {
+
+    IAsset* AssetManager::TryGetLoadedAsset(GUID guid) {
         if (m_AssetMap.find(guid) == m_AssetMap.end()) {
-            Log("Prefab Asset with guid: %i not found", guid.Value);
+            Log("Scene Asset with guid: %i not found\n", guid.Value);
             return nullptr;
         }
-        if (m_LoadedAssets.find(guid) != m_LoadedAssets.end())
-            return static_cast<PrefabAsset*>(m_LoadedAssets[guid]);
-        
-        PrefabAsset* prefab = new PrefabAsset();
-        std::string prefabPath = m_AssetMap[guid].Filepaths[0].string();
-        
-        FileStreamReader reader(prefabPath);
-        std::string fileContent;
-        fileContent.resize(reader.Size());
-        reader.Read(fileContent.data(), reader.Size());
-        
-        prefab->Deserialize(fileContent);
-        
-        m_LoadedAssets[guid] = prefab;
-        
-        return prefab;
+        if (m_LoadedAssets.find(guid) == m_LoadedAssets.end())
+            return nullptr;
+
+        return m_LoadedAssets[guid];
     }
+
 }

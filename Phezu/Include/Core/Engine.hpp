@@ -32,8 +32,6 @@ namespace Phezu {
         int Init(EngineArgs& args);
         void Run();
     public:
-        const PrefabAsset* GetPrefab(GUID guid);
-    public:
         SceneManager& GetSceneManager() { return m_SceneManager; }
         AssetManager& GetAssetManager() { return m_AssetManager; }
         ScriptEngine& GetScriptEngine() { return m_ScriptEngine; }

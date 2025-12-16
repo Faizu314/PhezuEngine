@@ -23,8 +23,8 @@ namespace Phezu {
         return entity;
     }
     
-    Entity* Scene::CreateEntity(GUID prefabGuid) {
-        auto prefab = m_Engine->GetPrefab(prefabGuid);
+    Entity* Scene::CreateEntity(AssetHandle<PrefabAsset> prefabHandle) {
+        auto prefab = m_Engine->GetAssetManager().GetAsset(prefabHandle);
         
         if (!prefab) {
             //TODO: add asserts

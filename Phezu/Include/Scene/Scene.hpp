@@ -4,7 +4,8 @@
 #include <unordered_map>
 #include <string>
 #include "Maths/Math.hpp"
-#include "Core/Types/GUID.hpp"
+#include "Asset/Core/Asset.hpp"
+#include "Asset/Types/PrefabAsset.hpp"
 
 namespace Phezu {
     
@@ -18,7 +19,7 @@ namespace Phezu {
         Scene(Engine* engine, const std::string& name);
     public:
         Entity* CreateEntity();
-        Entity* CreateEntity(GUID prefabGuid);
+        Entity* CreateEntity(AssetHandle<PrefabAsset> prefabHandle);
         Entity* GetEntity(uint64_t entityID) const;
         void DestroyEntity(uint64_t entityID);
         void LogicUpdate(float deltaTime);
@@ -32,7 +33,6 @@ namespace Phezu {
         void DestroyEntityInternal(Entity* entity);
     private:
         Engine* const m_Engine;
-        GUID m_Guid;
         std::string m_Name;
         std::unordered_map<uint64_t, Entity*> m_RuntimeEntities;
         std::vector<uint64_t> m_EntitiesToDestroy;
