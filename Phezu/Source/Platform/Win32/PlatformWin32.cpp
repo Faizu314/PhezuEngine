@@ -76,7 +76,7 @@ namespace Phezu {
 		s_Logger = new LoggerWin32();
 	}
 
-	int PlatformWin32::Init(const WindowArgs& args) {
+	void PlatformWin32::Init(const WindowArgs& args) {
 		s_Logger->Init();
 
 		m_hInstance = GetModuleHandle(NULL);
@@ -93,22 +93,17 @@ namespace Phezu {
 		ATOM atom = RegisterClass(&wc);
 
 		if (!atom) {
+			Phezu::Log("Assert Here\n");
 			PrintLastWinError("Unable to register class");
-			return -1;
 		}
 
-		int error = s_Window->Init(args, CLASS_NAME, m_hInstance);
-
-		if (error != 0)
-			return error;
+		s_Window->Init(args, CLASS_NAME, m_hInstance);
 
 		m_WindowHandle = GetDC(s_Window->GetWindowPtr());
 
 		s_Input->Init();
 
 		CreateGraphicsContext();
-
-		return 0;
 	}
 
 	void PlatformWin32::CreateGraphicsContext() {

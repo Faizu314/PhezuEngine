@@ -20,9 +20,9 @@
 #include "glm/glm.hpp"
 
 namespace Phezu {
-        
+    
     Renderer::Renderer()
-    : m_Api(nullptr), m_Window(nullptr), m_DefaultShader(nullptr), m_WindowSubId(0) {}
+    : m_Api(nullptr), m_Window(nullptr), m_DefaultShader(nullptr), m_QuadIndices(nullptr), m_WindowSubId(0) {}
     
     Renderer::~Renderer() {}
     

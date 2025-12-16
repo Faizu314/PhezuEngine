@@ -27,7 +27,7 @@ namespace Phezu {
 
 	class IPlatform {
 	public:
-		virtual int Init(const WindowArgs& args) = 0;
+		virtual void Init(const WindowArgs& args) = 0;
 		virtual void Destroy() = 0;
 	public:
 		virtual void PollEvents() = 0;

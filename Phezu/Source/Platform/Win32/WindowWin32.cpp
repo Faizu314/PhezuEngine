@@ -2,7 +2,7 @@
 
 namespace Phezu {
 
-    int WindowWin32::Init(const WindowArgs& args, const char winClassName[], HINSTANCE hInstance) {
+    void WindowWin32::Init(const WindowArgs& args, const char winClassName[], HINSTANCE hInstance) {
         m_Width = args.Width;
         m_Height = args.Height;
         m_RenderScale = args.RenderScale;
@@ -23,13 +23,12 @@ namespace Phezu {
 
         if (m_WindowPtr == nullptr)
         {
+            Log("Close program here\n");
             PrintLastWinError("Unable to open window");
-            return -1;
+            return;
         }
 
         ShowWindow(m_WindowPtr, SW_SHOWNORMAL);
-
-        return 0;
     }
 
     void WindowWin32::Update() {
