@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include "nlohmann/json.hpp"
-#include "AssetManagement/BlueprintEntry.hpp"
+#include "Asset/Blueprint/BlueprintEntry.hpp"
 #include "Scene/Components/DataComponent.hpp"
 #include "Serialization/CustomSerialization.hpp"
 

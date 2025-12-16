@@ -1,4 +1,4 @@
-#include "AssetManagement/BuildScenesConfig.hpp"
+#include "Asset/Configs/BuildScenesConfig.hpp"
 #include "nlohmann/json.hpp"
 
 namespace Phezu {

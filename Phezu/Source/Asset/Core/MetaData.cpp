@@ -1,4 +1,4 @@
-#include "AssetManagement/MetaData.hpp"
+#include "Asset/Core/MetaData.hpp"
 #include "nlohmann/json.hpp"
 
 namespace Phezu {

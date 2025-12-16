@@ -5,7 +5,7 @@
 #include "Scene/Components/RenderData.hpp"
 #include "Scene/Components/PhysicsData.hpp"
 #include "Scene/Components/ScriptComponent.hpp"
-#include "Scene/Prefab.hpp"
+#include "Asset/Types/PrefabAsset.hpp"
 #include "Scene/BlueprintInstantiator.hpp"
 #include "Core/Engine.hpp"
 
@@ -13,7 +13,6 @@
 
 namespace Phezu {
     
-    Scene::Scene(Engine* engine) : m_Engine(engine) { }
     Scene::Scene(Engine* engine, const std::string& name) : m_Engine(engine), m_Name(name) { }
     
     Entity* Scene::CreateEntity() {

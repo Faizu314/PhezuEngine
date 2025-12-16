@@ -1,6 +1,7 @@
 #include "Scene/BlueprintInstantiator.hpp"
-#include "AssetManagement/AssetManager.hpp"
-#include "AssetManagement/Blueprint.hpp"
+#include "Asset/Core/AssetManager.hpp"
+#include "Asset/Blueprint/Blueprint.hpp"
+#include "Asset/Types/PrefabAsset.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/Entity.hpp"
 #include "Scene/Components/ShapeData.hpp"
@@ -9,7 +10,6 @@
 #include "Scripting/ScriptEngine.hpp"
 #include "Scripting/ScriptInstance.hpp"
 #include "nlohmann/json.hpp"
-#include "Scene/Prefab.hpp"
 #include "Core/Types/Color.hpp"
 
 template <>

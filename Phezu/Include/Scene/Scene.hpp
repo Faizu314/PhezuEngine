@@ -4,18 +4,17 @@
 #include <unordered_map>
 #include <string>
 #include "Maths/Math.hpp"
-#include "AssetManagement/Blueprint.hpp"
+#include "Core/Types/GUID.hpp"
 
 namespace Phezu {
     
     class Engine;
     class Entity;
-    class Prefab;
+    class PrefabAsset;
     
     class Scene {
     public:
         Scene() = delete;
-        Scene(Engine* engine);
         Scene(Engine* engine, const std::string& name);
     public:
         Entity* CreateEntity();

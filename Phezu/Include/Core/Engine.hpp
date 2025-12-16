@@ -3,7 +3,7 @@
 #include "Core/Platform.hpp"
 #include "Physics.hpp"
 #include "Scene/SceneManager.hpp"
-#include "AssetManagement/AssetManager.hpp"
+#include "Asset/Core/AssetManager.hpp"
 #include "Graphics/Renderer.hpp"
 #include "Scripting/ScriptEngine.hpp"
 
@@ -12,7 +12,7 @@
 namespace Phezu {
     
     class Scene;
-    class Prefab;
+    class PrefabAsset;
 
     struct Paths {
         std::filesystem::path ExePath;
@@ -32,7 +32,7 @@ namespace Phezu {
         int Init(EngineArgs& args);
         void Run();
     public:
-        const Prefab* GetPrefab(GUID guid);
+        const PrefabAsset* GetPrefab(GUID guid);
     public:
         SceneManager& GetSceneManager() { return m_SceneManager; }
         AssetManager& GetAssetManager() { return m_AssetManager; }

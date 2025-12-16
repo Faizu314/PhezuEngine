@@ -1,6 +1,6 @@
 #pragma once
 
-#include "AssetManagement/Blueprint.hpp"
+#include "Asset/Blueprint/Blueprint.hpp"
 
 namespace Phezu {
 

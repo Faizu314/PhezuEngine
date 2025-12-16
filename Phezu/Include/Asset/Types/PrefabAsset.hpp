@@ -1,14 +1,14 @@
 #pragma once
 
 #include <vector>
-#include "AssetManagement/Blueprint.hpp"
+#include "Asset/Blueprint/Blueprint.hpp"
 #include "Core/Types/GUID.hpp"
 
 namespace Phezu {
     
-    class Prefab {
+    class PrefabAsset {
     public:
-        Prefab() = default;
+        PrefabAsset() = default;
     public:
         GUID GetGuid() { return m_Guid; }
     public:

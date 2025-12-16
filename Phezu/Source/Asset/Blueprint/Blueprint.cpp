@@ -1,4 +1,4 @@
-#include "AssetManagement/Blueprint.hpp"
+#include "Asset/Blueprint/Blueprint.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/Entity.hpp"
 #include "Scene/Components/ShapeData.hpp"
@@ -6,7 +6,7 @@
 #include "Scene/Components/PhysicsData.hpp"
 #include "Scripting/ScriptInstance.hpp"
 #include "nlohmann/json.hpp"
-#include "Scene/Prefab.hpp"
+#include "Asset/Types/PrefabAsset.hpp"
 #include "Core/Engine.hpp"
 #include "Core/Types/Color.hpp"
 

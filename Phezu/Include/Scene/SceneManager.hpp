@@ -5,7 +5,7 @@
 #include <functional>
 #include <unordered_map>
 
-#include "AssetManagement/AssetManager.hpp"
+#include "Asset/Configs/BuildScenesConfig.hpp"
 
 namespace Phezu {
     
