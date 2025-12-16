@@ -124,13 +124,4 @@ namespace Phezu {
 
         delete m_Platform;
     }
-    
-    const PrefabAsset* Engine::GetPrefab(GUID guid) {
-        if (!m_HasInited) {
-            Log("Trying to get prefab from non inited engine");
-            return nullptr;
-        }
-
-        return m_AssetManager.GetPrefabAsset(guid);
-    }
 }

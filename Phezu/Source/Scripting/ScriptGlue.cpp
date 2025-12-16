@@ -143,7 +143,7 @@ namespace Phezu {
     }
     
     uint32_t Entity_Instantiate(GUID prefabGuid) {
-        Entity* entity = s_Data->Engine->GetSceneManager().GetMasterScene()->CreateEntity(prefabGuid);
+		Entity* entity = s_Data->Engine->GetSceneManager().GetMasterScene()->CreateEntity({ prefabGuid });
         return s_Data->ScriptEngine->GetEntityScriptInstanceGcHandle(entity->GetEntityID());
     }
     

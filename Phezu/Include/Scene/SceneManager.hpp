@@ -5,6 +5,8 @@
 #include <functional>
 #include <unordered_map>
 
+#include "Asset/Core/Asset.hpp"
+#include "Asset/Types/SceneAsset.hpp"
 #include "Asset/Configs/BuildScenesConfig.hpp"
 
 namespace Phezu {
@@ -30,7 +32,7 @@ namespace Phezu {
     public:
         Entity* FindEntity(uint64_t entityID);
     private:
-        Scene* LoadScene(GUID sceneGuid);
+        Scene* LoadScene(AssetHandle<SceneAsset> sceneGuid);
     private:
         Engine* m_Engine;
     private:
