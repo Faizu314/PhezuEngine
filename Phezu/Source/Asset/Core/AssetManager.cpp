@@ -1,11 +1,12 @@
+#include <filesystem>
+
 #include "Asset/Core/AssetManager.hpp"
 #include "Asset/Core/MetaData.hpp"
 #include "Asset/Types/SceneAsset.hpp"
-#include "Asset/Blueprint/Blueprint.hpp"
 #include "Asset/Types/PrefabAsset.hpp"
+#include "Asset/Blueprint/Blueprint.hpp"
 #include "Serialization/FileStream.hpp"
 #include "Core/Platform.hpp"
-#include <filesystem>
 
 namespace Phezu {
     
@@ -40,7 +41,7 @@ namespace Phezu {
                 std::filesystem::path assetPath = entry.path();
                 assetPath.replace_extension("");
                 AssetRef& assetRef = m_AssetMap[metaData.Guid];
-                assetRef.Filepaths.push_back(assetPath);
+                assetRef.push_back(assetPath);
             }
             else if (entry.is_directory()) {
                 LoadAssetsInDirectory(entry.path());

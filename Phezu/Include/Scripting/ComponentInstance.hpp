@@ -1,10 +1,10 @@
 #pragma once
 
+#include <string>
+
 #include "Scripting/MonoDefs.hpp"
 #include "Scripting/ScriptClass.hpp"
 #include "Scripting/ScriptInstance.hpp"
-
-#include <string>
 
 namespace Phezu {
 	class ComponentInstance : public ScriptInstance {

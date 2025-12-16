@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Graphics/Core/GraphicsTypes.hpp"
 #include <vector>
+
+#include "Graphics/Core/GraphicsTypes.hpp"
 
 namespace Phezu {
 

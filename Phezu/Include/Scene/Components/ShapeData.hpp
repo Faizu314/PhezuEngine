@@ -3,8 +3,6 @@
 #include "Maths/Math.hpp"
 #include "Scene/Components/DataComponent.hpp"
 
-class mat3;
-
 namespace Phezu {
     
     class ShapeData : public DataComponent {

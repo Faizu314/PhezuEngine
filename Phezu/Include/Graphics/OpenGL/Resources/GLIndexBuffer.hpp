@@ -1,6 +1,7 @@
 #pragma once
 
 #include "glad/glad.h"
+
 #include "Graphics/Core/GraphicsTypes.hpp"
 #include "Graphics/Core/Resources/IndexBuffer.hpp"
 

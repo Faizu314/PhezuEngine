@@ -1,9 +1,9 @@
 #pragma once
 
+#include <string>
+
 #include "Scripting/MonoDefs.hpp"
 #include "Scripting/ScriptClass.hpp"
-
-#include <string>
 
 namespace Phezu {
 	class ScriptInstance {

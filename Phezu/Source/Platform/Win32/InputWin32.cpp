@@ -1,15 +1,15 @@
-#include "Platform/Win32/InputWin32.hpp"
+#include <string>
 
-#include <cstring>
+#include "Platform/Win32/InputWin32.hpp"
 
 namespace Phezu {
         
     void InputWin32::Init() {
-        memset(&m_InputData, 0, sizeof(m_InputData));
+        std::memset(&m_InputData, 0, sizeof(m_InputData));
     }
     
     void InputWin32::Destroy() {
-        memset(&m_InputData, 0, sizeof(m_InputData));
+        std::memset(&m_InputData, 0, sizeof(m_InputData));
     }
 
     const InputData& InputWin32::GetInput() {

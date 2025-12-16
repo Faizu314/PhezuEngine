@@ -1,10 +1,4 @@
-#include "Scripting/ScriptEngine.hpp"
-
-#include "Core/Engine.hpp"
-#include "Core/Platform.hpp"
-#include "Scripting/ScriptGlue.hpp"
-#include "Scene/Scene.hpp"
-#include "Scene/Entity.hpp"
+#include <fstream>
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
@@ -13,7 +7,12 @@
 #include <mono/metadata/object.h>
 #include "mono/utils/mono-logger.h"
 
-#include <fstream>
+#include "Core/Engine.hpp"
+#include "Core/Platform.hpp"
+#include "Scripting/ScriptEngine.hpp"
+#include "Scripting/ScriptGlue.hpp"
+#include "Scene/Entity.hpp"
+#include "Scene/Components/ScriptComponent.hpp"
 
 namespace Phezu {
 

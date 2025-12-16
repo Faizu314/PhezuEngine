@@ -1,6 +1,7 @@
 #pragma once
 
 #include "glad/glad.h"
+
 #include "Graphics/Core/Resources/VertexBuffer.hpp"
 
 namespace Phezu {

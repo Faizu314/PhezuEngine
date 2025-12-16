@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Core/Platform.hpp"
 #include "Windows.h"
+
+#include "Core/Platform.hpp"
 
 namespace Phezu {
 

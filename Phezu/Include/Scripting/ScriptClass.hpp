@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Scripting/MonoDefs.hpp"
 #include <string>
+
+#include "Scripting/MonoDefs.hpp"
 
 namespace Phezu {
 	enum class ScriptClassType {

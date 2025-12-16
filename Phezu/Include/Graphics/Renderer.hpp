@@ -4,12 +4,12 @@
 #include <vector>
 
 #include "glm/glm.hpp"
+
 #include "Core/Types/Color.hpp"
 #include "Graphics/Core/Descriptors/VertexLayout.hpp"
 
 namespace Phezu {
     
-    class IPlatform;
     class IWindow;
     class Entity;
     class IGraphicsAPI;

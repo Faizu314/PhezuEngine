@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Scene/Components/DataComponent.hpp"
-
 #include <string>
+
+#include "Scene/Components/DataComponent.hpp"
 
 namespace Phezu {
     
