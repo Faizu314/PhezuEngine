@@ -4,12 +4,12 @@
 #include <vector>
 #include <filesystem>
 #include "Core/Types/GUID.hpp"
-#include "BuildScenesConfig.hpp"
+#include "Asset/Configs/BuildScenesConfig.hpp"
 
 namespace Phezu {
     
     class Engine;
-    class Prefab;
+    class PrefabAsset;
     class SceneAsset;
     
     struct AssetRef {
@@ -23,7 +23,7 @@ namespace Phezu {
     public:
         void Init(const std::filesystem::path& projectPath);
         const SceneAsset* GetSceneAsset(GUID guid);
-        const Prefab* GetPrefabAsset(GUID guid);
+        const PrefabAsset* GetPrefabAsset(GUID guid);
         BuildScenesConfig GetBuildScenesConfig() { return m_BuildScenesConfig; }
     private:
         void LoadAssetMap(const std::filesystem::path& assetsFolder);

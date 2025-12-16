@@ -2,7 +2,7 @@
 
 #include "Core/Engine.hpp"
 #include "Scene/Scene.hpp"
-#include "Scene/Prefab.hpp"
+#include "Asset/Types/PrefabAsset.hpp"
 #include "Core/Platform.hpp"
 
 namespace Phezu {
@@ -125,7 +125,7 @@ namespace Phezu {
         delete m_Platform;
     }
     
-    const Prefab* Engine::GetPrefab(GUID guid) {
+    const PrefabAsset* Engine::GetPrefab(GUID guid) {
         if (!m_HasInited) {
             Log("Trying to get prefab from non inited engine");
             return nullptr;
