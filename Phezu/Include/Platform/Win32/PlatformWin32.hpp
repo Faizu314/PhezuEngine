@@ -13,7 +13,7 @@ namespace Phezu {
 	public:
 		PlatformWin32();
 	public:
-		int Init(const WindowArgs& args) override;
+		void Init(const WindowArgs& args) override;
 		void Destroy() override;
 	public:
 		void PollEvents() override;

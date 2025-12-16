@@ -93,7 +93,7 @@ namespace Phezu {
         m_RootDomain = mono_jit_init("PhezuEngineDomain");
         if (m_RootDomain == nullptr)
         {
-            Log("Error initializing mono jit\n");
+            Log("Assert Here, Error initializing mono jit\n");
             return;
         }
 

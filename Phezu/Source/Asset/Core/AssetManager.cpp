@@ -21,6 +21,9 @@ namespace Phezu {
             LoadAssetMap(assetsPath);
             LoadBuildScenesConfig(buildScenesConfigPath);
         }
+        else {
+            Log("Assert here, Assets or BuildScenesConfig file does not exist\n");
+        }
     }
     
     void AssetManager::LoadAssetMap(const std::filesystem::path& assetsFolder) {

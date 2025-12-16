@@ -13,7 +13,7 @@ namespace Phezu {
     public:
         WindowWin32() = default;
     public:
-        int Init(const WindowArgs& args, const char winClassName[], HINSTANCE hInstance);
+        void Init(const WindowArgs& args, const char winClassName[], HINSTANCE hInstance);
         void Destroy();
     public:
         void Update();

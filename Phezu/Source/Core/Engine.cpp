@@ -30,10 +30,7 @@ namespace Phezu {
 
         m_Platform = CreatePlatform();
 
-        if (m_Platform->Init(args.WindowArgs) != 0) {
-            return -1;
-        }
-
+        m_Platform->Init(args.WindowArgs);
         m_Renderer.Init(m_Platform->GetWindow(), m_Platform->GetGraphicsApi());
         m_AssetManager.Init(m_AssetsPath);
         m_SceneManager.Init();
