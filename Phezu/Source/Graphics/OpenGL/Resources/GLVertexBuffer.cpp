@@ -3,7 +3,7 @@
 namespace Phezu {
 
 
-	void GLVertexBuffer::Init(const float* vertices, size_t bufferSize, BufferType bufferType) {
+	void GLVertexBuffer::Init(const void* vertices, size_t bufferSize, BufferType bufferType) {
 		glGenBuffers(1, &m_Buffer);
 		glBindBuffer(GL_ARRAY_BUFFER, m_Buffer);
 

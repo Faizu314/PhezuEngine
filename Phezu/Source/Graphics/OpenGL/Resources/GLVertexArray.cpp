@@ -33,47 +33,59 @@ namespace Phezu {
 	}
 
 	void GLVertexArray::ApplyLayout(const VertexLayout* layout, const IShader* shader) {
-		GLsizei stride = 0;
-		uint64_t offset = 0;
+		for (GLuint i = 0; i < layout->GetAttributesCount(); i++)
+			glDisableVertexAttribArray(i);
 
-		for (int i = 0; i < layout->GetAttributesCount(); i++) {
-			stride += GetVertexAttributeSize(layout->GetAttributeAt(i));
-		}
+		GLsizei stride = static_cast<GLsizei>(layout->GetStride());
+		std::vector<VertexSemantic> requiredSemantics = shader->GetRequiredSemantics();
 
-		for (int i = 0; i < layout->GetAttributesCount(); i++) {
-			VertexAttribute attrib = layout->GetAttributeAt(i);
-			GLint count = GetVertexAttributeCount(attrib.AttributeCount);
-			GLboolean normalized = attrib.Normalized ? GL_TRUE : GL_FALSE;
+		for (size_t i = 0; i < requiredSemantics.size(); i++) {
+			VertexSemantic semantic = requiredSemantics[i];
+			GLuint location = static_cast<GLuint>(shader->GetSemanticLocation(semantic));
+
+			if (!layout->HasSemantic(semantic)) {
+				switch (semantic) {
+					case VertexSemantic::Position:
+					case VertexSemantic::Color:
+					case VertexSemantic::TexCoord0:
+					case VertexSemantic::TexCoord1:
+					case VertexSemantic::TexCoord2:
+					case VertexSemantic::TexCoord3:
+					case VertexSemantic::Custom0:
+					case VertexSemantic::Custom1:
+					case VertexSemantic::Custom2:
+					case VertexSemantic::Custom3:
+						glVertexAttrib4f(location, 0.0f, 0.0f, 0.0f, 0.0f); break;
+					case VertexSemantic::Normal:
+						glVertexAttrib3f(location, 0.0f, 0.0f, 0.0f); break;
+					default: {
+						Log("Should assert here\n");
+					}
+				}
+				
+				continue;
+			}
+
+			VertexAttribute attrib = layout->GetAttributeAt(semantic);
+			GLint count = static_cast<GLint>(GetVertexAttributeCount(attrib.AttributeCount));
 
 			switch (attrib.AttributeType) {
 				case VertexAttributeType::Float:
-					glVertexAttribPointer(i, count, GL_FLOAT, GL_FALSE, stride, (void*)(offset));
-					break;
-
+					glVertexAttribPointer(location, count, GL_FLOAT, GL_FALSE, stride, (void*)(attrib.Offset)); break;
 				case VertexAttributeType::Int:
-					glVertexAttribIPointer(i, count, GL_INT, stride, (void*)(offset));
-					break;
-
+					glVertexAttribIPointer(location, count, GL_INT, stride, (void*)(attrib.Offset)); break;
 				case VertexAttributeType::UInt:
-					glVertexAttribIPointer(i, count, GL_UNSIGNED_INT, stride, (void*)(offset));
-					break;
-
+					glVertexAttribIPointer(location, count, GL_UNSIGNED_INT, stride, (void*)(attrib.Offset)); break;
 				case VertexAttributeType::Byte:
-					glVertexAttribPointer(i, count, GL_BYTE, normalized, stride, (void*)(offset));
-					break;
-
+					glVertexAttribPointer(location, count, GL_BYTE, attrib.Normalized, stride, (void*)(attrib.Offset)); break;
 				case VertexAttributeType::UByte:
-					glVertexAttribPointer(i, count, GL_UNSIGNED_BYTE, normalized, stride, (void*)(offset));
-					break;
-
+					glVertexAttribPointer(location, count, GL_UNSIGNED_BYTE, attrib.Normalized, stride, (void*)(attrib.Offset)); break;
 				default: {
 					Log("Should Assert Here\n");
 				}
 			}
 
-			glEnableVertexAttribArray(i);
-
-			offset += GetVertexAttributeSize(attrib);
+			glEnableVertexAttribArray(location);
 		}
 	}
 }

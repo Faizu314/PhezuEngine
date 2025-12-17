@@ -8,7 +8,7 @@ namespace Phezu {
 
 	class GLVertexBuffer : public IVertexBuffer {
 	public:
-		void Init(const float* vertices, size_t bufferSize, BufferType bufferType) override;
+		void Init(const void* vertices, size_t bufferSize, BufferType bufferType) override;
 		void Bind() override;
 		void Destroy() override;
 	private:

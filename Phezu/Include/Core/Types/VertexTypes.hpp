@@ -12,6 +12,10 @@ namespace Phezu {
 		TexCoord1,
 		TexCoord2,
 		TexCoord3,
+		Custom0,
+		Custom1,
+		Custom2,
+		Custom3
 	};
 
 	enum class VertexAttributeType : uint8_t {

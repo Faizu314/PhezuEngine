@@ -47,14 +47,8 @@ namespace Phezu {
 
 
 	VertexLayout::VertexLayout(std::initializer_list<VertexAttribute> list) {
-		int index = 0;
-
 		for (auto& attrib : list) {
-			VertexAttribute copy = attrib;
-			copy.Index = index;
-			m_Attributes.insert(std::pair(attrib.Semantic, copy));
-
-			index++;
+			m_Attributes.insert(std::pair(attrib.Semantic, attrib));
 		}
 
 		EvaluateOffsetAndStride();
@@ -78,20 +72,9 @@ namespace Phezu {
 		return m_Attributes.size();
 	}
 
-	VertexAttribute VertexLayout::GetAttributeAt(int index) const {
-		if (index < 0 || index >= m_Attributes.size()) {
-			Log("Assert invalid index of vertex attribute\n");
-		}
-
-		for (auto& kvp : m_Attributes) {
-			if (kvp.second.Index == index) {
-				return kvp.second;
-			}
-		}
-
-		Log("Assert invalid data in vertex layout\n");
-
-		return VertexAttribute();
+	bool VertexLayout::HasSemantic(VertexSemantic semantic) const
+	{
+		return m_Attributes.find(semantic) != m_Attributes.end();
 	}
 
 	VertexAttribute VertexLayout::GetAttributeAt(VertexSemantic semantic) const {

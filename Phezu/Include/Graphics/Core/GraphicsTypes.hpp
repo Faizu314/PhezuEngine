@@ -15,9 +15,8 @@ namespace Phezu {
 		VertexSemantic Semantic;
 		VertexAttributeType AttributeType;
 		VertexAttributeCount AttributeCount;
-		unsigned int Index = 0;
-		unsigned int Offset = 0;
-		bool Normalized;
+		size_t Offset = 0;
+		bool Normalized = true;
 	};
 
 	enum class BufferType {

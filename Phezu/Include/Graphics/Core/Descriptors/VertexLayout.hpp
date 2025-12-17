@@ -11,8 +11,9 @@ namespace Phezu {
 		VertexLayout(std::initializer_list<VertexAttribute> list);
 	public:
 		size_t GetAttributesCount() const;
-		VertexAttribute GetAttributeAt(int index) const;
+		bool HasSemantic(VertexSemantic semantic) const;
 		VertexAttribute GetAttributeAt(VertexSemantic semantic) const;
+		unsigned int GetStride() const { return m_Stride; }
 	private:
 		void EvaluateOffsetAndStride();
 	private:
