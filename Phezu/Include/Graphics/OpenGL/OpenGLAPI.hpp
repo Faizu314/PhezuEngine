@@ -11,7 +11,7 @@ namespace Phezu {
 		void ClearFrame(Color color) override;
 		void RenderQuad(unsigned int indicesCount) override;
 	public:
-		IVertexBuffer* CreateVertexBuffer(const float* vertices, size_t bufferSize, BufferType bufferType) override;
+		IVertexBuffer* CreateVertexBuffer(const void* vertices, size_t bufferSize, BufferType bufferType) override;
 		IIndexBuffer* CreateIndexBuffer(const unsigned int* indices, size_t bufferSize, BufferType bufferType) override;
 		IVertexArray* CreateVertexArray() override;
 	public:

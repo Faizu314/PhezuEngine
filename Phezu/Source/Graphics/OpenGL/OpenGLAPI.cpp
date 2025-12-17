@@ -38,7 +38,7 @@ namespace Phezu {
 		return shader;
 	}
 
-	IVertexBuffer* OpenGLAPI::CreateVertexBuffer(const float* vertices, size_t bufferSize, BufferType bufferType) {
+	IVertexBuffer* OpenGLAPI::CreateVertexBuffer(const void* vertices, size_t bufferSize, BufferType bufferType) {
 		IVertexBuffer* buffer = new GLVertexBuffer();
 		buffer->Init(vertices, bufferSize, bufferType);
 		return buffer;

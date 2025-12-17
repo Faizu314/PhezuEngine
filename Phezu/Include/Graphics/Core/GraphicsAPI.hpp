@@ -20,7 +20,7 @@ namespace Phezu {
 		virtual void ClearFrame(Color color) = 0;
 		virtual void RenderQuad(unsigned int indicesCount) = 0;
 	public:
-		virtual IVertexBuffer* CreateVertexBuffer(const float* vertices, size_t bufferSize, BufferType bufferType) = 0;
+		virtual IVertexBuffer* CreateVertexBuffer(const void* vertices, size_t bufferSize, BufferType bufferType) = 0;
 		virtual IIndexBuffer* CreateIndexBuffer(const unsigned int* indices, size_t bufferSize, BufferType bufferType) = 0;
 		virtual IVertexArray* CreateVertexArray() = 0;
 	public:

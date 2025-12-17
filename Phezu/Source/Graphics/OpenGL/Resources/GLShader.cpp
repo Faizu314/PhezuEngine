@@ -64,6 +64,29 @@ namespace Phezu {
 		m_ShaderProgram = 0;
 	}
 
+	void GLShader::SetSemantics(const std::unordered_map<VertexSemantic, unsigned int>& semantics) {
+		m_Semantics = std::unordered_map<VertexSemantic, unsigned int>(semantics);
+	}
+
+	std::vector<VertexSemantic> GLShader::GetRequiredSemantics() const {
+		std::vector<VertexSemantic> semantics;
+
+		for (auto& kvp : m_Semantics) {
+			semantics.push_back(kvp.first);
+		}
+
+		return semantics;
+	}
+
+	unsigned int GLShader::GetSemanticLocation(VertexSemantic semantic) const {
+		if (m_Semantics.find(semantic) == m_Semantics.end()) {
+			Log("Should assert, semantic not found in required semantics of shader\n");
+			return 0;
+		}
+
+		return m_Semantics.at(semantic);
+	}
+
 	void GLShader::SetVec4(const std::string& uniformName, Color color) {
 		GLint location;
 
