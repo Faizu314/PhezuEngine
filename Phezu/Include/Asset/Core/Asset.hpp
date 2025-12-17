@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+
 #include "Core/Types/GUID.hpp"
 
 namespace Phezu {

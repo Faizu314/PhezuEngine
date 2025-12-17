@@ -38,6 +38,6 @@ namespace Phezu {
     private:
         IShader* m_DefaultShader;
         IIndexBuffer* m_QuadIndices;
-        VertexLayout m_QuadLayout;
+        VertexLayout* m_QuadLayout;
     };
 }

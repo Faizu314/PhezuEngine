@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <unordered_map>
 
 #include "Graphics/Core/GraphicsTypes.hpp"
 
@@ -8,12 +8,18 @@ namespace Phezu {
 
 	class VertexLayout {
 	public:
-		VertexLayout() = default;
+		VertexLayout(std::initializer_list<VertexAttribute> list);
 	public:
-		void Push(VertexAttributeType type, VertexAttributeCount count, bool normalized = true);
 		size_t GetAttributesCount() const;
 		VertexAttribute GetAttributeAt(int index) const;
+		VertexAttribute GetAttributeAt(VertexSemantic semantic) const;
 	private:
-		std::vector<VertexAttribute> m_Attributes;
+		void EvaluateOffsetAndStride();
+	private:
+		unsigned int m_Stride;
+		std::unordered_map<VertexSemantic, VertexAttribute> m_Attributes;
 	};
+
+	unsigned int GetVertexAttributeSize(const VertexAttribute& attribute);
+	unsigned int GetVertexAttributeCount(VertexAttributeCount countEnum);
 }
