@@ -2,7 +2,6 @@
 
 #include "glad/glad.h"
 
-#include "Graphics/Core/GraphicsTypes.hpp"
 #include "Graphics/Core/Resources/VertexArray.hpp"
 
 namespace Phezu {
@@ -13,10 +12,9 @@ namespace Phezu {
 		void Bind() override;
 		void Destroy() override;
 	public:
-		void LinkVertexBuffer(IVertexBuffer* vertexBuffer, const VertexLayout& layout) override;
+		void LinkVertexBuffer(IVertexBuffer* vertexBuffer) override;
 		void LinkIndexBuffer(IIndexBuffer* indexBuffer) override;
-	private:
-		void ApplyVertexLayout(const VertexLayout& layout);
+		void ApplyLayout(const VertexLayout* layout, const IShader* shader) override;
 	private:
 		GLuint m_Array = 0;
 	};

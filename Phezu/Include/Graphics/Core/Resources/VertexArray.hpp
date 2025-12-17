@@ -1,10 +1,11 @@
 #pragma once
 
-#include "Graphics/Core/Resources/VertexBuffer.hpp"
-#include "Graphics/Core/Resources/IndexBuffer.hpp"
-#include "Graphics/Core/Descriptors/VertexLayout.hpp"
-
 namespace Phezu {
+
+	class IVertexBuffer;
+	class IIndexBuffer;
+	class VertexLayout;
+	class IShader;
 
 	class IVertexArray {
 	public:
@@ -12,7 +13,8 @@ namespace Phezu {
 		virtual void Bind() = 0;
 		virtual void Destroy() = 0;
 	public:
-		virtual void LinkVertexBuffer(IVertexBuffer* vertexBuffer, const VertexLayout& layout) = 0;
+		virtual void LinkVertexBuffer(IVertexBuffer* vertexBuffer) = 0;
 		virtual void LinkIndexBuffer(IIndexBuffer* indexBuffer) = 0;
+		virtual void ApplyLayout(const VertexLayout* layout, const IShader* shader) = 0;
 	};
 }

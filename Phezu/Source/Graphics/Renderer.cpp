@@ -22,7 +22,7 @@
 namespace Phezu {
     
     Renderer::Renderer()
-    : m_Api(nullptr), m_Window(nullptr), m_DefaultShader(nullptr), m_QuadIndices(nullptr), m_WindowSubId(0) {}
+    : m_Api(nullptr), m_Window(nullptr), m_DefaultShader(nullptr), m_QuadIndices(nullptr), m_QuadLayout(nullptr), m_WindowSubId(0) {}
     
     Renderer::~Renderer() {}
     
@@ -60,7 +60,10 @@ namespace Phezu {
         };
 
         m_QuadIndices = m_Api->CreateIndexBuffer(indices, sizeof(indices), BufferType::Static);
-        m_QuadLayout.Push(VertexAttributeType::Float, VertexAttributeCount::Two);
+        m_QuadLayout = new VertexLayout(
+        {
+            { VertexSemantic::Position, VertexAttributeType::Float, VertexAttributeCount::Two }
+        });
     }
 
     void Renderer::Destroy() {
@@ -131,8 +134,9 @@ namespace Phezu {
         IVertexBuffer* vertexBuffer = m_Api->CreateVertexBuffer(vertices, sizeof(vertices), BufferType::Static);
         IVertexArray* vertexArray = m_Api->CreateVertexArray();
 
-        vertexArray->LinkVertexBuffer(vertexBuffer, m_QuadLayout);
+        vertexArray->LinkVertexBuffer(vertexBuffer);
         vertexArray->LinkIndexBuffer(m_QuadIndices);
+        vertexArray->ApplyLayout(m_QuadLayout, m_DefaultShader);
         vertexArray->Bind();
 
         m_Api->RenderQuad(6);

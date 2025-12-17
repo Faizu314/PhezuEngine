@@ -1,48 +1,12 @@
 #include "Core/Platform.hpp"
+#include "Graphics/Core/GraphicsTypes.hpp"
 #include "Graphics/OpenGL/Resources/GLVertexArray.hpp"
+#include "Graphics/Core/Resources/VertexBuffer.hpp"
+#include "Graphics/Core/Resources/IndexBuffer.hpp"
+#include "Graphics/Core/Resources/Shader.hpp"
+#include "Graphics/Core/Descriptors/VertexLayout.hpp"
 
 namespace Phezu {
-
-	GLint GetVertexAttributeCount(VertexAttributeCount countEnum) {
-		switch (countEnum) {
-			case VertexAttributeCount::One:
-				return 1;
-			case VertexAttributeCount::Two:
-				return 2;
-			case VertexAttributeCount::Three:
-				return 3;
-			case VertexAttributeCount::Four:
-				return 4;
-
-			default: {
-				Log("Should assert here\n");
-				return 1;
-			}
-		}
-	}
-
-	GLuint GetVertexAttributeSize(const VertexAttribute& attribute) {
-		int count = GetVertexAttributeCount(attribute.AttributeCount);
-
-		switch (attribute.AttributeType) {
-			case VertexAttributeType::Float:
-				return sizeof(float) * count;
-				
-			case VertexAttributeType::Int:
-				return sizeof(int) * count;
-			case VertexAttributeType::UInt:
-				return sizeof(unsigned int) * count;
-
-			case VertexAttributeType::Byte:
-			case VertexAttributeType::UByte:
-				return count;
-
-			default: {
-				Log("Should assert here\n");
-				return 1;
-			}
-		}
-	}
 
 	void GLVertexArray::Init() {
 		glGenVertexArrays(1, &m_Array);
@@ -58,11 +22,9 @@ namespace Phezu {
 		m_Array = 0;
 	}
 
-	void GLVertexArray::LinkVertexBuffer(IVertexBuffer* vertexBuffer, const VertexLayout& layout) {
+	void GLVertexArray::LinkVertexBuffer(IVertexBuffer* vertexBuffer) {
 		Bind();
 		vertexBuffer->Bind();
-
-		ApplyVertexLayout(layout);
 	}
 
 	void GLVertexArray::LinkIndexBuffer(IIndexBuffer* indexBuffer) {
@@ -70,16 +32,16 @@ namespace Phezu {
 		indexBuffer->Bind();
 	}
 
-	void GLVertexArray::ApplyVertexLayout(const VertexLayout& layout) {
+	void GLVertexArray::ApplyLayout(const VertexLayout* layout, const IShader* shader) {
 		GLsizei stride = 0;
 		uint64_t offset = 0;
 
-		for (int i = 0; i < layout.GetAttributesCount(); i++) {
-			stride += GetVertexAttributeSize(layout.GetAttributeAt(i));
+		for (int i = 0; i < layout->GetAttributesCount(); i++) {
+			stride += GetVertexAttributeSize(layout->GetAttributeAt(i));
 		}
 
-		for (int i = 0; i < layout.GetAttributesCount(); i++) {
-			VertexAttribute attrib = layout.GetAttributeAt(i);
+		for (int i = 0; i < layout->GetAttributesCount(); i++) {
+			VertexAttribute attrib = layout->GetAttributeAt(i);
 			GLint count = GetVertexAttributeCount(attrib.AttributeCount);
 			GLboolean normalized = attrib.Normalized ? GL_TRUE : GL_FALSE;
 
