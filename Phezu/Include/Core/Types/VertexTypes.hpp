@@ -32,4 +32,11 @@ namespace Phezu {
 		Three = 3,
 		Four = 4
 	};
+
+	VertexSemantic ToVertexSemantic(std::string semanticStr);
+	VertexAttributeType ToVertexAttributeType(std::string attributeTypeStr);
+	VertexAttributeCount ToVertexAttributeCount(std::string attributeCountStr);
+
+	unsigned int GetVertexAttributeSize(VertexAttributeType attribute);
+	unsigned int GetVertexAttributeCount(VertexAttributeCount countEnum);
 }

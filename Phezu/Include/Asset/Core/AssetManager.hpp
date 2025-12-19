@@ -43,6 +43,8 @@ namespace Phezu {
 
     template<typename T>
     const T* AssetManager::GetAsset(AssetHandle<T> assetHandle) {
+        static_assert(std::is_base_of_v<IAsset, T>, "T must derive from IAsset");
+
         GUID guid = assetHandle.GetGuid();
 
         T* asset = static_cast<T*>(TryGetLoadedAsset(guid));

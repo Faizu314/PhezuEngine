@@ -20,7 +20,4 @@ namespace Phezu {
 		unsigned int m_Stride;
 		std::unordered_map<VertexSemantic, VertexAttribute> m_Attributes;
 	};
-
-	unsigned int GetVertexAttributeSize(const VertexAttribute& attribute);
-	unsigned int GetVertexAttributeCount(VertexAttributeCount countEnum);
 }
