@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include "Core/Types/VertexTypes.hpp"
 #include "Core/Types/Buffer.hpp"
 #include "Asset/Core/Asset.hpp"
 
