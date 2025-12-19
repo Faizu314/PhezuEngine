@@ -9,7 +9,7 @@
 
 namespace Phezu {
 
-	void OpenGLAPI::RenderQuad(unsigned int indicesCount) {
+	void OpenGLAPI::RenderTriangles(unsigned int indicesCount) {
 		glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indicesCount), GL_UNSIGNED_INT, 0);
 	}
 

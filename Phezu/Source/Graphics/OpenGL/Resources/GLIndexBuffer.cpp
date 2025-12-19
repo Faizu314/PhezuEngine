@@ -14,6 +14,8 @@ namespace Phezu {
 			usage = GL_DYNAMIC_DRAW;
 
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufferSize, indices, usage);
+
+		m_IndicesCount = bufferSize / sizeof(unsigned int);
 	}
 
 	void GLIndexBuffer::Bind() {

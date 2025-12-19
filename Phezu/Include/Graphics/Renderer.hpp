@@ -2,11 +2,14 @@
 
 #include <cstdint>
 #include <vector>
+#include <unordered_map>
 
 #include "glm/glm.hpp"
 
 #include "Core/Types/Color.hpp"
+#include "Core/Types/GUID.hpp"
 #include "Graphics/Core/Descriptors/VertexLayout.hpp"
+#include "Graphics/Data/Mesh.hpp"
 
 namespace Phezu {
     
@@ -15,7 +18,6 @@ namespace Phezu {
     class IGraphicsAPI;
     class CameraData;
     class IShader;
-    class IIndexBuffer;
     class AssetManager;
 
     struct RendererContext {
@@ -44,7 +46,6 @@ namespace Phezu {
         // MUST HAVE A TARGET FRAME BUFFER
     private:
         IShader* m_DefaultShader;
-        IIndexBuffer* m_QuadIndices;
-        VertexLayout* m_QuadLayout;
+        std::unordered_map<GUID, Mesh> m_Meshes;
     };
 }

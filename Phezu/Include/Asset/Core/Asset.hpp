@@ -9,10 +9,10 @@ namespace Phezu {
 	template<typename T>
 	struct AssetHandle {
 	public:
-		AssetHandle(GUID guid) : Guid(guid) {}
-		GUID GetGuid() { return Guid; }
+		AssetHandle(GUID guid) : m_Guid(guid) {}
+		GUID GetGuid() { return m_Guid; }
 	private:
-		GUID Guid;
+		GUID m_Guid;
 	};
 
 	class IAsset {

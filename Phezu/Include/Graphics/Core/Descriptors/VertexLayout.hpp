@@ -8,6 +8,7 @@ namespace Phezu {
 
 	class VertexLayout {
 	public:
+		VertexLayout() = default;
 		VertexLayout(std::initializer_list<VertexAttribute> list);
 	public:
 		size_t GetAttributesCount() const;

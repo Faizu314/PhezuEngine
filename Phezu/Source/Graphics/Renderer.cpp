@@ -1,25 +1,24 @@
+#include "Core/Platform.hpp"
+#include "Core/Window.hpp"
 #include "Graphics/Renderer.hpp"
 #include "Graphics/Core/Resources/VertexBuffer.hpp" 
 #include "Graphics/Core/Resources/IndexBuffer.hpp" 
 #include "Graphics/Core/Resources/VertexArray.hpp" 
 #include "Graphics/Core/Resources/Shader.hpp"
-
-#include "Graphics/OpenGL/Resources/GLShader.hpp"
-
 #include "Graphics/Core/GraphicsAPI.hpp"
-
-#include "Core/Platform.hpp"
-#include "Core/Window.hpp"
-
+#include "Graphics/Data/Mesh.hpp"
+#include "Graphics/Data/MeshBuilder.hpp"
+#include "Asset/Core/AssetManager.hpp"
+#include "Asset/Types/MeshAsset.hpp"
 #include "Scene/Entity.hpp"
 #include "Scene/Components/TransformData.hpp"
 #include "Scene/Components/ShapeData.hpp"
 #include "Scene/Components/RenderData.hpp"
 #include "Scene/Components/CameraData.hpp"
-
 #include "Maths/Math.hpp"
 
-#include "glm/glm.hpp"
+
+#include "Graphics/OpenGL/Resources/GLShader.hpp"
 
 namespace Phezu {
     
@@ -61,26 +60,16 @@ namespace Phezu {
                                                      std::make_pair(VertexSemantic::Color, 2) });
         m_DefaultShader->Bind();
 
-        unsigned int indices[] = {
-            0, 2, 1,
-            0, 3, 2
-        };
+        AssetHandle<MeshAsset> handle = { 99 };
+        const MeshAsset* meshAsset = m_Ctx.Asset->GetAsset(handle);
 
-        m_QuadIndices = m_Ctx.Api->CreateIndexBuffer(indices, sizeof(indices), BufferType::Static);
-        m_QuadLayout = new VertexLayout(
-        {
-            { VertexSemantic::Position, VertexAttributeType::Float, VertexAttributeCount::Two },
-            { VertexSemantic::Color, VertexAttributeType::UByte, VertexAttributeCount::Four, true }
-        });
+        m_Meshes.insert(std::make_pair(handle.GetGuid(), MeshBuilder::CreateMesh(meshAsset)));
     }
 
     void Renderer::Destroy() {
         m_Ctx.Window->UnregisterWindowResizeCallback(m_WindowSubId);
 
-        m_QuadIndices->Destroy();
         m_DefaultShader->Destroy();
-        delete m_QuadIndices;
-        delete m_DefaultShader;
     }
     
     void Renderer::ClearFrame() {
@@ -129,38 +118,10 @@ namespace Phezu {
         Vector2 ur = Vector2(upRightScreen.X() / (screenWidth / 2.0f), upRightScreen.Y() / (screenWidth / 2.0f));
         Vector2 dl = Vector2(downLeftScreen.X() / (screenWidth / 2.0f), downLeftScreen.Y() / (screenWidth / 2.0f));
 
-
         m_DefaultShader->SetVec4("tint", renderData->Tint);
 
-        struct Vertex {
-            float x;
-            float y;
-            std::uint8_t r;
-            std::uint8_t g;
-            std::uint8_t b;
-            std::uint8_t a;
-        };
 
-        Vertex vertices[] = {
-            { dl.X(), dl.Y(), 255, 255, 255, 255 },
-            { dl.X(), ur.Y(), 100, 100, 100, 100 },
-            { ur.X(), ur.Y(), 150, 150, 150, 150 },
-            { ur.X(), dl.Y(), 050, 050, 050, 050 }
-        };
 
-        IVertexBuffer* vertexBuffer = m_Ctx.Api->CreateVertexBuffer(vertices, sizeof(vertices), BufferType::Static);
-        IVertexArray* vertexArray = m_Ctx.Api->CreateVertexArray();
-
-        vertexArray->LinkVertexBuffer(vertexBuffer);
-        vertexArray->LinkIndexBuffer(m_QuadIndices);
-        vertexArray->ApplyLayout(m_QuadLayout, m_DefaultShader);
-        vertexArray->Bind();
-
-        m_Ctx.Api->RenderQuad(6);
-
-        vertexBuffer->Destroy();
-        vertexArray->Destroy();
-        delete vertexBuffer;
-        delete vertexArray;
+        m_Ctx.Api->RenderTriangles(6);
     }
 }
