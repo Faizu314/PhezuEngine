@@ -16,13 +16,22 @@ namespace Phezu {
     class CameraData;
     class IShader;
     class IIndexBuffer;
+    class AssetManager;
+
+    struct RendererContext {
+        RendererContext() = default;
+
+        IWindow* Window = nullptr;
+        IGraphicsAPI* Api = nullptr;
+        AssetManager* Asset = nullptr;
+    };
   
     class Renderer {
     public:
         Renderer();
         ~Renderer();
     public:
-        void Init(IWindow* window, IGraphicsAPI* graphicsApi);
+        void Init(RendererContext ctx);
         void Destroy();
     public:
         void ClearFrame();
@@ -30,10 +39,8 @@ namespace Phezu {
     private:
         void DrawEntity(Entity* entity, CameraData* camera);
     private:
-        IGraphicsAPI* m_Api;
-    private:
+        RendererContext m_Ctx;
         int m_WindowSubId;
-        IWindow* m_Window;
         // MUST HAVE A TARGET FRAME BUFFER
     private:
         IShader* m_DefaultShader;

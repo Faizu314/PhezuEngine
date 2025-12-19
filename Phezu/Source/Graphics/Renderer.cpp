@@ -4,6 +4,8 @@
 #include "Graphics/Core/Resources/VertexArray.hpp" 
 #include "Graphics/Core/Resources/Shader.hpp"
 
+#include "Graphics/OpenGL/Resources/GLShader.hpp"
+
 #include "Graphics/Core/GraphicsAPI.hpp"
 
 #include "Core/Platform.hpp"
@@ -22,36 +24,41 @@
 namespace Phezu {
     
     Renderer::Renderer()
-    : m_Api(nullptr), m_Window(nullptr), m_DefaultShader(nullptr), m_QuadIndices(nullptr), m_QuadLayout(nullptr), m_WindowSubId(0) {}
+    : m_Ctx(), m_DefaultShader(nullptr), m_QuadIndices(nullptr), m_QuadLayout(nullptr), m_WindowSubId(0) {}
     
     Renderer::~Renderer() {}
     
-    void Renderer::Init(IWindow* window, IGraphicsAPI* graphicsApi) {
-        m_Api = graphicsApi;
-        m_Window = window;
+    void Renderer::Init(RendererContext ctx) {
+        m_Ctx = ctx;
 
-        m_WindowSubId = m_Window->RegisterWindowResizeCallback(
-            [this](int width, int height) { m_Api->SetViewport(0, 0, width, height); }
+        m_WindowSubId = m_Ctx.Window->RegisterWindowResizeCallback(
+            [this](int width, int height) { m_Ctx.Api->SetViewport(0, 0, width, height); }
         );
 
         std::string vert = 
             "#version 460 core\n"
-            "layout (location = 0) in vec2 aPos;\n"
+            "layout (location = 3) in vec2 aPos;\n"
+            "layout (location = 2) in vec4 color;\n"
+            "out vec4 vertexColor;\n"
             "void main()\n"
             "{\n"
             "   gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0);\n"
+            "   vertexColor = color;\n"
             "}\0";
 
         std::string frag =
             "#version 460 core\n"
             "out vec4 FragColor;\n"
+            "in vec4 vertexColor;\n"
             "uniform vec4 tint;"
             "void main()\n"
             "{\n"
-            "   FragColor = tint;\n"
+            "   FragColor = tint * vertexColor;\n"
             "}\0";
 
-        m_DefaultShader = m_Api->CreateShader(vert, frag);
+        m_DefaultShader = m_Ctx.Api->CreateShader(vert, frag);
+        ((GLShader*)m_DefaultShader)->SetSemantics({ std::make_pair(VertexSemantic::Position, 3), 
+                                                     std::make_pair(VertexSemantic::Color, 2) });
         m_DefaultShader->Bind();
 
         unsigned int indices[] = {
@@ -59,15 +66,16 @@ namespace Phezu {
             0, 3, 2
         };
 
-        m_QuadIndices = m_Api->CreateIndexBuffer(indices, sizeof(indices), BufferType::Static);
+        m_QuadIndices = m_Ctx.Api->CreateIndexBuffer(indices, sizeof(indices), BufferType::Static);
         m_QuadLayout = new VertexLayout(
         {
-            { VertexSemantic::Position, VertexAttributeType::Float, VertexAttributeCount::Two }
+            { VertexSemantic::Position, VertexAttributeType::Float, VertexAttributeCount::Two },
+            { VertexSemantic::Color, VertexAttributeType::UByte, VertexAttributeCount::Four, true }
         });
     }
 
     void Renderer::Destroy() {
-        m_Window->UnregisterWindowResizeCallback(m_WindowSubId);
+        m_Ctx.Window->UnregisterWindowResizeCallback(m_WindowSubId);
 
         m_QuadIndices->Destroy();
         m_DefaultShader->Destroy();
@@ -76,7 +84,7 @@ namespace Phezu {
     }
     
     void Renderer::ClearFrame() {
-        m_Api->ClearFrame(Color(0, 0, 0, 0));
+        m_Ctx.Api->ClearFrame(Color(0, 0, 0, 0));
     }
     
     void Renderer::DrawEntities(const std::vector<Entity*>& renderableEntities, size_t count, CameraData* camera) {
@@ -98,8 +106,8 @@ namespace Phezu {
         if (shapeData == nullptr || renderData == nullptr)
             return;
 
-        int screenWidth = m_Window->GetWidth();
-        int screenHeight = m_Window->GetHeight();
+        int screenWidth = m_Ctx.Window->GetWidth();
+        int screenHeight = m_Ctx.Window->GetHeight();
         
         Vector2 camPosition = cameraTransform->GetWorldPosition();
         float aspectRatio = static_cast<float>(screenWidth) / screenHeight;
@@ -124,22 +132,31 @@ namespace Phezu {
 
         m_DefaultShader->SetVec4("tint", renderData->Tint);
 
-        float vertices[] = {
-             dl.X(), dl.Y(),
-             dl.X(), ur.Y(),
-             ur.X(), ur.Y(),
-             ur.X(), dl.Y()
+        struct Vertex {
+            float x;
+            float y;
+            std::uint8_t r;
+            std::uint8_t g;
+            std::uint8_t b;
+            std::uint8_t a;
         };
 
-        IVertexBuffer* vertexBuffer = m_Api->CreateVertexBuffer(vertices, sizeof(vertices), BufferType::Static);
-        IVertexArray* vertexArray = m_Api->CreateVertexArray();
+        Vertex vertices[] = {
+            { dl.X(), dl.Y(), 255, 255, 255, 255 },
+            { dl.X(), ur.Y(), 100, 100, 100, 100 },
+            { ur.X(), ur.Y(), 150, 150, 150, 150 },
+            { ur.X(), dl.Y(), 050, 050, 050, 050 }
+        };
+
+        IVertexBuffer* vertexBuffer = m_Ctx.Api->CreateVertexBuffer(vertices, sizeof(vertices), BufferType::Static);
+        IVertexArray* vertexArray = m_Ctx.Api->CreateVertexArray();
 
         vertexArray->LinkVertexBuffer(vertexBuffer);
         vertexArray->LinkIndexBuffer(m_QuadIndices);
         vertexArray->ApplyLayout(m_QuadLayout, m_DefaultShader);
         vertexArray->Bind();
 
-        m_Api->RenderQuad(6);
+        m_Ctx.Api->RenderQuad(6);
 
         vertexBuffer->Destroy();
         vertexArray->Destroy();
