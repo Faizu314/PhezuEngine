@@ -87,7 +87,7 @@ namespace Phezu {
 		return m_Semantics.at(semantic);
 	}
 
-	void GLShader::SetVec4(const std::string& uniformName, Color color) {
+	void GLShader::SetColor(const std::string& uniformName, Color color) {
 		GLint location;
 
 		if (m_UniformLocations.find(uniformName) == m_UniformLocations.end()) {
@@ -99,6 +99,20 @@ namespace Phezu {
 		}
 
 		glUniform4f(location, color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, color.a / 255.0f);
+	}
+
+	void GLShader::SetMat3(const std::string& uniformName, Mat3x3 mat) {
+		GLint location;
+
+		if (m_UniformLocations.find(uniformName) == m_UniformLocations.end()) {
+			location = glGetUniformLocation(m_ShaderProgram, uniformName.c_str());
+			m_UniformLocations.insert(std::pair(uniformName, location));
+		}
+		else {
+			location = m_UniformLocations[uniformName];
+		}
+
+		glUniformMatrix3fv(location, 1, GL_FALSE, mat.GetPtr());
 	}
 
 }

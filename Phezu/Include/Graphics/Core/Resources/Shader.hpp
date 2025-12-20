@@ -17,6 +17,7 @@ namespace Phezu {
 		virtual std::vector<VertexSemantic> GetRequiredSemantics() const = 0;
 		virtual unsigned int GetSemanticLocation(VertexSemantic semantic) const = 0;
 	public:
-		virtual void SetVec4(const std::string& uniformName, Color color) = 0;
+		virtual void SetColor(const std::string& uniformName, Color color) = 0;
+		virtual void SetMat3(const std::string& uniformName, Mat3x3 mat) = 0;
 	};
 }
