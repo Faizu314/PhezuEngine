@@ -1,5 +1,4 @@
-#include "glm/glm.hpp"
-
+#include "Maths/Objects/Vector3.hpp"
 #include "Scene/Entity.hpp"
 #include "Scene/Components/TransformData.hpp"
 
@@ -40,35 +39,35 @@ namespace Phezu {
     }
     
     Vector2 TransformData::LocalToWorldPoint(Vector2 localPoint) const {
-        glm::vec3 point3(localPoint.X(), localPoint.Y(), 1);
-        glm::vec3 worldPoint = m_LocalToWorld * point3;
-        return Vector2(worldPoint.x, worldPoint.y);
+        Vector3 point3(localPoint.X(), localPoint.Y(), 1);
+
+        return m_LocalToWorld * point3;
     }
     
     Vector2 TransformData::WorldToLocalPoint(Vector2 worldPoint) const {
-        glm::vec3 point3(worldPoint.X(), worldPoint.Y(), 1);
-        glm::vec3 localPoint = m_WorldToLocal * point3;
-        return Vector2(localPoint.x, localPoint.y);
+        Vector3 point3(worldPoint.X(), worldPoint.Y(), 1);
+
+        return m_WorldToLocal * point3;
     }
     
     void TransformData::RecalculateLocalToWorld() {
-        glm::mat3 localTransform(1.0);
+        Mat3x3 localTransform;
         
         float Sx = m_LocalScale.X();
         float Sy = m_LocalScale.Y();
         float Px = m_LocalPosition.X();
         float Py = m_LocalPosition.Y();
-        localTransform[0][0] = Sx;
-        localTransform[1][1] = Sy;
-        localTransform[2][0] = Px;
-        localTransform[2][1] = Py;
+        localTransform.Set(0, 0, Sx);
+        localTransform.Set(1, 1, Sy);
+        localTransform.Set(2, 0, Px);
+        localTransform.Set(2, 1, Py);
         
         if (m_Entity->GetParent() == nullptr)
             m_LocalToWorld = localTransform;
         else
             m_LocalToWorld = m_Entity->GetParent()->m_LocalToWorld * localTransform;
         
-        m_WorldToLocal = glm::inverse(m_LocalToWorld);
+        m_WorldToLocal = m_LocalToWorld.Inversed();
         
         m_IsDirty = false;
     }
