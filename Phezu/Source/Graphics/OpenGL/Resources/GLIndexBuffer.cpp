@@ -15,7 +15,7 @@ namespace Phezu {
 
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufferSize, indices, usage);
 
-		m_IndicesCount = bufferSize / sizeof(unsigned int);
+		m_IndicesCount = static_cast<unsigned int>(bufferSize / sizeof(unsigned int));
 	}
 
 	void GLIndexBuffer::Bind() {

@@ -144,8 +144,8 @@ namespace Phezu {
     }
     
     Physics::EntityRect Physics::GetWorldRectFromTransformAndShapeData(TransformData* transData, ShapeData* shapeData) {
-        Vector2 ul = transData->LocalToWorldPoint(shapeData->GetVertexPosition(ShapeData::VertexType::UpLeft));
-        Vector2 dr = transData->LocalToWorldPoint(shapeData->GetVertexPosition(ShapeData::VertexType::DownRight));
+        Vector2 ul = transData->LocalToWorldPoint(Vector2(-0.5f, 0.5f));
+        Vector2 dr = transData->LocalToWorldPoint(Vector2(0.5f, -0.5f));
         
         EntityRect rect;
         
