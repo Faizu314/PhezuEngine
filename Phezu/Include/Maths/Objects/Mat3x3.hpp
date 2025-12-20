@@ -1,6 +1,7 @@
 #pragma once
 
 #include "glm/glm.hpp"
+#include "glm/gtc/type_ptr.hpp"
 
 #include "Maths/Objects/Vector3.hpp"
 
@@ -14,6 +15,10 @@ namespace Phezu {
         void Set(int i, int j, float value) { m_Matrix[i][j] = value; }
     public:
         Mat3x3 Inversed() { return glm::inverse(m_Matrix); }
+        const float* GetPtr() { return glm::value_ptr(m_Matrix); }
+    public:
+        void ResetToIdentity();
+        void SetTranslation(Vector2 translation);
     public:
         Mat3x3 operator*(const Mat3x3& other) const { return m_Matrix * other.m_Matrix; }
         Vector3 operator*(const Vector3& other) const { return m_Matrix * other.m_Vector; }

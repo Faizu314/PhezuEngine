@@ -38,6 +38,8 @@ namespace Phezu {
 	public:
 		void UploadMeshData();
 		void Bind(const IShader* shader);
+	public:
+		size_t GetIndicesCount() const;
 	private:
 		IGraphicsAPI* m_Api = nullptr;
 		AttachedDataRef m_Data;

@@ -19,6 +19,7 @@ namespace Phezu {
     public:
         Vector2 LocalToWorldPoint(Vector2 localPoint) const;
         Vector2 WorldToLocalPoint(Vector2 worldPoint) const;
+        const Mat3x3& GetLocalToWorld() const { return m_LocalToWorld; }
     public:
         void RecalculateLocalToWorld();
         bool GetIsDirty() { return m_IsDirty; }

@@ -101,4 +101,13 @@ namespace Phezu {
 		m_VertexArray->Bind();
 		m_VertexArray->ApplyLayout(&m_Layout, shader);
 	}
+
+	size_t Mesh::GetIndicesCount() const {
+		if (m_IndexBuffer == nullptr) {
+			Log("Should assert here\n");
+			return 0;
+		}
+
+		return m_IndexBuffer->GetIndicesCount();
+	}
 }
