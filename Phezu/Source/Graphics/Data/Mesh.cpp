@@ -79,7 +79,7 @@ namespace Phezu {
 	}
 
 	void Mesh::UploadMeshData() {
-		if (m_Api == nullptr || m_VertexBuffer == nullptr || m_IndexBuffer == nullptr) {
+		if (m_Api == nullptr) {
 			Log("Should assert here\n");
 			return;
 		}

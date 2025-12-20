@@ -11,7 +11,7 @@ namespace Phezu {
 	}
 
 	void Buffer::Write(const void* data, size_t writeSize, size_t startByteIndex) {
-		if (startByteIndex + writeSize <= m_Size) {
+		if (startByteIndex + writeSize > m_Size) {
 			Log("Should assert here\n");
 			return;
 		}
