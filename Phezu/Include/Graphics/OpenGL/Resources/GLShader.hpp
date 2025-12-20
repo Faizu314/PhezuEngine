@@ -19,7 +19,8 @@ namespace Phezu {
 		std::vector<VertexSemantic> GetRequiredSemantics() const override;
 		unsigned int GetSemanticLocation(VertexSemantic semantic) const override;
 	public:
-		void SetVec4(const std::string& uniformName, Color color) override;
+		void SetColor(const std::string& uniformName, Color color) override;
+		void SetMat3(const std::string& uniformName, Mat3x3 mat) override;
 	private:
 		GLuint m_ShaderProgram = 0;
 		std::unordered_map<VertexSemantic, unsigned int> m_Semantics;
