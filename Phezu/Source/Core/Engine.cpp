@@ -31,8 +31,8 @@ namespace Phezu {
         m_Platform = CreatePlatform();
 
         m_Platform->Init(args.WindowArgs);
-        m_Renderer.Init({ m_Platform->GetWindow(), m_Platform->GetGraphicsApi(), &m_AssetManager });
         m_AssetManager.Init(m_AssetsPath);
+        m_Renderer.Init({ m_Platform->GetWindow(), m_Platform->GetGraphicsApi(), &m_AssetManager });
         m_SceneManager.Init();
         m_ScriptEngine.Init();
         

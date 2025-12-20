@@ -9,7 +9,9 @@ namespace Phezu {
 	class VertexLayout {
 	public:
 		VertexLayout() = default;
-		VertexLayout(std::initializer_list<VertexAttribute> list);
+	public:
+		void Push(VertexAttribute attrib);
+		void ComputeLayout();
 	public:
 		size_t GetAttributesCount() const;
 		bool HasSemantic(VertexSemantic semantic) const;
@@ -18,7 +20,7 @@ namespace Phezu {
 	private:
 		void EvaluateOffsetAndStride();
 	private:
-		unsigned int m_Stride;
+		unsigned int m_Stride = 0;
 		std::unordered_map<VertexSemantic, VertexAttribute> m_Attributes;
 	};
 }

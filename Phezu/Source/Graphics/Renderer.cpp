@@ -34,16 +34,23 @@ namespace Phezu {
             [this](int width, int height) { m_Ctx.Api->SetViewport(0, 0, width, height); }
         );
 
-        std::string vert = 
-            "#version 460 core\n"
-            "layout (location = 3) in vec2 aPos;\n"
-            "layout (location = 2) in vec4 color;\n"
-            "out vec4 vertexColor;\n"
-            "void main()\n"
-            "{\n"
-            "   gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0);\n"
-            "   vertexColor = color;\n"
-            "}\0";
+        std::string vert = R"(
+            #version 460 core
+            layout (location = 3) in vec2 aPos;
+            layout (location = 2) in vec4 color;
+            uniform mat3 objectToWorld;
+            uniform mat3 worldToView;
+            uniform mat3 viewToScreen;
+            out vec4 vertexColor;
+            void main()
+            {
+                vec3 worldPos = objectToWorld * vec3(aPos.xy, 1.0);
+                vec3 viewPos = worldToView * vec3(worldPos.xy, 1.0);
+                vec3 screenPos = viewToScreen * vec3(viewPos.xy, 1.0);
+
+                gl_Position = vec4(screenPos.xy, 0.0, 1.0);
+                vertexColor = color;
+            })";
 
         std::string frag =
             "#version 460 core\n"
@@ -63,7 +70,7 @@ namespace Phezu {
         AssetHandle<MeshAsset> handle = { 99 };
         const MeshAsset* meshAsset = m_Ctx.Asset->GetAsset(handle);
 
-        m_Meshes.insert(std::make_pair(handle.GetGuid(), MeshBuilder::CreateMesh(meshAsset)));
+        m_Meshes.insert(std::make_pair(handle.GetGuid(), MeshBuilder::CreateMesh(meshAsset, m_Ctx.Api)));
     }
 
     void Renderer::Destroy() {
@@ -88,7 +95,7 @@ namespace Phezu {
         float vSize = camera->Size * 2.0f;
         float hSize = vSize * aspectRatio;
 
-        m_ScreenTransform.Set(0, 0, aspectRatio / camera->Size);
+        m_ScreenTransform.Set(0, 0, 1.0f / (aspectRatio * camera->Size));
         m_ScreenTransform.Set(1, 1, 1.0f / camera->Size);
 
         m_DefaultShader->SetMat3("worldToView", m_ViewTransform);

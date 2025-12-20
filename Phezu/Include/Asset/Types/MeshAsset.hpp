@@ -22,11 +22,11 @@ namespace Phezu {
         MeshAsset() = default;
     public:
         void Deserialize(const std::string& data) override;
-    private:
-        GUID m_Guid;
-        std::vector<SerializedBuffer> m_VertexBuffers;
-        std::vector<unsigned int> m_IndexBuffer;
-        size_t m_Stride = 0;
-        size_t m_VertexCount = 0;
+    public:
+        GUID Guid;
+        std::vector<SerializedBuffer> VertexBuffers;
+        std::vector<unsigned int> IndexBuffer;
+        size_t Stride = 0;
+        size_t VertexCount = 0;
 	};
 }

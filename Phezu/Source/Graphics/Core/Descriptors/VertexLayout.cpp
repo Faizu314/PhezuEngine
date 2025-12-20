@@ -4,26 +4,24 @@
 
 namespace Phezu {
 
-	VertexLayout::VertexLayout(std::initializer_list<VertexAttribute> list) {
-		for (auto& attrib : list) {
-			m_Attributes.insert(std::pair(attrib.Semantic, attrib));
-		}
+	void VertexLayout::Push(VertexAttribute attrib) {
+		m_Attributes.insert(std::pair(attrib.Semantic, attrib));
+	}
 
+	void VertexLayout::ComputeLayout() {
 		EvaluateOffsetAndStride();
 	}
 
 	void VertexLayout::EvaluateOffsetAndStride() {
 		m_Stride = 0;
-		unsigned int offset = 0;
 
 		for (auto& kvp : m_Attributes) {
-			kvp.second.Offset = offset;
+			kvp.second.Offset = m_Stride;
 
 			unsigned int attribSize = GetVertexAttributeSize(kvp.second.AttributeType);
 			unsigned int attribCount = GetVertexAttributeCount(kvp.second.AttributeCount);
 
-			m_Stride += attribSize;
-			offset += attribSize * attribCount;
+			m_Stride += attribSize * attribCount;
 		}
 	}
 
