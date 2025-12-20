@@ -155,11 +155,10 @@ namespace Phezu {
                 }
                 case EntryType::ShapeData:
                 {
-                    Vector2 pivot = GetProperty<Vector2>("Pivot", entry, overrides);
-                    Vector2 size = GetProperty<Vector2>("Size", entry, overrides);
+                    GUID meshGuid = GetProperty<uint64_t>("MeshAsset", entry, overrides);
 
                     auto shapeData = dynamic_cast<ShapeData*>(parentEntity->AddDataComponent(ComponentType::Shape));
-                    shapeData->Set(pivot, size);
+                    shapeData->SetMeshHandle({ meshGuid });
                     components[entry.FileID] = shapeData;
 
                     break;

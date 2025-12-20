@@ -23,7 +23,7 @@
 namespace Phezu {
     
     Renderer::Renderer()
-    : m_Ctx(), m_DefaultShader(nullptr), m_QuadIndices(nullptr), m_QuadLayout(nullptr), m_WindowSubId(0) {}
+    : m_Ctx(), m_DefaultShader(nullptr), m_WindowSubId(0) {}
     
     Renderer::~Renderer() {}
     
@@ -77,6 +77,23 @@ namespace Phezu {
     }
     
     void Renderer::DrawEntities(const std::vector<Entity*>& renderableEntities, size_t count, CameraData* camera) {
+        TransformData* cameraTransform = dynamic_cast<TransformData*>(camera->GetEntity()->GetDataComponent(ComponentType::Transform));
+
+        m_ViewTransform.SetTranslation(cameraTransform->GetWorldPosition());
+
+        int screenWidth = m_Ctx.Window->GetWidth();
+        int screenHeight = m_Ctx.Window->GetHeight();
+
+        float aspectRatio = static_cast<float>(screenWidth) / screenHeight;
+        float vSize = camera->Size * 2.0f;
+        float hSize = vSize * aspectRatio;
+
+        m_ScreenTransform.Set(0, 0, aspectRatio / camera->Size);
+        m_ScreenTransform.Set(1, 1, 1.0f / camera->Size);
+
+        m_DefaultShader->SetMat3("worldToView", m_ViewTransform);
+        m_DefaultShader->SetMat3("viewToScreen", m_ScreenTransform);
+
         int index = 0;
         for (auto& entity : renderableEntities) {
             if (index >= count)
@@ -87,7 +104,6 @@ namespace Phezu {
     }
     
     void Renderer::DrawEntity(Entity* entity, CameraData* camera) {
-        TransformData* cameraTransform = dynamic_cast<TransformData*>(camera->GetEntity()->GetDataComponent(ComponentType::Transform));
         TransformData* transformData = dynamic_cast<TransformData*>(entity->GetDataComponent(ComponentType::Transform));
         ShapeData* shapeData = dynamic_cast<ShapeData*>(entity->GetDataComponent(ComponentType::Shape));
         RenderData* renderData = dynamic_cast<RenderData*>(entity->GetDataComponent(ComponentType::Render));
@@ -95,33 +111,14 @@ namespace Phezu {
         if (shapeData == nullptr || renderData == nullptr)
             return;
 
-        int screenWidth = m_Ctx.Window->GetWidth();
-        int screenHeight = m_Ctx.Window->GetHeight();
-        
-        Vector2 camPosition = cameraTransform->GetWorldPosition();
-        float aspectRatio = static_cast<float>(screenWidth) / screenHeight;
-        float vSize = camera->Size * 2.0f;
-        float hSize = vSize * aspectRatio;
-        
-        Vector2 upRightLocal = shapeData->GetVertexPosition(ShapeData::VertexType::UpRight);
-        Vector2 downLeftLocal = shapeData->GetVertexPosition(ShapeData::VertexType::DownLeft);
-        
-        Vector2 upRightWorld = transformData->LocalToWorldPoint(upRightLocal);
-        Vector2 downLeftWorld = transformData->LocalToWorldPoint(downLeftLocal);
-        
-        Vector2 upRightView = upRightWorld - camPosition;
-        Vector2 downLeftView = downLeftWorld - camPosition;
+        m_DefaultShader->SetMat3("objectToWorld", transformData->GetLocalToWorld());
+        m_DefaultShader->SetColor("tint", renderData->Tint);
 
-        Vector2 upRightScreen = Vector2(upRightView.X() * screenWidth / hSize, upRightView.Y() * screenHeight / vSize);
-        Vector2 downLeftScreen = Vector2(downLeftView.X() * screenWidth / hSize, downLeftView.Y() * screenHeight / vSize);
+        auto meshHandle = shapeData->GetMeshHandle();
+        Mesh& mesh = m_Meshes.at(meshHandle.GetGuid());
 
-        Vector2 ur = Vector2(upRightScreen.X() / (screenWidth / 2.0f), upRightScreen.Y() / (screenWidth / 2.0f));
-        Vector2 dl = Vector2(downLeftScreen.X() / (screenWidth / 2.0f), downLeftScreen.Y() / (screenWidth / 2.0f));
+        mesh.Bind(m_DefaultShader);
 
-        m_DefaultShader->SetVec4("tint", renderData->Tint);
-
-
-
-        m_Ctx.Api->RenderTriangles(6);
+        m_Ctx.Api->RenderTriangles(mesh.GetIndicesCount());
     }
 }

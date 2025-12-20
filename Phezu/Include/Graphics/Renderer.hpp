@@ -45,5 +45,8 @@ namespace Phezu {
     private:
         IShader* m_DefaultShader;
         std::unordered_map<GUID, Mesh> m_Meshes;
+    private:
+        Mat3x3 m_ViewTransform;
+        Mat3x3 m_ScreenTransform;
     };
 }
