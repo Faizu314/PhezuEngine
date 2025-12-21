@@ -9,7 +9,7 @@ namespace Phezu {
     
     class PrefabAsset : public IAsset {
     public:
-        PrefabAsset() = default;
+        PrefabAsset(GUID guid) : IAsset(guid) {}
     public:
         void Deserialize(const std::string& data) override;
     public:

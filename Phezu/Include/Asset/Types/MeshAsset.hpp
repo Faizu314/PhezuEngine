@@ -18,11 +18,10 @@ namespace Phezu {
 
 	class MeshAsset : public IAsset {
     public:
-        MeshAsset() = default;
+        MeshAsset(GUID guid) : IAsset(guid) {}
     public:
         void Deserialize(const std::string& data) override;
     public:
-        GUID Guid;
         std::vector<SerializedBuffer> VertexBuffers;
         std::vector<unsigned int> IndexBuffer;
         size_t Stride = 0;

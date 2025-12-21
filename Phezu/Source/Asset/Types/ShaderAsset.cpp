@@ -77,8 +77,6 @@ namespace Phezu {
 
 
     void ShaderAsset::Deserialize(const std::string& data) {
-        GetMetaData(data);
-
         const std::string vertexTag = "##Vertex";
         const std::string fragmentTag = "##Fragment";
 
@@ -106,33 +104,6 @@ namespace Phezu {
         fragmentPos += fragmentTag.length();
 
         FragmentSource = data.substr(fragmentPos);
-    }
-
-    void ShaderAsset::GetMetaData(const std::string& data) {
-        size_t braceOpen = data.find('{', 0);
-        if (braceOpen == std::string::npos) {
-            Log("Should assert here: Shader compile error\n");
-            return;
-        }
-
-        size_t braceClose = braceOpen + 1;
-
-        for (; braceClose < data.size(); braceClose++)
-        {
-            if (data[braceClose] == '}')
-                break;
-        }
-
-        if (braceClose >= data.size()) {
-            Log("Should assert here: Shader compile error\n");
-            return;
-        }
-
-        std::string jsonStr = data.substr(braceOpen, braceClose - braceOpen + 1);
-        nlohmann::json j = nlohmann::json::parse(jsonStr);
-
-        Guid = j["Guid"].get<uint64_t>();
-        Language = j["Language"].get<std::string>();
     }
 
     std::string ShaderAsset::FindVertexInputBlock(const std::string& src, size_t* start, size_t* end) {

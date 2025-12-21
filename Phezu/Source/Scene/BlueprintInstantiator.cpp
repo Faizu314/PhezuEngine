@@ -61,28 +61,28 @@ namespace Phezu {
 	}
 
 
-	Entity* BlueprintInstantiator::Instantiate(const BlueprintRuntimeContext& context, const Blueprint& blueprint)
+	Entity* BlueprintInstantiator::Instantiate(const BlueprintRuntimeContext& context, const Blueprint& blueprint, GUID bpGuid)
 	{
 		BlueprintRegistry registry;
 
 		/*-----– First Pass -------*/
 
-		InstantiateEntitiesAndComponents(context, blueprint, registry);
+		InstantiateEntitiesAndComponents(context, blueprint, bpGuid, registry);
 
 		OnEntitiesCreated(context, registry);
 
 		/*-----– Second Pass -------*/
 
-		BuildHierarchyAndInitializeScripts(context, blueprint, registry);
+		BuildHierarchyAndInitializeScripts(context, blueprint, bpGuid, registry);
 
 		OnScriptsInitialized(context, registry);
 
-		return registry[RegistryKey(0, blueprint.GetGuid())].RootEntity;
+		return registry[RegistryKey(0, bpGuid)].RootEntity;
 	}
 
-	void BlueprintInstantiator::InstantiateEntitiesAndComponents(const BlueprintRuntimeContext& context, const Blueprint& bp, BlueprintRegistry& registry, uint64_t instanceID, PrefabOverrides overrides)
+	void BlueprintInstantiator::InstantiateEntitiesAndComponents(const BlueprintRuntimeContext& context, const Blueprint& bp, GUID bpGuid, BlueprintRegistry& registry, uint64_t instanceID, PrefabOverrides overrides)
 	{
-        GUID guid = bp.GetGuid();
+        GUID guid = bpGuid;
         RegistryKey registryKey(instanceID, guid);
 
         /* ---- Prefab Entries ---- */
@@ -92,10 +92,11 @@ namespace Phezu {
 
             uint64_t prefabGuid = GetProperty<uint64_t>("SourcePrefab", entry, overrides);
             AssetHandle<PrefabAsset> prefabHandle = { prefabGuid };
-            const Blueprint& prefabBlueprint = context.assetManager->GetAsset(prefabHandle)->GetBlueprint();
+            const PrefabAsset* prefabAsset = context.assetManager->GetAsset(prefabHandle);
+            const Blueprint& prefabBlueprint = prefabAsset->GetBlueprint();
 
             PrefabOverrides prefabOverrides = entry.Properties.at("Overrides").get<PrefabOverrides>();
-            InstantiateEntitiesAndComponents(context, prefabBlueprint, registry, entry.FileID, prefabOverrides);
+            InstantiateEntitiesAndComponents(context, prefabBlueprint, prefabAsset->Guid, registry, entry.FileID, prefabOverrides);
         }
 
         /* ---- Entity Entries ---- */
@@ -243,9 +244,9 @@ namespace Phezu {
         }
 	}
 
-	void BlueprintInstantiator::BuildHierarchyAndInitializeScripts(const BlueprintRuntimeContext& context, const Blueprint& bp, BlueprintRegistry& registry, uint64_t instanceID, PrefabOverrides overrides)
+	void BlueprintInstantiator::BuildHierarchyAndInitializeScripts(const BlueprintRuntimeContext& context, const Blueprint& bp, GUID bpGuid, BlueprintRegistry& registry, uint64_t instanceID, PrefabOverrides overrides)
 	{
-        GUID guid = bp.GetGuid();
+        GUID guid = bpGuid;
         RegistryKey registryKey(instanceID, guid);
 
         /* ---- Prefab Entries ---- */
@@ -258,10 +259,11 @@ namespace Phezu {
             uint64_t prefabGuid = GetProperty<uint64_t>("SourcePrefab", entry, overrides);
             uint64_t parentFileID = GetProperty<uint64_t>("Parent", entry, overrides);
             AssetHandle<PrefabAsset> prefabHandle = { prefabGuid };
-            const Blueprint& prefabBlueprint = context.assetManager->GetAsset(prefabHandle)->GetBlueprint();
+            const PrefabAsset* prefabAsset = context.assetManager->GetAsset(prefabHandle);
+            const Blueprint& prefabBlueprint = prefabAsset->GetBlueprint();
 
             PrefabOverrides prefabOverrides = entry.Properties.at("Overrides").get<PrefabOverrides>();
-            BuildHierarchyAndInitializeScripts(context, prefabBlueprint, registry, entry.FileID, prefabOverrides);
+            BuildHierarchyAndInitializeScripts(context, prefabBlueprint, prefabAsset->Guid, registry, entry.FileID, prefabOverrides);
 
             if (parentFileID != 0)
                 registry[RegistryKey(entry.FileID, prefabGuid)].RootEntity->SetParent(entities[parentFileID]);

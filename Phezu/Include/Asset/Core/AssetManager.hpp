@@ -6,6 +6,11 @@
 
 #include "Core/Types/GUID.hpp"
 #include "Asset/Core/Asset.hpp"
+#include "Asset/Types/ImageAsset.hpp"
+#include "Asset/Types/MeshAsset.hpp"
+#include "Asset/Types/ShaderAsset.hpp"
+#include "Asset/Types/PrefabAsset.hpp"
+#include "Asset/Types/SceneAsset.hpp"
 #include "Asset/Configs/BuildScenesConfig.hpp"
 
 namespace Phezu {
@@ -53,7 +58,7 @@ namespace Phezu {
 
         std::string assetPath = m_AssetMap[guid][0].string();
 
-        asset = new T();
+        asset = new T(guid);
         asset->Deserialize(GetFileFromDisk(assetPath));
 
         m_LoadedAssets[guid] = asset;

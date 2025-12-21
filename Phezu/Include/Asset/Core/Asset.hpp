@@ -18,7 +18,12 @@ namespace Phezu {
 
 	class IAsset {
 	public:
+		IAsset() = delete;
+		IAsset(GUID guid) : Guid(guid) {}
+	public:
 		virtual void Deserialize(const std::string& data) = 0;
+	public:
+		GUID Guid;
 	};
 
 }

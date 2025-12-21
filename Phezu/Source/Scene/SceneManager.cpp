@@ -41,7 +41,7 @@ namespace Phezu {
         const SceneAsset* masterSceneAsset = m_Engine->GetAssetManager().GetAsset(sceneHandle);
         Scene* scene = new Scene(m_Engine, masterSceneAsset->GetName());
         BlueprintRuntimeContext ctx = { &m_Engine->GetAssetManager(), &m_Engine->GetScriptEngine(), scene };
-        BlueprintInstantiator::Instantiate(ctx, masterSceneAsset->GetBlueprint());
+        BlueprintInstantiator::Instantiate(ctx, masterSceneAsset->GetBlueprint(), masterSceneAsset->Guid);
 
         return scene;
     }
