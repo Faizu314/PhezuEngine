@@ -36,11 +36,11 @@ namespace Phezu {
 
 	class BlueprintInstantiator {
 	public:
-		static Entity* Instantiate(const BlueprintRuntimeContext& context, const Blueprint& blueprint);
+		static Entity* Instantiate(const BlueprintRuntimeContext& context, const Blueprint& blueprint, GUID bpGuid);
 	private:
-		static void InstantiateEntitiesAndComponents(const BlueprintRuntimeContext& context, const Blueprint& blueprint, BlueprintRegistry& registry, uint64_t instanceID = 0, PrefabOverrides overrides = PrefabOverrides());
+		static void InstantiateEntitiesAndComponents(const BlueprintRuntimeContext& context, const Blueprint& blueprint, GUID bpGuid, BlueprintRegistry& registry, uint64_t instanceID = 0, PrefabOverrides overrides = PrefabOverrides());
 		static void OnEntitiesCreated(const BlueprintRuntimeContext& context, BlueprintRegistry& registry);
-		static void BuildHierarchyAndInitializeScripts(const BlueprintRuntimeContext& context, const Blueprint& blueprint, BlueprintRegistry& registry, uint64_t instanceID = 0, PrefabOverrides overrides = PrefabOverrides());
+		static void BuildHierarchyAndInitializeScripts(const BlueprintRuntimeContext& context, const Blueprint& blueprint, GUID bpGuid, BlueprintRegistry& registry, uint64_t instanceID = 0, PrefabOverrides overrides = PrefabOverrides());
 		static void OnScriptsInitialized(const BlueprintRuntimeContext& context, BlueprintRegistry& registry);
 	};
 }

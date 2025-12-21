@@ -9,7 +9,7 @@ namespace Phezu {
 
 	class SceneAsset : public IAsset {
     public:
-        SceneAsset() = default;
+        SceneAsset(GUID guid) : IAsset(guid) {}
     public:
         void Deserialize(const std::string& data) override;
     public:

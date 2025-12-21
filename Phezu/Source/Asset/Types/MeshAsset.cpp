@@ -10,7 +10,6 @@ namespace Phezu {
     void MeshAsset::Deserialize(const std::string& data) {
         nlohmann::json j = nlohmann::json::parse(data);
 
-        Guid = j["Guid"].get<uint64_t>();
         VertexCount = j["VertexCount"].get<size_t>();
 
         size_t totalBuffersSize = 0;

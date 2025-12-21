@@ -6,7 +6,6 @@
 #include <unordered_set>
 
 #include "nlohmann/json.hpp"
-#include "Core/Types/GUID.hpp"
 #include "Asset/Blueprint/BlueprintEntry.hpp"
 
 namespace Phezu {
@@ -26,8 +25,5 @@ namespace Phezu {
         std::vector<BlueprintEntry> ScriptEntries;
     public:
         void Deserialize(const nlohmann::json& j);
-        GUID GetGuid() const { return m_Guid; }
-    private:
-        GUID m_Guid;
     };
 }

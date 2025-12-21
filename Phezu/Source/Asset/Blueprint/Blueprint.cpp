@@ -11,7 +11,6 @@ namespace Phezu {
         ComponentEntries.clear();
         ScriptEntries.clear();
         
-        m_Guid.Value = j["Guid"].get<uint64_t>();
         for (const auto& entryJson : j["Entries"]) {
             BlueprintEntry entry;
             entry.Deserialize(entryJson);
