@@ -32,9 +32,9 @@ namespace Phezu {
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
-	IShader* OpenGLAPI::CreateShader(const std::string& vert, const std::string& frag) {
+	IShader* OpenGLAPI::CreateShader(const std::string& vert, const std::string& frag, const std::unordered_map<VertexSemantic, unsigned int>& vertInput) {
 		IShader* shader = new GLShader();
-		shader->Init(vert, frag);
+		shader->Init(vert, frag, vertInput);
 		return shader;
 	}
 

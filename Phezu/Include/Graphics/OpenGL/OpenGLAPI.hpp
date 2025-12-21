@@ -15,6 +15,6 @@ namespace Phezu {
 		IIndexBuffer* CreateIndexBuffer(const unsigned int* indices, size_t bufferSize, BufferType bufferType) override;
 		IVertexArray* CreateVertexArray() override;
 	public:
-		IShader* CreateShader(const std::string& vert, const std::string& frag) override;
+		IShader* CreateShader(const std::string& vert, const std::string& frag, const std::unordered_map<VertexSemantic, unsigned int>& vertInput) override;
 	};
 }

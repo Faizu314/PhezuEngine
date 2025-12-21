@@ -43,7 +43,7 @@ namespace Phezu {
         int m_WindowSubId;
         // MUST HAVE A TARGET FRAME BUFFER
     private:
-        IShader* m_DefaultShader;
+        std::unordered_map<GUID, IShader*> m_Shaders;
         std::unordered_map<GUID, Mesh> m_Meshes;
     private:
         Mat3x3 m_ViewTransform;

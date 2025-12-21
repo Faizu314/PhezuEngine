@@ -1,4 +1,6 @@
 #include "Core/Types/Buffer.hpp"
+#include "Graphics/Core/GraphicsAPI.hpp"
+#include "Graphics/Core/Resources/Shader.hpp"
 #include "Graphics/Data/MeshBuilder.hpp"
 
 namespace Phezu {
@@ -89,4 +91,10 @@ namespace Phezu {
 
 		return mesh;
 	}
+
+    IShader* MeshBuilder::CreateShader(const ShaderAsset* shaderAsset, IGraphicsAPI* api) {
+        IShader* shader = api->CreateShader(shaderAsset->VertexSource, shaderAsset->FragmentSource, shaderAsset->Semantics);
+
+        return shader;
+    }
 }

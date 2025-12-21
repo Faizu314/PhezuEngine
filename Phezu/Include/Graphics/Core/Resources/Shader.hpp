@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 #include "Core/Types/Color.hpp"
 #include "Core/Types/VertexTypes.hpp"
@@ -10,7 +11,7 @@ namespace Phezu {
 
 	class IShader {
 	public:
-		virtual void Init(const std::string& vert, const std::string& frag) = 0;
+		virtual void Init(const std::string& vert, const std::string& frag, const std::unordered_map<VertexSemantic, unsigned int>& vertInput) = 0;
 		virtual void Bind() = 0;
 		virtual void Destroy() = 0;
 	public:

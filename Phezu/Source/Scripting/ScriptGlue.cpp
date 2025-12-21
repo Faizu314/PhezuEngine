@@ -203,7 +203,7 @@ namespace Phezu {
         if (entity) {
             RenderData* render = dynamic_cast<RenderData*>(entity->GetDataComponent(ComponentType::Render));
             
-            *tint = render->Tint;
+            *tint = render->GetTint();
         }
     }
     
@@ -213,7 +213,7 @@ namespace Phezu {
         if (entity) {
             RenderData* render = dynamic_cast<RenderData*>(entity->GetDataComponent(ComponentType::Render));
             
-            render->Tint = *tint;
+            render->SetTint(*tint);
         }
     }
     
