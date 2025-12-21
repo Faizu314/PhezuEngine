@@ -1,11 +1,11 @@
 #include "Core/Types/Buffer.hpp"
 #include "Graphics/Core/GraphicsAPI.hpp"
 #include "Graphics/Core/Resources/Shader.hpp"
-#include "Graphics/Data/MeshBuilder.hpp"
+#include "Graphics/Data/DataBuilder.hpp"
 
 namespace Phezu {
 
-	Mesh MeshBuilder::CreateMesh(const MeshAsset* meshAsset, IGraphicsAPI* api)
+	Mesh DataBuilder::CreateMesh(const MeshAsset* meshAsset, IGraphicsAPI* api)
 	{
         Buffer vertexBuffer;
         VertexLayout layout;
@@ -92,7 +92,7 @@ namespace Phezu {
 		return mesh;
 	}
 
-    IShader* MeshBuilder::CreateShader(const ShaderAsset* shaderAsset, IGraphicsAPI* api) {
+    IShader* DataBuilder::CreateShader(const ShaderAsset* shaderAsset, IGraphicsAPI* api) {
         IShader* shader = api->CreateShader(shaderAsset->VertexSource, shaderAsset->FragmentSource, shaderAsset->Semantics);
 
         return shader;

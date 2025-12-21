@@ -1,13 +1,10 @@
 #include "Core/Platform.hpp"
 #include "Core/Window.hpp"
 #include "Graphics/Renderer.hpp"
-#include "Graphics/Core/Resources/VertexBuffer.hpp" 
-#include "Graphics/Core/Resources/IndexBuffer.hpp" 
-#include "Graphics/Core/Resources/VertexArray.hpp" 
 #include "Graphics/Core/Resources/Shader.hpp"
 #include "Graphics/Core/GraphicsAPI.hpp"
 #include "Graphics/Data/Mesh.hpp"
-#include "Graphics/Data/MeshBuilder.hpp"
+#include "Graphics/Data/DataBuilder.hpp"
 #include "Asset/Core/AssetManager.hpp"
 #include "Asset/Types/MeshAsset.hpp"
 #include "Scene/Entity.hpp"
@@ -33,11 +30,11 @@ namespace Phezu {
 
         AssetHandle<ShaderAsset> shaderHandle = { 101 };
         const ShaderAsset* shaderAsset = m_Ctx.Asset->GetAsset(shaderHandle);
-        m_Shaders.insert(std::make_pair(shaderHandle.GetGuid(), MeshBuilder::CreateShader(shaderAsset, m_Ctx.Api)));
+        m_Shaders.insert(std::make_pair(shaderHandle.GetGuid(), DataBuilder::CreateShader(shaderAsset, m_Ctx.Api)));
 
         AssetHandle<MeshAsset> handle = { 99 };
         const MeshAsset* meshAsset = m_Ctx.Asset->GetAsset(handle);
-        m_Meshes.insert(std::make_pair(handle.GetGuid(), MeshBuilder::CreateMesh(meshAsset, m_Ctx.Api)));
+        m_Meshes.insert(std::make_pair(handle.GetGuid(), DataBuilder::CreateMesh(meshAsset, m_Ctx.Api)));
     }
 
     void Renderer::Destroy() {
