@@ -24,7 +24,7 @@ namespace Phezu {
     
     class FileStreamReader : public StreamReader {
     public:
-        FileStreamReader(const std::string& filePath) : m_Filestream(filePath, std::ios::in) {}
+        FileStreamReader(const std::string& filePath) : m_Filestream(filePath, std::ios::in | std::ios::binary) {}
         ~FileStreamReader() {
             if (m_Filestream.is_open())
                 m_Filestream.close();
