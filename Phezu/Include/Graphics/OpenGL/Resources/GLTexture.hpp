@@ -8,7 +8,7 @@ namespace Phezu {
 
 	class GLTexture : public ITexture {
 	public:
-		void Init(unsigned char* data, TextureSettings settings) override;
+		void Init(unsigned char* data, unsigned int width, unsigned int height, SamplerDesc settings) override;
 		void Bind() override;
 		void Destroy() override;
 	private:

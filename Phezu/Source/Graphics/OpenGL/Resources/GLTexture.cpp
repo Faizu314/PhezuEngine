@@ -34,7 +34,7 @@ namespace Phezu {
 	}
 
 
-	void Phezu::GLTexture::Init(unsigned char* data, TextureSettings settings) {
+	void Phezu::GLTexture::Init(unsigned char* data, unsigned int width, unsigned int height, SamplerDesc settings) {
 		glGenTextures(1, &m_Texture);
 		glBindTexture(GL_TEXTURE_2D, m_Texture);
 
@@ -46,7 +46,7 @@ namespace Phezu {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filteringMode);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filteringMode);
 
-		glTexImage2D(GL_TEXTURE, 0, GL_RGBA, settings.Width, settings.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	}
 
 	void GLTexture::Bind() {
