@@ -1,9 +1,11 @@
 #pragma once
 
+#include <unordered_map>
 #include <string>
 
 #include "Core/Platform.hpp"
 #include "Core/Types/Color.hpp"
+#include "Core/Types/VertexTypes.hpp"
 #include "Graphics/Core/GraphicsTypes.hpp"
 
 namespace Phezu {
@@ -24,6 +26,6 @@ namespace Phezu {
 		virtual IIndexBuffer* CreateIndexBuffer(const unsigned int* indices, size_t bufferSize, BufferType bufferType) = 0;
 		virtual IVertexArray* CreateVertexArray() = 0;
 	public:
-		virtual IShader* CreateShader(const std::string& vert, const std::string& frag) = 0;
+		virtual IShader* CreateShader(const std::string& vert, const std::string& frag, const std::unordered_map<VertexSemantic, unsigned int>& vertInput) = 0;
 	};
 }

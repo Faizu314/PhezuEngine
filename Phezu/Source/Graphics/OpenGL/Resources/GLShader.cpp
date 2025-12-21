@@ -3,7 +3,7 @@
 
 namespace Phezu {
 	
-	void GLShader::Init(const std::string& vert, const std::string& frag) {
+	void GLShader::Init(const std::string& vert, const std::string& frag, const std::unordered_map<VertexSemantic, unsigned int>& vertInput) {
 		const char* vertSource = vert.c_str();
 		const char* fragSource = frag.c_str();
 
@@ -52,6 +52,8 @@ namespace Phezu {
 
 		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);
+
+		m_Semantics = vertInput;
 	}
 
 	void GLShader::Bind() {
@@ -62,10 +64,6 @@ namespace Phezu {
 		if (m_ShaderProgram != 0)
 			glDeleteProgram(m_ShaderProgram);
 		m_ShaderProgram = 0;
-	}
-
-	void GLShader::SetSemantics(const std::unordered_map<VertexSemantic, unsigned int>& semantics) {
-		m_Semantics = std::unordered_map<VertexSemantic, unsigned int>(semantics);
 	}
 
 	std::vector<VertexSemantic> GLShader::GetRequiredSemantics() const {

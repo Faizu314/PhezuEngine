@@ -17,13 +17,10 @@
 #include "Scene/Components/CameraData.hpp"
 #include "Maths/Math.hpp"
 
-
-#include "Graphics/OpenGL/Resources/GLShader.hpp"
-
 namespace Phezu {
     
     Renderer::Renderer()
-    : m_Ctx(), m_DefaultShader(nullptr), m_WindowSubId(0) {}
+    : m_Ctx(), m_WindowSubId(0) {}
     
     Renderer::~Renderer() {}
     
@@ -34,49 +31,21 @@ namespace Phezu {
             [this](int width, int height) { m_Ctx.Api->SetViewport(0, 0, width, height); }
         );
 
-        std::string vert = R"(
-            #version 460 core
-            layout (location = 3) in vec2 aPos;
-            layout (location = 2) in vec4 color;
-            uniform mat3 objectToWorld;
-            uniform mat3 worldToView;
-            uniform mat3 viewToScreen;
-            out vec4 vertexColor;
-            void main()
-            {
-                vec3 worldPos = objectToWorld * vec3(aPos.xy, 1.0);
-                vec3 viewPos = worldToView * vec3(worldPos.xy, 1.0);
-                vec3 screenPos = viewToScreen * vec3(viewPos.xy, 1.0);
-
-                gl_Position = vec4(screenPos.xy, 0.0, 1.0);
-                vertexColor = color;
-            })";
-
-        std::string frag =
-            "#version 460 core\n"
-            "out vec4 FragColor;\n"
-            "in vec4 vertexColor;\n"
-            "uniform vec4 tint;"
-            "void main()\n"
-            "{\n"
-            "   FragColor = tint * vertexColor;\n"
-            "}\0";
-
-        m_DefaultShader = m_Ctx.Api->CreateShader(vert, frag);
-        ((GLShader*)m_DefaultShader)->SetSemantics({ std::make_pair(VertexSemantic::Position, 3), 
-                                                     std::make_pair(VertexSemantic::Color, 2) });
-        m_DefaultShader->Bind();
+        AssetHandle<ShaderAsset> shaderHandle = { 101 };
+        const ShaderAsset* shaderAsset = m_Ctx.Asset->GetAsset(shaderHandle);
+        m_Shaders.insert(std::make_pair(shaderHandle.GetGuid(), MeshBuilder::CreateShader(shaderAsset, m_Ctx.Api)));
 
         AssetHandle<MeshAsset> handle = { 99 };
         const MeshAsset* meshAsset = m_Ctx.Asset->GetAsset(handle);
-
         m_Meshes.insert(std::make_pair(handle.GetGuid(), MeshBuilder::CreateMesh(meshAsset, m_Ctx.Api)));
     }
 
     void Renderer::Destroy() {
         m_Ctx.Window->UnregisterWindowResizeCallback(m_WindowSubId);
 
-        m_DefaultShader->Destroy();
+        for (auto kvp : m_Shaders) {
+            kvp.second->Destroy();
+        }
     }
     
     void Renderer::ClearFrame() {
@@ -98,9 +67,6 @@ namespace Phezu {
         m_ScreenTransform.Set(0, 0, 1.0f / (aspectRatio * camera->Size));
         m_ScreenTransform.Set(1, 1, 1.0f / camera->Size);
 
-        m_DefaultShader->SetMat3("worldToView", m_ViewTransform);
-        m_DefaultShader->SetMat3("viewToScreen", m_ScreenTransform);
-
         int index = 0;
         for (auto& entity : renderableEntities) {
             if (index >= count)
@@ -118,13 +84,20 @@ namespace Phezu {
         if (shapeData == nullptr || renderData == nullptr)
             return;
 
-        m_DefaultShader->SetMat3("objectToWorld", transformData->GetLocalToWorld());
-        m_DefaultShader->SetColor("tint", renderData->Tint);
+        auto shaderHandle = renderData->GetShaderHandle();
+        IShader* shader = m_Shaders.at(shaderHandle.GetGuid());
+
+        shader->Bind();
+
+        shader->SetMat3("objectToWorld", transformData->GetLocalToWorld());
+        shader->SetMat3("worldToView", m_ViewTransform);
+        shader->SetMat3("viewToScreen", m_ScreenTransform);
+        shader->SetColor("tint", renderData->GetTint());
 
         auto meshHandle = shapeData->GetMeshHandle();
         Mesh& mesh = m_Meshes.at(meshHandle.GetGuid());
 
-        mesh.Bind(m_DefaultShader);
+        mesh.Bind(shader);
 
         m_Ctx.Api->RenderTriangles(mesh.GetIndicesCount());
     }

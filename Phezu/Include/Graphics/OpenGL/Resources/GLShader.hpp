@@ -11,11 +11,10 @@ namespace Phezu {
 
 	class GLShader : public IShader {
 	public:
-		void Init(const std::string& vert, const std::string& frag) override;
+		void Init(const std::string& vert, const std::string& frag, const std::unordered_map<VertexSemantic, unsigned int>& vertInput) override;
 		void Bind() override;
 		void Destroy() override;
 	public:
-		void SetSemantics(const std::unordered_map<VertexSemantic, unsigned int>& semantics);
 		std::vector<VertexSemantic> GetRequiredSemantics() const override;
 		unsigned int GetSemanticLocation(VertexSemantic semantic) const override;
 	public:
