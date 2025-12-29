@@ -1,8 +1,31 @@
 #pragma once
 
-#include "Core/Platform.hpp"
+#include <stdint.h>
+#include <string>
+#include <variant>
+
+#include "Core/Types/Color.hpp"
+#include "Maths/Objects/Vector2.hpp"
+#include "Maths/Objects/Vector3.hpp"
 
 namespace Phezu {
+
+	enum class TextureWrapMode {
+		Repeat,
+		MirroredRepeat,
+		ClampToEdge,
+		ClampToBorder
+	};
+
+	enum class TextureFilteringMode {
+		Point,
+		Bilinear
+	};
+
+	struct SamplerDesc {
+		TextureWrapMode WrapMode;
+		TextureFilteringMode FilteringMode;
+	};
 
 	enum class VertexSemantic : uint8_t {
 		Position,
@@ -39,4 +62,20 @@ namespace Phezu {
 
 	unsigned int GetVertexAttributeSize(VertexAttributeType attribute);
 	unsigned int GetVertexAttributeCount(VertexAttributeCount countEnum);
+
+	enum class MaterialParameterType : uint8_t {
+		Float,
+		Float2,
+		Float3,
+		Color,
+		Int,
+		Bool
+	};
+
+	using MaterialParameterValue = std::variant<float, Vector2, Vector3, Color, int, bool>;
+
+	struct MaterialParameter {
+		MaterialParameterType Type;
+		MaterialParameterValue Value;
+	};
 }

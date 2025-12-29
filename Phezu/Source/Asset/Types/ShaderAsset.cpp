@@ -2,6 +2,7 @@
 
 #include "nlohmann/json.hpp"
 
+#include "Core/Platform.hpp"
 #include "Asset/Types/ShaderAsset.hpp"
 
 namespace Phezu {

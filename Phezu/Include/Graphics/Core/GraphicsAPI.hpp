@@ -5,8 +5,8 @@
 
 #include "Core/Platform.hpp"
 #include "Core/Types/Color.hpp"
-#include "Core/Types/VertexTypes.hpp"
-#include "Core/Types/TextureTypes.hpp"
+#include "Core/Types/Types.hpp"
+#include "Core/Types/Types.hpp"
 #include "Graphics/Core/GraphicsTypes.hpp"
 
 namespace Phezu {

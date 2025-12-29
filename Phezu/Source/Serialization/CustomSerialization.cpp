@@ -1,7 +1,15 @@
 #include "Serialization/CustomSerialization.hpp"
 
 namespace Phezu {
-    
+
+    void from_json(const nlohmann::json& j, GUID& guid) {
+        guid.Value = j.get<uint64_t>();
+    }
+
+    void to_json(nlohmann::json& j, const GUID& guid) {
+        j = guid.Value;
+    }
+
     void from_json(const nlohmann::json& j, EntryRef& v) {
         v.Guid = j.value("Guid", 0);
         v.InstanceID = j.value("InstanceID", 0);
@@ -59,6 +67,16 @@ namespace Phezu {
         j = nlohmann::json{{"x", v.X()}, {"y", v.Y()}};
     }
 
+
+
+    void from_json(const nlohmann::json& j, Vector3& v) {
+        v.Set(j.value("x", 0.0f), j.value("y", 0.0f), j.value("z", 0.0f));
+    }
+
+    void to_json(nlohmann::json& j, const Vector3& v) {
+        j = nlohmann::json{ {"x", v.X()}, {"y", v.Y()}, {"z", v.Z()} };
+    }
+
     
     
     void from_json(const nlohmann::json& j, Color& c) {
@@ -70,6 +88,58 @@ namespace Phezu {
 
     void to_json(nlohmann::json& j, const Color& c) {
         j = nlohmann::json{{"r", c.r}, {"g", c.g}, {"b", c.b}, {"a", c.a}};
+    }
+
+    void from_json(const nlohmann::json& j, MaterialParameter& p) {
+        std::string type = j["Type"].get<std::string>();
+
+        if (type == "Float") {
+            p.Type = MaterialParameterType::Float;
+            p.Value = j["Value"].get<float>();
+        }
+        else if (type == "Float2") {
+            p.Type = MaterialParameterType::Float2;
+            p.Value = j["Value"].get<Vector2>();
+        }
+        else if (type == "Float3") {
+            p.Type = MaterialParameterType::Float3;
+            p.Value = j["Value"].get<Vector3>();
+        }
+        else if (type == "Color") {
+            p.Type = MaterialParameterType::Color;
+            p.Value = j["Value"].get<Color>();
+        }
+        else if (type == "Int") {
+            p.Type = MaterialParameterType::Int;
+            p.Value = j["Value"].get<int>();
+        }
+        else if (type == "Bool") {
+            p.Type = MaterialParameterType::Bool;
+            p.Value = j["Value"].get<bool>();
+        }
+    }
+
+    void to_json(nlohmann::json& j, const MaterialParameter& p) {
+        switch (p.Type) {
+            case MaterialParameterType::Float:
+                j["Type"] = "Float";
+                j["Value"] = std::get<float>(p.Value);
+            case MaterialParameterType::Float2:
+                j["Type"] = "Float2";
+                j["Value"] = std::get<Vector2>(p.Value);
+            case MaterialParameterType::Float3:
+                j["Type"] = "Float3";
+                j["Value"] = std::get<Vector3>(p.Value);
+            case MaterialParameterType::Color:
+                j["Type"] = "Color";
+                j["Value"] = std::get<Color>(p.Value);
+            case MaterialParameterType::Int:
+                j["Type"] = "Int";
+                j["Value"] = std::get<int>(p.Value);
+            case MaterialParameterType::Bool:
+                j["Type"] = "Bool";
+                j["Value"] = std::get<bool>(p.Value);
+        }
     }
     
 }

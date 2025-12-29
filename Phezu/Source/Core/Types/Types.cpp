@@ -2,8 +2,8 @@
 
 #include <unordered_map>
 
+#include "Core/Types/Types.hpp"
 #include "Core/Platform.hpp"
-#include "Graphics/Core/GraphicsTypes.hpp"
 
 namespace Phezu {
 

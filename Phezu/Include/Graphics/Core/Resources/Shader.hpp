@@ -5,7 +5,7 @@
 #include <unordered_map>
 
 #include "Core/Types/Color.hpp"
-#include "Core/Types/VertexTypes.hpp"
+#include "Core/Types/Types.hpp"
 
 namespace Phezu {
 

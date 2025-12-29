@@ -2,7 +2,8 @@
 
 #include "nlohmann/json.hpp"
 
-#include "Core/Types/VertexTypes.hpp"
+#include "Core/Platform.hpp"
+#include "Core/Types/Types.hpp"
 #include "Asset/Types/MeshAsset.hpp"
 
 namespace Phezu {

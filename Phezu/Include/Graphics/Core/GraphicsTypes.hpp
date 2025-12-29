@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-#include "Core/Types/VertexTypes.hpp"
+#include "Core/Types/Types.hpp"
 
 namespace Phezu {
 
