@@ -5,6 +5,7 @@
 #include "Graphics/OpenGL/Resources/GLIndexBuffer.hpp"
 #include "Graphics/OpenGL/Resources/GLVertexArray.hpp"
 #include "Graphics/OpenGL/Resources/GLShader.hpp"
+#include "Graphics/OpenGL/Resources/GLTexture.hpp"
 #include "Core/Platform.hpp"
 
 namespace Phezu {
@@ -36,6 +37,12 @@ namespace Phezu {
 		IShader* shader = new GLShader();
 		shader->Init(vert, frag, vertInput);
 		return shader;
+	}
+
+	ITexture* OpenGLAPI::CreateTexture(unsigned char* data, unsigned int width, unsigned int height, SamplerDesc settings) {
+		ITexture* texture = new GLTexture();
+		texture->Init(data, width, height, settings);
+		return texture;
 	}
 
 	IVertexBuffer* OpenGLAPI::CreateVertexBuffer(const void* vertices, size_t bufferSize, BufferType bufferType) {

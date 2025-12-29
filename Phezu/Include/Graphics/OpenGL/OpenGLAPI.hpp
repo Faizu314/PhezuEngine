@@ -16,5 +16,6 @@ namespace Phezu {
 		IVertexArray* CreateVertexArray() override;
 	public:
 		IShader* CreateShader(const std::string& vert, const std::string& frag, const std::unordered_map<VertexSemantic, unsigned int>& vertInput) override;
+		ITexture* CreateTexture(unsigned char* data, unsigned int width, unsigned int height, SamplerDesc settings) override;
 	};
 }
