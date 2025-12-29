@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "Core/Types/VertexTypes.hpp"
+#include "Core/Types/Types.hpp"
 #include "Asset/Core/Asset.hpp"
 
 namespace Phezu {

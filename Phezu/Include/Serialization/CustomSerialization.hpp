@@ -6,6 +6,7 @@
 
 #include "nlohmann/json.hpp"
 
+#include "Core/Types/Types.hpp"
 #include "Core/Types/GUID.hpp"
 #include "Core/Types/Color.hpp"
 #include "Maths/Math.hpp"
@@ -37,6 +38,11 @@ namespace Phezu {
         std::unordered_set<uint64_t> RemovedComponents; //A file will only save the components it removed
         std::unordered_map<uint64_t, EntryOverrides> EntryOverrides;
     };
+
+    void from_json(const nlohmann::json& j, GUID& guid);
+
+    void to_json(nlohmann::json& j, const GUID& guid);
+
     
     void from_json(const nlohmann::json& j, EntryRef& v);
     
@@ -60,10 +66,21 @@ namespace Phezu {
 
     void to_json(nlohmann::json& j, const Vector2& v);
 
+
+
+    void from_json(const nlohmann::json& j, Vector3& v);
+
+    void to_json(nlohmann::json& j, const Vector3& v);
+
     
     
     void from_json(const nlohmann::json& j, Color& c);
 
     void to_json(nlohmann::json& j, const Color& c);
+
+
+    void from_json(const nlohmann::json& j, MaterialParameter& p);
+
+    void to_json(nlohmann::json& j, const MaterialParameter& p);
     
 }

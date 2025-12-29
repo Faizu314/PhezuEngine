@@ -2,7 +2,7 @@
 
 #include <unordered_map>
 
-#include "Core/Types/VertexTypes.hpp"
+#include "Core/Types/Types.hpp"
 #include "Asset/Core/Asset.hpp"
 
 namespace Phezu {

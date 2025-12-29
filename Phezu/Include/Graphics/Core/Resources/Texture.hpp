@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Types/TextureTypes.hpp"
+#include "Core/Types/Types.hpp"
 
 namespace Phezu {
 
