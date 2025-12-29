@@ -8,6 +8,7 @@
 #include "Asset/Core/Asset.hpp"
 #include "Asset/Types/ImageAsset.hpp"
 #include "Asset/Types/TextureAsset.hpp"
+#include "Asset/Types/MaterialAsset.hpp"
 #include "Asset/Types/MeshAsset.hpp"
 #include "Asset/Types/ShaderAsset.hpp"
 #include "Asset/Types/PrefabAsset.hpp"

@@ -72,7 +72,7 @@ namespace Phezu {
 
     IAsset* AssetManager::TryGetLoadedAsset(GUID guid) {
         if (m_AssetMap.find(guid) == m_AssetMap.end()) {
-            Log("Scene Asset with guid: %i not found\n", guid.Value);
+            Log("Assert here: Asset with guid: %i not found\n", guid.Value);
             return nullptr;
         }
         if (m_LoadedAssets.find(guid) == m_LoadedAssets.end())
