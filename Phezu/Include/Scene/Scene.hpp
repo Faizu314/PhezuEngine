@@ -12,7 +12,6 @@ namespace Phezu {
     
     class Engine;
     class Entity;
-    class PrefabAsset;
     
     class Scene {
     public:
