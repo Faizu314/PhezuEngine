@@ -6,6 +6,7 @@
 #include "Core/Platform.hpp"
 #include "Core/Types/Color.hpp"
 #include "Core/Types/VertexTypes.hpp"
+#include "Core/Types/TextureTypes.hpp"
 #include "Graphics/Core/GraphicsTypes.hpp"
 
 namespace Phezu {
@@ -14,6 +15,7 @@ namespace Phezu {
 	class IVertexBuffer;
 	class IIndexBuffer;
 	class IVertexArray;
+	class ITexture;
 
 	class IGraphicsAPI {
 	public:
@@ -27,5 +29,6 @@ namespace Phezu {
 		virtual IVertexArray* CreateVertexArray() = 0;
 	public:
 		virtual IShader* CreateShader(const std::string& vert, const std::string& frag, const std::unordered_map<VertexSemantic, unsigned int>& vertInput) = 0;
+		virtual ITexture* CreateTexture(unsigned char* data, unsigned int width, unsigned int height, SamplerDesc settings) = 0;
 	};
 }
