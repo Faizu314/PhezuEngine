@@ -79,8 +79,8 @@ namespace Phezu {
     void to_json(nlohmann::json& j, const Color& c);
 
 
-    void from_json(const nlohmann::json& j, MaterialParameter& p);
+    void from_json(const nlohmann::json& j, MaterialProperty& p);
 
-    void to_json(nlohmann::json& j, const MaterialParameter& p);
+    void to_json(nlohmann::json& j, const MaterialProperty& p);
     
 }

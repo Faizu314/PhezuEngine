@@ -9,7 +9,7 @@ namespace Phezu {
 
 		ShaderRef = j["Shader"].get<uint64_t>();
 		Textures = j["Textures"].get<std::unordered_map<std::string, GUID>>();
-		Parameters = j["Parameters"].get<std::unordered_map<std::string, MaterialParameter>>();
+		Parameters = j["Properties"].get<std::unordered_map<std::string, MaterialProperty>>();
 	}
 
 }
