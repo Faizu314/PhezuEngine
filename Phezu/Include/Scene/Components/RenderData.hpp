@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Types/Color.hpp"
-#include "Asset/Types/ShaderAsset.hpp"
+#include "Asset/Types/MaterialAsset.hpp"
 #include "Scene/Components/DataComponent.hpp"
 
 namespace Phezu {
@@ -10,14 +10,9 @@ namespace Phezu {
     public:
         RenderData(Entity* entity) : DataComponent(entity) {}
     public:
-        void SetShaderHandle(AssetHandle<ShaderAsset> handle) { m_ShaderHandle = handle; }
-        AssetHandle<ShaderAsset> GetShaderHandle() { return m_ShaderHandle; }
-        void SetTint(Color tint) { m_Tint = tint; }
-        Color GetTint() { return m_Tint; }
+        void SetMaterialHandle(AssetHandle<MaterialAsset> handle) { m_MaterialHandle = handle; }
+        AssetHandle<MaterialAsset> GetMaterialHandle() { return m_MaterialHandle; }
     private:
-        //Texture
-        void* m_Sprite;
-        AssetHandle<ShaderAsset> m_ShaderHandle;
-        Color m_Tint;
+        AssetHandle<MaterialAsset> m_MaterialHandle;
     };
 }

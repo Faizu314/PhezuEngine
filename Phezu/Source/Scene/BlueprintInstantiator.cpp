@@ -166,12 +166,10 @@ namespace Phezu {
                 }
                 case EntryType::RenderData:
                 {
-                    GUID shaderGuid = GetProperty<uint64_t>("Shader", entry, overrides);
-                    Color tint = GetProperty<Color>("Tint", entry, overrides);
+                    GUID materialGuid = GetProperty<uint64_t>("Material", entry, overrides);
 
                     auto renderData = dynamic_cast<RenderData*>(parentEntity->AddDataComponent(ComponentType::Render));
-                    renderData->SetShaderHandle({ shaderGuid });
-                    renderData->SetTint(tint);
+                    renderData->SetMaterialHandle({ materialGuid });
                     components[entry.FileID] = renderData;
 
                     break;
