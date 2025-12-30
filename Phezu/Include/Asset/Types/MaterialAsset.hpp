@@ -19,7 +19,7 @@ namespace Phezu {
 	public:
 		GUID ShaderRef;
 		std::unordered_map<std::string, GUID> Textures;
-		std::unordered_map<std::string, MaterialParameter> Parameters;
+		std::unordered_map<std::string, MaterialProperty> Parameters;
 	};
 
 }

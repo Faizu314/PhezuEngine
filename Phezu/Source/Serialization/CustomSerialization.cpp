@@ -90,53 +90,53 @@ namespace Phezu {
         j = nlohmann::json{{"r", c.r}, {"g", c.g}, {"b", c.b}, {"a", c.a}};
     }
 
-    void from_json(const nlohmann::json& j, MaterialParameter& p) {
+    void from_json(const nlohmann::json& j, MaterialProperty& p) {
         std::string type = j["Type"].get<std::string>();
 
         if (type == "Float") {
-            p.Type = MaterialParameterType::Float;
+            p.Type = MaterialPropertyType::Float;
             p.Value = j["Value"].get<float>();
         }
         else if (type == "Float2") {
-            p.Type = MaterialParameterType::Float2;
+            p.Type = MaterialPropertyType::Float2;
             p.Value = j["Value"].get<Vector2>();
         }
         else if (type == "Float3") {
-            p.Type = MaterialParameterType::Float3;
+            p.Type = MaterialPropertyType::Float3;
             p.Value = j["Value"].get<Vector3>();
         }
         else if (type == "Color") {
-            p.Type = MaterialParameterType::Color;
+            p.Type = MaterialPropertyType::Color;
             p.Value = j["Value"].get<Color>();
         }
         else if (type == "Int") {
-            p.Type = MaterialParameterType::Int;
+            p.Type = MaterialPropertyType::Int;
             p.Value = j["Value"].get<int>();
         }
         else if (type == "Bool") {
-            p.Type = MaterialParameterType::Bool;
+            p.Type = MaterialPropertyType::Bool;
             p.Value = j["Value"].get<bool>();
         }
     }
 
-    void to_json(nlohmann::json& j, const MaterialParameter& p) {
+    void to_json(nlohmann::json& j, const MaterialProperty& p) {
         switch (p.Type) {
-            case MaterialParameterType::Float:
+            case MaterialPropertyType::Float:
                 j["Type"] = "Float";
                 j["Value"] = std::get<float>(p.Value);
-            case MaterialParameterType::Float2:
+            case MaterialPropertyType::Float2:
                 j["Type"] = "Float2";
                 j["Value"] = std::get<Vector2>(p.Value);
-            case MaterialParameterType::Float3:
+            case MaterialPropertyType::Float3:
                 j["Type"] = "Float3";
                 j["Value"] = std::get<Vector3>(p.Value);
-            case MaterialParameterType::Color:
+            case MaterialPropertyType::Color:
                 j["Type"] = "Color";
                 j["Value"] = std::get<Color>(p.Value);
-            case MaterialParameterType::Int:
+            case MaterialPropertyType::Int:
                 j["Type"] = "Int";
                 j["Value"] = std::get<int>(p.Value);
-            case MaterialParameterType::Bool:
+            case MaterialPropertyType::Bool:
                 j["Type"] = "Bool";
                 j["Value"] = std::get<bool>(p.Value);
         }

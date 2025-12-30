@@ -63,7 +63,7 @@ namespace Phezu {
 	unsigned int GetVertexAttributeSize(VertexAttributeType attribute);
 	unsigned int GetVertexAttributeCount(VertexAttributeCount countEnum);
 
-	enum class MaterialParameterType : uint8_t {
+	enum class MaterialPropertyType : uint8_t {
 		Float,
 		Float2,
 		Float3,
@@ -72,10 +72,10 @@ namespace Phezu {
 		Bool
 	};
 
-	using MaterialParameterValue = std::variant<float, Vector2, Vector3, Color, int, bool>;
+	using MaterialPropertyValue = std::variant<float, Vector2, Vector3, Color, int, bool>;
 
-	struct MaterialParameter {
-		MaterialParameterType Type;
-		MaterialParameterValue Value;
+	struct MaterialProperty {
+		MaterialPropertyType Type;
+		MaterialPropertyValue Value;
 	};
 }
