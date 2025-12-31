@@ -2,11 +2,12 @@
 #include "Core/Window.hpp"
 #include "Graphics/Renderer.hpp"
 #include "Graphics/Core/Resources/Shader.hpp"
+#include "Graphics/Core/Resources/Texture.hpp"
 #include "Graphics/Core/GraphicsAPI.hpp"
 #include "Graphics/Data/Mesh.hpp"
+#include "Graphics/Data/Material.hpp"
 #include "Graphics/Data/ResourceManager.hpp"
 #include "Asset/Core/AssetManager.hpp"
-#include "Asset/Types/MeshAsset.hpp"
 #include "Scene/Entity.hpp"
 #include "Scene/Components/TransformData.hpp"
 #include "Scene/Components/ShapeData.hpp"
@@ -27,22 +28,10 @@ namespace Phezu {
         m_WindowSubId = m_Ctx.Window->RegisterWindowResizeCallback(
             [this](int width, int height) { m_Ctx.Api->SetViewport(0, 0, width, height); }
         );
-
-        AssetHandle<ShaderAsset> shaderHandle = { 101 };
-        const ShaderAsset* shaderAsset = m_Ctx.Asset->GetAsset(shaderHandle);
-        m_Shaders.insert(std::make_pair(shaderHandle.GetGuid(), ResourceManager::CreateShader(shaderAsset, m_Ctx.Api)));
-
-        AssetHandle<MeshAsset> handle = { 99 };
-        const MeshAsset* meshAsset = m_Ctx.Asset->GetAsset(handle);
-        m_Meshes.insert(std::make_pair(handle.GetGuid(), ResourceManager::CreateMesh(meshAsset, m_Ctx.Api)));
     }
 
     void Renderer::Destroy() {
         m_Ctx.Window->UnregisterWindowResizeCallback(m_WindowSubId);
-
-        for (auto kvp : m_Shaders) {
-            kvp.second->Destroy();
-        }
     }
     
     void Renderer::ClearFrame() {
@@ -81,21 +70,19 @@ namespace Phezu {
         if (shapeData == nullptr || renderData == nullptr)
             return;
 
-        auto shaderHandle = renderData->GetShaderHandle();
-        IShader* shader = m_Shaders.at(shaderHandle.GetGuid());
-
-        shader->Bind();
-
-        shader->SetMat3("objectToWorld", transformData->GetLocalToWorld());
-        shader->SetMat3("worldToView", m_ViewTransform);
-        shader->SetMat3("viewToScreen", m_ScreenTransform);
-        shader->SetColor("tint", renderData->GetTint());
+        auto materialHandle = renderData->GetMaterialHandle();
+        Material* material = m_Ctx.Asset->GetMaterial(materialHandle);
 
         auto meshHandle = shapeData->GetMeshHandle();
-        Mesh& mesh = m_Meshes.at(meshHandle.GetGuid());
+        const Mesh* mesh = m_Ctx.Asset->GetMesh(meshHandle);
 
-        mesh.Bind(shader);
+        mesh->Bind(material->GetShader());
+        material->Bind();
 
-        m_Ctx.Api->RenderTriangles(mesh.GetIndicesCount());
+        material->SetMat3("objectToWorld", transformData->GetLocalToWorld());
+        material->SetMat3("worldToView", m_ViewTransform);
+        material->SetMat3("viewToScreen", m_ScreenTransform);
+
+        m_Ctx.Api->RenderTriangles(mesh->GetIndicesCount());
     }
 }

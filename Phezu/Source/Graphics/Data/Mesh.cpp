@@ -8,32 +8,8 @@
 
 namespace Phezu {
 
-	Mesh::Mesh(Mesh&& other) noexcept {
-		*this = std::move(other);
-	}
-
 	Mesh::~Mesh() {
 		Destroy();
-	}
-
-	Mesh& Mesh::operator=(Mesh&& other) noexcept {
-		if (this != &other) {
-			Destroy();
-			
-			m_Api = other.m_Api;
-			m_Data = other.m_Data;
-			m_Layout = other.m_Layout;
-			m_VertexBuffer = other.m_VertexBuffer;
-			m_IndexBuffer = other.m_IndexBuffer;
-			m_VertexArray = other.m_VertexArray;
-
-			other.m_Api = nullptr;
-			other.m_VertexBuffer = nullptr;
-			other.m_IndexBuffer = nullptr;
-			other.m_VertexArray = nullptr;
-		}
-
-		return *this;
 	}
 
 	void Mesh::Init(IGraphicsAPI* api) {
@@ -92,7 +68,7 @@ namespace Phezu {
 		m_VertexArray->LinkIndexBuffer(m_IndexBuffer);
 	}
 
-	void Mesh::Bind(const IShader* shader) {
+	void Mesh::Bind(const IShader* shader) const {
 		if (m_Api == nullptr || m_VertexBuffer == nullptr || m_IndexBuffer == nullptr || m_VertexArray == nullptr) {
 			Log("Should assert here\n");
 			return;
