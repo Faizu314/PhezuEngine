@@ -11,6 +11,9 @@ namespace Phezu {
 	class IVertexArray;
 	class IShader;
 
+
+	class Mesh {
+	public:
 	struct AttachedDataRef {
 		const void* AttachedVertices = nullptr;
 		size_t VertexBufferSize = 0;
@@ -20,8 +23,6 @@ namespace Phezu {
 		size_t IndexBufferSize = 0;
 		BufferType IndexBufferType;
 	};
-
-	class Mesh {
 	public:
 		Mesh() = default;
 		~Mesh();

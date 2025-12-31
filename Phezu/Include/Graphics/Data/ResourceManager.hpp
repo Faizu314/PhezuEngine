@@ -12,7 +12,7 @@ namespace Phezu {
 	class IGraphicsAPI;
 	class IShader;
 
-	class DataBuilder {
+	class ResourceManager {
 	public:
 		static Mesh CreateMesh(const MeshAsset* meshAsset, IGraphicsAPI* api);
 		static IShader* CreateShader(const ShaderAsset* shaderAsset, IGraphicsAPI* api);
