@@ -5,7 +5,7 @@
 
 namespace Phezu {
 
-	Mesh DataBuilder::CreateMesh(const MeshAsset* meshAsset, IGraphicsAPI* api)
+	Mesh ResourceManager::CreateMesh(const MeshAsset* meshAsset, IGraphicsAPI* api)
 	{
         Buffer vertexBuffer;
         VertexLayout layout;
@@ -92,7 +92,7 @@ namespace Phezu {
 		return mesh;
 	}
 
-    IShader* DataBuilder::CreateShader(const ShaderAsset* shaderAsset, IGraphicsAPI* api) {
+    IShader* ResourceManager::CreateShader(const ShaderAsset* shaderAsset, IGraphicsAPI* api) {
         IShader* shader = api->CreateShader(shaderAsset->VertexSource, shaderAsset->FragmentSource, shaderAsset->Semantics);
 
         return shader;
