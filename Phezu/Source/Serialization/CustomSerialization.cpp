@@ -1,4 +1,8 @@
+#include "Core/Platform.hpp"
 #include "Serialization/CustomSerialization.hpp"
+#include "Maths/Objects/Vector2.hpp"
+#include "Maths/Objects/Vector3.hpp"
+#include "Core/Types/Color.hpp"
 
 namespace Phezu {
 
@@ -124,21 +128,30 @@ namespace Phezu {
             case MaterialPropertyType::Float:
                 j["Type"] = "Float";
                 j["Value"] = std::get<float>(p.Value);
+                break;
             case MaterialPropertyType::Float2:
                 j["Type"] = "Float2";
                 j["Value"] = std::get<Vector2>(p.Value);
+                break;
             case MaterialPropertyType::Float3:
                 j["Type"] = "Float3";
                 j["Value"] = std::get<Vector3>(p.Value);
+                break;
             case MaterialPropertyType::Color:
                 j["Type"] = "Color";
                 j["Value"] = std::get<Color>(p.Value);
+                break;
             case MaterialPropertyType::Int:
                 j["Type"] = "Int";
                 j["Value"] = std::get<int>(p.Value);
+                break;
             case MaterialPropertyType::Bool:
                 j["Type"] = "Bool";
                 j["Value"] = std::get<bool>(p.Value);
+                break;
+            default: {
+                Log("Should assert here\n");
+            }
         }
     }
     

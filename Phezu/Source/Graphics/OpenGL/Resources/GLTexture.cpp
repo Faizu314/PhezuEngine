@@ -49,8 +49,8 @@ namespace Phezu {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	}
 
-	void GLTexture::Bind() {
-		glActiveTexture(GL_TEXTURE0);
+	void GLTexture::Bind(uint8_t unitIndex) {
+		glActiveTexture(GL_TEXTURE0 + unitIndex);
 		glBindTexture(GL_TEXTURE_2D, m_Texture);
 	}
 

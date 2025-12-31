@@ -28,8 +28,8 @@ namespace Phezu {
 		~Mesh();
 		Mesh(const Mesh&) = delete;
 		Mesh& operator=(const Mesh&) = delete;
-		Mesh(Mesh&& other) noexcept;
-		Mesh& operator=(Mesh&& other) noexcept;
+		Mesh(Mesh&& other) = delete;
+		Mesh& operator=(Mesh&& other) = delete;
 	public:
 		void Init(IGraphicsAPI* api);
 		void Destroy();
@@ -38,7 +38,7 @@ namespace Phezu {
 		void AttachIndexBuffer(const unsigned int* indices, size_t bufferSize, BufferType bufferType);
 	public:
 		void UploadMeshData();
-		void Bind(const IShader* shader);
+		void Bind(const IShader* shader) const;
 	public:
 		unsigned int GetIndicesCount() const;
 	private:

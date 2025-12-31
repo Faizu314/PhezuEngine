@@ -6,6 +6,7 @@
 #include "Physics.hpp"
 #include "Scene/SceneManager.hpp"
 #include "Asset/Core/AssetManager.hpp"
+#include "Graphics/Data/ResourceManager.hpp"
 #include "Graphics/Renderer.hpp"
 #include "Scripting/ScriptEngine.hpp"
 
@@ -57,6 +58,7 @@ namespace Phezu {
         Renderer m_Renderer;
         SceneManager m_SceneManager;
         AssetManager m_AssetManager;
+        ResourceManager m_ResourceManager;
         ScriptEngine m_ScriptEngine;
     private:
         bool m_HasInited;
