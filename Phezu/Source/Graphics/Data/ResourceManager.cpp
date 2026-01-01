@@ -17,16 +17,26 @@ namespace Phezu {
     void ResourceManager::Destroy() {
         for (auto& mesh : m_Meshes) {
             mesh.second->Destroy();
+            delete mesh.second;
         }
+        m_Meshes.clear();
+
         for (auto& mat : m_Materials) {
-            mat.second->Destroy();
+            delete mat.second;
         }
+        m_Materials.clear();
+
         for (auto& shader : m_Shaders) {
             shader.second->Destroy();
+            delete shader.second;
         }
+        m_Shaders.clear();
+
         for (auto& texture : m_Textures) {
             texture.second->Destroy();
+            delete texture.second;
         }
+        m_Textures.clear();
     }
 
     const Mesh* ResourceManager::GetMesh(AssetHandle<MeshAsset> meshHandle) {

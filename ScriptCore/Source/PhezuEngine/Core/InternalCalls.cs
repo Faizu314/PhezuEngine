@@ -36,9 +36,9 @@ namespace PhezuEngine {
         internal static extern void Physics_SetVelocity(ulong entityID, ref Vector2 velocity);
         
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Renderer_GetTint(ulong entityID, out Color tint);
+        internal static extern void Renderer_GetColor(ulong entityID, string propertyName, out Color value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Renderer_SetTint(ulong entityID, ref Color tint);
+        internal static extern void Renderer_SetColor(ulong entityID, string propertyName, ref Color value);
     }
 }

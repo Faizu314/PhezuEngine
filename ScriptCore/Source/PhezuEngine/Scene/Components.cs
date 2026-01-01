@@ -42,18 +42,15 @@ namespace PhezuEngine {
 
     public class Renderer : Component
     {
-        public Color Tint
+        public void SetColor(string propertyName, Color value)
         {
-            get
-            {
-                InternalCalls.Renderer_GetTint(Entity.ID, out Color tint);
-                return tint;
-            }
+            InternalCalls.Renderer_SetColor(Entity.ID, propertyName, ref value);
+        }
 
-            set
-            {
-                InternalCalls.Renderer_SetTint(Entity.ID, ref value);
-            }
+        public Color GetColor(string propertyName)
+        {
+            InternalCalls.Renderer_GetColor(Entity.ID, propertyName, out Color value);
+            return value;
         }
     }
 

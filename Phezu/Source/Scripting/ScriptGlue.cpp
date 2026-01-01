@@ -5,6 +5,8 @@
 #include "Core/Engine.hpp"
 #include "Scripting/ScriptEngine.hpp"
 #include "Scripting/ScriptGlue.hpp"
+#include "Graphics/Data/ResourceManager.hpp"
+#include "Graphics/Data/Material.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/Entity.hpp"
 #include "Scene/Components/PhysicsData.hpp"
@@ -14,20 +16,21 @@
 namespace Phezu {
 	
 	struct Data {
+		SceneManager* SceneManager;
 		ScriptEngine* ScriptEngine;
-		Engine* Engine;
+		ResourceManager* ResourceManager;
 	};
 
 	static Data* s_Data = nullptr;
 
 	Entity* GetEntity(uint64_t entityID) {
-		SceneManager sceneManager = s_Data->Engine->GetSceneManager();
+		SceneManager* sceneManager = s_Data->SceneManager;
 		Entity* entity;
 
-		if (auto scene = sceneManager.GetActiveScene()) {
+		if (auto scene = sceneManager->GetActiveScene()) {
 			entity = scene->GetEntity(entityID);
 		}
-		else if (auto scene = sceneManager.GetMasterScene()) {
+		else if (auto scene = sceneManager->GetMasterScene()) {
 			entity = scene->GetEntity(entityID);
 		}
 
@@ -54,14 +57,14 @@ namespace Phezu {
 		return ManagedType::None;
 	}
     
+	/*----Entity-Internal-Calls----*/
+
     MonoString* Entity_GetTag(uint64_t entityID) {
         auto entity = GetEntity(entityID);
         const std::string& tag = entity->Tag;
         
         return mono_string_new(mono_domain_get(), tag.c_str());
     }
-
-    /*----Entity-Internal-Calls----*/
     
 	bool Entity_HasComponent(uint64_t entityID, MonoType* monoType) {
 		auto entity = GetEntity(entityID);
@@ -139,7 +142,7 @@ namespace Phezu {
     }
     
     uint32_t Entity_Instantiate(GUID prefabGuid) {
-		Entity* entity = s_Data->Engine->GetSceneManager().GetMasterScene()->CreateEntity({ prefabGuid });
+		Entity* entity = s_Data->SceneManager->GetMasterScene()->CreateEntity({ prefabGuid });
         return s_Data->ScriptEngine->GetEntityScriptInstanceGcHandle(entity->GetEntityID());
     }
     
@@ -197,30 +200,49 @@ namespace Phezu {
         }
     }
 
-    void Renderer_GetTint(uint64_t entityID, Color* tint) {
+    void Renderer_GetColor(uint64_t entityID, MonoString* propertyName, Color* tint) {
         Entity* entity = GetEntity(entityID);
         
+		char* propertyCStr = mono_string_to_utf8(propertyName);
+
         if (entity) {
             RenderData* render = dynamic_cast<RenderData*>(entity->GetDataComponent(ComponentType::Render));
             
-            *tint = render->GetTint();
+			auto matHandle = render->GetMaterialHandle();
+			Material* mat = s_Data->ResourceManager->GetMaterial(matHandle);
+			MaterialProperty property = mat->GetProperty(propertyCStr);
+			
+			if (property.Type != MaterialPropertyType::Color) {
+				*tint = Color::Clear;
+				return;
+			}
+
+			*tint = std::get<Color>(property.Value);
         }
     }
     
-    void Renderer_SetTint(uint64_t entityID, Color* tint) {
-        Entity* entity = GetEntity(entityID);
-        
-        if (entity) {
-            RenderData* render = dynamic_cast<RenderData*>(entity->GetDataComponent(ComponentType::Render));
-            
-            render->SetTint(*tint);
-        }
+    void Renderer_SetColor(uint64_t entityID, MonoString* propertyName, Color* tint) {
+		Entity* entity = GetEntity(entityID);
+
+		char* propertyCStr = mono_string_to_utf8(propertyName);
+
+		if (entity) {
+			RenderData* render = dynamic_cast<RenderData*>(entity->GetDataComponent(ComponentType::Render));
+
+			auto matHandle = render->GetMaterialHandle();
+			Material* mat = s_Data->ResourceManager->GetMaterial(matHandle);
+			MaterialProperty property;
+			property.Type = MaterialPropertyType::Color;
+			property.Value = *tint;
+			mat->SetProperty(propertyCStr, property);
+		}
     }
     
-	void ScriptGlue::Init(Engine* engine, ScriptEngine* scriptEngine) {
+	void ScriptGlue::Init(SceneManager* sceneManager, ScriptEngine* scriptEngine, ResourceManager* resourceManager) {
 		s_Data = new Data();
-		s_Data->Engine = engine;
+		s_Data->SceneManager = sceneManager;
 		s_Data->ScriptEngine = scriptEngine;
+		s_Data->ResourceManager = resourceManager;
 	}
 
 	void ScriptGlue::Bind() {
@@ -237,8 +259,8 @@ namespace Phezu {
         mono_add_internal_call("PhezuEngine.InternalCalls::Physics_GetVelocity", reinterpret_cast<const void*>(&Physics_GetVelocity));
         mono_add_internal_call("PhezuEngine.InternalCalls::Physics_SetVelocity", reinterpret_cast<const void*>(&Physics_SetVelocity));
         
-        mono_add_internal_call("PhezuEngine.InternalCalls::Renderer_GetTint", reinterpret_cast<const void*>(&Renderer_GetTint));
-        mono_add_internal_call("PhezuEngine.InternalCalls::Renderer_SetTint", reinterpret_cast<const void*>(&Renderer_SetTint));
+        mono_add_internal_call("PhezuEngine.InternalCalls::Renderer_GetColor", reinterpret_cast<const void*>(&Renderer_GetColor));
+        mono_add_internal_call("PhezuEngine.InternalCalls::Renderer_SetColor", reinterpret_cast<const void*>(&Renderer_SetColor));
 	}
 
 	void ScriptGlue::Destroy() {

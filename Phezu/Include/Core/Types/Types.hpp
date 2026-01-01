@@ -64,6 +64,7 @@ namespace Phezu {
 	unsigned int GetVertexAttributeCount(VertexAttributeCount countEnum);
 
 	enum class MaterialPropertyType : uint8_t {
+		None = 0,
 		Float,
 		Float2,
 		Float3,
