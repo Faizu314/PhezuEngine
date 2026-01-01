@@ -56,9 +56,11 @@ namespace Phezu {
 		Four = 4
 	};
 
-	VertexSemantic ToVertexSemantic(std::string semanticStr);
-	VertexAttributeType ToVertexAttributeType(std::string attributeTypeStr);
-	VertexAttributeCount ToVertexAttributeCount(std::string attributeCountStr);
+	VertexSemantic ToVertexSemantic(const std::string& semanticStr);
+	VertexAttributeType ToVertexAttributeType(const std::string& attributeTypeStr);
+	VertexAttributeCount ToVertexAttributeCount(const std::string& attributeCountStr);
+	TextureFilteringMode ToTextureFilteringMode(const std::string& textureFilterModeStr);
+	TextureWrapMode ToTextureWrapMode(const std::string& textureWrapModeStr);
 
 	unsigned int GetVertexAttributeSize(VertexAttributeType attribute);
 	unsigned int GetVertexAttributeCount(VertexAttributeCount countEnum);

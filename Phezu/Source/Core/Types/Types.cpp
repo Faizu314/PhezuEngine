@@ -7,71 +7,64 @@
 
 namespace Phezu {
 
-	static std::unordered_map<std::string, VertexSemantic> s_StrToVertSemantic = {
-		{"Position",  VertexSemantic::Position},
-		{"Normal",    VertexSemantic::Normal},
-		{"Color",     VertexSemantic::Color},
-		{"TexCoord0", VertexSemantic::TexCoord0},
-		{"TexCoord1", VertexSemantic::TexCoord1},
-		{"TexCoord2", VertexSemantic::TexCoord2},
-		{"TexCoord3", VertexSemantic::TexCoord3},
-		{"Custom0",   VertexSemantic::Custom0},
-		{"Custom1",   VertexSemantic::Custom1},
-		{"Custom2",   VertexSemantic::Custom2},
-		{"Custom3",   VertexSemantic::Custom3}
-	};
+	#define ENUM_TO_MAP_ENTRY(EnumType, x) {#x, EnumType::x},
 
-	static std::unordered_map<std::string, VertexAttributeType> s_StrToVertType = {
-		{"Float",  VertexAttributeType::Float},
-		{"Int",    VertexAttributeType::Int},
-		{"UInt",     VertexAttributeType::UInt},
-		{"Byte", VertexAttributeType::Byte},
-		{"UByte", VertexAttributeType::UByte}
-	};
+	#define DEFINE_ENUM_STRING_MAP(EnumType, ENUM_LIST, DEFAULT_VALUE)                  \
+		static std::unordered_map<std::string, EnumType> s_StrTo##EnumType = {          \
+			ENUM_LIST(EnumType, ENUM_TO_MAP_ENTRY)                                      \
+		};                                                                              \
+																						\
+		EnumType To##EnumType(const std::string& str) {                                 \
+			auto it = s_StrTo##EnumType.find(str);                                      \
+			if (it == s_StrTo##EnumType.end()) {                                        \
+				const char* enumTypeStr = #EnumType;                                    \
+				Log("Unknown %s: %s\n", enumTypeStr, str.c_str());                      \
+				return EnumType::DEFAULT_VALUE;                                         \
+			}                                                                           \
+			return it->second;                                                          \
+		}                                                                                   
 
-	static std::unordered_map<std::string, VertexAttributeCount> s_StrToVertCount = {
-		{"One",  VertexAttributeCount::One},
-		{"Two",  VertexAttributeCount::Two},
-		{"Three",  VertexAttributeCount::Three},
-		{"Four",  VertexAttributeCount::Four}
-	};
+	#define VERTEX_SEMANTICS_LIST(E, X)       \
+		X(E, Position)                        \
+		X(E, Normal)                          \
+		X(E, Color)                           \
+		X(E, TexCoord0)                       \
+		X(E, TexCoord1)                       \
+		X(E, TexCoord2)                       \
+		X(E, TexCoord3)                       \
+		X(E, Custom0)                         \
+		X(E, Custom1)                         \
+		X(E, Custom2)                         \
+		X(E, Custom3)					 
 
+	#define VERTEX_ATTRIBUTE_TYPE_LIST(E, X)  \
+		X(E, Float)                           \
+		X(E, Int)                             \
+		X(E, UInt)                            \
+		X(E, Byte)                            \
+		X(E, UByte)
 
-	VertexSemantic ToVertexSemantic(std::string semanticStr) {
-		auto it = s_StrToVertSemantic.find(semanticStr);
+	#define VERTEX_ATTRIBUTE_COUNT_LIST(E, X) \
+		X(E, One)                             \
+		X(E, Two)                             \
+		X(E, Three)                           \
+		X(E, Four)
 
-		if (it == s_StrToVertSemantic.end()) {
-			Log("Unknown vertex semantic: %s\n", semanticStr);
+	#define TEXTURE_FILTERING_MODE_LIST(E, X) \
+		X(E, Point)                           \
+		X(E, Bilinear)
 
-			return VertexSemantic::Position;
-		}
+	#define TEXTURE_WRAP_MODE_LIST(E, X)      \
+		X(E, Repeat)                          \
+		X(E, MirroredRepeat)                  \
+		X(E, ClampToEdge)                     \
+		X(E, ClampToBorder)
 
-		return it->second;
-	}
-
-	VertexAttributeType ToVertexAttributeType(std::string attributeTypeStr) {
-		auto it = s_StrToVertType.find(attributeTypeStr);
-
-		if (it == s_StrToVertType.end()) {
-			Log("Unknown vertex attribute type: %s\n", attributeTypeStr);
-
-			return VertexAttributeType::Float;
-		}
-
-		return it->second;
-	}
-
-	VertexAttributeCount ToVertexAttributeCount(std::string attributeCountStr) {
-		auto it = s_StrToVertCount.find(attributeCountStr);
-
-		if (it == s_StrToVertCount.end()) {
-			Log("Unknown vertex attribute count: %s\n", attributeCountStr);
-
-			return VertexAttributeCount::One;
-		}
-
-		return it->second;
-	}
+	DEFINE_ENUM_STRING_MAP(VertexSemantic, VERTEX_SEMANTICS_LIST, Position)
+	DEFINE_ENUM_STRING_MAP(VertexAttributeType, VERTEX_ATTRIBUTE_TYPE_LIST, Float)
+	DEFINE_ENUM_STRING_MAP(VertexAttributeCount, VERTEX_ATTRIBUTE_COUNT_LIST, One)
+	DEFINE_ENUM_STRING_MAP(TextureFilteringMode, TEXTURE_FILTERING_MODE_LIST, Point)
+	DEFINE_ENUM_STRING_MAP(TextureWrapMode, TEXTURE_WRAP_MODE_LIST, Repeat)
 
 	unsigned int GetVertexAttributeSize(VertexAttributeType attribute) {
 		switch (attribute) {
