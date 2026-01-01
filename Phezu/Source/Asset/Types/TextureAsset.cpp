@@ -8,7 +8,8 @@ namespace Phezu {
 		nlohmann::json j = nlohmann::json::parse(data);
 
 		ImageRef = j["Image"].get<uint64_t>();
-
+		FilteringMode = ToTextureFilteringMode(j["FilteringMode"].get<std::string>());
+		WrapMode = ToTextureWrapMode(j["WrapMode"].get<std::string>());
 	}
 
 }
