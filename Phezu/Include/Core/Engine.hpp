@@ -36,6 +36,7 @@ namespace Phezu {
         SceneManager& GetSceneManager() { return m_SceneManager; }
         AssetManager& GetAssetManager() { return m_AssetManager; }
         ScriptEngine& GetScriptEngine() { return m_ScriptEngine; }
+        ResourceManager& GetResourceManager() { return m_ResourceManager; }
         const InputData& GetInput() const { return m_Platform->GetInput(); }
         long long unsigned int GetFrameCount() const { return m_FrameCount; }
         std::filesystem::path GetExePath() const { return m_ExePath; }

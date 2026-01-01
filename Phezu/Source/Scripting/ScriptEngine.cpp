@@ -75,7 +75,7 @@ namespace Phezu {
     void ScriptEngine::Init() {
         InitMono();
 
-        ScriptGlue::Init(m_Engine, this);
+        ScriptGlue::Init(&m_Engine->GetSceneManager(), this, &m_Engine->GetResourceManager());
         
         ScriptGlue::Bind();
 

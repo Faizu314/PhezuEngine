@@ -46,6 +46,7 @@ namespace Phezu {
         Vector2& operator=(const Vector2& other) { Set(other.X(), other.Y()); return *this; }
         Vector2 operator*(float value) const { return Vector2(m_Vector * value); }
         Vector2 operator/(float value) const { return Vector2(m_Vector / value); }
+        bool operator==(const Vector2& other) const { return m_Vector == other.m_Vector; }
         operator glm::vec2& () { return m_Vector; }
         operator const glm::vec2& () const { return m_Vector; }
     private:

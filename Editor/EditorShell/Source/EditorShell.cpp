@@ -85,20 +85,16 @@ namespace Phezu::Editor {
         std::filesystem::create_directory(buildDir / "mono");
         std::filesystem::copy(exeDir / "mono", buildDir / "mono", std::filesystem::copy_options::recursive | std::filesystem::copy_options::skip_existing);
 
-        const char* toCopy[10] = {
+        const size_t toCopySize = 4;
+
+        const char* toCopy[toCopySize] = {
             "Phezu-ScriptCore.dll",
             "mono-2.0-sgen.dll",
             "mono-2.0-sgen.lib",
             "Runtime.exe",
-            "SDL2.dll",
-            "SDL2.lib",
-            "SDL2_image.dll",
-            "SDL2_image.lib",
-            "SDL2_ttf.dll",
-            "SDL2_ttf.lib"
         };
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < toCopySize; i++) {
             std::filesystem::copy(exeDir / toCopy[i], buildDir, std::filesystem::copy_options::skip_existing);
         }
     }

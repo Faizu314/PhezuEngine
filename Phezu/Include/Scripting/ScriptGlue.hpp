@@ -2,11 +2,12 @@
 
 namespace Phezu {
 	class ScriptEngine;
-	class Engine;
+	class SceneManager;
+	class ResourceManager;
 
 	class ScriptGlue {
 	public:
-		void static Init(Engine* engine, ScriptEngine* scriptEngine);
+		void static Init(SceneManager* sceneManager, ScriptEngine* scriptEngine, ResourceManager* resourceManager);
 		void static Bind();
 		void static Destroy();
 	};

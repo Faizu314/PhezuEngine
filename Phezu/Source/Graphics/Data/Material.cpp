@@ -26,11 +26,18 @@ namespace Phezu {
 		}
 	}
 
+	MaterialProperty Material::GetProperty(const std::string& propertyName) {
+		if (m_Properties.find(propertyName) != m_Properties.end()) {
+			return m_Properties.at(propertyName);
+		}
+
+		return MaterialProperty();
+	}
+
 	void Material::SetProperty(const std::string& propertyName, const MaterialProperty& property) {
 		if (m_Properties.find(propertyName) != m_Properties.end()) {
 			auto prop = m_Properties.at(propertyName);
 
-			//fix this line
 			if (prop.Type == property.Type && prop.Value == property.Value)
 				return;
 		}
