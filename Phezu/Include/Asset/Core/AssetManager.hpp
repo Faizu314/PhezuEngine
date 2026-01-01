@@ -21,7 +21,7 @@ namespace Phezu {
     class PrefabAsset;
     class SceneAsset;
     
-    using AssetRef = std::vector<std::filesystem::path>;
+    using AssetPaths = std::vector<std::filesystem::path>;
     
     class AssetManager {
     public:
@@ -29,6 +29,8 @@ namespace Phezu {
         AssetManager(Engine* engine);
     public:
         void Init(const std::filesystem::path& projectPath);
+        void Destroy();
+    public:
         template<typename T>
         const T* GetAsset(AssetHandle<T> assetHandle);
         BuildScenesConfig GetBuildScenesConfig() { return m_BuildScenesConfig; }
@@ -40,7 +42,7 @@ namespace Phezu {
         IAsset* TryGetLoadedAsset(GUID guid);
         std::string GetFileFromDisk(const std::filesystem::path& filePath);
     private:
-        std::unordered_map<GUID, AssetRef> m_AssetMap;
+        std::unordered_map<GUID, AssetPaths> m_AssetMap;
         std::unordered_map<GUID, IAsset*> m_LoadedAssets;
         BuildScenesConfig m_BuildScenesConfig;
     private:

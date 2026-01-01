@@ -25,6 +25,13 @@ namespace Phezu {
             Log("Assert here, Assets or BuildScenesConfig file does not exist\n");
         }
     }
+
+    void AssetManager::Destroy() {
+        for (auto& asset : m_LoadedAssets) {
+            delete asset.second;
+        }
+        m_LoadedAssets.clear();
+    }
     
     void AssetManager::LoadAssetMap(const std::filesystem::path& assetsFolder) {
         LoadAssetsInDirectory(assetsFolder);
@@ -43,7 +50,7 @@ namespace Phezu {
                 
                 std::filesystem::path assetPath = entry.path();
                 assetPath.replace_extension("");
-                AssetRef& assetRef = m_AssetMap[metaData.Guid];
+                AssetPaths& assetRef = m_AssetMap[metaData.Guid];
                 assetRef.push_back(assetPath);
             }
             else if (entry.is_directory()) {
