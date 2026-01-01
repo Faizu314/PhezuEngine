@@ -13,15 +13,16 @@ namespace Phezu {
     void SceneManager::Init() {
         AssetManager& assetManager = m_Engine->GetAssetManager();
         m_BuildScenesConfig = assetManager.GetBuildScenesConfig();
-
-        m_MasterScene = new Scene(m_Engine, "MasterScene");
     }
 
     void SceneManager::OnStartGame() {
-        LoadScene(AssetHandle<SceneAsset>{ m_BuildScenesConfig.MasterScene });
-
+        AssetHandle<SceneAsset> masterSceneHandle = { m_BuildScenesConfig.MasterScene };
+        const SceneAsset* sceneAsset = m_Engine->GetAssetManager().GetAsset(masterSceneHandle);
+        m_MasterScene = new Scene(m_Engine, sceneAsset->GetName());
         auto cameraEntity = m_MasterScene->CreateEntity();
         m_ActiveCamera = dynamic_cast<CameraData*>(cameraEntity->AddDataComponent(ComponentType::Camera));
+        BlueprintRuntimeContext ctx = { &m_Engine->GetAssetManager(), &m_Engine->GetScriptEngine(), m_MasterScene };
+        BlueprintInstantiator::Instantiate(ctx, sceneAsset->GetBlueprint(), sceneAsset->Guid);
     }
     
     void SceneManager::LoadScene(size_t buildIndex) {
@@ -38,10 +39,10 @@ namespace Phezu {
     }
     
     Scene* SceneManager::LoadScene(AssetHandle<SceneAsset> sceneHandle) {
-        const SceneAsset* masterSceneAsset = m_Engine->GetAssetManager().GetAsset(sceneHandle);
-        Scene* scene = new Scene(m_Engine, masterSceneAsset->GetName());
+        const SceneAsset* sceneAsset = m_Engine->GetAssetManager().GetAsset(sceneHandle);
+        Scene* scene = new Scene(m_Engine, sceneAsset->GetName());
         BlueprintRuntimeContext ctx = { &m_Engine->GetAssetManager(), &m_Engine->GetScriptEngine(), scene };
-        BlueprintInstantiator::Instantiate(ctx, masterSceneAsset->GetBlueprint(), masterSceneAsset->Guid);
+        BlueprintInstantiator::Instantiate(ctx, sceneAsset->GetBlueprint(), sceneAsset->Guid);
 
         return scene;
     }
