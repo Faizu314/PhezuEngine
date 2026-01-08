@@ -1,4 +1,6 @@
 #include "nlohmann/json.hpp"
+
+#include "Core/Types/Types.hpp"
 #include "Asset/Core/MetaData.hpp"
 
 namespace Phezu {
@@ -7,5 +9,6 @@ namespace Phezu {
         nlohmann::json j = nlohmann::json::parse(data);
 
         Guid.Value = j["Guid"];
+        Type = ToAssetType(j["Type"].get<std::string>());
     }
 }

@@ -19,14 +19,16 @@ namespace Phezu {
 		SpriteMaterial
 	};
 
-	enum class AssetType : uint8_t {
+	enum class AssetType {
+		None,
 		Scene,
 		Prefab,
 		Mesh,
 		Shader,
 		Image,
 		Texture,
-		Material
+		Material,
+		Config
 	};
 
 	enum class AssetSource {

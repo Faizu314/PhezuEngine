@@ -36,7 +36,6 @@ namespace Phezu {
         void Init(RendererContext ctx, RenderTarget renderTarget);
         void Destroy();
     public:
-        void ClearFrame();
         void DrawScene(const std::vector<Entity*>& renderableEntities, size_t count, CameraData* camera);
     private:
         void OnWindowResized(int width, int height);

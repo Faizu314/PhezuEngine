@@ -72,8 +72,6 @@ namespace Phezu {
             
             renderablesCount = staticsCount = dynamicsCount = 0;
 
-            m_Renderer.ClearFrame();
-            
             deltaTime = 0.0f;// GetDeltaTime(frameStartTime, freqMs);
 
             masterScene->LogicUpdate(deltaTime);

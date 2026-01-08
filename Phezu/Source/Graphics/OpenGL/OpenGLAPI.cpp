@@ -72,4 +72,11 @@ namespace Phezu {
 		vertexArray->Init();
 		return vertexArray;
 	}
+
+	IFrameBuffer* OpenGLAPI::CreateFrameBuffer()
+	{
+		GLFrameBuffer* frameBuffer = new GLFrameBuffer();
+		frameBuffer->Init();
+		return frameBuffer;
+	}
 }
