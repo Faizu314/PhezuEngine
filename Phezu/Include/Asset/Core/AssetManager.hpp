@@ -43,6 +43,7 @@ namespace Phezu {
     private:
         void LoadAssetMap(const std::filesystem::path& assetsFolder);
         void LoadAssetsInDirectory(const std::filesystem::path& folder);
+        void LoadBuiltInAssets();
         void LoadBuildScenesConfig(const std::filesystem::path& buildScenesConfigPath);
     private:
         IAsset* TryGetLoadedAsset(AssetHandle guid);

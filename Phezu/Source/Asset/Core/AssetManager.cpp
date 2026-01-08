@@ -2,6 +2,7 @@
 
 #include "Asset/Core/AssetManager.hpp"
 #include "Asset/Core/MetaData.hpp"
+#include "Asset/Core/BuiltInAssets.hpp"
 #include "Asset/Types/SceneAsset.hpp"
 #include "Asset/Types/PrefabAsset.hpp"
 #include "Asset/Blueprint/Blueprint.hpp"
@@ -16,6 +17,8 @@ namespace Phezu {
     
     void AssetManager::Init(const std::filesystem::path& assetsPath) {
         std::filesystem::path buildScenesConfigPath = assetsPath / BUILD_SCENE_RELATIVE_PATH;
+
+        LoadBuiltInAssets();
 
         if (std::filesystem::exists(assetsPath) && std::filesystem::exists(buildScenesConfigPath)) {
             LoadAssetMap(assetsPath);
@@ -61,6 +64,22 @@ namespace Phezu {
             }
         }
     }
+
+    void AssetManager::LoadBuiltInAssets() {
+        AssetHandle quadMesh(static_cast<int>(BuiltInAssetType::QuadMesh), AssetSource::Engine);
+        AssetHandle whiteImage(static_cast<int>(BuiltInAssetType::WhiteImage), AssetSource::Engine);
+        AssetHandle defaultTexture(static_cast<int>(BuiltInAssetType::DefaultTexture), AssetSource::Engine);
+        AssetHandle spriteShader(static_cast<int>(BuiltInAssetType::SpriteShader), AssetSource::Engine);
+        AssetHandle blitShader(static_cast<int>(BuiltInAssetType::BlitShader), AssetSource::Engine);
+        AssetHandle spriteMaterial(static_cast<int>(BuiltInAssetType::SpriteMaterial), AssetSource::Engine);
+        
+        m_LoadedAssets[quadMesh] = BuiltInAssets::CreateQuadMesh();
+        m_LoadedAssets[whiteImage] = BuiltInAssets::CreateWhiteImage();
+        m_LoadedAssets[defaultTexture] = BuiltInAssets::CreateDefaultTexture();
+        m_LoadedAssets[spriteShader] = BuiltInAssets::CreateSpriteShader();
+        m_LoadedAssets[blitShader] = BuiltInAssets::CreateBlitShader();
+        m_LoadedAssets[spriteMaterial] = BuiltInAssets::CreateSpriteMaterial();
+    }
     
     void AssetManager::LoadBuildScenesConfig(const std::filesystem::path& buildScenesConfigPath) {
         FileStreamReader reader(buildScenesConfigPath.string());
@@ -81,10 +100,6 @@ namespace Phezu {
     }
 
     IAsset* AssetManager::TryGetLoadedAsset(AssetHandle assetHandle) {
-        if (m_AssetMap.find(assetHandle) == m_AssetMap.end()) {
-            Log("Assert here: Asset with guid: %i not found\n", assetHandle.GetGuid().Value);
-            return nullptr;
-        }
         if (m_LoadedAssets.find(assetHandle) == m_LoadedAssets.end())
             return nullptr;
 
