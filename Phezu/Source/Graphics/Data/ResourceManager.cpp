@@ -187,6 +187,13 @@ namespace Phezu {
         Material* mat = new Material();
 
         mat->Init(shader, textures);
+        mat->Bind();
+
+        for (auto& kvp : materialAsset->Properties) {
+            const std::string& propName = kvp.first;
+            const MaterialProperty& property = kvp.second;
+            mat->SetProperty(propName, property);
+        }
 
         return mat;
     }
