@@ -28,13 +28,14 @@ namespace Phezu {
     }
 
     void from_json(const nlohmann::json& j, EntryRef& v) {
-        v.Guid = j.value("Guid", 0);
+        v.Source = j.value("Source", AssetSource::Project);
+        v.Guid = j.value("Guid", GUID());
         v.InstanceID = j.value("InstanceID", 0);
         v.FileID = j.value("FileID", 0);
     }
     
     void to_json(nlohmann::json& j, const EntryRef& v) {
-        j = nlohmann::json{{"Guid", v.Guid}, {"FileID", v.InstanceID}, {"EntityFileID", v.FileID}};
+        j = nlohmann::json { {"Source", v.Source}, {"Guid", v.Guid}, { "InstanceID", v.InstanceID }, {"FileID", v.FileID} };
     }
     
     
@@ -53,7 +54,7 @@ namespace Phezu {
     }
     
     void to_json(nlohmann::json& j, const PrefabOverrides& obj) {
-        j = nlohmann::json{
+        j = nlohmann::json {
             {"RemovedEntities", obj.RemovedEntities},
             {"RemovedComponents", obj.RemovedComponents},
             {"EntryOverrides", obj.EntryOverrides}
