@@ -18,7 +18,7 @@ namespace Phezu {
 	public:
 		AssetHandle ShaderRef;
 		std::unordered_map<std::string, AssetHandle> Textures;
-		std::unordered_map<std::string, MaterialProperty> Parameters;
+		std::unordered_map<std::string, MaterialProperty> Properties;
 	};
 
 }
