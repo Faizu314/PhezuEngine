@@ -7,8 +7,11 @@
 #include "Core/Types/Color.hpp"
 #include "Maths/Objects/Vector2.hpp"
 #include "Maths/Objects/Vector3.hpp"
+#include "Asset/Core/Asset.hpp"
 
 namespace Phezu {
+
+	#define TO_STRING_UTIL(EnumType) EnumType To##EnumType(const std::string& enumStr); std::string ToString(EnumType enumValue);
 
 	enum class TextureWrapMode {
 		Repeat,
@@ -56,11 +59,12 @@ namespace Phezu {
 		Four = 4
 	};
 
-	VertexSemantic ToVertexSemantic(const std::string& semanticStr);
-	VertexAttributeType ToVertexAttributeType(const std::string& attributeTypeStr);
-	VertexAttributeCount ToVertexAttributeCount(const std::string& attributeCountStr);
-	TextureFilteringMode ToTextureFilteringMode(const std::string& textureFilterModeStr);
-	TextureWrapMode ToTextureWrapMode(const std::string& textureWrapModeStr);
+	TO_STRING_UTIL(VertexSemantic)
+	TO_STRING_UTIL(VertexAttributeType)
+	TO_STRING_UTIL(VertexAttributeCount)
+	TO_STRING_UTIL(TextureFilteringMode)
+	TO_STRING_UTIL(TextureWrapMode)
+	TO_STRING_UTIL(AssetSource)
 
 	unsigned int GetVertexAttributeSize(VertexAttributeType attribute);
 	unsigned int GetVertexAttributeCount(VertexAttributeCount countEnum);

@@ -1,8 +1,9 @@
 #include "Core/Platform.hpp"
 #include "Core/Window.hpp"
 #include "Graphics/Renderer.hpp"
-#include "Graphics/Core/Resources/Shader.hpp"
 #include "Graphics/Core/Resources/Texture.hpp"
+#include "Graphics/Core/Resources/Shader.hpp"
+#include "Graphics/Core/Resources/FrameBuffer.hpp"
 #include "Graphics/Core/GraphicsAPI.hpp"
 #include "Graphics/Data/Mesh.hpp"
 #include "Graphics/Data/Material.hpp"
@@ -18,16 +19,35 @@
 namespace Phezu {
     
     Renderer::Renderer()
-    : m_Ctx(), m_WindowSubId(0) {}
+    : m_Ctx(), m_IntermediateTarget(nullptr), m_RenderTarget(nullptr), m_WindowSubId(0), m_QuadMesh(nullptr), m_BlitShader(nullptr) { }
     
     Renderer::~Renderer() {}
     
-    void Renderer::Init(RendererContext ctx) {
+    void Renderer::Init(RendererContext ctx, RenderTarget renderTarget) {
         m_Ctx = ctx;
+        m_RenderTarget = renderTarget.Target;
 
         m_WindowSubId = m_Ctx.Window->RegisterWindowResizeCallback(
-            [this](int width, int height) { m_Ctx.Api->SetViewport(0, 0, width, height); }
+            [this](int width, int height) { OnWindowResized(width, height); }
         );
+
+        m_QuadMesh = m_Ctx.Asset->GetMesh({ static_cast<int>(BuiltInAssetType::QuadMesh), AssetSource::Engine });
+        m_BlitShader = m_Ctx.Asset->GetShader({ static_cast<int>(BuiltInAssetType::BlitShader), AssetSource::Engine});
+        m_BlitShader->SetInt("mainTex", 0);
+
+        SamplerDesc samplerDesc = { TextureWrapMode::ClampToEdge, TextureFilteringMode::Point };
+        //divide by render scale
+        int texWidth = m_Ctx.Window->GetWidth();
+        int texHeight = m_Ctx.Window->GetHeight();
+        m_IntermediateTex = m_Ctx.Api->CreateTexture(nullptr, texWidth, texHeight, samplerDesc);
+
+        m_IntermediateTarget = m_Ctx.Api->CreateFrameBuffer();
+        m_IntermediateTarget->AttachTexture(m_IntermediateTex);
+    }
+
+    void Renderer::OnWindowResized(int width, int height) {
+        m_Ctx.Api->SetViewport(0, 0, width, height);
+        m_IntermediateTex->Resize(nullptr, width, height); //divide by render scale
     }
 
     void Renderer::Destroy() {
@@ -35,14 +55,15 @@ namespace Phezu {
     }
     
     void Renderer::ClearFrame() {
-        m_Ctx.Api->ClearFrame(Color(0, 0, 0, 0));
+        m_Ctx.Api->ClearFrame(Color::Clear);
     }
     
-    void Renderer::DrawEntities(const std::vector<Entity*>& renderableEntities, size_t count, CameraData* camera) {
+    void Renderer::DrawScene(const std::vector<Entity*>& renderableEntities, size_t count, CameraData* camera) {
         TransformData* cameraTransform = dynamic_cast<TransformData*>(camera->GetEntity()->GetDataComponent(ComponentType::Transform));
 
         m_ViewTransform.SetTranslation(cameraTransform->GetWorldPosition());
 
+        // divide by render scale
         int screenWidth = m_Ctx.Window->GetWidth();
         int screenHeight = m_Ctx.Window->GetHeight();
 
@@ -50,8 +71,10 @@ namespace Phezu {
         float vSize = camera->Size * 2.0f;
         float hSize = vSize * aspectRatio;
 
-        m_ScreenTransform.Set(0, 0, 1.0f / (aspectRatio * camera->Size));
-        m_ScreenTransform.Set(1, 1, 1.0f / camera->Size);
+        Vector2 scaling(1.0f / (aspectRatio * camera->Size), 1.0f / camera->Size);
+        m_ScreenTransform.SetScaling(scaling);
+
+        m_IntermediateTarget->Bind();
 
         int index = 0;
         for (auto& entity : renderableEntities) {
@@ -60,6 +83,14 @@ namespace Phezu {
             DrawEntity(entity, camera);
             index++;
         }
+
+        m_RenderTarget->Bind();
+
+        m_QuadMesh->Bind(m_BlitShader);
+        m_BlitShader->Bind();
+        m_IntermediateTex->Bind(0);
+
+        m_Ctx.Api->RenderTriangles(6);
     }
     
     void Renderer::DrawEntity(Entity* entity, CameraData* camera) {

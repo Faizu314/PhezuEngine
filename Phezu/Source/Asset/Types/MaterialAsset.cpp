@@ -7,8 +7,8 @@ namespace Phezu {
 	{
 		nlohmann::json j = nlohmann::json::parse(data);
 
-		ShaderRef = j["Shader"].get<uint64_t>();
-		Textures = j["Textures"].get<std::unordered_map<std::string, GUID>>();
+		ShaderRef = j["Shader"].get<AssetHandle>();
+		Textures = j["Textures"].get<std::unordered_map<std::string, AssetHandle>>();
 		Parameters = j["Parameters"].get<std::unordered_map<std::string, MaterialProperty>>();
 	}
 

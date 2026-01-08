@@ -19,6 +19,7 @@ namespace Phezu {
     public:
         void ResetToIdentity();
         void SetTranslation(Vector2 translation);
+        void SetScaling(Vector2 scaling);
     public:
         Mat3x3 operator*(const Mat3x3& other) const { return m_Matrix * other.m_Matrix; }
         Vector3 operator*(const Vector3& other) const { return m_Matrix * other.m_Vector; }

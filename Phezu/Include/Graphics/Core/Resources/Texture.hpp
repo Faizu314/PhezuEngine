@@ -9,5 +9,7 @@ namespace Phezu {
 		virtual void Init(unsigned char *data, unsigned int width, unsigned int height, SamplerDesc settings) = 0;
 		virtual void Bind(uint8_t unitIndex) = 0;
 		virtual void Destroy() = 0;
+	public:
+		virtual void Resize(unsigned char* data, unsigned int width, unsigned int height) = 0;
 	};
 }

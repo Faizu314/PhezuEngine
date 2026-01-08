@@ -19,7 +19,7 @@ namespace Phezu {
         Scene(Engine* engine, const std::string& name);
     public:
         Entity* CreateEntity();
-        Entity* CreateEntity(AssetHandle<PrefabAsset> prefabHandle);
+        Entity* CreateEntity(AssetHandle prefabHandle);
         Entity* GetEntity(uint64_t entityID) const;
         void DestroyEntity(uint64_t entityID);
         void LogicUpdate(float deltaTime);

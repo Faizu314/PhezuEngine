@@ -47,11 +47,14 @@ namespace Phezu {
                 
                 MetaData metaData;
                 metaData.Deserialize(metaDataString);
+
+                AssetHandle assetHandle(metaData.Guid, AssetSource::Project);
                 
                 std::filesystem::path assetPath = entry.path();
                 assetPath.replace_extension("");
-                AssetPaths& assetRef = m_AssetMap[metaData.Guid];
-                assetRef.push_back(assetPath);
+                AssetRef& assetRef = m_AssetMap[assetHandle];
+                assetRef.Paths.push_back(assetPath);
+                assetRef.Type = metaData.Type;
             }
             else if (entry.is_directory()) {
                 LoadAssetsInDirectory(entry.path());
@@ -77,15 +80,15 @@ namespace Phezu {
         return fileContent;
     }
 
-    IAsset* AssetManager::TryGetLoadedAsset(GUID guid) {
-        if (m_AssetMap.find(guid) == m_AssetMap.end()) {
-            Log("Assert here: Asset with guid: %i not found\n", guid.Value);
+    IAsset* AssetManager::TryGetLoadedAsset(AssetHandle assetHandle) {
+        if (m_AssetMap.find(assetHandle) == m_AssetMap.end()) {
+            Log("Assert here: Asset with guid: %i not found\n", assetHandle.GetGuid().Value);
             return nullptr;
         }
-        if (m_LoadedAssets.find(guid) == m_LoadedAssets.end())
+        if (m_LoadedAssets.find(assetHandle) == m_LoadedAssets.end())
             return nullptr;
 
-        return m_LoadedAssets[guid];
+        return m_LoadedAssets[assetHandle];
     }
 
 }

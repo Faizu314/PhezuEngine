@@ -22,7 +22,17 @@ namespace Phezu {
 				return EnumType::DEFAULT_VALUE;                                         \
 			}                                                                           \
 			return it->second;                                                          \
-		}                                                                                   
+		}                                                                               \
+																						\
+		std::string ToString(EnumType value) {											\
+			for (auto& kvp : s_StrTo##EnumType) {										\
+				if (kvp.second == value)												\
+					return kvp.first;													\
+			}																			\
+			const char* enumTypeStr = #EnumType;										\
+			Log("Unknown value of enum %s::%i", enumTypeStr, static_cast<int>(value));	\
+			return "";																	\
+		}																				
 
 	#define VERTEX_SEMANTICS_LIST(E, X)       \
 		X(E, Position)                        \
@@ -60,11 +70,16 @@ namespace Phezu {
 		X(E, ClampToEdge)                     \
 		X(E, ClampToBorder)
 
+#define ASSET_SOURCE_LIST(E, X)				  \
+		X(E, Engine)                          \
+		X(E, Project)
+
 	DEFINE_ENUM_STRING_MAP(VertexSemantic, VERTEX_SEMANTICS_LIST, Position)
 	DEFINE_ENUM_STRING_MAP(VertexAttributeType, VERTEX_ATTRIBUTE_TYPE_LIST, Float)
 	DEFINE_ENUM_STRING_MAP(VertexAttributeCount, VERTEX_ATTRIBUTE_COUNT_LIST, One)
 	DEFINE_ENUM_STRING_MAP(TextureFilteringMode, TEXTURE_FILTERING_MODE_LIST, Point)
 	DEFINE_ENUM_STRING_MAP(TextureWrapMode, TEXTURE_WRAP_MODE_LIST, Repeat)
+	DEFINE_ENUM_STRING_MAP(AssetSource, ASSET_SOURCE_LIST, Project)
 
 	unsigned int GetVertexAttributeSize(VertexAttributeType attribute) {
 		switch (attribute) {

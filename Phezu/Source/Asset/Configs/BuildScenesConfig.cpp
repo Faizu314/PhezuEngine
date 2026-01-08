@@ -6,14 +6,14 @@ namespace Phezu {
     void BuildScenesConfig::Deserialize(const std::string& data) {
         nlohmann::json j = nlohmann::json::parse(data);
 
-        MasterScene.Value = j["MasterScene"];
+        MasterScene = { GUID(j["MasterScene"]), AssetSource::Project };
         BuildScenes.clear();
         
         for (const auto& guidJson : j["BuildScenes"]) {
             GUID guid;
             guid.Value = guidJson["Guid"];
             
-            BuildScenes.push_back(guid);
+            BuildScenes.push_back({ guid, AssetSource::Project });
         }
     }
     

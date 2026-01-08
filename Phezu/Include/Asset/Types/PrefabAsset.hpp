@@ -9,8 +9,7 @@ namespace Phezu {
     
     class PrefabAsset : public IAsset {
     public:
-        PrefabAsset(GUID guid) : IAsset(guid) {}
-    public:
+        AssetType GetAssetType() override { return AssetType::Prefab; }
         void Deserialize(const std::string& data) override;
     public:
         const Blueprint& GetBlueprint() const { return m_Blueprint; }

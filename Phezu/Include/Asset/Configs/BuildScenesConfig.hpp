@@ -2,12 +2,12 @@
 
 #include <string>
 #include <vector>
-#include "Core/Types/GUID.hpp"
+#include "Asset/Core/Asset.hpp"
 
 namespace Phezu {
     struct BuildScenesConfig {
-        GUID MasterScene;
-        std::vector<GUID> BuildScenes;
+        AssetHandle MasterScene;
+        std::vector<AssetHandle> BuildScenes;
         
         BuildScenesConfig() = default;
         void Deserialize(const std::string& data);

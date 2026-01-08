@@ -33,7 +33,7 @@ namespace Phezu {
         m_Platform->Init(args.WindowArgs);
         m_AssetManager.Init(m_AssetsPath);
         m_ResourceManager.Init(&m_AssetManager, m_Platform->GetGraphicsApi());
-        m_Renderer.Init({ m_Platform->GetWindow(), m_Platform->GetGraphicsApi(), &m_ResourceManager });
+        m_Renderer.Init({ m_Platform->GetWindow(), m_Platform->GetGraphicsApi(), &m_ResourceManager }, RenderTarget::Default());
         m_SceneManager.Init();
         m_ScriptEngine.Init();
         
@@ -90,7 +90,7 @@ namespace Phezu {
 
             m_Physics.PhysicsUpdate(staticEntitiesBuffer, dynamicEntitiesBuffer, staticsCount, dynamicsCount, deltaTime);
 
-            m_Renderer.DrawEntities(renderEntitiesBuffer, renderablesCount, m_SceneManager.GetActiveCamera());
+            m_Renderer.DrawScene(renderEntitiesBuffer, renderablesCount, m_SceneManager.GetActiveCamera());
 
             m_Platform->Update();
             

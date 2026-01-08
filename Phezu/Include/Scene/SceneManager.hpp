@@ -26,7 +26,7 @@ namespace Phezu {
     public:
         Entity* FindEntity(uint64_t entityID);
     private:
-        Scene* LoadScene(AssetHandle<SceneAsset> sceneGuid);
+        Scene* LoadScene(AssetHandle sceneGuid);
     private:
         Engine* m_Engine;
     private:
