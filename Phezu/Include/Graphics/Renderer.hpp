@@ -13,12 +13,12 @@ namespace Phezu {
     class IWindow;
     class Entity;
     class IGraphicsAPI;
-    class CameraData;
-    class IShader;
     class ITexture;
-    class ResourceManager;
+    class IShader;
+    class CameraData;
     class Mesh;
-    class Material;
+    class ResourceManager;
+    class IFrameBuffer;
 
     struct RendererContext {
         RendererContext() = default;
@@ -33,17 +33,24 @@ namespace Phezu {
         Renderer();
         ~Renderer();
     public:
-        void Init(RendererContext ctx);
+        void Init(RendererContext ctx, RenderTarget renderTarget);
         void Destroy();
     public:
         void ClearFrame();
-        void DrawEntities(const std::vector<Entity*>& renderableEntities, size_t count, CameraData* camera);
+        void DrawScene(const std::vector<Entity*>& renderableEntities, size_t count, CameraData* camera);
     private:
+        void OnWindowResized(int width, int height);
         void DrawEntity(Entity* entity, CameraData* camera);
     private:
         RendererContext m_Ctx;
+    private:
         int m_WindowSubId;
-        // MUST HAVE A TARGET FRAME BUFFER
+        ITexture* m_IntermediateTex;
+        IFrameBuffer* m_IntermediateTarget;
+        IFrameBuffer* m_RenderTarget;
+    private:
+        const Mesh* m_QuadMesh;
+        IShader* m_BlitShader;
     private:
         Mat3x3 m_ViewTransform;
         Mat3x3 m_ScreenTransform;

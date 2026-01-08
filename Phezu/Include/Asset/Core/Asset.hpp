@@ -1,29 +1,64 @@
 #pragma once
 
 #include <string>
+#include <stdlib.h>
 
 #include "Core/Types/GUID.hpp"
 
 namespace Phezu {
 	
-	template<typename T>
+	enum class BuiltInAssetType {
+		QuadMesh,
+		WhiteImage,
+		DefaultTexture,
+		SpriteShader,
+		BlitShader,
+		SolidShader,
+		SpriteMaterial
+	};
+
+	enum class AssetType : uint8_t {
+		Scene,
+		Prefab,
+		Mesh,
+		Shader,
+		Image,
+		Texture,
+		Material
+	};
+
+	enum class AssetSource {
+		Engine = 0,
+		Project
+	};
+
 	struct AssetHandle {
 	public:
 		AssetHandle() = default;
-		AssetHandle(GUID guid) : m_Guid(guid) {}
-		GUID GetGuid() { return m_Guid; }
+		AssetHandle(GUID guid, AssetSource source) : m_Guid(guid), m_Source(source) {}
+		GUID GetGuid() const { return m_Guid; }
+		AssetSource GetSource() const { return m_Source; }
+	public:
+		bool operator==(const AssetHandle& other) const { return m_Source == other.m_Source && m_Guid == other.m_Guid; }
 	private:
+		AssetSource m_Source = AssetSource::Engine;
 		GUID m_Guid = 0;
 	};
 
 	class IAsset {
 	public:
-		IAsset() = delete;
-		IAsset(GUID guid) : Guid(guid) {}
-	public:
+		virtual AssetType GetAssetType() = 0;
 		virtual void Deserialize(const std::string& data) = 0;
-	public:
-		GUID Guid;
 	};
 
+}
+
+namespace std {
+	template<>
+	class hash<Phezu::AssetHandle> {
+	public:
+		size_t operator()(const Phezu::AssetHandle& h) const noexcept {
+			return h.GetGuid().Value ^ uint64_t(h.GetSource()) << 63;
+		}
+	};
 }

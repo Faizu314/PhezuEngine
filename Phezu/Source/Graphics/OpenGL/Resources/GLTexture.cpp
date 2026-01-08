@@ -54,6 +54,10 @@ namespace Phezu {
 		glBindTexture(GL_TEXTURE_2D, m_Texture);
 	}
 
+	void GLTexture::Resize(unsigned char* data, unsigned int width, unsigned int height) {
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	}
+
 	void GLTexture::Destroy() {
 		glDeleteTextures(1, &m_Texture);
 	}

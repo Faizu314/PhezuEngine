@@ -1,17 +1,16 @@
 #pragma once
 
 #include "Core/Types/Types.hpp"
-#include "Asset/Core/Asset.hpp"
+#include "Asset/Types/ImageAsset.hpp"
 
 namespace Phezu {
 
 	class TextureAsset : public IAsset {
 	public:
-		TextureAsset(GUID guid) : IAsset(guid) {}
-	public:
+		AssetType GetAssetType() override { return AssetType::Texture; }
 		void Deserialize(const std::string& data) override;
 	public:
-		GUID ImageRef;
+		AssetHandle ImageRef;
 		TextureFilteringMode FilteringMode = TextureFilteringMode::Point;
 		TextureWrapMode WrapMode = TextureWrapMode::Repeat;
 	};

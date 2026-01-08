@@ -3,8 +3,21 @@
 #include "Maths/Objects/Vector2.hpp"
 #include "Maths/Objects/Vector3.hpp"
 #include "Core/Types/Color.hpp"
+#include "Core/Types/Types.hpp"
 
 namespace Phezu {
+
+    void from_json(const nlohmann::json& j, AssetHandle& handle) {
+        AssetHandle h(j["Guid"].get<uint64_t>(), ToAssetSource(j["Source"].get<std::string>()));
+
+        handle = h;
+    }
+
+    void to_json(nlohmann::json& j, const AssetHandle& handle) {
+        j["Source"] = ToString(handle.GetSource());
+        j["Guid"] = handle.GetGuid().Value;
+    }
+
 
     void from_json(const nlohmann::json& j, GUID& guid) {
         guid.Value = j.get<uint64_t>();

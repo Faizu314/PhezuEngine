@@ -9,6 +9,7 @@
 #include "Core/Types/Types.hpp"
 #include "Core/Types/GUID.hpp"
 #include "Core/Types/Color.hpp"
+#include "Asset/Core/Asset.hpp"
 #include "Maths/Math.hpp"
 
 namespace Phezu {
@@ -38,6 +39,11 @@ namespace Phezu {
         std::unordered_set<uint64_t> RemovedComponents; //A file will only save the components it removed
         std::unordered_map<uint64_t, EntryOverrides> EntryOverrides;
     };
+
+    void from_json(const nlohmann::json& j, AssetHandle& handle);
+
+    void to_json(nlohmann::json& j, const AssetHandle& handle);
+
 
     void from_json(const nlohmann::json& j, GUID& guid);
 

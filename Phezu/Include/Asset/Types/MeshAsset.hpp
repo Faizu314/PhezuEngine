@@ -18,8 +18,7 @@ namespace Phezu {
 
 	class MeshAsset : public IAsset {
     public:
-        MeshAsset(GUID guid) : IAsset(guid) {}
-    public:
+        AssetType GetAssetType() override { return AssetType::Mesh; }
         void Deserialize(const std::string& data) override;
     public:
         std::vector<SerializedBuffer> VertexBuffers;

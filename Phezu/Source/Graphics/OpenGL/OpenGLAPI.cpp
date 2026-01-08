@@ -6,6 +6,7 @@
 #include "Graphics/OpenGL/Resources/GLVertexArray.hpp"
 #include "Graphics/OpenGL/Resources/GLShader.hpp"
 #include "Graphics/OpenGL/Resources/GLTexture.hpp"
+#include "Graphics/OpenGL/Resources/GLFrameBuffer.hpp"
 #include "Core/Platform.hpp"
 
 namespace Phezu {
@@ -21,6 +22,15 @@ namespace Phezu {
 			static_cast<GLint>(width),
 			static_cast<GLint>(height)
 		);
+	}
+
+	void OpenGLAPI::SetRenderTarget(IFrameBuffer* fbo) {
+		if (fbo == nullptr) {
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		}
+		else {
+			fbo->Bind();
+		}
 	}
 
 	void OpenGLAPI::ClearFrame(Color color) {

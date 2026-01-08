@@ -10,9 +10,9 @@ namespace Phezu {
     public:
         RenderData(Entity* entity) : DataComponent(entity) {}
     public:
-        void SetMaterialHandle(AssetHandle<MaterialAsset> handle) { m_MaterialHandle = handle; }
-        AssetHandle<MaterialAsset> GetMaterialHandle() { return m_MaterialHandle; }
+        void SetMaterialHandle(AssetHandle materialHandle) { m_MaterialHandle = materialHandle; }
+        AssetHandle GetMaterialHandle() { return m_MaterialHandle; }
     private:
-        AssetHandle<MaterialAsset> m_MaterialHandle;
+        AssetHandle m_MaterialHandle;
     };
 }

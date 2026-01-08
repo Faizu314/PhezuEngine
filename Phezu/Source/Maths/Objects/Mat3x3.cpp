@@ -20,4 +20,9 @@ namespace Phezu {
 		m_Matrix[2][1] = translation.Y();
 	}
 
+	void Mat3x3::SetScaling(Vector2 scaling) {
+		m_Matrix[0][0] = scaling.X();
+		m_Matrix[1][1] = scaling.Y();
+	}
+
 }

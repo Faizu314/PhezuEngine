@@ -15,10 +15,10 @@ namespace Phezu {
 		void Init(AssetManager* assetManager, IGraphicsAPI* api);
 		void Destroy();
 	public:
-		const Mesh* GetMesh(AssetHandle<MeshAsset> meshHandle);
-		Material* GetMaterial(AssetHandle<MaterialAsset> materialHandle);
-		ITexture* GetTexture(AssetHandle<TextureAsset> textureHandle);
-		IShader* GetShader(AssetHandle<ShaderAsset> shaderHandle);
+		const Mesh* GetMesh(AssetHandle meshHandle);
+		Material* GetMaterial(AssetHandle materialHandle);
+		ITexture* GetTexture(AssetHandle textureHandle);
+		IShader* GetShader(AssetHandle shaderHandle);
 	private:
 		Mesh* CreateMesh(const MeshAsset* meshAsset);
 		Material* CreateMaterial(const MaterialAsset* materialAsset);
@@ -28,10 +28,10 @@ namespace Phezu {
 		AssetManager* m_AssetManager;
 		IGraphicsAPI* m_Api;
 	private:
-		std::unordered_map<GUID, Mesh*> m_Meshes;
-		std::unordered_map<GUID, Material*> m_Materials;
-		std::unordered_map<GUID, IShader*> m_Shaders;
-		std::unordered_map<GUID, ITexture*> m_Textures;
+		std::unordered_map<AssetHandle, Mesh*> m_Meshes;
+		std::unordered_map<AssetHandle, Material*> m_Materials;
+		std::unordered_map<AssetHandle, IShader*> m_Shaders;
+		std::unordered_map<AssetHandle, ITexture*> m_Textures;
 	};
 
 }

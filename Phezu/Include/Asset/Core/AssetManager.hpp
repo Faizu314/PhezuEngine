@@ -4,6 +4,7 @@
 #include <vector>
 #include <filesystem>
 
+#include "Core/Platform.hpp"
 #include "Core/Types/GUID.hpp"
 #include "Asset/Core/Asset.hpp"
 #include "Asset/Types/ImageAsset.hpp"
@@ -22,6 +23,11 @@ namespace Phezu {
     class SceneAsset;
     
     using AssetPaths = std::vector<std::filesystem::path>;
+
+    struct AssetRef {
+        std::vector<std::filesystem::path> Paths;
+        AssetType Type;
+    };
     
     class AssetManager {
     public:
@@ -32,18 +38,18 @@ namespace Phezu {
         void Destroy();
     public:
         template<typename T>
-        const T* GetAsset(AssetHandle<T> assetHandle);
+        const T* GetAsset(AssetHandle assetHandle);
         BuildScenesConfig GetBuildScenesConfig() { return m_BuildScenesConfig; }
     private:
         void LoadAssetMap(const std::filesystem::path& assetsFolder);
         void LoadAssetsInDirectory(const std::filesystem::path& folder);
         void LoadBuildScenesConfig(const std::filesystem::path& buildScenesConfigPath);
     private:
-        IAsset* TryGetLoadedAsset(GUID guid);
+        IAsset* TryGetLoadedAsset(AssetHandle guid);
         std::string GetFileFromDisk(const std::filesystem::path& filePath);
     private:
-        std::unordered_map<GUID, AssetPaths> m_AssetMap;
-        std::unordered_map<GUID, IAsset*> m_LoadedAssets;
+        std::unordered_map<AssetHandle, AssetRef> m_AssetMap;
+        std::unordered_map<AssetHandle, IAsset*> m_LoadedAssets;
         BuildScenesConfig m_BuildScenesConfig;
     private:
         Engine* m_Engine;
@@ -51,21 +57,29 @@ namespace Phezu {
 
 
     template<typename T>
-    const T* AssetManager::GetAsset(AssetHandle<T> assetHandle) {
+    const T* AssetManager::GetAsset(AssetHandle assetHandle) {
         static_assert(std::is_base_of_v<IAsset, T>, "T must derive from IAsset");
 
         GUID guid = assetHandle.GetGuid();
+        AssetSource source = assetHandle.GetSource();
 
-        T* asset = static_cast<T*>(TryGetLoadedAsset(guid));
+        T* asset = static_cast<T*>(TryGetLoadedAsset(assetHandle));
         if (asset != nullptr)
             return asset;
 
-        std::string assetPath = m_AssetMap[guid][0].string();
+        AssetRef& ref = m_AssetMap[assetHandle];
+        std::string assetPath = ref.Paths[0].string();
 
-        asset = new T(guid);
+        asset = new T();
+
+        if (ref.Type != asset->GetAssetType()) {
+            Log("Should assert here, asset guid does not match its type.\n");
+            return nullptr;
+        }
+
         asset->Deserialize(GetFileFromDisk(assetPath));
 
-        m_LoadedAssets[guid] = asset;
+        m_LoadedAssets[assetHandle] = asset;
 
         return asset;
     }

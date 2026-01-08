@@ -39,46 +39,46 @@ namespace Phezu {
         m_Textures.clear();
     }
 
-    const Mesh* ResourceManager::GetMesh(AssetHandle<MeshAsset> meshHandle) {
-        if (m_Meshes.find(meshHandle.GetGuid()) != m_Meshes.end())
-            return m_Meshes.at(meshHandle.GetGuid());
+    const Mesh* ResourceManager::GetMesh(AssetHandle meshHandle) {
+        if (m_Meshes.find(meshHandle) != m_Meshes.end())
+            return m_Meshes.at(meshHandle);
 
-        const MeshAsset* meshAsset = m_AssetManager->GetAsset(meshHandle);
+        auto meshAsset = m_AssetManager->GetAsset<MeshAsset>(meshHandle);
         Mesh* mesh = CreateMesh(meshAsset);
-        m_Meshes.insert(std::make_pair(meshHandle.GetGuid(), mesh));
+        m_Meshes.insert(std::make_pair(meshHandle, mesh));
 
         return mesh;
     }
 
-    Material* ResourceManager::GetMaterial(AssetHandle<MaterialAsset> materialHandle) {
-        if (m_Materials.find(materialHandle.GetGuid()) != m_Materials.end())
-            return m_Materials.at(materialHandle.GetGuid());
+    Material* ResourceManager::GetMaterial(AssetHandle materialHandle) {
+        if (m_Materials.find(materialHandle) != m_Materials.end())
+            return m_Materials.at(materialHandle);
 
-        const MaterialAsset* materialAsset = m_AssetManager->GetAsset(materialHandle);
+        auto materialAsset = m_AssetManager->GetAsset<MaterialAsset>(materialHandle);
         Material* material = CreateMaterial(materialAsset);
-        m_Materials.insert(std::make_pair(materialHandle.GetGuid(), material));
+        m_Materials.insert(std::make_pair(materialHandle, material));
 
         return material;
     }
 
-    ITexture* ResourceManager::GetTexture(AssetHandle<TextureAsset> textureHandle) {
-        if (m_Materials.find(textureHandle.GetGuid()) != m_Materials.end())
-            return m_Textures.at(textureHandle.GetGuid());
+    ITexture* ResourceManager::GetTexture(AssetHandle textureHandle) {
+        if (m_Materials.find(textureHandle) != m_Materials.end())
+            return m_Textures.at(textureHandle);
 
-        const TextureAsset* textureAsset = m_AssetManager->GetAsset(textureHandle);
+        auto textureAsset = m_AssetManager->GetAsset<TextureAsset>(textureHandle);
         ITexture* texture = CreateTexture(textureAsset);
-        m_Textures.insert(std::make_pair(textureHandle.GetGuid(), texture));
+        m_Textures.insert(std::make_pair(textureHandle, texture));
 
         return texture;
     }
 
-    IShader* ResourceManager::GetShader(AssetHandle<ShaderAsset> shaderHandle) {
-        if (m_Shaders.find(shaderHandle.GetGuid()) != m_Shaders.end())
-            return m_Shaders.at(shaderHandle.GetGuid());
+    IShader* ResourceManager::GetShader(AssetHandle shaderHandle) {
+        if (m_Shaders.find(shaderHandle) != m_Shaders.end())
+            return m_Shaders.at(shaderHandle);
 
-        const ShaderAsset* shaderAsset = m_AssetManager->GetAsset(shaderHandle);
+        auto shaderAsset = m_AssetManager->GetAsset<ShaderAsset>(shaderHandle);
         IShader* shader = CreateShader(shaderAsset);
-        m_Shaders.insert(std::make_pair(shaderHandle.GetGuid(), shader));
+        m_Shaders.insert(std::make_pair(shaderHandle, shader));
 
         return shader;
     }
@@ -171,16 +171,16 @@ namespace Phezu {
 	}
 
     Material* ResourceManager::CreateMaterial(const MaterialAsset* materialAsset) {
-        GUID shaderGuid = materialAsset->ShaderRef;
+        AssetHandle shaderHandle = materialAsset->ShaderRef;
 
-        IShader* shader = GetShader({ shaderGuid });
+        IShader* shader = GetShader(shaderHandle);
 
         std::unordered_map<std::string, ITexture*> textures;
 
         for (auto& kvp : materialAsset->Textures) {
             const std::string& texName = kvp.first;
-            GUID texGuid = kvp.second;
-            ITexture* texture = GetTexture({ texGuid });
+            AssetHandle texHandle = kvp.second;
+            ITexture* texture = GetTexture(texHandle);
             textures.insert(std::make_pair(texName, texture));
         }
 
@@ -198,8 +198,8 @@ namespace Phezu {
     }
 
     ITexture* ResourceManager::CreateTexture(const TextureAsset* textureAsset) {
-        AssetHandle<ImageAsset> imageHandle = { textureAsset->ImageRef };
-        const ImageAsset* imageAsset = m_AssetManager->GetAsset(imageHandle);
+        AssetHandle imageHandle = textureAsset->ImageRef;
+        auto imageAsset = m_AssetManager->GetAsset<ImageAsset>(imageHandle);
 
         SamplerDesc desc = {
             textureAsset->WrapMode,

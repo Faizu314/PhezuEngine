@@ -23,4 +23,13 @@ namespace Phezu {
 		Static,
 		Dynamic
 	};
+
+	class IFrameBuffer;
+
+	struct RenderTarget {
+		IFrameBuffer* Target;
+
+		static RenderTarget Default() { return { nullptr }; }
+		static RenderTarget Offscreen(IFrameBuffer* fbo) { return { fbo }; }
+	};
 }
