@@ -62,4 +62,8 @@ namespace Phezu {
 		glDeleteTextures(1, &m_Texture);
 	}
 
+	ResourceHandle GLTexture::GetHandle() {
+		return { static_cast<uint64_t>(m_Texture) };
+	}
+
 }

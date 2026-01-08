@@ -6,6 +6,10 @@
 
 namespace Phezu {
 
+	struct ResourceHandle {
+		uint64_t Ptr = 0;
+	};
+
 	struct VertexAttribute {
 		VertexAttribute() = default;
 

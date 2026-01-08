@@ -54,10 +54,6 @@ namespace Phezu {
         m_Ctx.Window->UnregisterWindowResizeCallback(m_WindowSubId);
     }
     
-    void Renderer::ClearFrame() {
-        m_Ctx.Api->ClearFrame(Color::Clear);
-    }
-    
     void Renderer::DrawScene(const std::vector<Entity*>& renderableEntities, size_t count, CameraData* camera) {
         TransformData* cameraTransform = dynamic_cast<TransformData*>(camera->GetEntity()->GetDataComponent(ComponentType::Transform));
 
@@ -75,6 +71,7 @@ namespace Phezu {
         m_ScreenTransform.SetScaling(scaling);
 
         m_IntermediateTarget->Bind();
+        m_Ctx.Api->ClearFrame(Color::Clear);
 
         int index = 0;
         for (auto& entity : renderableEntities) {
@@ -84,7 +81,8 @@ namespace Phezu {
             index++;
         }
 
-        m_RenderTarget->Bind();
+        m_Ctx.Api->SetRenderTarget(m_RenderTarget);
+        m_Ctx.Api->ClearFrame(Color::Clear);
 
         m_QuadMesh->Bind(m_BlitShader);
         m_BlitShader->Bind();

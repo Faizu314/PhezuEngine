@@ -11,6 +11,7 @@ namespace Phezu {
 		void Init(unsigned char* data, unsigned int width, unsigned int height, SamplerDesc settings) override;
 		void Bind(uint8_t unitIndex) override;
 		void Destroy() override;
+		ResourceHandle GetHandle() override;
 	public:
 		void Resize(unsigned char* data, unsigned int width, unsigned int height) override;
 	private:

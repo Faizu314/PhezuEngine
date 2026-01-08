@@ -74,12 +74,24 @@ namespace Phezu {
 		X(E, Engine)                          \
 		X(E, Project)
 
+#define ASSET_TYPE_LIST(E, X)				  \
+		X(E, None)                            \
+		X(E, Scene)                           \
+		X(E, Prefab)                          \
+		X(E, Mesh)                            \
+		X(E, Shader)                          \
+		X(E, Image)                           \
+		X(E, Texture)                         \
+		X(E, Material)                        \
+		X(E, Config)
+
 	DEFINE_ENUM_STRING_MAP(VertexSemantic, VERTEX_SEMANTICS_LIST, Position)
 	DEFINE_ENUM_STRING_MAP(VertexAttributeType, VERTEX_ATTRIBUTE_TYPE_LIST, Float)
 	DEFINE_ENUM_STRING_MAP(VertexAttributeCount, VERTEX_ATTRIBUTE_COUNT_LIST, One)
 	DEFINE_ENUM_STRING_MAP(TextureFilteringMode, TEXTURE_FILTERING_MODE_LIST, Point)
 	DEFINE_ENUM_STRING_MAP(TextureWrapMode, TEXTURE_WRAP_MODE_LIST, Repeat)
 	DEFINE_ENUM_STRING_MAP(AssetSource, ASSET_SOURCE_LIST, Project)
+	DEFINE_ENUM_STRING_MAP(AssetType, ASSET_TYPE_LIST, None)
 
 	unsigned int GetVertexAttributeSize(VertexAttributeType attribute) {
 		switch (attribute) {

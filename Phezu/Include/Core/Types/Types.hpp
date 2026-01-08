@@ -65,6 +65,7 @@ namespace Phezu {
 	TO_STRING_UTIL(TextureFilteringMode)
 	TO_STRING_UTIL(TextureWrapMode)
 	TO_STRING_UTIL(AssetSource)
+	TO_STRING_UTIL(AssetType)
 
 	unsigned int GetVertexAttributeSize(VertexAttributeType attribute);
 	unsigned int GetVertexAttributeCount(VertexAttributeCount countEnum);
