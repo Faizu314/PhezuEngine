@@ -24,7 +24,8 @@ namespace Phezu {
     };
     
     struct EntryRef {
-        uint64_t Guid;
+        AssetSource Source;
+        GUID Guid;
         uint64_t InstanceID;
         uint64_t FileID;
     };

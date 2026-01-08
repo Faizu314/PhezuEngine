@@ -16,23 +16,17 @@ template <>
 struct std::hash<Phezu::RegistryKey> {
 	std::size_t operator()(const Phezu::RegistryKey& key) const noexcept {
 		std::size_t h1 = std::hash<uint64_t>{}(key.InstanceID);
-		std::size_t h2 = std::hash<uint64_t>{}(key.PrefabGuid);
+		std::size_t h2 = std::hash<Phezu::AssetHandle>{}(key.PrefabHandle);
 		return h1 ^ (h2 << 1);
 	}
 };
 
 namespace Phezu {
 	
-	RegistryKey::RegistryKey(uint64_t instanceID, uint64_t prefabGuid) : InstanceID(instanceID), PrefabGuid(prefabGuid) {}
+	RegistryKey::RegistryKey(uint64_t instanceID, AssetHandle prefabHandle) : InstanceID(instanceID), PrefabHandle(prefabHandle) {}
 
 	bool RegistryKey::operator==(const RegistryKey& other) const {
-		return InstanceID == other.InstanceID && PrefabGuid == other.PrefabGuid;
-	}
-
-	bool RegistryKey::operator<(const RegistryKey& other) const {
-		if (InstanceID == other.InstanceID)
-			return PrefabGuid < other.PrefabGuid;
-		return InstanceID < other.InstanceID;
+		return InstanceID == other.InstanceID && PrefabHandle == other.PrefabHandle;
 	}
 
 	nlohmann::json GetProperty(const std::string& propertyName, const BlueprintEntry& entry, const PrefabOverrides& prefabOverrides) {
@@ -61,42 +55,40 @@ namespace Phezu {
 	}
 
 
-	Entity* BlueprintInstantiator::Instantiate(const BlueprintRuntimeContext& context, const Blueprint& blueprint, GUID bpGuid)
+	Entity* BlueprintInstantiator::Instantiate(const BlueprintRuntimeContext& context, const Blueprint& blueprint, AssetHandle bpHandle)
 	{
 		BlueprintRegistry registry;
 
 		/*-----– First Pass -------*/
 
-		InstantiateEntitiesAndComponents(context, blueprint, bpGuid, registry);
+		InstantiateEntitiesAndComponents(context, blueprint, bpHandle, registry);
 
 		OnEntitiesCreated(context, registry);
 
 		/*-----– Second Pass -------*/
 
-		BuildHierarchyAndInitializeScripts(context, blueprint, bpGuid, registry);
+		BuildHierarchyAndInitializeScripts(context, blueprint, bpHandle, registry);
 
 		OnScriptsInitialized(context, registry);
 
-		return registry[RegistryKey(0, bpGuid)].RootEntity;
+		return registry[RegistryKey(0, bpHandle)].RootEntity;
 	}
 
-	void BlueprintInstantiator::InstantiateEntitiesAndComponents(const BlueprintRuntimeContext& context, const Blueprint& bp, GUID bpGuid, BlueprintRegistry& registry, uint64_t instanceID, PrefabOverrides overrides)
+	void BlueprintInstantiator::InstantiateEntitiesAndComponents(const BlueprintRuntimeContext& context, const Blueprint& bp, AssetHandle bpHandle, BlueprintRegistry& registry, uint64_t instanceID, PrefabOverrides overrides)
 	{
-        GUID guid = bpGuid;
-        RegistryKey registryKey(instanceID, guid);
+        RegistryKey registryKey(instanceID, bpHandle);
 
         /* ---- Prefab Entries ---- */
 
         for (size_t i = 0; i < bp.PrefabEntries.size(); i++) {
             const BlueprintEntry& entry = bp.PrefabEntries[i];
 
-            uint64_t prefabGuid = GetProperty<uint64_t>("SourcePrefab", entry, overrides);
-            AssetHandle<PrefabAsset> prefabHandle = { prefabGuid };
-            const PrefabAsset* prefabAsset = context.assetManager->GetAsset(prefabHandle);
+            AssetHandle prefabHandle = GetProperty<AssetHandle>("SourcePrefab", entry, overrides);
+            auto prefabAsset = context.assetManager->GetAsset<PrefabAsset>(prefabHandle);
             const Blueprint& prefabBlueprint = prefabAsset->GetBlueprint();
 
-            PrefabOverrides prefabOverrides = entry.Properties.at("Overrides").get<PrefabOverrides>();
-            InstantiateEntitiesAndComponents(context, prefabBlueprint, prefabAsset->Guid, registry, entry.FileID, prefabOverrides);
+            PrefabOverrides prefabOverrides = GetProperty<PrefabOverrides>("Overrides", entry, overrides);
+            InstantiateEntitiesAndComponents(context, prefabBlueprint, prefabHandle, registry, entry.FileID, prefabOverrides);
         }
 
         /* ---- Entity Entries ---- */
@@ -127,19 +119,20 @@ namespace Phezu {
             const BlueprintEntry& entry = bp.ComponentEntries[i];
 
             EntryRef parentRef = GetProperty<EntryRef>("Parent", entry, overrides);
+            AssetHandle parentHandle(parentRef.Guid, parentRef.Source);
 
             // If component was removed
             if (overrides.RemovedComponents.find(entry.FileID) != overrides.RemovedComponents.end())
                 continue;
             // If component was attached to an entity which was removed
-            if (parentRef.Guid == guid && overrides.RemovedEntities.find(parentRef.FileID) != overrides.RemovedEntities.end())
+            if (parentHandle == bpHandle && overrides.RemovedEntities.find(parentRef.FileID) != overrides.RemovedEntities.end())
                 continue;
 
             Entity* parentEntity;
-            if (parentRef.Guid == guid)
+            if (parentHandle == bpHandle)
                 parentEntity = registry[registryKey].Entities[parentRef.FileID];
             else
-                parentEntity = registry[RegistryKey(parentRef.InstanceID, parentRef.Guid)].Entities[parentRef.FileID];
+                parentEntity = registry[RegistryKey(parentRef.InstanceID, parentHandle)].Entities[parentRef.FileID];
 
             switch (entry.TypeID) {
                 case EntryType::TransformData:
@@ -156,20 +149,20 @@ namespace Phezu {
                 }
                 case EntryType::ShapeData:
                 {
-                    GUID meshGuid = GetProperty<uint64_t>("Mesh", entry, overrides);
+                    AssetHandle meshHandle = GetProperty<AssetHandle>("Mesh", entry, overrides);
 
                     auto shapeData = dynamic_cast<ShapeData*>(parentEntity->AddDataComponent(ComponentType::Shape));
-                    shapeData->SetMeshHandle({ meshGuid });
+                    shapeData->SetMeshHandle(meshHandle);
                     components[entry.FileID] = shapeData;
 
                     break;
                 }
                 case EntryType::RenderData:
                 {
-                    GUID materialGuid = GetProperty<uint64_t>("Material", entry, overrides);
+                    AssetHandle materialHandle = GetProperty<AssetHandle>("Material", entry, overrides);
 
                     auto renderData = dynamic_cast<RenderData*>(parentEntity->AddDataComponent(ComponentType::Render));
-                    renderData->SetMaterialHandle({ materialGuid });
+                    renderData->SetMaterialHandle(materialHandle);
                     components[entry.FileID] = renderData;
 
                     break;
@@ -198,19 +191,20 @@ namespace Phezu {
             const BlueprintEntry& entry = bp.ScriptEntries[i];
 
             EntryRef parentRef = GetProperty<EntryRef>("Parent", entry, overrides);
+            AssetHandle parentHandle(parentRef.Guid, parentRef.Source);
 
             // If component was attached to an entity which was removed
-            if (parentRef.Guid == guid && overrides.RemovedEntities.find(parentRef.InstanceID) != overrides.RemovedEntities.end())
+            if (parentHandle == bpHandle && overrides.RemovedEntities.find(parentRef.InstanceID) != overrides.RemovedEntities.end())
                 continue;
             // If component was removed
             if (overrides.RemovedComponents.find(entry.FileID) != overrides.RemovedComponents.end())
                 continue;
 
             Entity* parentEntity;
-            if (parentRef.Guid == guid)
+            if (parentHandle == bpHandle)
                 parentEntity = registry[registryKey].Entities[parentRef.FileID];
             else
-                parentEntity = registry[RegistryKey(parentRef.InstanceID, parentRef.Guid)].Entities[parentRef.FileID];
+                parentEntity = registry[RegistryKey(parentRef.InstanceID, parentHandle)].Entities[parentRef.FileID];
 
             std::string classFullname = GetProperty<std::string>("Fullname", entry, overrides);
 
@@ -242,10 +236,9 @@ namespace Phezu {
         }
 	}
 
-	void BlueprintInstantiator::BuildHierarchyAndInitializeScripts(const BlueprintRuntimeContext& context, const Blueprint& bp, GUID bpGuid, BlueprintRegistry& registry, uint64_t instanceID, PrefabOverrides overrides)
+	void BlueprintInstantiator::BuildHierarchyAndInitializeScripts(const BlueprintRuntimeContext& context, const Blueprint& bp, AssetHandle bpHandle, BlueprintRegistry& registry, uint64_t instanceID, PrefabOverrides overrides)
 	{
-        GUID guid = bpGuid;
-        RegistryKey registryKey(instanceID, guid);
+        RegistryKey registryKey(instanceID, bpHandle);
 
         /* ---- Prefab Entries ---- */
 
@@ -254,19 +247,18 @@ namespace Phezu {
         for (size_t i = 0; i < bp.PrefabEntries.size(); i++) {
             const BlueprintEntry& entry = bp.PrefabEntries[i];
 
-            uint64_t prefabGuid = GetProperty<uint64_t>("SourcePrefab", entry, overrides);
+            AssetHandle prefabHandle = GetProperty<AssetHandle>("SourcePrefab", entry, overrides);
             uint64_t parentFileID = GetProperty<uint64_t>("Parent", entry, overrides);
-            AssetHandle<PrefabAsset> prefabHandle = { prefabGuid };
-            const PrefabAsset* prefabAsset = context.assetManager->GetAsset(prefabHandle);
+            auto prefabAsset = context.assetManager->GetAsset<PrefabAsset>(prefabHandle);
             const Blueprint& prefabBlueprint = prefabAsset->GetBlueprint();
 
             PrefabOverrides prefabOverrides = entry.Properties.at("Overrides").get<PrefabOverrides>();
-            BuildHierarchyAndInitializeScripts(context, prefabBlueprint, prefabAsset->Guid, registry, entry.FileID, prefabOverrides);
+            BuildHierarchyAndInitializeScripts(context, prefabBlueprint, prefabHandle, registry, entry.FileID, prefabOverrides);
 
             if (parentFileID != 0)
-                registry[RegistryKey(entry.FileID, prefabGuid)].RootEntity->SetParent(entities[parentFileID]);
+                registry[RegistryKey(entry.FileID, prefabHandle)].RootEntity->SetParent(entities[parentFileID]);
             else
-                registry[registryKey].RootEntity = registry[RegistryKey(entry.FileID, prefabGuid)].RootEntity;
+                registry[registryKey].RootEntity = registry[RegistryKey(entry.FileID, prefabHandle)].RootEntity;
         }
 
         /* ---- Entity Entries ---- */
@@ -278,14 +270,15 @@ namespace Phezu {
                 continue;
 
             EntryRef parentRef = GetProperty<EntryRef>("Parent", entry, overrides);
+            AssetHandle parentHandle(parentRef.Guid, parentRef.Source);
             auto entity = entities[entry.FileID];
 
             if (parentRef.FileID != 0) {
                 Entity* parentEntity;
-                if (parentRef.Guid == guid)
+                if (parentHandle == bpHandle)
                     parentEntity = entities[parentRef.FileID];
                 else
-                    parentEntity = registry[RegistryKey(parentRef.InstanceID, parentRef.Guid)].Entities[parentRef.FileID];
+                    parentEntity = registry[RegistryKey(parentRef.InstanceID, parentHandle)].Entities[parentRef.FileID];
 
                 entity->SetParent(parentEntity);
             }

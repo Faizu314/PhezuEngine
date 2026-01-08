@@ -33,7 +33,7 @@ namespace Phezu {
         
         BlueprintRuntimeContext ctx = { &m_Engine->GetAssetManager(), &m_Engine->GetScriptEngine(), this };
 
-        auto entity = BlueprintInstantiator::Instantiate(ctx, prefab->GetBlueprint(), prefab->Guid);
+        auto entity = BlueprintInstantiator::Instantiate(ctx, prefab->GetBlueprint(), prefabHandle);
         
         entity->RecalculateSubtreeTransforms();
                 

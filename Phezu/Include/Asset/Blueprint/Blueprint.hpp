@@ -17,6 +17,8 @@ namespace Phezu {
     public:
         Blueprint() = default;
     public:
+        Blueprint(const Blueprint& other) = delete;
+        Blueprint(const Blueprint&& other) = delete;
         Blueprint& operator=(const Blueprint& other) = delete;
     public:
         std::vector<BlueprintEntry> EntityEntries;

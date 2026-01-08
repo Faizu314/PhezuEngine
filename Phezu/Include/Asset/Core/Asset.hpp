@@ -7,6 +7,8 @@
 
 namespace Phezu {
 	
+	inline constexpr uint64_t INVALID_GUID = 0;
+
 	enum class BuiltInAssetType {
 		QuadMesh,
 		WhiteImage,
@@ -42,7 +44,7 @@ namespace Phezu {
 		bool operator==(const AssetHandle& other) const { return m_Source == other.m_Source && m_Guid == other.m_Guid; }
 	private:
 		AssetSource m_Source = AssetSource::Engine;
-		GUID m_Guid = 0;
+		GUID m_Guid = INVALID_GUID;
 	};
 
 	class IAsset {
