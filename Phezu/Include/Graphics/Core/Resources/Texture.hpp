@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "Core/Types/Types.hpp"
 #include "Graphics/Core/GraphicsTypes.hpp"
 
@@ -13,5 +15,7 @@ namespace Phezu {
 		virtual ResourceHandle GetHandle() = 0;
 	public:
 		virtual void Resize(unsigned char* data, unsigned int width, unsigned int height) = 0;
+	public:
+		virtual std::vector<unsigned char> GetPixelData() = 0;
 	};
 }

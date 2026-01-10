@@ -14,8 +14,11 @@ namespace Phezu {
 		ResourceHandle GetHandle() override;
 	public:
 		void Resize(unsigned char* data, unsigned int width, unsigned int height) override;
+	public:
+		std::vector<unsigned char> GetPixelData() override;
 	private:
 		GLuint m_Texture;
+		size_t m_Size;
 	};
 
 }
