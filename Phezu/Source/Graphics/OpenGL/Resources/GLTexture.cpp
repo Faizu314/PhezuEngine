@@ -47,6 +47,8 @@ namespace Phezu {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filteringMode);
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+		m_Size = width * height * sizeof(unsigned char) * 4;
 	}
 
 	void GLTexture::Bind(uint8_t unitIndex) {
@@ -56,6 +58,17 @@ namespace Phezu {
 
 	void GLTexture::Resize(unsigned char* data, unsigned int width, unsigned int height) {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+		m_Size = width * height * sizeof(unsigned char) * 4;
+	}
+
+	std::vector<unsigned char> GLTexture::GetPixelData() {
+		std::vector<unsigned char> pixels;
+		pixels.reserve(m_Size);
+
+		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+
+		return pixels;
 	}
 
 	void GLTexture::Destroy() {

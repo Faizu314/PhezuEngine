@@ -19,6 +19,7 @@ namespace Phezu {
 		unsigned int GetSemanticLocation(VertexSemantic semantic) const override;
 	public:
 		void SetInt(const std::string& uniformName, int color) override;
+		void SetVec2(const std::string& uniformName, Vector2 value) override;
 		void SetColor(const std::string& uniformName, Color color) override;
 		void SetMat3(const std::string& uniformName, Mat3x3 mat) override;
 	private:

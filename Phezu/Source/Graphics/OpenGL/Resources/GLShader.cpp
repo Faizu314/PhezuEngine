@@ -105,6 +105,12 @@ namespace Phezu {
 		glUniform1i(location, static_cast<GLint>(value));
 	}
 
+	void GLShader::SetVec2(const std::string& uniformName, Vector2 value) {
+		GLint location = GetUniformLocation(uniformName);
+
+		glUniform2f(location, static_cast<GLfloat>(value.X()), static_cast<GLfloat>(value.Y()));
+	}
+
 	void GLShader::SetColor(const std::string& uniformName, Color color) {
 		GLint location = GetUniformLocation(uniformName);
 
