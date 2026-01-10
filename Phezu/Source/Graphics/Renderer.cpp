@@ -19,7 +19,7 @@
 namespace Phezu {
     
     Renderer::Renderer()
-    : m_Ctx(), m_IntermediateTarget(nullptr), m_RenderTarget(nullptr), m_WindowSubId(0), m_QuadMesh(nullptr), m_BlitShader(nullptr) { }
+    : m_Ctx(), m_IntermediateTex(nullptr), m_IntermediateTarget(nullptr), m_RenderTarget(nullptr), m_WindowSubId(0), m_QuadMesh(nullptr), m_BlitShader(nullptr) { }
     
     Renderer::~Renderer() {}
     
@@ -42,6 +42,7 @@ namespace Phezu {
         m_IntermediateTex = m_Ctx.Api->CreateTexture(nullptr, texWidth, texHeight, samplerDesc);
 
         m_IntermediateTarget = m_Ctx.Api->CreateFrameBuffer();
+        m_IntermediateTarget->Bind();
         m_IntermediateTarget->AttachTexture(m_IntermediateTex);
     }
 
@@ -52,6 +53,12 @@ namespace Phezu {
 
     void Renderer::Destroy() {
         m_Ctx.Window->UnregisterWindowResizeCallback(m_WindowSubId);
+
+        m_IntermediateTex->Destroy();
+        delete m_IntermediateTex;
+        
+        m_IntermediateTarget->Destroy();
+        delete m_IntermediateTarget;
     }
     
     void Renderer::DrawScene(const std::vector<Entity*>& renderableEntities, size_t count, CameraData* camera) {
