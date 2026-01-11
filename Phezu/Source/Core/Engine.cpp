@@ -1,7 +1,6 @@
 #include <string>
 
 #include "Core/Engine.hpp"
-#include "Scene/Scene.hpp"
 
 namespace Phezu {
     
@@ -29,8 +28,8 @@ namespace Phezu {
         m_MonoCoreLibsPath = args.AllPaths.MonoCoreLibsPath;
 
         m_Platform = CreatePlatform();
-
         m_Platform->Init(args.WindowArgs);
+
         m_AssetManager.Init(m_AssetsPath);
         m_ResourceManager.Init(&m_AssetManager, m_Platform->GetGraphicsApi());
         m_Renderer.Init({ m_Platform->GetWindow(), m_Platform->GetGraphicsApi(), &m_ResourceManager }, RenderTarget::Default());
@@ -46,12 +45,6 @@ namespace Phezu {
             return;
         }
         
-        m_IsRunning = true;
-        
-        m_SceneManager.OnStartGame();
-        
-        //Uint64 frameStartTime = SDL_GetPerformanceCounter();
-        //Uint64 freqMs = SDL_GetPerformanceFrequency();
         float deltaTime;
 
         std::vector<Entity*> staticEntitiesBuffer(ENTITIES_BUFFER_SIZE);
@@ -60,9 +53,9 @@ namespace Phezu {
         size_t renderablesCount;
         size_t staticsCount;
         size_t dynamicsCount;
-        
-        Scene* masterScene = m_SceneManager.GetMasterScene();
-        Scene* activeScene;
+
+        m_SceneManager.OnStartGame();
+        m_IsRunning = true;
         
         while (m_IsRunning)
         {
@@ -74,20 +67,11 @@ namespace Phezu {
 
             deltaTime = 0.0f;// GetDeltaTime(frameStartTime, freqMs);
 
-            masterScene->LogicUpdate(deltaTime);
-            masterScene->GetPhysicsEntities(staticEntitiesBuffer, dynamicEntitiesBuffer, staticsCount, dynamicsCount);
-            masterScene->GetRenderableEntities(renderEntitiesBuffer, renderablesCount);
-            
-            activeScene = m_SceneManager.GetActiveScene();
-            
-            if (auto sceneL = activeScene) {
-                sceneL->LogicUpdate(deltaTime);
-                sceneL->GetPhysicsEntities(staticEntitiesBuffer, dynamicEntitiesBuffer, staticsCount, dynamicsCount);
-                sceneL->GetRenderableEntities(renderEntitiesBuffer, renderablesCount);
-            }
+            m_SceneManager.Update(deltaTime);
+            m_SceneManager.GetPhysicsEntities(staticEntitiesBuffer, dynamicEntitiesBuffer, staticsCount, dynamicsCount);
+            m_SceneManager.GetRenderableEntities(renderEntitiesBuffer, renderablesCount);
 
             m_Physics.PhysicsUpdate(staticEntitiesBuffer, dynamicEntitiesBuffer, staticsCount, dynamicsCount, deltaTime);
-
             m_Renderer.DrawScene(renderEntitiesBuffer, renderablesCount, m_SceneManager.GetActiveCamera());
 
             m_Platform->Update();
@@ -114,6 +98,7 @@ namespace Phezu {
         m_ScriptEngine.Shutdown();
         //m_SceneManager.Shutdown();
         m_Renderer.Destroy();
+        m_ResourceManager.Destroy();
         m_Platform->Destroy();
 
         delete m_Platform;

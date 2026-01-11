@@ -47,6 +47,30 @@ namespace Phezu {
         return scene;
     }
     
+    void SceneManager::Update(float deltaTime) {
+        m_MasterScene->LogicUpdate(deltaTime);
+
+        if (m_ActiveScene != nullptr) {
+            m_ActiveScene->LogicUpdate(deltaTime);
+        }
+    }
+
+    void SceneManager::GetPhysicsEntities(std::vector<Entity*>& staticEntities, std::vector<Entity*>& dynamicEntities, size_t& staticIndex, size_t& dynamicIndex) {
+        m_MasterScene->GetPhysicsEntities(staticEntities, dynamicEntities, staticIndex, dynamicIndex);
+
+        if (m_ActiveScene != nullptr) {
+            m_ActiveScene->GetPhysicsEntities(staticEntities, dynamicEntities, staticIndex, dynamicIndex);
+        }
+    }
+
+    void SceneManager::GetRenderableEntities(std::vector<Entity*>& entities, size_t& index) {
+        m_MasterScene->GetRenderableEntities(entities, index);
+
+        if (m_ActiveScene != nullptr) {
+            m_ActiveScene->GetRenderableEntities(entities, index);
+        }
+    }
+
     void SceneManager::OnEndOfFrame() {
         if (!m_LoadSceneAfterFrame)
             return;
