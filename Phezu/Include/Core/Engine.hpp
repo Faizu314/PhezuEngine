@@ -46,8 +46,8 @@ namespace Phezu {
     private:
         Engine();
         Engine(const Engine&) = delete;
-        Engine& operator=(const Engine&) = delete;
         Engine(Engine&&) = delete;
+        Engine& operator=(const Engine&) = delete;
         Engine& operator=(Engine&&) = delete;
     private:
         void Destroy();
