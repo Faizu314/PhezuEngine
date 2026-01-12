@@ -1,7 +1,8 @@
 #pragma once
 
+#include <Windows.h>
+
 #include "Core/Platform.hpp"
-#include "Maths/Math.hpp"
 
 namespace Phezu {
     
@@ -9,6 +10,7 @@ namespace Phezu {
     public:
         void Init();
         void Destroy();
+        int WindowProc(UINT msg, WPARAM wParam);
         const InputData& GetInput();
     private:
         InputData m_InputData;

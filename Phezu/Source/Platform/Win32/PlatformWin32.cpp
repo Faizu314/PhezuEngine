@@ -42,6 +42,14 @@ namespace Phezu {
 			{
 				return s_Window->OnWindowClose();
 			}
+			case WM_KEYDOWN:
+			{
+				return s_Input->WindowProc(msg, wParam);
+			}
+			case WM_KEYUP:
+			{
+				return s_Input->WindowProc(msg, wParam);
+			}
 			default:
 				return DefWindowProc(hwnd, msg, wParam, lParam);
 		}
