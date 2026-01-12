@@ -13,7 +13,9 @@
 #include "Graphics/OpenGL/OpenGLAPI.hpp"
 
 namespace Phezu {
-	
+
+	using clock = std::chrono::steady_clock;
+
 	static WindowWin32* s_Window = nullptr;
 	static InputWin32* s_Input = nullptr;
 	static LoggerWin32* s_Logger = nullptr;
@@ -77,6 +79,8 @@ namespace Phezu {
 	}
 
 	void PlatformWin32::Init(const WindowArgs& args) {
+		m_StartTime = clock::now();
+
 		s_Logger->Init();
 
 		m_hInstance = GetModuleHandle(NULL);
@@ -200,6 +204,18 @@ namespace Phezu {
 		SwapBuffers(m_WindowHandle);
 	}
 
+	void PlatformWin32::Wait(float delay) {
+		DWORD ms = static_cast<DWORD>(delay * 1000.0f);
+
+		Sleep(ms);
+	}
+
+	double PlatformWin32::GetTime() {
+		std::chrono::duration<double> duration = clock::now() - m_StartTime;
+		
+		return duration.count();
+	}
+
 	void PlatformWin32::Log(const char* msg, va_list args) {
 		s_Logger->Log(msg, args);
 	}
@@ -207,6 +223,6 @@ namespace Phezu {
 	void PlatformWin32::Destroy() {
 		s_Window->Destroy();
 		s_Input->Destroy();
-		//m_Logger->Destroy();
+		s_Logger->Destroy();
 	}
 }

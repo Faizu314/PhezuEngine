@@ -13,11 +13,29 @@ namespace Phezu {
             FILE* fp;
             freopen_s(&fp, "CONOUT$", "w", stdout);
             freopen_s(&fp, "CONOUT$", "w", stderr);
+            freopen_s(&fp, "CONIN$", "r", stdin);
             std::cout.clear();
             std::cerr.clear();
+            std::cin.clear();
         }
 
         std::memset(m_LogBuffer, 0, LOG_BUFFER_SIZE);
+    }
+
+    void LoggerWin32::Destroy() {
+        fflush(stdout);
+        fflush(stderr);
+
+        FILE* fp;
+        freopen_s(&fp, "NUL", "w", stdout);
+        freopen_s(&fp, "NUL", "w", stderr);
+        freopen_s(&fp, "NUL", "r", stdin);
+
+        std::cout.clear();
+        std::cerr.clear();
+        std::cin.clear();
+
+        FreeConsole();
     }
 
     void LoggerWin32::Log(const char* msg, va_list args) {

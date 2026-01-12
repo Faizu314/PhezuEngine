@@ -4,8 +4,8 @@
 
 namespace Phezu {
     
-    static const float MAX_DELTA_TIME = 1.0f / 20.0f;
-    static const float TARGET_FRAME_TIME = 1.0f / 60.0f;
+    static const double MAX_DELTA_TIME = 1.0f / 20.0f;
+    static const double TARGET_FRAME_TIME = 1.0f / 60.0f;
     static const size_t ENTITIES_BUFFER_SIZE = 128;
 
     Engine* Engine::s_Instance = nullptr;
@@ -45,7 +45,9 @@ namespace Phezu {
             return;
         }
         
-        float deltaTime;
+        double deltaTime;
+        double frameStartTime;
+        double prevFrameTime = m_Platform->GetTime();
 
         std::vector<Entity*> staticEntitiesBuffer(ENTITIES_BUFFER_SIZE);
         std::vector<Entity*> dynamicEntitiesBuffer(ENTITIES_BUFFER_SIZE);
@@ -59,34 +61,33 @@ namespace Phezu {
         
         while (m_IsRunning)
         {
-            m_Platform->PollEvents();
-            
-            m_ScriptEngine.PreUpdate();
-            
+            frameStartTime = m_Platform->GetTime();
+            deltaTime = frameStartTime - prevFrameTime;
             renderablesCount = staticsCount = dynamicsCount = 0;
+            float deltaTimeF = static_cast<float>(deltaTime);
 
-            deltaTime = 0.0f;// GetDeltaTime(frameStartTime, freqMs);
+            m_Platform->PollEvents();
+            m_ScriptEngine.PreUpdate();
 
-            m_SceneManager.Update(deltaTime);
+            m_SceneManager.Update(deltaTimeF);
             m_SceneManager.GetPhysicsEntities(staticEntitiesBuffer, dynamicEntitiesBuffer, staticsCount, dynamicsCount);
             m_SceneManager.GetRenderableEntities(renderEntitiesBuffer, renderablesCount);
-
-            m_Physics.PhysicsUpdate(staticEntitiesBuffer, dynamicEntitiesBuffer, staticsCount, dynamicsCount, deltaTime);
+            m_Physics.PhysicsUpdate(staticEntitiesBuffer, dynamicEntitiesBuffer, staticsCount, dynamicsCount, deltaTimeF);
             m_Renderer.DrawScene(renderEntitiesBuffer, renderablesCount, m_SceneManager.GetActiveCamera());
-
             m_Platform->Update();
             
             m_SceneManager.OnEndOfFrame();
 
-            float frameDuration = 0.0f;//(SDL_GetPerformanceCounter() - frameStartTime) * 1000.0f;
+            double frameDuration = m_Platform->GetTime() - frameStartTime;
 
-            //if (frameDuration < TARGET_FRAME_TIME)
-            //{
-            //    double delayMs = TARGET_FRAME_TIME - frameDuration;
-            //    SDL_Delay((Uint32)delayMs);
-            //}
+            if (frameDuration < TARGET_FRAME_TIME)
+            {
+                double delay = TARGET_FRAME_TIME - frameDuration;
+                m_Platform->Wait(static_cast<float>(delay));
+            }
             
             m_FrameCount++;
+            prevFrameTime = frameStartTime;
         }
         
         m_IsRunning = false;

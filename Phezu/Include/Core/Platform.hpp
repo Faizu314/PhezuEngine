@@ -32,6 +32,8 @@ namespace Phezu {
 	public:
 		virtual void PollEvents() = 0;
 		virtual void Update() = 0;
+		virtual void Wait(float delay) = 0;
+		virtual double GetTime() = 0;
 	public:
 		virtual IWindow* GetWindow() = 0;
 		virtual IGraphicsAPI* GetGraphicsApi() = 0;
