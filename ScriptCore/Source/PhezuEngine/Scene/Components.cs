@@ -5,7 +5,6 @@ namespace PhezuEngine {
 
     public abstract class Component : Object {
         public Entity Entity { get; private set; }
-        public Entity m_Entity;
         
         private void SetEntity(IntPtr ptr) {
             GCHandle handle = GCHandle.FromIntPtr(ptr);

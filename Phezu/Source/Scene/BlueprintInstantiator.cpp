@@ -3,6 +3,7 @@
 #include "Core/Types/Color.hpp"
 #include "Asset/Core/AssetManager.hpp"
 #include "Asset/Types/PrefabAsset.hpp"
+#include "Graphics/Data/ResourceManager.hpp"
 #include "Scene/BlueprintInstantiator.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/Entity.hpp"
@@ -152,7 +153,7 @@ namespace Phezu {
                     AssetHandle meshHandle = GetProperty<AssetHandle>("Mesh", entry, overrides);
 
                     auto shapeData = dynamic_cast<ShapeData*>(parentEntity->AddDataComponent(ComponentType::Shape));
-                    shapeData->SetMeshHandle(meshHandle);
+                    shapeData->SetMesh(context.resourceManager->GetMesh(meshHandle));
                     components[entry.FileID] = shapeData;
 
                     break;
@@ -162,7 +163,7 @@ namespace Phezu {
                     AssetHandle materialHandle = GetProperty<AssetHandle>("Material", entry, overrides);
 
                     auto renderData = dynamic_cast<RenderData*>(parentEntity->AddDataComponent(ComponentType::Render));
-                    renderData->SetMaterialHandle(materialHandle);
+                    renderData->SetMaterial(context.resourceManager->GetMaterial(materialHandle));
                     components[entry.FileID] = renderData;
 
                     break;

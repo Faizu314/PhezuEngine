@@ -1,18 +1,18 @@
 #pragma once
 
-#include "Core/Types/Color.hpp"
-#include "Asset/Types/MaterialAsset.hpp"
 #include "Scene/Components/DataComponent.hpp"
 
 namespace Phezu {
     
+    class Material;
+
     class RenderData : public DataComponent {
     public:
-        RenderData(Entity* entity) : DataComponent(entity) {}
+        RenderData(Entity* entity) : DataComponent(entity), m_Material(nullptr) {}
     public:
-        void SetMaterialHandle(AssetHandle materialHandle) { m_MaterialHandle = materialHandle; }
-        AssetHandle GetMaterialHandle() { return m_MaterialHandle; }
+        void SetMaterial(Material* material) { m_Material = material; }
+        Material* GetMaterial() { return m_Material; }
     private:
-        AssetHandle m_MaterialHandle;
+        Material* m_Material;
     };
 }

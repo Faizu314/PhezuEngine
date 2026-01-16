@@ -31,7 +31,7 @@ namespace Phezu {
             return nullptr;
         }
         
-        BlueprintRuntimeContext ctx = { &m_Engine->GetAssetManager(), &m_Engine->GetScriptEngine(), this };
+        BlueprintRuntimeContext ctx = { &m_Engine->GetAssetManager(), &m_Engine->GetResourceManager(), &m_Engine->GetScriptEngine(), this};
 
         auto entity = BlueprintInstantiator::Instantiate(ctx, prefab->GetBlueprint(), prefabHandle);
         

@@ -208,8 +208,7 @@ namespace Phezu {
         if (entity) {
             RenderData* render = dynamic_cast<RenderData*>(entity->GetDataComponent(ComponentType::Render));
             
-			auto matHandle = render->GetMaterialHandle();
-			Material* mat = s_Data->ResourceManager->GetMaterial(matHandle);
+			Material* mat = render->GetMaterial();
 			MaterialProperty property = mat->GetProperty(propertyCStr);
 			
 			if (property.Type != MaterialPropertyType::Color) {
@@ -229,8 +228,7 @@ namespace Phezu {
 		if (entity) {
 			RenderData* render = dynamic_cast<RenderData*>(entity->GetDataComponent(ComponentType::Render));
 
-			auto matHandle = render->GetMaterialHandle();
-			Material* mat = s_Data->ResourceManager->GetMaterial(matHandle);
+			Material* mat = render->GetMaterial();
 			MaterialProperty property;
 			property.Type = MaterialPropertyType::Color;
 			property.Value = *tint;
@@ -245,26 +243,30 @@ namespace Phezu {
 		s_Data->ResourceManager = resourceManager;
 	}
 
-	void ScriptGlue::Bind() {
-        mono_add_internal_call("PhezuEngine.InternalCalls::Entity_GetTag", reinterpret_cast<const void*>(&Entity_GetTag));
-        mono_add_internal_call("PhezuEngine.InternalCalls::Entity_HasComponent", reinterpret_cast<const void*>(&Entity_HasComponent));
-        mono_add_internal_call("PhezuEngine.InternalCalls::Entity_GetComponent", reinterpret_cast<const void*>(&Entity_GetComponent));
-        mono_add_internal_call("PhezuEngine.InternalCalls::Entity_RemoveComponent", reinterpret_cast<const void*>(&Entity_RemoveComponent));
-        mono_add_internal_call("PhezuEngine.InternalCalls::Entity_Instantiate", reinterpret_cast<const void*>(&Entity_Instantiate));
-        mono_add_internal_call("PhezuEngine.InternalCalls::Entity_Destroy", reinterpret_cast<const void*>(&Entity_Destroy));
-        
-		mono_add_internal_call("PhezuEngine.InternalCalls::Transform_GetPosition", reinterpret_cast<const void*>(&Transform_GetPosition));
-		mono_add_internal_call("PhezuEngine.InternalCalls::Transform_SetPosition", reinterpret_cast<const void*>(&Transform_SetPosition));
-        
-        mono_add_internal_call("PhezuEngine.InternalCalls::Physics_GetVelocity", reinterpret_cast<const void*>(&Physics_GetVelocity));
-        mono_add_internal_call("PhezuEngine.InternalCalls::Physics_SetVelocity", reinterpret_cast<const void*>(&Physics_SetVelocity));
-        
-        mono_add_internal_call("PhezuEngine.InternalCalls::Renderer_GetColor", reinterpret_cast<const void*>(&Renderer_GetColor));
-        mono_add_internal_call("PhezuEngine.InternalCalls::Renderer_SetColor", reinterpret_cast<const void*>(&Renderer_SetColor));
-	}
-
 	void ScriptGlue::Destroy() {
 		delete s_Data;
 		s_Data = nullptr;
+	}
+
+	static const std::string prefix = "PhezuEngine.InternalCalls::";
+
+	#define INTERNAL_CALL(x) mono_add_internal_call((prefix + std::string(#x)).c_str(), reinterpret_cast<const void*>(&##x))
+
+	void ScriptGlue::Bind() {
+		INTERNAL_CALL(Entity_GetTag);
+		INTERNAL_CALL(Entity_HasComponent);
+		INTERNAL_CALL(Entity_GetComponent);
+		INTERNAL_CALL(Entity_RemoveComponent);
+		INTERNAL_CALL(Entity_Instantiate);
+		INTERNAL_CALL(Entity_Destroy);
+
+		INTERNAL_CALL(Transform_GetPosition);
+		INTERNAL_CALL(Transform_SetPosition);
+
+		INTERNAL_CALL(Physics_GetVelocity);
+		INTERNAL_CALL(Physics_SetVelocity);
+
+		INTERNAL_CALL(Renderer_GetColor);
+		INTERNAL_CALL(Renderer_SetColor);
 	}
 }

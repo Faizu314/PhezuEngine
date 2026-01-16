@@ -23,6 +23,7 @@ namespace Phezu {
 	public:
 		void Init(IShader* shader, std::unordered_map<std::string, ITexture*> textures);
 		void Bind();
+		Material* Copy();
 	public:
 		MaterialProperty GetProperty(const std::string& propertyName);
 		void SetProperty(const std::string& propertyName, const MaterialProperty& property);
