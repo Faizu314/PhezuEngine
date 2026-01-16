@@ -109,11 +109,8 @@ namespace Phezu {
         if (shapeData == nullptr || renderData == nullptr)
             return;
 
-        auto materialHandle = renderData->GetMaterialHandle();
-        Material* material = m_Ctx.Asset->GetMaterial(materialHandle);
-
-        auto meshHandle = shapeData->GetMeshHandle();
-        const Mesh* mesh = m_Ctx.Asset->GetMesh(meshHandle);
+        Material* material = renderData->GetMaterial();
+        const Mesh* mesh = shapeData->GetMesh();
 
         mesh->Bind(material->GetShader());
         material->Bind();

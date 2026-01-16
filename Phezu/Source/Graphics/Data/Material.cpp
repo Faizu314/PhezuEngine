@@ -34,6 +34,15 @@ namespace Phezu {
 		return MaterialProperty();
 	}
 
+	Material* Material::Copy() {
+		Material* copy = new Material();
+
+		copy->Init(m_Shader, m_Textures);
+		copy->m_Properties = m_Properties;
+
+		return copy;
+	}
+
 	void Material::SetProperty(const std::string& propertyName, const MaterialProperty& property) {
 		if (m_Properties.find(propertyName) != m_Properties.end()) {
 			auto prop = m_Properties.at(propertyName);

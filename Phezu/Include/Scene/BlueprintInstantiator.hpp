@@ -8,12 +8,14 @@
 namespace Phezu {
 	
 	class AssetManager;
+	class ResourceManager;
 	class ScriptEngine;
 	class Scene;
 	class Entity;
 
 	struct BlueprintRuntimeContext {
 		AssetManager* assetManager;
+		ResourceManager* resourceManager;
 		ScriptEngine* scriptEngine;
 		Scene* scene;
 	};

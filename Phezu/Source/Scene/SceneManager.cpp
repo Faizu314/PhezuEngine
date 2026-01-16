@@ -21,7 +21,7 @@ namespace Phezu {
         m_MasterScene = new Scene(m_Engine, sceneAsset->GetName());
         auto cameraEntity = m_MasterScene->CreateEntity();
         m_ActiveCamera = dynamic_cast<CameraData*>(cameraEntity->AddDataComponent(ComponentType::Camera));
-        BlueprintRuntimeContext ctx = { &m_Engine->GetAssetManager(), &m_Engine->GetScriptEngine(), m_MasterScene };
+        BlueprintRuntimeContext ctx = { &m_Engine->GetAssetManager(), &m_Engine->GetResourceManager(), &m_Engine->GetScriptEngine(), m_MasterScene};
         BlueprintInstantiator::Instantiate(ctx, sceneAsset->GetBlueprint(), masterSceneHandle);
     }
     
@@ -41,7 +41,7 @@ namespace Phezu {
     Scene* SceneManager::LoadScene(AssetHandle sceneHandle) {
         auto sceneAsset = m_Engine->GetAssetManager().GetAsset<SceneAsset>(sceneHandle);
         Scene* scene = new Scene(m_Engine, sceneAsset->GetName());
-        BlueprintRuntimeContext ctx = { &m_Engine->GetAssetManager(), &m_Engine->GetScriptEngine(), scene };
+        BlueprintRuntimeContext ctx = { &m_Engine->GetAssetManager(), &m_Engine->GetResourceManager(), &m_Engine->GetScriptEngine(), scene};
         BlueprintInstantiator::Instantiate(ctx, sceneAsset->GetBlueprint(), sceneHandle);
 
         return scene;

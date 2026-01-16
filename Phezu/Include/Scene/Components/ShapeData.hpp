@@ -1,17 +1,17 @@
 #pragma once
 
-#include "Asset/Types/MeshAsset.hpp"
+#include "Graphics/Data/Mesh.hpp"
 #include "Scene/Components/DataComponent.hpp"
 
 namespace Phezu {
     
     class ShapeData : public DataComponent {
     public:
-        ShapeData(Entity* entity);
+        ShapeData(Entity* entity) : DataComponent(entity), m_Mesh(nullptr) { }
     public:
-        void SetMeshHandle(AssetHandle meshHandle) { m_MeshHandle = meshHandle; }
-        AssetHandle GetMeshHandle() { return m_MeshHandle; }
+        void SetMesh(const Mesh* mesh) { m_Mesh = mesh; }
+        const Mesh* GetMesh() { return m_Mesh; }
     private:
-        AssetHandle m_MeshHandle;
+        const Mesh* m_Mesh;
     };
 }
