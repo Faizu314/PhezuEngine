@@ -3,12 +3,12 @@ using System.Runtime.InteropServices;
 namespace PhezuEngine {
  
     [StructLayout(LayoutKind.Sequential)]
-    public struct PrefabRef : IAssetRef {
+    public struct MaterialRef : IAssetRef {
         
         public ulong Guid => m_Guid;
         private readonly ulong m_Guid;
         
-        public PrefabRef(ulong guid)
+        public MaterialRef(ulong guid)
         {
             m_Guid = guid;
         }

@@ -41,15 +41,16 @@ namespace PhezuEngine {
 
     public class Renderer : Component
     {
-        public void SetColor(string propertyName, Color value)
-        {
-            InternalCalls.Renderer_SetColor(Entity.ID, propertyName, ref value);
-        }
-
-        public Color GetColor(string propertyName)
-        {
-            InternalCalls.Renderer_GetColor(Entity.ID, propertyName, out Color value);
-            return value;
+        public Material Material {
+            get
+            {
+                ulong materialID = InternalCalls.Renderer_GetMaterial(Entity.ID);
+                return new Material(materialID);
+            }
+            set
+            {
+                InternalCalls.Renderer_SetMaterial(Entity.ID, value.ID);
+            }
         }
     }
 
