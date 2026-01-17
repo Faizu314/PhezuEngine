@@ -305,7 +305,7 @@ namespace Phezu {
 
                 switch (fieldData.Type) {
                     case ScriptFieldType::AssetRef:
-                        uint64_t value = fieldData.Value.get<uint64_t>();
+                        AssetHandle value = fieldData.Value.get<AssetHandle>();
                         script->SetAssetRefField(field, value);
                         break;
                 }

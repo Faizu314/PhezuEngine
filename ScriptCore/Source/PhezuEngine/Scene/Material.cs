@@ -42,7 +42,7 @@ namespace PhezuEngine {
 
         public static Material GetMaterial(MaterialRef materialRef)
         {
-            return new Material(InternalCalls.Material_Get(materialRef.Guid));
+            return new Material(InternalCalls.Material_Get(materialRef.Guid, materialRef.Source));
         }
     }
 

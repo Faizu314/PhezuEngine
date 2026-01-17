@@ -57,7 +57,13 @@ namespace Phezu {
         mono_field_set_value(m_Instance, field, &gcHandle);
     }
     
-    void ScriptInstance::SetAssetRefField(MonoClassField* field, uint64_t guid) {
-        mono_field_set_value(m_Instance, field, &guid);
+    void ScriptInstance::SetAssetRefField(MonoClassField* field, AssetHandle handle) {
+        uint64_t* data = new uint64_t[2];
+        data[0] = handle.GetGuid();
+        data[1] = static_cast<uint64_t>(handle.GetSource());
+
+        mono_field_set_value(m_Instance, field, data);
+
+        delete[] data;
     }
 };

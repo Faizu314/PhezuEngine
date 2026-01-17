@@ -141,8 +141,10 @@ namespace Phezu {
         s_Data->ScriptEngine->RemoveBehaviourScriptInstance(entityID, classFullname);
     }
     
-    uint32_t Entity_Instantiate(GUID prefabGuid) {
-		Entity* entity = s_Data->SceneManager->GetMasterScene()->CreateEntity({ prefabGuid, AssetSource::Project });
+    uint32_t Entity_Instantiate(GUID prefabGuid, uint64_t source) {
+		AssetHandle handle { prefabGuid, static_cast<AssetSource>(source) };
+
+		Entity* entity = s_Data->SceneManager->GetMasterScene()->CreateEntity(handle);
         return s_Data->ScriptEngine->GetEntityScriptInstanceGcHandle(entity->GetEntityID());
     }
     
