@@ -16,7 +16,7 @@ namespace Phezu {
 
     void ResourceManager::Destroy() {
         for (auto& mesh : m_Meshes) {
-            mesh.second->Destroy();
+            const_cast<Mesh*>(mesh.second)->Destroy();
             delete mesh.second;
         }
         m_Meshes.clear();
@@ -81,6 +81,35 @@ namespace Phezu {
         m_Shaders.insert(std::make_pair(shaderHandle, shader));
 
         return shader;
+    }
+
+
+    bool ResourceManager::IsUserMaterial(uint64_t materialID) {
+        Material* mat = m_MaterialRegistry.GetResource(materialID);
+        
+        return m_UserMaterials.find(mat) != m_UserMaterials.end();
+    }
+
+    uint64_t ResourceManager::CreateUserMaterial(uint64_t sourceMaterialID) {
+        Material* sourceMat = m_MaterialRegistry.GetResource(sourceMaterialID);
+        Material* sourceCopy = sourceMat->Copy();
+
+        m_UserMaterials.insert(sourceCopy);
+
+        return m_MaterialRegistry.AddRecord(sourceCopy);
+    }
+
+    void ResourceManager::DestroyUserMaterial(uint64_t materialID) {
+        Material* mat = m_MaterialRegistry.GetResource(materialID);
+
+        if (m_UserMaterials.find(mat) == m_UserMaterials.end()) {
+            Log("Assert here, trying to delete a user material that does not exist\n");
+            return;
+        }
+
+        m_UserMaterials.erase(mat);
+        m_MaterialRegistry.RemoveRecord(mat);
+        delete mat;
     }
 
 	Mesh* ResourceManager::CreateMesh(const MeshAsset* meshAsset)
@@ -194,6 +223,8 @@ namespace Phezu {
             const MaterialProperty& property = kvp.second;
             mat->SetProperty(propName, property);
         }
+
+        m_MaterialRegistry.AddRecord(mat);
 
         return mat;
     }

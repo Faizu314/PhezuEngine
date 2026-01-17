@@ -202,40 +202,114 @@ namespace Phezu {
         }
     }
 
-    void Renderer_GetColor(uint64_t entityID, MonoString* propertyName, Color* tint) {
-        Entity* entity = GetEntity(entityID);
-        
-		char* propertyCStr = mono_string_to_utf8(propertyName);
+	/*----Renderer-Internal-Calls----*/
 
-        if (entity) {
-            RenderData* render = dynamic_cast<RenderData*>(entity->GetDataComponent(ComponentType::Render));
-            
-			Material* mat = render->GetMaterial();
-			MaterialProperty property = mat->GetProperty(propertyCStr);
-			
-			if (property.Type != MaterialPropertyType::Color) {
-				*tint = Color::Clear;
-				return;
-			}
-
-			*tint = std::get<Color>(property.Value);
-        }
-    }
-    
-    void Renderer_SetColor(uint64_t entityID, MonoString* propertyName, Color* tint) {
+	uint64_t Renderer_GetMaterial(uint64_t entityID) {
 		Entity* entity = GetEntity(entityID);
-
-		char* propertyCStr = mono_string_to_utf8(propertyName);
 
 		if (entity) {
 			RenderData* render = dynamic_cast<RenderData*>(entity->GetDataComponent(ComponentType::Render));
 
-			Material* mat = render->GetMaterial();
-			MaterialProperty property;
-			property.Type = MaterialPropertyType::Color;
-			property.Value = *tint;
-			mat->SetProperty(propertyCStr, property);
+			return s_Data->ResourceManager->GetMaterialID(render->GetMaterial());
 		}
+
+		Log("Throw C# error here: entity does not exist\n");
+		return 0;
+	}
+
+	void Renderer_SetMaterial(uint64_t entityID, uint64_t materialID) {
+		Entity* entity = GetEntity(entityID);
+
+		if (entity == nullptr) {
+			Log("Throw C# error here: entity does not exist\n");
+			return;
+		}
+		
+		Material* mat = s_Data->ResourceManager->GetMaterial(materialID);
+
+		if (mat == nullptr) {
+			Log("Throw C# error here: invalid material\n");
+			return;
+		}
+
+		if (entity) {
+			RenderData* render = dynamic_cast<RenderData*>(entity->GetDataComponent(ComponentType::Render));
+
+			render->SetMaterial(mat);
+		}
+	}
+
+	/*----Material-Internal-Calls----*/
+
+
+	uint64_t Material_Create(uint64_t sourceMaterialID) {
+		Material* mat = s_Data->ResourceManager->GetMaterial(sourceMaterialID);
+
+		if (mat == nullptr) {
+			Log("Throw C# error here: invalid material\n");
+			return 0;
+		}
+
+		return s_Data->ResourceManager->CreateUserMaterial(sourceMaterialID);
+	}
+
+	uint64_t Material_Get(GUID guid, uint64_t source) {
+		AssetHandle handle{ guid, static_cast<AssetSource>(source) };
+
+		Material* mat = s_Data->ResourceManager->GetMaterial(handle);
+
+		if (mat == nullptr) {
+			Log("Throw C# error here: invalid material asset ref\n");
+			return 0;
+		}
+
+		return s_Data->ResourceManager->GetMaterialID(mat);
+	}
+
+	void Material_Destroy(uint64_t materialID) {
+		s_Data->ResourceManager->DestroyUserMaterial(materialID);
+	}
+
+    void Material_GetColor(uint64_t materialID, MonoString* propertyName, Color* tint) {
+		Material* mat = s_Data->ResourceManager->GetMaterial(materialID);
+
+		if (mat == nullptr) {
+			Log("Throw C# error here: invalid material\n");
+			return;
+		}
+
+		char* propertyCStr = mono_string_to_utf8(propertyName);
+
+		MaterialProperty property = mat->GetProperty(propertyCStr);
+			
+		if (property.Type != MaterialPropertyType::Color) {
+			*tint = Color::Clear;
+			return;
+		}
+
+		*tint = std::get<Color>(property.Value);
+    }
+    
+    void Material_SetColor(uint64_t materialID, MonoString* propertyName, Color* tint) {
+		if (!s_Data->ResourceManager->IsUserMaterial(materialID)) {
+			Log("Throw C# error here: writing to a readonly material\n");
+			return;
+		}
+
+		Material* mat = s_Data->ResourceManager->GetMaterial(materialID);
+
+		if (mat == nullptr) {
+			Log("Throw C# error here: invalid material\n");
+			return;
+		}
+
+		char* propertyCStr = mono_string_to_utf8(propertyName);
+
+		MaterialProperty property;
+		property.Type = MaterialPropertyType::Color;
+		property.Value = *tint;
+
+		mat->SetProperty(propertyCStr, property);
     }
     
 	void ScriptGlue::Init(SceneManager* sceneManager, ScriptEngine* scriptEngine, ResourceManager* resourceManager) {
@@ -268,7 +342,14 @@ namespace Phezu {
 		INTERNAL_CALL(Physics_GetVelocity);
 		INTERNAL_CALL(Physics_SetVelocity);
 
-		INTERNAL_CALL(Renderer_GetColor);
-		INTERNAL_CALL(Renderer_SetColor);
+
+		INTERNAL_CALL(Renderer_GetMaterial);
+		INTERNAL_CALL(Renderer_SetMaterial);
+
+		INTERNAL_CALL(Material_Create);
+		INTERNAL_CALL(Material_Get);
+		INTERNAL_CALL(Material_Destroy);
+		INTERNAL_CALL(Material_GetColor);
+		INTERNAL_CALL(Material_SetColor);
 	}
 }
