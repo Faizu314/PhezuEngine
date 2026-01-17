@@ -30,6 +30,7 @@ namespace Phezu {
             case VK_RIGHT: m_InputData.Right = isKeyDown; break;
             case VK_DOWN:  m_InputData.Down  = isKeyDown; break;
             case VK_LEFT:  m_InputData.Left  = isKeyDown; break;
+            case VK_SPACE: m_InputData.Space = isKeyDown; break;
 		}
 
         return 0;
