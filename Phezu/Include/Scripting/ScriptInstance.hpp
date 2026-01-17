@@ -4,6 +4,7 @@
 
 #include "Scripting/MonoDefs.hpp"
 #include "Scripting/ScriptClass.hpp"
+#include "Asset/Core/Asset.hpp"
 
 namespace Phezu {
 	class ScriptInstance {
@@ -27,7 +28,7 @@ namespace Phezu {
         void SetStructField(MonoClassField* field, std::byte* data);
     public:
         void SetInstanceRefField(MonoClassField* field, uint32_t gcHandle);
-        void SetAssetRefField(MonoClassField* field, uint64_t guid);
+        void SetAssetRefField(MonoClassField* field, AssetHandle handle);
 	protected:
         ScriptClass* m_Class;
         MonoObject* m_Instance;

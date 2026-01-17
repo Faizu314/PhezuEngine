@@ -18,7 +18,7 @@ namespace PhezuEngine {
         internal static extern IntPtr Entity_RemoveComponent(ulong entityID, IntPtr componentType);
         
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern IntPtr Entity_Instantiate(ulong guid);
+        internal static extern IntPtr Entity_Instantiate(ulong guid, ulong source);
         
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Entity_Destroy(ulong entityID);
@@ -49,7 +49,7 @@ namespace PhezuEngine {
         internal static extern ulong Material_Create(ulong sourceMaterialID);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern ulong Material_Get(ulong materialGuid);
+        internal static extern ulong Material_Get(ulong materialGuid, ulong source);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Material_Destroy(ulong materialID);
