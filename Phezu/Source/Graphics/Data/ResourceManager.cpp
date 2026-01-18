@@ -16,7 +16,7 @@ namespace Phezu {
 
     void ResourceManager::Destroy() {
         for (auto& mesh : m_Meshes) {
-            const_cast<Mesh*>(mesh.second)->Destroy();
+            mesh.second->Destroy();
             delete mesh.second;
         }
         m_Meshes.clear();

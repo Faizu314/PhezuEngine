@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <stdlib.h>
 
 #include "Core/Types/GUID.hpp"
 
@@ -40,6 +39,7 @@ namespace Phezu {
 	public:
 		AssetHandle() = default;
 		AssetHandle(GUID guid, AssetSource source) : m_Guid(guid), m_Source(source) {}
+	public:
 		GUID GetGuid() const { return m_Guid; }
 		AssetSource GetSource() const { return m_Source; }
 	public:

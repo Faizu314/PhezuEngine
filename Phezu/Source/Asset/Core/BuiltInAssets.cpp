@@ -11,8 +11,8 @@ namespace Phezu {
 		std::vector<float> positions = {
 			-0.5f, -0.5f,
 			-0.5f,  0.5f,
-				0.5f,  0.5f,
-				0.5f, -0.5f
+			0.5f,  0.5f,
+			0.5f, -0.5f
 		};
 
 		SerializedBuffer positionBuffer = {

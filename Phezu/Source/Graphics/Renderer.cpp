@@ -8,7 +8,6 @@
 #include "Graphics/Data/Mesh.hpp"
 #include "Graphics/Data/Material.hpp"
 #include "Graphics/Data/ResourceManager.hpp"
-#include "Asset/Core/AssetManager.hpp"
 #include "Scene/Entity.hpp"
 #include "Scene/Components/TransformData.hpp"
 #include "Scene/Components/ShapeData.hpp"
@@ -19,7 +18,7 @@
 namespace Phezu {
     
     Renderer::Renderer()
-    : m_Ctx(), m_IntermediateTex(nullptr), m_IntermediateTarget(nullptr), m_RenderTarget(nullptr), m_WindowSubId(0), m_QuadMesh(nullptr), m_BlitShader(nullptr) { }
+    : m_Ctx(), m_IntermediateTex(nullptr), m_IntermediateTarget(nullptr), m_RenderTarget(nullptr), m_QuadMesh(nullptr), m_BlitShader(nullptr) { }
     
     Renderer::~Renderer() {}
     
@@ -27,6 +26,8 @@ namespace Phezu {
         m_Ctx = ctx;
         m_RenderTarget = renderTarget.Target;
 
+        m_ScreenWidth = m_Ctx.Window->GetWidth();
+        m_ScreenHeight = m_Ctx.Window->GetHeight();
         m_WindowSubId = m_Ctx.Window->RegisterWindowResizeCallback(
             [this](int width, int height) { OnWindowResized(width, height); }
         );
@@ -48,9 +49,12 @@ namespace Phezu {
     }
 
     void Renderer::OnWindowResized(int width, int height) {
+        m_ScreenWidth = width;
+        m_ScreenHeight = height;
+
         float renderScale = static_cast<float>(m_Ctx.Window->GetRenderScale());
-        int texWidth = static_cast<int>(m_Ctx.Window->GetWidth() / renderScale);
-        int texHeight = static_cast<int>(m_Ctx.Window->GetHeight() / renderScale);
+        int texWidth = static_cast<int>(width / renderScale);
+        int texHeight = static_cast<int>(height / renderScale);
 
         m_IntermediateTex->Resize(nullptr, texWidth, texHeight);
     }
@@ -70,16 +74,17 @@ namespace Phezu {
 
         m_ViewTransform.SetTranslation(cameraTransform->GetWorldPosition());
 
-        int screenWidth = m_Ctx.Window->GetWidth();
-        int screenHeight = m_Ctx.Window->GetHeight();
+        //m_ScreenWidth = m_Ctx.Window->GetWidth();
+        //m_ScreenHeight = m_Ctx.Window->GetHeight();
+
         float renderScale = static_cast<float>(m_Ctx.Window->GetRenderScale());
-        float aspectRatio = static_cast<float>(screenWidth) / screenHeight;
+        float aspectRatio = static_cast<float>(m_ScreenWidth) / m_ScreenHeight;
 
         Vector2 scaling(1.0f / (aspectRatio * camera->Size), 1.0f / camera->Size);
         m_ScreenTransform.SetScaling(scaling);
 
         m_IntermediateTarget->Bind();
-        m_Ctx.Api->SetViewport(0, 0, static_cast<int>(screenWidth / renderScale), static_cast<int>(screenHeight / renderScale));
+        m_Ctx.Api->SetViewport(0, 0, static_cast<int>(m_ScreenWidth / renderScale), static_cast<int>(m_ScreenHeight / renderScale));
         m_Ctx.Api->ClearFrame(Color::Clear);
 
         int index = 0;
@@ -91,7 +96,7 @@ namespace Phezu {
         }
 
         m_Ctx.Api->SetRenderTarget(m_RenderTarget);
-        m_Ctx.Api->SetViewport(0, 0, screenWidth, screenHeight);
+        m_Ctx.Api->SetViewport(0, 0, m_ScreenWidth, m_ScreenHeight);
         m_Ctx.Api->ClearFrame(Color::Clear);
 
         m_QuadMesh->Bind(m_BlitShader);

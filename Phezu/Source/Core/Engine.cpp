@@ -67,8 +67,7 @@ namespace Phezu {
             float deltaTimeF = static_cast<float>(deltaTime);
 
             m_Platform->PollEvents();
-            m_ScriptEngine.PreUpdate();
-
+            m_ScriptEngine.OnUpdate(deltaTimeF);
             m_SceneManager.Update(deltaTimeF);
             m_SceneManager.GetPhysicsEntities(staticEntitiesBuffer, dynamicEntitiesBuffer, staticsCount, dynamicsCount);
             m_SceneManager.GetRenderableEntities(renderEntitiesBuffer, renderablesCount);

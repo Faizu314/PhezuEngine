@@ -64,12 +64,21 @@ namespace Phezu {
         GUID guid = assetHandle.GetGuid();
         AssetSource source = assetHandle.GetSource();
 
-        T* asset = static_cast<T*>(TryGetLoadedAsset(assetHandle));
-        if (asset != nullptr)
-            return asset;
+        IAsset* iAsset = TryGetLoadedAsset(assetHandle);
+        T* asset = nullptr;
+
+        if (iAsset != nullptr) {
+            asset = dynamic_cast<T*>(iAsset);
+
+            if (asset == nullptr) {
+                Log("Should assert here, asset guid does not match its type.\n");
+                return nullptr;
+            }
+            if (asset != nullptr)
+                return asset;
+        }
 
         AssetRef& ref = m_AssetMap[assetHandle];
-        std::string assetPath = ref.Paths[0].string();
 
         asset = new T();
 
@@ -78,6 +87,7 @@ namespace Phezu {
             return nullptr;
         }
 
+        std::string assetPath = ref.Paths[0].string();
         asset->Deserialize(GetFileFromDisk(assetPath));
 
         m_LoadedAssets[assetHandle] = asset;
