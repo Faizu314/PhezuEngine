@@ -1,3 +1,5 @@
+#pragma warning disable CS0649
+
 namespace PhezuEngine {
 
     public static class Input {

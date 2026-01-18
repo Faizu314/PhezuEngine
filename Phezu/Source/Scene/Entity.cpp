@@ -6,7 +6,7 @@
 #include "Scene/Components/CameraData.hpp"
 #include "Scene/Components/ScriptComponent.hpp"
 
-#include "Logger.hpp"
+#include "Core/Platform.hpp"
 
 namespace Phezu {
     

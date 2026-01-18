@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Maths/Math.hpp"
+#include "Maths/Objects/Vector2.hpp"
+#include "Maths/Objects/Mat3x3.hpp"
 #include "Scene/Components/DataComponent.hpp"
 
 namespace Phezu {
@@ -18,14 +19,15 @@ namespace Phezu {
     public:
         Vector2 LocalToWorldPoint(Vector2 localPoint) const;
         Vector2 WorldToLocalPoint(Vector2 worldPoint) const;
+        const Mat3x3& GetLocalToWorld() const { return m_LocalToWorld; }
     public:
         void RecalculateLocalToWorld();
         bool GetIsDirty() { return m_IsDirty; }
     private:
         Vector2 m_LocalPosition;
         Vector2 m_LocalScale;
-        glm::mat3 m_LocalToWorld;
-        glm::mat3 m_WorldToLocal;
+        Mat3x3 m_LocalToWorld;
+        Mat3x3 m_WorldToLocal;
         bool m_IsDirty;
     };
 }

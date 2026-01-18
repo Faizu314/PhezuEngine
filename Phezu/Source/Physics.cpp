@@ -1,10 +1,10 @@
+#include <algorithm>
+
 #include "Physics.hpp"
-#include "Engine.hpp"
+#include "Core/Engine.hpp"
 #include "Scene/Entity.hpp"
 #include "Scene/Components/PhysicsData.hpp"
 #include "Scene/Components/ShapeData.hpp"
-
-#include <algorithm>
 
 namespace Phezu {
     
@@ -144,8 +144,8 @@ namespace Phezu {
     }
     
     Physics::EntityRect Physics::GetWorldRectFromTransformAndShapeData(TransformData* transData, ShapeData* shapeData) {
-        Vector2 ul = transData->LocalToWorldPoint(shapeData->GetVertexPosition(ShapeData::VertexType::UpLeft));
-        Vector2 dr = transData->LocalToWorldPoint(shapeData->GetVertexPosition(ShapeData::VertexType::DownRight));
+        Vector2 ul = transData->LocalToWorldPoint(Vector2(-0.5f, 0.5f));
+        Vector2 dr = transData->LocalToWorldPoint(Vector2(0.5f, -0.5f));
         
         EntityRect rect;
         

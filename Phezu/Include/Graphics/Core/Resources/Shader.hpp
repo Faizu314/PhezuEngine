@@ -1,0 +1,26 @@
+#pragma once
+
+#include <string>
+#include <vector>
+#include <unordered_map>
+
+#include "Core/Types/Color.hpp"
+#include "Core/Types/Types.hpp"
+
+namespace Phezu {
+
+	class IShader {
+	public:
+		virtual void Init(const std::string& vert, const std::string& frag, const std::unordered_map<VertexSemantic, unsigned int>& vertInput) = 0;
+		virtual void Bind() = 0;
+		virtual void Destroy() = 0;
+	public:
+		virtual std::vector<VertexSemantic> GetRequiredSemantics() const = 0;
+		virtual unsigned int GetSemanticLocation(VertexSemantic semantic) const = 0;
+	public:
+		virtual void SetInt(const std::string& uniformName, int value) = 0;
+		virtual void SetVec2(const std::string& uniformName, Vector2 value) = 0;
+		virtual void SetColor(const std::string& uniformName, Color color) = 0;
+		virtual void SetMat3(const std::string& uniformName, Mat3x3 mat) = 0;
+	};
+}
