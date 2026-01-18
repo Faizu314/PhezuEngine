@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Scripting/Core/MonoDefs.hpp"
+
 struct InputFields {
     MonoClassField *W, *A, *S, *D, *Space;
 };
