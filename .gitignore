@@ -32,8 +32,11 @@
 *.out
 *.app
 
-# Don't ignore .exe files in the Vendor folder
+# Don't ignore .exe files in any Vendor folder
 !Vendor/**/*.exe
+
+# Don't ignore .lib files in Phezu/Vendor folder
+!Phezu/Vendor/**/*.lib
 
 #mac finder
 *.DS_Store

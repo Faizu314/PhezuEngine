@@ -1,19 +1,15 @@
 #include "Scene/Scene.hpp"
 #include "Scene/Entity.hpp"
 #include "Scene/Components/DataComponent.hpp"
-#include "Scene/Components/ShapeData.hpp"
-#include "Scene/Components/RenderData.hpp"
 #include "Scene/Components/PhysicsData.hpp"
-#include "Scene/Components/ScriptComponent.hpp"
-#include "Scene/Prefab.hpp"
-#include "Engine.hpp"
-
-#include <stdexcept>
+#include "Scene/Factory/BlueprintInstantiator.hpp"
+#include "Assets/Types/PrefabAsset.hpp"
+#include "Assets/Systems/AssetManager.hpp"
+#include "Scripting/Systems/ScriptEngine.hpp"
 
 namespace Phezu {
     
-    Scene::Scene(Engine* engine) : m_Engine(engine), m_IsLoaded(false) { }
-    Scene::Scene(Engine* engine, const std::string& name) : m_Engine(engine), m_Name(name), m_IsLoaded(false) { }
+    Scene::Scene(SceneContext ctx, const std::string& name) : m_Ctx(ctx), m_Name(name) { }
     
     Entity* Scene::CreateEntity() {
         Entity* entity = new Entity(this);
@@ -23,15 +19,17 @@ namespace Phezu {
         return entity;
     }
     
-    Entity* Scene::CreateEntity(GUID prefabGuid) {
-        auto prefab = m_Engine->GetPrefab(prefabGuid);
+    Entity* Scene::CreateEntity(AssetHandle prefabHandle) {
+        auto prefab = m_Ctx.assetManager->GetAsset<PrefabAsset>(prefabHandle);
         
         if (!prefab) {
             //TODO: add asserts
             return nullptr;
         }
         
-        auto entity = prefab->Instantiate(this);
+        BlueprintRuntimeContext ctx = { m_Ctx.assetManager, m_Ctx.resourceManager, m_Ctx.scriptEngine, this};
+
+        auto entity = BlueprintInstantiator::Instantiate(ctx, prefab->GetBlueprint(), prefabHandle);
         
         entity->RecalculateSubtreeTransforms();
                 
@@ -56,33 +54,27 @@ namespace Phezu {
         if (it == m_RuntimeEntities.end())
             return;
         
-        size_t childCount = it->second->GetChildCount();
-        
-        for (size_t i = 0; i < childCount; i++) {
-            if (auto child = it->second->GetChild(i))
-                DestroyEntityInternal(child->GetEntityID());
-        }
-        
-        m_Engine->GetScriptEngine().OnEntityDestroyed(it->second);
-        it->second->OnDestroyed();
+        DestroyEntityInternal(it->second);
         
         m_RuntimeEntities.erase(it);
     }
-    
-    void Scene::Load() {
-        m_SceneEntities.Instantiate(this);
 
-        m_IsLoaded = true;
-        
-        UpdateHierarchy();
+    void Scene::DestroyEntityInternal(Entity* entity) {
+        size_t childCount = entity->GetChildCount();
+
+        for (size_t i = 0; i < childCount; i++) {
+            if (auto child = entity->GetChild(i))
+                DestroyEntityInternal(child);
+        }
+
+        m_Ctx.scriptEngine->OnEntityDestroyed(entity);
+        entity->OnDestroyed();
     }
     
     void Scene::LogicUpdate(float deltaTime) {
         for (auto entityID : m_EntitiesToDestroy)
             DestroyEntityInternal(entityID);
         m_EntitiesToDestroy.clear();
-
-        m_Engine->GetScriptEngine().OnUpdate(deltaTime);
         
         UpdateHierarchy();
     }
@@ -142,34 +134,14 @@ namespace Phezu {
     }
     
     void Scene::BeginUnload() {
-        m_IsLoaded = false;
+
     }
     
     void Scene::Unload() {
+        for (auto kvp : m_RuntimeEntities) {
+            DestroyEntityInternal(kvp.second);
+        }
+
         m_RuntimeEntities.clear();
-        m_IsLoaded = false;
-    }
-    
-    long long unsigned int Scene::GetFrameCount() const {
-        return m_Engine->GetFrameCount();
-    }
-    
-    std::string Scene::Serialize() const {
-        nlohmann::json j;
-        
-        j["Name"] = m_Name;
-        j["Guid"] = m_Guid.Value;
-        m_SceneEntities.Serialize(j);
-
-        return j.dump(4);
-    }
-    
-    void Scene::Deserialize(const std::string& data) {
-        nlohmann::json j = nlohmann::json::parse(data);
-
-        m_Name = j["Name"].get<std::string>();
-        m_Guid.Value = j["Guid"].get<uint64_t>();
-        m_SceneEntities.Deserialize(j);
-        m_SceneEntities.Initialize(m_Engine, m_Guid);
     }
 }

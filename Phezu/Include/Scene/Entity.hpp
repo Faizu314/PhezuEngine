@@ -1,18 +1,17 @@
 #pragma once
 
 #include <vector>
-#include <typeindex>
 #include <string>
 #include <unordered_map>
+#include <cstdint>
 
-#include "Renderer.hpp"
 #include "Scene/Components/TransformData.hpp"
-#include "Scene/Components/ScriptComponent.hpp"
+#include "Scene/Components/DataComponent.hpp"
 
 namespace Phezu {
     
     class Scene;
-    class Physics;
+    class ScriptComponent;
     
     class Entity {
     public:
@@ -28,7 +27,6 @@ namespace Phezu {
     public:
         DataComponent* AddDataComponent(ComponentType componentType);
         DataComponent* GetDataComponent(ComponentType componentType);
-        TransformData* GetTransformData() { return &m_TransformData; }
         void RemoveDataComponent(ComponentType componentType);
         bool HasDataComponent(ComponentType componentType) const;
         ScriptComponent* AddScriptComponent(const std::string& classFullname);

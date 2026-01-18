@@ -74,13 +74,4 @@ else
     executable_path="Runtime/Runtime.app"
 fi
 
-read -p "Do you want to run the sample game? You will find the app bundle at Build/$executable_path (Y/N): " user_input
-
-user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
-
-if [[ "$user_input" == "y" ]]; then
-    echo "Running sample game..."
-    open "$executable_path"
-else
-    echo "Exiting. Game not launched."
-fi
+echo "Build Successful"
