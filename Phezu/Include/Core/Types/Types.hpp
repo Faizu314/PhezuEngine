@@ -7,7 +7,7 @@
 #include "Core/Types/Color.hpp"
 #include "Maths/Objects/Vector2.hpp"
 #include "Maths/Objects/Vector3.hpp"
-#include "Asset/Core/Asset.hpp"
+#include "Assets/Core/Asset.hpp"
 
 namespace Phezu {
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Platform.hpp"
-#include "Asset/Core/AssetManager.hpp"
+#include "Assets/Core/AssetManager.hpp"
 
 namespace Phezu {
 

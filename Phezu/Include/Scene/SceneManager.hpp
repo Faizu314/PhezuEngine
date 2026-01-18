@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Asset/Core/Asset.hpp"
-#include "Asset/Types/SceneAsset.hpp"
-#include "Asset/Configs/BuildScenesConfig.hpp"
+#include "Assets/Core/Asset.hpp"
+#include "Assets/Types/SceneAsset.hpp"
+#include "Assets/Configs/BuildScenesConfig.hpp"
 
 namespace Phezu {
     
