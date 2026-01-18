@@ -3,7 +3,6 @@
 #include "Assets/Systems/AssetManager.hpp"
 #include "Assets/Core/MetaData.hpp"
 #include "Assets/Core/BuiltInAssets.hpp"
-#include "Assets/Blueprint/Blueprint.hpp"
 #include "Serialization/FileStream.hpp"
 #include "Core/Platform.hpp"
 
@@ -11,7 +10,7 @@ namespace Phezu {
     
     static const char* BUILD_SCENE_RELATIVE_PATH = "buildscenes.config";
     
-    AssetManager::AssetManager(Engine* engine) : m_Engine(engine) {}
+    AssetManager::AssetManager() {}
     
     void AssetManager::Init(const std::filesystem::path& assetsPath) {
         std::filesystem::path buildScenesConfigPath = assetsPath / BUILD_SCENE_RELATIVE_PATH;

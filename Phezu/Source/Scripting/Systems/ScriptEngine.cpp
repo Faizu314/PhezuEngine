@@ -56,11 +56,13 @@ namespace Phezu {
         return nameSpace + "." + className;
     }
 
-    ScriptEngine::ScriptEngine(Engine* engine) : m_Engine(engine), m_RootDomain(nullptr), m_EngineAssembly(nullptr), m_GameAssembly(nullptr), m_ObjectClass(nullptr), m_ComponentClass(nullptr), m_BehaviourComponentClass(nullptr), m_EntityClass(nullptr), m_InputClassVTable(nullptr), m_EntityIdField(nullptr), m_ComponentEntitySetter(nullptr) {
+    ScriptEngine::ScriptEngine() : m_Engine(nullptr), m_RootDomain(nullptr), m_EngineAssembly(nullptr), m_GameAssembly(nullptr), m_ObjectClass(nullptr), m_ComponentClass(nullptr), m_BehaviourComponentClass(nullptr), m_EntityClass(nullptr), m_InputClassVTable(nullptr), m_EntityIdField(nullptr), m_ComponentEntitySetter(nullptr) {
         std::memset(&m_InputFields, 0, sizeof(m_InputFields));
     }
 
-    void ScriptEngine::Init() {
+    void ScriptEngine::Init(Engine* engine) {
+        m_Engine = engine;
+
         InitMono();
 
         ScriptGlue::Init(&m_Engine->GetSceneManager(), this, &m_Engine->GetResourceManager());

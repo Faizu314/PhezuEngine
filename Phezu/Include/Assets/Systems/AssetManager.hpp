@@ -28,13 +28,17 @@ namespace Phezu {
 
     struct AssetRef {
         std::vector<std::filesystem::path> Paths;
-        AssetType Type;
+        AssetType Type = AssetType::None;
     };
     
     class AssetManager {
     public:
-        AssetManager() = delete;
-        AssetManager(Engine* engine);
+        AssetManager();
+    public:
+        AssetManager(const AssetManager&) = delete;
+        AssetManager(const AssetManager&&) = delete;
+        AssetManager& operator=(const AssetManager&) = delete;
+        AssetManager& operator=(const AssetManager&&) = delete;
     public:
         void Init(const std::filesystem::path& projectPath);
         void Destroy();
@@ -54,8 +58,6 @@ namespace Phezu {
         std::unordered_map<AssetHandle, AssetRef> m_AssetMap;
         std::unordered_map<AssetHandle, IAsset*> m_LoadedAssets;
         BuildScenesConfig m_BuildScenesConfig;
-    private:
-        Engine* m_Engine;
     };
 
 

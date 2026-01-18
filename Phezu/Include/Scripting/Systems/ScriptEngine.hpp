@@ -14,18 +14,17 @@ namespace Phezu {
 	class Entity;
 	class ScriptClass;
 	class ScriptInstance;
-    
-    std::string ToString(ManagedType t);
-    
+        
 	class ScriptEngine {
 	public:
-		ScriptEngine(Engine* engine);
+		ScriptEngine();
     public:
-        ScriptEngine() = delete;
         ScriptEngine(const ScriptEngine&) = delete;
+		ScriptEngine(const ScriptEngine&&) = delete;
         ScriptEngine& operator=(const ScriptEngine&) = delete;
+		ScriptEngine& operator=(const ScriptEngine&&) = delete;
 	public:
-		void Init();
+		void Init(Engine* engine);
 		void CreateManagedScripts(Entity* entity);
         void InitializeManagedScripts(Entity* entity);
 		void OnEntityDestroyed(Entity* entity);

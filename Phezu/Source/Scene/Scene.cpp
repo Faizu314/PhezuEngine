@@ -1,19 +1,15 @@
 #include "Scene/Scene.hpp"
 #include "Scene/Entity.hpp"
 #include "Scene/Components/DataComponent.hpp"
-#include "Scene/Components/ShapeData.hpp"
-#include "Scene/Components/RenderData.hpp"
 #include "Scene/Components/PhysicsData.hpp"
-#include "Scene/Components/ScriptComponent.hpp"
-#include "Assets/Types/PrefabAsset.hpp"
 #include "Scene/Factory/BlueprintInstantiator.hpp"
-#include "Core/Engine.hpp"
-
-#include <stdexcept>
+#include "Assets/Types/PrefabAsset.hpp"
+#include "Assets/Systems/AssetManager.hpp"
+#include "Scripting/Systems/ScriptEngine.hpp"
 
 namespace Phezu {
     
-    Scene::Scene(Engine* engine, const std::string& name) : m_Engine(engine), m_Name(name) { }
+    Scene::Scene(SceneContext ctx, const std::string& name) : m_Ctx(ctx), m_Name(name) { }
     
     Entity* Scene::CreateEntity() {
         Entity* entity = new Entity(this);
@@ -24,14 +20,14 @@ namespace Phezu {
     }
     
     Entity* Scene::CreateEntity(AssetHandle prefabHandle) {
-        auto prefab = m_Engine->GetAssetManager().GetAsset<PrefabAsset>(prefabHandle);
+        auto prefab = m_Ctx.assetManager->GetAsset<PrefabAsset>(prefabHandle);
         
         if (!prefab) {
             //TODO: add asserts
             return nullptr;
         }
         
-        BlueprintRuntimeContext ctx = { &m_Engine->GetAssetManager(), &m_Engine->GetResourceManager(), &m_Engine->GetScriptEngine(), this};
+        BlueprintRuntimeContext ctx = { m_Ctx.assetManager, m_Ctx.resourceManager, m_Ctx.scriptEngine, this};
 
         auto entity = BlueprintInstantiator::Instantiate(ctx, prefab->GetBlueprint(), prefabHandle);
         
@@ -71,7 +67,7 @@ namespace Phezu {
                 DestroyEntityInternal(child);
         }
 
-        m_Engine->GetScriptEngine().OnEntityDestroyed(entity);
+        m_Ctx.scriptEngine->OnEntityDestroyed(entity);
         entity->OnDestroyed();
     }
     
