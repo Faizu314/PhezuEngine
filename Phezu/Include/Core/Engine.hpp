@@ -4,11 +4,11 @@
 
 #include "Core/Platform.hpp"
 #include "Physics.hpp"
-#include "Scene/SceneManager.hpp"
-#include "Assets/Core/AssetManager.hpp"
-#include "Graphics/Data/ResourceManager.hpp"
-#include "Graphics/Renderer.hpp"
-#include "Scripting/ScriptEngine.hpp"
+#include "Scene/Systems/SceneManager.hpp"
+#include "Assets/Systems/AssetManager.hpp"
+#include "Graphics/Systems/ResourceManager.hpp"
+#include "Graphics/Systems/Renderer.hpp"
+#include "Scripting/Systems/ScriptEngine.hpp"
 
 namespace Phezu {
     

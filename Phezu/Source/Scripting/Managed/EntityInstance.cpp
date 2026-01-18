@@ -1,4 +1,4 @@
-#include "Scripting/EntityInstance.hpp"
+#include "Scripting/Managed/EntityInstance.hpp"
 #include "Core/Platform.hpp"
 
 #include "mono/jit/jit.h"

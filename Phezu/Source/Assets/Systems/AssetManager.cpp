@@ -1,6 +1,6 @@
 #include <filesystem>
 
-#include "Assets/Core/AssetManager.hpp"
+#include "Assets/Systems/AssetManager.hpp"
 #include "Assets/Core/MetaData.hpp"
 #include "Assets/Core/BuiltInAssets.hpp"
 #include "Assets/Blueprint/Blueprint.hpp"

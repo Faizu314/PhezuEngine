@@ -3,9 +3,9 @@
 #include <vector>
 #include <unordered_map>
 
-#include "Scripting/EntityInstance.hpp"
-#include "Scripting/BehaviourInstance.hpp"
-#include "Scripting/ComponentInstance.hpp"
+#include "Scripting/Managed/EntityInstance.hpp"
+#include "Scripting/Managed/BehaviourInstance.hpp"
+#include "Scripting/Managed/ComponentInstance.hpp"
 
 namespace Phezu {
 	struct EntityScriptingContext {

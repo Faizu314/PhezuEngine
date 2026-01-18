@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "Scripting/MonoDefs.hpp"
+#include "Scripting/Core/MonoDefs.hpp"
 
 namespace Phezu {
 	enum class ScriptClassType {

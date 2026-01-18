@@ -1,10 +1,10 @@
 #include "Core/Engine.hpp"
 #include "Assets/Types/SceneAsset.hpp"
-#include "Scene/SceneManager.hpp"
+#include "Scene/Systems/SceneManager.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/Entity.hpp"
 #include "Scene/Components/CameraData.hpp"
-#include "Scene/BlueprintInstantiator.hpp"
+#include "Scene/Factory/BlueprintInstantiator.hpp"
 
 namespace Phezu {
     

@@ -1,4 +1,4 @@
-#include "Scripting/ScriptInstance.hpp"
+#include "Scripting/Managed/ScriptInstance.hpp"
 #include "Core/Platform.hpp"
 
 #include "mono/jit/jit.h"

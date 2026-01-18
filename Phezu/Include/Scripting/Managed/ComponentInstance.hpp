@@ -2,9 +2,9 @@
 
 #include <string>
 
-#include "Scripting/MonoDefs.hpp"
-#include "Scripting/ScriptClass.hpp"
-#include "Scripting/ScriptInstance.hpp"
+#include "Scripting/Core/MonoDefs.hpp"
+#include "Scripting/Managed/ScriptClass.hpp"
+#include "Scripting/Managed/ScriptInstance.hpp"
 
 namespace Phezu {
 	class ComponentInstance : public ScriptInstance {

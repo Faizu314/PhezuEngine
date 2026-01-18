@@ -1,17 +1,17 @@
 #include "nlohmann/json.hpp"
 
 #include "Core/Types/Color.hpp"
-#include "Assets/Core/AssetManager.hpp"
+#include "Assets/Systems/AssetManager.hpp"
 #include "Assets/Types/PrefabAsset.hpp"
-#include "Graphics/Data/ResourceManager.hpp"
-#include "Scene/BlueprintInstantiator.hpp"
+#include "Graphics/Systems/ResourceManager.hpp"
+#include "Scene/Factory/BlueprintInstantiator.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/Entity.hpp"
 #include "Scene/Components/ShapeData.hpp"
 #include "Scene/Components/RenderData.hpp"
 #include "Scene/Components/PhysicsData.hpp"
 #include "Scene/Components/ScriptComponent.hpp"
-#include "Scripting/ScriptEngine.hpp"
+#include "Scripting/Systems/ScriptEngine.hpp"
 
 template <>
 struct std::hash<Phezu::RegistryKey> {

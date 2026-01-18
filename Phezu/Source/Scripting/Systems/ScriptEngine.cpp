@@ -9,8 +9,8 @@
 
 #include "Core/Engine.hpp"
 #include "Core/Platform.hpp"
-#include "Scripting/ScriptEngine.hpp"
-#include "Scripting/ScriptGlue.hpp"
+#include "Scripting/Systems/ScriptEngine.hpp"
+#include "Scripting/Bindings/ScriptGlue.hpp"
 #include "Scene/Entity.hpp"
 #include "Scene/Components/ScriptComponent.hpp"
 

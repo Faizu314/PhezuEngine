@@ -1,4 +1,4 @@
-#include "Scripting/BehaviourInstance.hpp"
+#include "Scripting/Managed/BehaviourInstance.hpp"
 #include "Core/Platform.hpp"
 
 #include "mono/jit/jit.h"
