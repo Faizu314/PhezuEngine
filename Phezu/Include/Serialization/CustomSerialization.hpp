@@ -3,14 +3,12 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
+#include <cstdint>
 
 #include "nlohmann/json.hpp"
 
 #include "Core/Types/Types.hpp"
-#include "Core/Types/GUID.hpp"
-#include "Core/Types/Color.hpp"
 #include "Assets/Core/Asset.hpp"
-#include "Maths/Math.hpp"
 
 namespace Phezu {
     

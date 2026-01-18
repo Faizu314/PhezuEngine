@@ -1,13 +1,10 @@
 #pragma once
 
 #include <unordered_map>
-#include <variant>
+#include <string>
 
-#include "Assets/Types/ShaderAsset.hpp"
-#include "Core/Types/Types.hpp"
-#include "Core/Types/Color.hpp"
-#include "Maths/Objects/Vector2.hpp"
-#include "Maths/Objects/Vector3.hpp"
+#include "Assets/Core/Asset.hpp"
+#include "Core/Types/MaterialTypes.hpp"
 
 namespace Phezu {
 

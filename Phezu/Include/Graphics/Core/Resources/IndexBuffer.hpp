@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Graphics/Core/GraphicsTypes.hpp"
+
 namespace Phezu {
 	
 	class IIndexBuffer {

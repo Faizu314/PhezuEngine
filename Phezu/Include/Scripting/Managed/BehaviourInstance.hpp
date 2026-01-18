@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #include "Scripting/Core/MonoDefs.hpp"
 #include "Scripting/Managed/ScriptClass.hpp"
 #include "Scripting/Managed/ComponentInstance.hpp"

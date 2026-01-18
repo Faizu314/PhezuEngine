@@ -1,6 +1,7 @@
 #pragma once
 
 namespace Phezu {
+
 	class ScriptEngine;
 	class SceneManager;
 	class ResourceManager;

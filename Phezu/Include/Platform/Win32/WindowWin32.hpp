@@ -1,11 +1,10 @@
 #pragma once
 
 #include <Windows.h>
-#include <string>
 #include <unordered_map>
 
 #include "Core/Window.hpp"
-#include "Platform/Win32/PlatformWin32.hpp"
+#include <Core/Platform.hpp>
 
 namespace Phezu {
     

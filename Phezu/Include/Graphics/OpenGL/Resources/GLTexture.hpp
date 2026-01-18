@@ -1,7 +1,9 @@
 #pragma once
 
-#include "glad/glad.h"
+#include <cstdint>
+#include <vector>
 
+#include "glad/glad.h"
 #include "Graphics/Core/Resources/Texture.hpp"
 
 namespace Phezu {

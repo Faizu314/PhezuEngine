@@ -1,4 +1,5 @@
 #include "Platform/Win32/WindowWin32.hpp"
+#include "Platform/Win32/PlatformWin32.hpp"
 
 namespace Phezu {
 

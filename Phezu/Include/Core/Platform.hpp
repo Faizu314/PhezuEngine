@@ -3,7 +3,7 @@
 #include <cstdarg>
 #include <string>
 
-#include "Maths/Math.hpp"
+#include "Maths/Objects/Vector2.hpp"
 
 namespace Phezu {
 

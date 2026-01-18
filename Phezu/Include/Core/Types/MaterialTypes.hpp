@@ -1,6 +1,7 @@
 #pragma once
 
 #include <variant>
+#include <cstdint>
 
 #include "Core/Types/Color.hpp"
 #include "Maths/Objects/Vector2.hpp"

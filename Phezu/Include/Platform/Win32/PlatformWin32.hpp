@@ -2,6 +2,7 @@
 
 #include "Windows.h"
 #include <chrono>
+#include <cstdarg>
 
 #include "Core/Platform.hpp"
 
