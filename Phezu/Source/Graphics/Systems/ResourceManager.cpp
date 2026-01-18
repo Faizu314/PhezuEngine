@@ -2,7 +2,7 @@
 #include "Graphics/Core/GraphicsAPI.hpp"
 #include "Graphics/Core/Resources/Shader.hpp"
 #include "Graphics/Core/Resources/Texture.hpp"
-#include "Graphics/Data/ResourceManager.hpp"
+#include "Graphics/Systems/ResourceManager.hpp"
 #include "Graphics/Data/Mesh.hpp"
 #include "Graphics/Data/Material.hpp"
 #include "Graphics/Core/Descriptors/VertexLayout.hpp"

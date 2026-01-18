@@ -2,11 +2,11 @@
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
-#include "mono/metadata/debug-helpers.h"
 #include "mono/metadata/mono-config.h"
 #include <mono/metadata/object.h>
 #include "mono/utils/mono-logger.h"
 
+#include "Core/Types/Types.hpp"
 #include "Core/Engine.hpp"
 #include "Core/Platform.hpp"
 #include "Scripting/Systems/ScriptEngine.hpp"
@@ -48,18 +48,6 @@ namespace Phezu {
         Log("Level  : %s\n", log_level);
         Log("Message: %s\n", message);
         Log("Fatal  : %s\n\n", fatal ? "true" : "false");
-    }
-
-    std::string ToString(ManagedType t) {
-        switch (t) {
-            case ManagedType::None: return "None";
-            case ManagedType::Transform: return "Transform";
-            case ManagedType::Physics:  return "Physics";
-            case ManagedType::Shape: return "Shape";
-            case ManagedType::Renderer: return "Renderer";
-            case ManagedType::ScriptComponent: return "ScriptComponent";
-        }
-        return "Unknown";
     }
     
     std::string GetMonoClassFullname(const std::string& nameSpace, const std::string& className) {
