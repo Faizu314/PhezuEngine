@@ -79,8 +79,6 @@ namespace Phezu {
         for (auto entityID : m_EntitiesToDestroy)
             DestroyEntityInternal(entityID);
         m_EntitiesToDestroy.clear();
-
-        m_Engine->GetScriptEngine().OnUpdate(deltaTime);
         
         UpdateHierarchy();
     }

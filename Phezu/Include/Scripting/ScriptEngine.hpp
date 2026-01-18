@@ -28,7 +28,6 @@ namespace Phezu {
 		void CreateManagedScripts(Entity* entity);
         void InitializeManagedScripts(Entity* entity);
 		void OnEntityDestroyed(Entity* entity);
-        void PreUpdate();
 		void OnUpdate(float deltaTime);
         void FirePhysicsCollisionEvent(uint64_t entityA, uint64_t entityB, PhysicsEventType eventType);
 		void Shutdown();
@@ -42,6 +41,7 @@ namespace Phezu {
 	private:
 		void InitMono();
 		void ShutdownMono();
+		void PreUpdate();
         void GetInputClassAndFields();
         void GetEngineClasses();
 		void GetScriptClasses();

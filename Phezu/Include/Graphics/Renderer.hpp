@@ -1,12 +1,9 @@
 #pragma once
 
-#include <cstdint>
 #include <vector>
-#include <unordered_map>
 
-#include "Core/Types/Color.hpp"
-#include "Core/Types/GUID.hpp"
 #include "Graphics/Core/Descriptors/VertexLayout.hpp"
+#include "Maths/Objects/Mat3x3.hpp"
 
 namespace Phezu {
     
@@ -43,7 +40,10 @@ namespace Phezu {
     private:
         RendererContext m_Ctx;
     private:
-        int m_WindowSubId;
+        int m_WindowSubId = -1;
+        int m_ScreenWidth = 0;
+        int m_ScreenHeight = 0;
+    private:
         ITexture* m_IntermediateTex;
         IFrameBuffer* m_IntermediateTarget;
         IFrameBuffer* m_RenderTarget;

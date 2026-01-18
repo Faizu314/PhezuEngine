@@ -3,8 +3,6 @@
 #include "Asset/Core/AssetManager.hpp"
 #include "Asset/Core/MetaData.hpp"
 #include "Asset/Core/BuiltInAssets.hpp"
-#include "Asset/Types/SceneAsset.hpp"
-#include "Asset/Types/PrefabAsset.hpp"
 #include "Asset/Blueprint/Blueprint.hpp"
 #include "Serialization/FileStream.hpp"
 #include "Core/Platform.hpp"

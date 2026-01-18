@@ -81,7 +81,7 @@ namespace Phezu {
 		AssetManager* m_AssetManager;
 		IGraphicsAPI* m_Api;
 	private:
-		std::unordered_map<AssetHandle, const Mesh*> m_Meshes;
+		std::unordered_map<AssetHandle, Mesh*> m_Meshes;
 		std::unordered_map<AssetHandle, Material*> m_Materials;
 		std::unordered_map<AssetHandle, IShader*> m_Shaders;
 		std::unordered_map<AssetHandle, ITexture*> m_Textures;

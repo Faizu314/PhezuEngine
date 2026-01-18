@@ -174,16 +174,20 @@ namespace Phezu {
 
         m_Entities.erase(entity->GetEntityID());
     }
-    
+
     void ScriptEngine::PreUpdate() {
-        mono_field_static_set_value(m_InputClassVTable, m_InputFields.W, (void*)&(m_Engine->GetInput().W));
-        mono_field_static_set_value(m_InputClassVTable, m_InputFields.A, (void*)&(m_Engine->GetInput().A));
-        mono_field_static_set_value(m_InputClassVTable, m_InputFields.S, (void*)&(m_Engine->GetInput().S));
-        mono_field_static_set_value(m_InputClassVTable, m_InputFields.D, (void*)&(m_Engine->GetInput().D));
-        mono_field_static_set_value(m_InputClassVTable, m_InputFields.Space, (void*)&(m_Engine->GetInput().Space));
+        const InputData& input = m_Engine->GetInput();
+
+        mono_field_static_set_value(m_InputClassVTable, m_InputFields.W, (void*)&(input.W));
+        mono_field_static_set_value(m_InputClassVTable, m_InputFields.A, (void*)&(input.A));
+        mono_field_static_set_value(m_InputClassVTable, m_InputFields.S, (void*)&(input.S));
+        mono_field_static_set_value(m_InputClassVTable, m_InputFields.D, (void*)&(input.D));
+        mono_field_static_set_value(m_InputClassVTable, m_InputFields.Space, (void*)&(input.Space));
     }
 
     void ScriptEngine::OnUpdate(float deltaTime) {
+        PreUpdate();
+
         for (auto it = m_Entities.begin(); it != m_Entities.end(); it++) {
             auto& entityData = it->second;
 
