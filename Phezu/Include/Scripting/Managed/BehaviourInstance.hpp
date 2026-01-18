@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Scripting/MonoDefs.hpp"
-#include "Scripting/ScriptClass.hpp"
-#include "Scripting/ComponentInstance.hpp"
+#include "Scripting/Core/MonoDefs.hpp"
+#include "Scripting/Managed/ScriptClass.hpp"
+#include "Scripting/Managed/ComponentInstance.hpp"
 
 namespace Phezu {
 	class BehaviourInstance : public ComponentInstance {

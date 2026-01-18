@@ -2,8 +2,8 @@
 
 #include <string>
 
-#include "Scripting/MonoDefs.hpp"
-#include "Scripting/ScriptClass.hpp"
+#include "Scripting/Core/MonoDefs.hpp"
+#include "Scripting/Managed/ScriptClass.hpp"
 #include "Assets/Core/Asset.hpp"
 
 namespace Phezu {

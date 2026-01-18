@@ -6,7 +6,7 @@
 #include "Scene/Components/PhysicsData.hpp"
 #include "Scene/Components/ScriptComponent.hpp"
 #include "Assets/Types/PrefabAsset.hpp"
-#include "Scene/BlueprintInstantiator.hpp"
+#include "Scene/Factory/BlueprintInstantiator.hpp"
 #include "Core/Engine.hpp"
 
 #include <stdexcept>

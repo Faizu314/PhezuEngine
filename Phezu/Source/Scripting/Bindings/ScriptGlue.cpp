@@ -3,9 +3,9 @@
 
 #include "Core/Platform.hpp"
 #include "Core/Engine.hpp"
-#include "Scripting/ScriptEngine.hpp"
-#include "Scripting/ScriptGlue.hpp"
-#include "Graphics/Data/ResourceManager.hpp"
+#include "Scripting/Systems/ScriptEngine.hpp"
+#include "Scripting/Bindings/ScriptGlue.hpp"
+#include "Graphics/Systems/ResourceManager.hpp"
 #include "Graphics/Data/Material.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/Entity.hpp"

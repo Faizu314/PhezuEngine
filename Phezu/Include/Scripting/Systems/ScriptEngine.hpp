@@ -3,9 +3,9 @@
 #include <string>
 #include <unordered_map>
 
-#include "Scripting/MonoDefs.hpp"
-#include "Scripting/ScriptDefs.hpp"
-#include "Scripting/EntityScriptingContext.hpp"
+#include "Scripting/Core/MonoDefs.hpp"
+#include "Scripting/Core/ScriptDefs.hpp"
+#include "Scripting/Core/EntityScriptingContext.hpp"
 
 namespace Phezu {
 
