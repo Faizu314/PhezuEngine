@@ -26,13 +26,9 @@ target_include_directories(Runtime PUBLIC ${CMAKE_SOURCE_DIR}/Runtime/include)
 target_link_libraries(Runtime PRIVATE Phezu)
 
 add_custom_command(TARGET Runtime POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJ_DEST_DIR}"
-    
-    COMMAND ${CMAKE_COMMAND} -E make_directory "${PROJ_DEST_DIR}"
     COMMAND ${CMAKE_COMMAND} -E make_directory "${SCRIPT_CORE_DLL_DEST_DIR}"
     COMMAND ${CMAKE_COMMAND} -E make_directory "${LIB_DEST_DIR}"
 
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SRC_DIR}" "${PROJ_DEST_DIR}"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${SCRIPT_CORE_DLL_SRC_DIR}/Phezu-ScriptCore.dll" "${SCRIPT_CORE_DLL_DEST_DIR}/Phezu-ScriptCore.dll"
 
     COMMAND ${CMAKE_COMMAND} 

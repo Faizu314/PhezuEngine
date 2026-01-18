@@ -13,7 +13,7 @@ if "%~2"=="--Release" (
     set BUILD_CONFIG=Release
 )
 
-set "CMAKE_COMMAND="%CD%\Vendor\Windows\CMake\bin\cmake.exe""
+set "CMAKE_COMMAND="%CD%\Vendor\win32\cmake\bin\cmake.exe""
 
 echo Using CMake command: %CMAKE_COMMAND%
 
@@ -56,6 +56,7 @@ for /f "delims=. tokens=1" %%v in ('"%VSWHERE%" -latest -property installationVe
     set "VS_MAJOR=%%v"
 )
 
+if "%VS_MAJOR%"=="18" set "VS_YEAR=2026"
 if "%VS_MAJOR%"=="17" set "VS_YEAR=2022"
 if "%VS_MAJOR%"=="16" set "VS_YEAR=2019"
 if "%VS_MAJOR%"=="15" set "VS_YEAR=2017"

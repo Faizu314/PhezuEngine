@@ -1,0 +1,40 @@
+#pragma once
+
+#include <Windows.h>
+#include <unordered_map>
+
+#include "Core/Window.hpp"
+#include <Core/Platform.hpp>
+
+namespace Phezu {
+    
+    class WindowWin32 : public IWindow {
+    public:
+        WindowWin32() = default;
+    public:
+        void Init(const WindowArgs& args, const char winClassName[], HINSTANCE hInstance);
+        void Destroy();
+    public:
+        void Update();
+    public:
+        int GetWidth() const override { return m_Width; }
+        int GetHeight() const override { return m_Height; }
+        int GetRenderScale() const override { return m_RenderScale; }
+        int RegisterWindowResizeCallback(const ResizeCallback& callback) override;
+        void UnregisterWindowResizeCallback(int subscriberId) override;
+    public:
+        int OnWindowMove();
+        int OnWindowResize(UINT flag, int width, int height);
+        int OnWindowClose();
+    public:
+        HWND GetWindowPtr() { return m_WindowPtr; }
+    private:
+        int m_Width = 0;
+        int m_Height = 0;
+        int m_RenderScale = 0;
+        HWND m_WindowPtr = nullptr;
+    private:
+        int m_CurrSubscriberId = 0;
+        std::unordered_map<int, ResizeCallback> m_Subscribers;
+    };
+}

@@ -1,15 +1,41 @@
+#include "Core/Platform.hpp"
 #include "Serialization/CustomSerialization.hpp"
+#include "Maths/Objects/Vector2.hpp"
+#include "Maths/Objects/Vector3.hpp"
+#include "Core/Types/Color.hpp"
+#include "Core/Types/Types.hpp"
 
 namespace Phezu {
-    
+
+    void from_json(const nlohmann::json& j, AssetHandle& handle) {
+        AssetHandle h(j["Guid"].get<uint64_t>(), ToAssetSource(j["Source"].get<std::string>()));
+
+        handle = h;
+    }
+
+    void to_json(nlohmann::json& j, const AssetHandle& handle) {
+        j["Source"] = ToString(handle.GetSource());
+        j["Guid"] = handle.GetGuid().Value;
+    }
+
+
+    void from_json(const nlohmann::json& j, GUID& guid) {
+        guid.Value = j.get<uint64_t>();
+    }
+
+    void to_json(nlohmann::json& j, const GUID& guid) {
+        j = guid.Value;
+    }
+
     void from_json(const nlohmann::json& j, EntryRef& v) {
-        v.Guid = j.value("Guid", 0);
+        v.Source = j.value("Source", AssetSource::Project);
+        v.Guid = j.value("Guid", GUID());
         v.InstanceID = j.value("InstanceID", 0);
         v.FileID = j.value("FileID", 0);
     }
     
     void to_json(nlohmann::json& j, const EntryRef& v) {
-        j = nlohmann::json{{"Guid", v.Guid}, {"FileID", v.InstanceID}, {"EntityFileID", v.FileID}};
+        j = nlohmann::json { {"Source", v.Source}, {"Guid", v.Guid}, { "InstanceID", v.InstanceID }, {"FileID", v.FileID} };
     }
     
     
@@ -28,7 +54,7 @@ namespace Phezu {
     }
     
     void to_json(nlohmann::json& j, const PrefabOverrides& obj) {
-        j = nlohmann::json{
+        j = nlohmann::json {
             {"RemovedEntities", obj.RemovedEntities},
             {"RemovedComponents", obj.RemovedComponents},
             {"EntryOverrides", obj.EntryOverrides}
@@ -59,6 +85,16 @@ namespace Phezu {
         j = nlohmann::json{{"x", v.X()}, {"y", v.Y()}};
     }
 
+
+
+    void from_json(const nlohmann::json& j, Vector3& v) {
+        v.Set(j.value("x", 0.0f), j.value("y", 0.0f), j.value("z", 0.0f));
+    }
+
+    void to_json(nlohmann::json& j, const Vector3& v) {
+        j = nlohmann::json{ {"x", v.X()}, {"y", v.Y()}, {"z", v.Z()} };
+    }
+
     
     
     void from_json(const nlohmann::json& j, Color& c) {
@@ -71,17 +107,66 @@ namespace Phezu {
     void to_json(nlohmann::json& j, const Color& c) {
         j = nlohmann::json{{"r", c.r}, {"g", c.g}, {"b", c.b}, {"a", c.a}};
     }
-    
-    
-    
-    void from_json(const nlohmann::json& j, Rect& r) {
-        r.x = j.value("X", 0);
-        r.y = j.value("Y", 0);
-        r.w = j.value("Width", 0);
-        r.h = j.value("Height", 0);
+
+    void from_json(const nlohmann::json& j, MaterialProperty& p) {
+        std::string type = j["Type"].get<std::string>();
+
+        if (type == "Float") {
+            p.Type = MaterialPropertyType::Float;
+            p.Value = j["Value"].get<float>();
+        }
+        else if (type == "Float2") {
+            p.Type = MaterialPropertyType::Float2;
+            p.Value = j["Value"].get<Vector2>();
+        }
+        else if (type == "Float3") {
+            p.Type = MaterialPropertyType::Float3;
+            p.Value = j["Value"].get<Vector3>();
+        }
+        else if (type == "Color") {
+            p.Type = MaterialPropertyType::Color;
+            p.Value = j["Value"].get<Color>();
+        }
+        else if (type == "Int") {
+            p.Type = MaterialPropertyType::Int;
+            p.Value = j["Value"].get<int>();
+        }
+        else if (type == "Bool") {
+            p.Type = MaterialPropertyType::Bool;
+            p.Value = j["Value"].get<bool>();
+        }
     }
 
-    void to_json(nlohmann::json& j, const Rect& r) {
-        j = nlohmann::json{{"X", r.x}, {"Y", r.y}, {"Width", r.w}, {"Height", r.h}};
+    void to_json(nlohmann::json& j, const MaterialProperty& p) {
+        switch (p.Type) {
+            case MaterialPropertyType::Float:
+                j["Type"] = "Float";
+                j["Value"] = std::get<float>(p.Value);
+                break;
+            case MaterialPropertyType::Float2:
+                j["Type"] = "Float2";
+                j["Value"] = std::get<Vector2>(p.Value);
+                break;
+            case MaterialPropertyType::Float3:
+                j["Type"] = "Float3";
+                j["Value"] = std::get<Vector3>(p.Value);
+                break;
+            case MaterialPropertyType::Color:
+                j["Type"] = "Color";
+                j["Value"] = std::get<Color>(p.Value);
+                break;
+            case MaterialPropertyType::Int:
+                j["Type"] = "Int";
+                j["Value"] = std::get<int>(p.Value);
+                break;
+            case MaterialPropertyType::Bool:
+                j["Type"] = "Bool";
+                j["Value"] = std::get<bool>(p.Value);
+                break;
+            default: {
+                Log("Should assert here\n");
+            }
+        }
     }
+    
 }

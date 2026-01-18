@@ -3,9 +3,12 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
-#include "Maths/Math.hpp"
-#include "Renderer.hpp"
+#include <cstdint>
+
 #include "nlohmann/json.hpp"
+
+#include "Core/Types/Types.hpp"
+#include "Assets/Core/Asset.hpp"
 
 namespace Phezu {
     
@@ -19,7 +22,8 @@ namespace Phezu {
     };
     
     struct EntryRef {
-        uint64_t Guid;
+        AssetSource Source;
+        GUID Guid;
         uint64_t InstanceID;
         uint64_t FileID;
     };
@@ -34,6 +38,16 @@ namespace Phezu {
         std::unordered_set<uint64_t> RemovedComponents; //A file will only save the components it removed
         std::unordered_map<uint64_t, EntryOverrides> EntryOverrides;
     };
+
+    void from_json(const nlohmann::json& j, AssetHandle& handle);
+
+    void to_json(nlohmann::json& j, const AssetHandle& handle);
+
+
+    void from_json(const nlohmann::json& j, GUID& guid);
+
+    void to_json(nlohmann::json& j, const GUID& guid);
+
     
     void from_json(const nlohmann::json& j, EntryRef& v);
     
@@ -57,15 +71,21 @@ namespace Phezu {
 
     void to_json(nlohmann::json& j, const Vector2& v);
 
+
+
+    void from_json(const nlohmann::json& j, Vector3& v);
+
+    void to_json(nlohmann::json& j, const Vector3& v);
+
     
     
     void from_json(const nlohmann::json& j, Color& c);
 
     void to_json(nlohmann::json& j, const Color& c);
-    
-    
-    
-    void from_json(const nlohmann::json& j, Rect& r);
 
-    void to_json(nlohmann::json& j, const Rect& r);
+
+    void from_json(const nlohmann::json& j, MaterialProperty& p);
+
+    void to_json(nlohmann::json& j, const MaterialProperty& p);
+    
 }
