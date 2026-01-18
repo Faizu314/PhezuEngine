@@ -1,5 +1,10 @@
 #pragma once
 
+#include <cstdint>
+#include <unordered_map>
+#include <unordered_set>
+#include <utility>
+
 #include "Core/Platform.hpp"
 #include "Assets/Systems/AssetManager.hpp"
 

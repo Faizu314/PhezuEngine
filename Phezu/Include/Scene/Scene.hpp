@@ -3,10 +3,9 @@
 #include <vector>
 #include <unordered_map>
 #include <string>
+#include <cstdint>
 
-#include "Maths/Math.hpp"
 #include "Assets/Core/Asset.hpp"
-#include "Assets/Types/PrefabAsset.hpp"
 
 namespace Phezu {
     

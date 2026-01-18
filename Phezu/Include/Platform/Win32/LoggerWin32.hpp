@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Platform.hpp"
+#include <cstdarg>
 
 namespace Phezu {   
 

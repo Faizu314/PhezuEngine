@@ -1,11 +1,12 @@
 #pragma once
 
 #include <vector>
-#include <typeindex>
 #include <string>
 #include <unordered_map>
+#include <cstdint>
 
 #include "Scene/Components/TransformData.hpp"
+#include "Scene/Components/DataComponent.hpp"
 
 namespace Phezu {
     

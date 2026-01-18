@@ -3,10 +3,9 @@
 #include <unordered_map>
 #include <string>
 
-#include "Core/Platform.hpp"
 #include "Core/Types/Color.hpp"
-#include "Core/Types/Types.hpp"
 #include "Graphics/Core/GraphicsTypes.hpp"
+#include "Core/Types/Types.hpp"
 
 namespace Phezu {
 

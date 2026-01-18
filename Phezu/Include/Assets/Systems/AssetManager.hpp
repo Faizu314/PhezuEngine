@@ -3,6 +3,8 @@
 #include <unordered_map>
 #include <vector>
 #include <filesystem>
+#include <string>
+#include <type_traits>
 
 #include "Core/Platform.hpp"
 #include "Core/Types/GUID.hpp"

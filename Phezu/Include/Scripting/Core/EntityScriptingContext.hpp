@@ -2,10 +2,14 @@
 
 #include <vector>
 #include <unordered_map>
+#include <cstdint>
 
+#include "MonoDefs.hpp"
+#include "ScriptDefs.hpp"
 #include "Scripting/Managed/EntityInstance.hpp"
 #include "Scripting/Managed/BehaviourInstance.hpp"
 #include "Scripting/Managed/ComponentInstance.hpp"
+#include "Scripting/Managed/ScriptClass.hpp"
 
 namespace Phezu {
 	struct EntityScriptingContext {

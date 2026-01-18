@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Core/Types/Types.hpp"
+#include <string>
+
 #include "Assets/Core/Asset.hpp"
 
 namespace Phezu {

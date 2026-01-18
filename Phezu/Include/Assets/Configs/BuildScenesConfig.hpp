@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+
 #include "Assets/Core/Asset.hpp"
 
 namespace Phezu {

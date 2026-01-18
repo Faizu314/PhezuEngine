@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Assets/Core/Asset.hpp"
-
 namespace Phezu {
 
 	class MeshAsset;

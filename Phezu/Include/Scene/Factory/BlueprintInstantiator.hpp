@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cstdint>
+#include <unordered_map>
+
 #include "Assets/Core/Asset.hpp"
 #include "Assets/Blueprint/Blueprint.hpp"
 #include "Scene/Components/DataComponent.hpp"

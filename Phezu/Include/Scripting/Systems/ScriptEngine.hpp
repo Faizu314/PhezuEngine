@@ -2,6 +2,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <cstdint>
 
 #include "Scripting/Core/MonoDefs.hpp"
 #include "Scripting/Core/ScriptDefs.hpp"

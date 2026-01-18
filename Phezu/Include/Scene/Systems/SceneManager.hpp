@@ -1,7 +1,9 @@
 #pragma once
 
+#include <cstdint>
+#include <vector>
+
 #include "Assets/Core/Asset.hpp"
-#include "Assets/Types/SceneAsset.hpp"
 #include "Assets/Configs/BuildScenesConfig.hpp"
 
 namespace Phezu {
@@ -9,6 +11,7 @@ namespace Phezu {
     class Engine;
     class Scene;
     class CameraData;
+    class Entity;
     
     class SceneManager {
     public:

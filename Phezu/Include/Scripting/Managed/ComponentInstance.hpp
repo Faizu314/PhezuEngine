@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include <cstdint>
 
 #include "Scripting/Core/MonoDefs.hpp"
 #include "Scripting/Managed/ScriptClass.hpp"

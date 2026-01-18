@@ -1,9 +1,10 @@
 #pragma once
 
 #include <vector>
+#include <cstdint>
 
-#include "Core/Types/Types.hpp"
 #include "Graphics/Core/GraphicsTypes.hpp"
+#include "Core/Types/Types.hpp"
 
 namespace Phezu {
 
