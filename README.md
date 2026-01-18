@@ -10,7 +10,7 @@ Created as a personal learning project to understand engine architecture. There 
 - **Prefab system** with nesting and overrides
 - **Physics system** (axis-aligned boxes only)
 - **Asset Management** of scene and prefab files
-- **Basic rendering** of colored boxes  
+- **Custom Rendering** of sprites  
 - **Minimal dependencies** and clean, readable architecture
 
 ## Goals
@@ -21,21 +21,35 @@ Created as a personal learning project to understand engine architecture. There 
 
 ## Dependencies
 - [Mono](https://www.mono-project.com/) Used for scripting
-- [SDL2](https://www.libsdl.org/) Used for rendering, windows and input (Planned to be removed)
 
 ## Technical Overview
-- Written in **C++17**
-- Uses **CMake** for cross-platform builds  
-- Mono integration for **runtime C# scripting**  
-- Has complete separation of project and engine files.
+- Written in **C++17**.
+- Uses **CMake** for cross-platform builds.
+- Mono integration for **runtime C# scripting**.
+- Custom **OpenGL** rendering backend.
+- List of currently supported assets:
+    - Scene
+    - Prefab
+    - Image
+    - Texture
+    - Shader
+    - Material
+    - Mesh
   
 Project consists of 4 subprojects:
 - Phezu - This is the static library containing the engine code.
 - Runtime - This is the executable that links to Phezu and launches the engine.
 - ScriptCore - This is the C# dll containing all of the engine classes.
 - Editor
-  - EditorShell - (This will also be an executable which will link to Phezu and run editor commands)
+  - EditorShell - (This is an executable which will link to Phezu and run editor commands)
   - EditorGUI - (This will use imgui and EditorShell to run the editor app)
+ 
+List of all third party code used (Mostly single headers):
+  - glm
+  - nlohmann
+  - stb_image
+  - tinyxml2
+  - glad
 
 ## CI / Tested Configurations
 
@@ -46,39 +60,25 @@ Project consists of 4 subprojects:
 
 ## Windows Setup
 **Requirements**
-- Visual Studio installation  
+```bash
+  Visual Studio installation
+  Supported versions: 2017, 2019, 2022, 2026
+  Desktop development with C++ Module is required
+```
 
 **Instructions**
 ```bash
 1. Clone or download the repository
-2. Double-click Setup_Win.bat
+2. Run Setup_Win.bat
 ```
 
-## macOS Setup (Experimental)
-> ⚠️ macOS support is **not officially maintained** and may require manual setup.
+## Linux and Mac not currently supported
 
-**Requirements**
-```bash
-brew install mono
-```
-
-**Instructions**
-```bash
-1. Open Terminal at the root directory
-2. Run ./Setup_Mac.sh
-```
-
-⚠️ *Tested in a local development environment, but not verified in a production or release setup.*
-
-## Linux not currently supported
-
-## Roadmap
-- Separate DLLs for engine and user scripts  
-- Remove SDL2 dependency  
-- Add support for primitives and rotation  
-- Sprite rendering
-- Linux support
-- Editor application (Much Later)
+## Current Roadmap 
+- Add a documentation site.
+- Add custom physics module.
+- Android support (Much Later).
+- Editor application (Much Later).
 
 ---
 
