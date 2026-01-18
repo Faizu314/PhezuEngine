@@ -19,9 +19,7 @@ namespace Phezu {
     
     Renderer::Renderer()
     : m_Ctx(), m_IntermediateTex(nullptr), m_IntermediateTarget(nullptr), m_RenderTarget(nullptr), m_QuadMesh(nullptr), m_BlitShader(nullptr) { }
-    
-    Renderer::~Renderer() {}
-    
+        
     void Renderer::Init(RendererContext ctx, RenderTarget renderTarget) {
         m_Ctx = ctx;
         m_RenderTarget = renderTarget.Target;

@@ -18,8 +18,6 @@ namespace Phezu {
     class IFrameBuffer;
 
     struct RendererContext {
-        RendererContext() = default;
-
         IWindow* Window = nullptr;
         IGraphicsAPI* Api = nullptr;
         ResourceManager* Asset = nullptr;
@@ -28,7 +26,11 @@ namespace Phezu {
     class Renderer {
     public:
         Renderer();
-        ~Renderer();
+    public:
+        Renderer(const Renderer&) = delete;
+        Renderer(const Renderer&&) = delete;
+        Renderer& operator=(const Renderer&) = delete;
+        Renderer& operator=(const Renderer&&) = delete;
     public:
         void Init(RendererContext ctx, RenderTarget renderTarget);
         void Destroy();

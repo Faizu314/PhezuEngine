@@ -8,20 +8,20 @@
 
 namespace Phezu {
     
-    SceneManager::SceneManager(Engine* engine) : m_Engine(engine), m_MasterScene(nullptr), m_ActiveCamera(nullptr), m_LoadSceneAfterFrame(false), m_ActiveScene(nullptr), m_SceneToLoad(0) {}
+    SceneManager::SceneManager() : m_MasterScene(nullptr), m_ActiveCamera(nullptr), m_LoadSceneAfterFrame(false), m_ActiveScene(nullptr), m_SceneToLoad(0) {}
     
-    void SceneManager::Init() {
-        AssetManager& assetManager = m_Engine->GetAssetManager();
-        m_BuildScenesConfig = assetManager.GetBuildScenesConfig();
+    void SceneManager::Init(SceneContext ctx) {
+        m_Ctx = ctx;
+        m_BuildScenesConfig = m_Ctx.assetManager->GetBuildScenesConfig();
     }
 
     void SceneManager::OnStartGame() {
         AssetHandle masterSceneHandle = m_BuildScenesConfig.MasterScene;
-        auto sceneAsset = m_Engine->GetAssetManager().GetAsset<SceneAsset>(masterSceneHandle);
-        m_MasterScene = new Scene(m_Engine, sceneAsset->GetName());
+        auto sceneAsset = m_Ctx.assetManager->GetAsset<SceneAsset>(masterSceneHandle);
+        m_MasterScene = new Scene(m_Ctx, sceneAsset->GetName());
         auto cameraEntity = m_MasterScene->CreateEntity();
         m_ActiveCamera = dynamic_cast<CameraData*>(cameraEntity->AddDataComponent(ComponentType::Camera));
-        BlueprintRuntimeContext ctx = { &m_Engine->GetAssetManager(), &m_Engine->GetResourceManager(), &m_Engine->GetScriptEngine(), m_MasterScene};
+        BlueprintRuntimeContext ctx = { m_Ctx.assetManager, m_Ctx.resourceManager, m_Ctx.scriptEngine, m_MasterScene };
         BlueprintInstantiator::Instantiate(ctx, sceneAsset->GetBlueprint(), masterSceneHandle);
     }
     
@@ -39,9 +39,9 @@ namespace Phezu {
     }
     
     Scene* SceneManager::LoadScene(AssetHandle sceneHandle) {
-        auto sceneAsset = m_Engine->GetAssetManager().GetAsset<SceneAsset>(sceneHandle);
-        Scene* scene = new Scene(m_Engine, sceneAsset->GetName());
-        BlueprintRuntimeContext ctx = { &m_Engine->GetAssetManager(), &m_Engine->GetResourceManager(), &m_Engine->GetScriptEngine(), scene};
+        auto sceneAsset = m_Ctx.assetManager->GetAsset<SceneAsset>(sceneHandle);
+        Scene* scene = new Scene(m_Ctx, sceneAsset->GetName());
+        BlueprintRuntimeContext ctx = { m_Ctx.assetManager, m_Ctx.resourceManager, m_Ctx.scriptEngine, scene };
         BlueprintInstantiator::Instantiate(ctx, sceneAsset->GetBlueprint(), sceneHandle);
 
         return scene;

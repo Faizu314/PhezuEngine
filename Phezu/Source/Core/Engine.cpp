@@ -11,9 +11,7 @@ namespace Phezu {
     Engine* Engine::s_Instance = nullptr;
     
     Engine::Engine() : m_HasInited(false), m_IsRunning(false),
-        m_FrameCount(0), m_AssetManager(this), m_SceneManager(this),
-        m_Physics(this), m_Renderer(), m_Platform(nullptr),
-        m_ScriptEngine(this) {}
+        m_FrameCount(0), m_Physics(this), m_Platform(nullptr) { }
     
     int Engine::Init(EngineArgs& args) {
         if (m_HasInited) {
@@ -33,8 +31,8 @@ namespace Phezu {
         m_AssetManager.Init(m_AssetsPath);
         m_ResourceManager.Init(&m_AssetManager, m_Platform->GetGraphicsApi());
         m_Renderer.Init({ m_Platform->GetWindow(), m_Platform->GetGraphicsApi(), &m_ResourceManager }, RenderTarget::Default());
-        m_SceneManager.Init();
-        m_ScriptEngine.Init();
+        m_SceneManager.Init({ &m_AssetManager, &m_ResourceManager, &m_ScriptEngine });
+        m_ScriptEngine.Init(this);
         
         return 0;
     }

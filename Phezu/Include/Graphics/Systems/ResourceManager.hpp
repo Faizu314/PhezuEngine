@@ -64,6 +64,13 @@ namespace Phezu {
 
 	class ResourceManager {
 	public:
+		ResourceManager() = default;
+	public:
+		ResourceManager(const ResourceManager&) = delete;
+		ResourceManager(const ResourceManager&&) = delete;
+		ResourceManager& operator=(const ResourceManager&) = delete;
+		ResourceManager& operator=(const ResourceManager&&) = delete;
+	public:
 		void Init(AssetManager* assetManager, IGraphicsAPI* api);
 		void Destroy();
 	public:

@@ -12,13 +12,26 @@ namespace Phezu {
     class Scene;
     class CameraData;
     class Entity;
+    class AssetManager;
+    class ResourceManager;
+    class ScriptEngine;
+
+    struct SceneContext {
+        AssetManager* assetManager = nullptr;
+        ResourceManager* resourceManager = nullptr;
+        ScriptEngine* scriptEngine = nullptr;
+    };
     
     class SceneManager {
     public:
-        SceneManager() = delete;
-        SceneManager(Engine* engine);
+        SceneManager();
     public:
-        void Init();
+        SceneManager(const SceneManager&) = delete;
+        SceneManager(const SceneManager&&) = delete;
+        SceneManager& operator=(const SceneManager&) = delete;
+        SceneManager& operator=(const SceneManager&&) = delete;
+    public:
+        void Init(SceneContext ctx);
         void OnStartGame();
         void Update(float deltaTime);
         void OnEndOfFrame();
@@ -35,7 +48,7 @@ namespace Phezu {
     private:
         Scene* LoadScene(AssetHandle sceneGuid);
     private:
-        Engine* m_Engine;
+        SceneContext m_Ctx;
     private:
         BuildScenesConfig m_BuildScenesConfig;
         Scene* m_MasterScene;

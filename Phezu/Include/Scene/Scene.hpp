@@ -6,16 +6,17 @@
 #include <cstdint>
 
 #include "Assets/Core/Asset.hpp"
+#include "Scene/Systems/SceneManager.hpp"
 
 namespace Phezu {
     
     class Engine;
     class Entity;
-    
+
     class Scene {
     public:
         Scene() = delete;
-        Scene(Engine* engine, const std::string& name);
+        Scene(SceneContext ctx, const std::string& name);
     public:
         Entity* CreateEntity();
         Entity* CreateEntity(AssetHandle prefabHandle);
@@ -31,7 +32,7 @@ namespace Phezu {
         void DestroyEntityInternal(uint64_t entityID);
         void DestroyEntityInternal(Entity* entity);
     private:
-        Engine* const m_Engine;
+        SceneContext m_Ctx;
         std::string m_Name;
         std::unordered_map<uint64_t, Entity*> m_RuntimeEntities;
         std::vector<uint64_t> m_EntitiesToDestroy;
