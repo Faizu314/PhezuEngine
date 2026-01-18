@@ -19,7 +19,7 @@ namespace PhezuEngine {
         }
 
         public static Entity Instantiate(PrefabRef prefab) {
-            IntPtr entityRef = InternalCalls.Entity_Instantiate(prefab.Guid);
+            IntPtr entityRef = InternalCalls.Entity_Instantiate(prefab.Guid, prefab.Source);
             return GetEntity(entityRef);
         }
 

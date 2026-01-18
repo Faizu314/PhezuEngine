@@ -5,7 +5,6 @@ namespace PhezuEngine {
 
     public abstract class Component : Object {
         public Entity Entity { get; private set; }
-        public Entity m_Entity;
         
         private void SetEntity(IntPtr ptr) {
             GCHandle handle = GCHandle.FromIntPtr(ptr);
@@ -42,17 +41,15 @@ namespace PhezuEngine {
 
     public class Renderer : Component
     {
-        public Color Tint
-        {
+        public Material Material {
             get
             {
-                InternalCalls.Renderer_GetTint(Entity.ID, out Color tint);
-                return tint;
+                ulong materialID = InternalCalls.Renderer_GetMaterial(Entity.ID);
+                return new Material(materialID);
             }
-
             set
             {
-                InternalCalls.Renderer_SetTint(Entity.ID, ref value);
+                InternalCalls.Renderer_SetMaterial(Entity.ID, value.ID);
             }
         }
     }

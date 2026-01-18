@@ -1,6 +1,6 @@
-#include "Maths/Random.hpp"
-
 #include <random>
+
+#include "Maths/Random.hpp"
 
 namespace Phezu {
     
