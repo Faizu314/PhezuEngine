@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Asset/Core/Asset.hpp"
-#include "Asset/Blueprint/Blueprint.hpp"
+#include "Assets/Core/Asset.hpp"
+#include "Assets/Blueprint/Blueprint.hpp"
 #include "Scene/Components/DataComponent.hpp"
 #include "Serialization/CustomSerialization.hpp"
 

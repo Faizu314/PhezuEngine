@@ -1,8 +1,8 @@
 #include "nlohmann/json.hpp"
 
 #include "Core/Types/Color.hpp"
-#include "Asset/Core/AssetManager.hpp"
-#include "Asset/Types/PrefabAsset.hpp"
+#include "Assets/Core/AssetManager.hpp"
+#include "Assets/Types/PrefabAsset.hpp"
 #include "Graphics/Data/ResourceManager.hpp"
 #include "Scene/BlueprintInstantiator.hpp"
 #include "Scene/Scene.hpp"

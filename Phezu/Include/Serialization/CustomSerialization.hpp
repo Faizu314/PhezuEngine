@@ -9,7 +9,7 @@
 #include "Core/Types/Types.hpp"
 #include "Core/Types/GUID.hpp"
 #include "Core/Types/Color.hpp"
-#include "Asset/Core/Asset.hpp"
+#include "Assets/Core/Asset.hpp"
 #include "Maths/Math.hpp"
 
 namespace Phezu {

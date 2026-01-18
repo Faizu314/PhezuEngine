@@ -4,7 +4,7 @@
 
 #include "Scripting/MonoDefs.hpp"
 #include "Scripting/ScriptClass.hpp"
-#include "Asset/Core/Asset.hpp"
+#include "Assets/Core/Asset.hpp"
 
 namespace Phezu {
 	class ScriptInstance {

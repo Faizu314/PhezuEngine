@@ -1,5 +1,5 @@
 #include "Core/Engine.hpp"
-#include "Asset/Types/SceneAsset.hpp"
+#include "Assets/Types/SceneAsset.hpp"
 #include "Scene/SceneManager.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/Entity.hpp"

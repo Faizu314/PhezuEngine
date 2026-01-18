@@ -5,8 +5,8 @@
 #include <string>
 
 #include "Maths/Math.hpp"
-#include "Asset/Core/Asset.hpp"
-#include "Asset/Types/PrefabAsset.hpp"
+#include "Assets/Core/Asset.hpp"
+#include "Assets/Types/PrefabAsset.hpp"
 
 namespace Phezu {
     
