@@ -48,7 +48,6 @@ List of all third party code used (Mostly single headers):
   - glm
   - nlohmann
   - stb_image
-  - tinyxml2
   - glad
 
 ## CI / Tested Configurations
