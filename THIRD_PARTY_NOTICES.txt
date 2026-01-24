@@ -1,8 +1,15 @@
-================================================================================
-Third-Party Libraries Used
+
+PhezuEngine uses third-party libraries distributed under
+MIT license and parts of mono distributed under other licenses.
+
+In the event that I accidentally failed to list a required notice, please
+bring it to my attention. Post an issue or email me:
+
+  faizanqaiser9@gmail.com
+
 ================================================================================
 
-OpenGL Mathematics (GLM)
+License notice for OpenGL Mathematics (GLM)
 --------------------------------------------------------------------------------
 Repository: https://github.com/g-truc/glm
 
@@ -33,7 +40,7 @@ THE SOFTWARE.
 
 ================================================================================
 
-Nlohmann Json
+License notice for Nlohmann Json
 --------------------------------------------------------------------------------
 Repository: https://github.com/nlohmann/json
 
@@ -60,7 +67,7 @@ SOFTWARE.
 
 ================================================================================
 
-STB_IMAGE
+License notice for STB_IMAGE
 --------------------------------------------------------------------------------
 File: stb_image.h
 Link: https://github.com/nothings/stb/blob/master/stb_image.h
@@ -86,7 +93,7 @@ SOFTWARE.
 
 ================================================================================
 
-GLAD
+License notice for GLAD
 --------------------------------------------------------------------------------
 Link: https://github.com/Dav1dde/glad
 
@@ -112,7 +119,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ================================================================================
 
-Mono
+License notice for Mono
 --------------------------------------------------------------------------------
 Repository: https://github.com/mono/mono
 Website: https://www.mono-project.com/
