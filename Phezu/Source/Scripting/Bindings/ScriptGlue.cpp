@@ -25,7 +25,7 @@ namespace Phezu {
 
 	Entity* GetEntity(uint64_t entityID) {
 		SceneManager* sceneManager = s_Data->SceneManager;
-		Entity* entity;
+		Entity* entity = nullptr;
 
 		if (auto scene = sceneManager->GetActiveScene()) {
 			entity = scene->GetEntity(entityID);
