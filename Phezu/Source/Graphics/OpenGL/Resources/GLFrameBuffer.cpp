@@ -1,3 +1,4 @@
+#include "Core/Defs/Assert.hpp"
 #include "Core/Platform.hpp"
 #include "Graphics/Core/Resources/Texture.hpp"
 #include "Graphics/OpenGL/Resources/GLFrameBuffer.hpp"
@@ -20,8 +21,7 @@ namespace Phezu {
 		GLuint texturePtr = static_cast<GLuint>(texture->GetHandle().Ptr);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texturePtr, 0);
 
-		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-			Log("Should assert here, Framebuffer is not complete!\n");
+		PZ_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is not complete.\n")
 	}
 
 }

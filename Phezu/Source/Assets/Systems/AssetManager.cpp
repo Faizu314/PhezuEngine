@@ -17,13 +17,11 @@ namespace Phezu {
 
         LoadBuiltInAssets();
 
-        if (std::filesystem::exists(assetsPath) && std::filesystem::exists(buildScenesConfigPath)) {
-            LoadAssetMap(assetsPath);
-            LoadBuildScenesConfig(buildScenesConfigPath);
-        }
-        else {
-            Log("Assert here, Assets or BuildScenesConfig file does not exist\n");
-        }
+        PZ_ASSERT(std::filesystem::exists(assetsPath) && std::filesystem::exists(buildScenesConfigPath),
+            "Assets or BuildScenesConfig file does not exist.\n");
+
+        LoadAssetMap(assetsPath);
+        LoadBuildScenesConfig(buildScenesConfigPath);
     }
 
     void AssetManager::Destroy() {

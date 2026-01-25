@@ -1,3 +1,4 @@
+#include "Core/Defs/Assert.hpp"
 #include "Core/Platform.hpp"
 #include "Graphics/OpenGL/Resources/GLTexture.hpp"
 
@@ -14,7 +15,7 @@ namespace Phezu {
 			case TextureWrapMode::ClampToBorder:
 				return GL_CLAMP_TO_BORDER;
 			default: {
-				Log("Should assert here\n");
+				PZ_ASSERT(false, "Unknown TextureWrapMode.\n")
 				return 0;
 			}
 		}
@@ -27,7 +28,7 @@ namespace Phezu {
 			case TextureFilteringMode::Bilinear:
 				return GL_LINEAR;
 			default: {
-				Log("Should assert here\n");
+				PZ_ASSERT(false, "Unknown TextureFilteringMode.\n")
 				return 0;
 			}
 		}

@@ -1,5 +1,6 @@
 #include <string>
 
+#include "Core/Defs/Assert.hpp"
 #include "Core/Engine.hpp"
 
 namespace Phezu {

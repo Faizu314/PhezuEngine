@@ -9,6 +9,7 @@
 #include <string>
 #include <type_traits>
 
+#include "Core/Defs/Assert.hpp"
 #include "Core/Platform.hpp"
 #include "Core/Types/GUID.hpp"
 #include "Assets/Core/Asset.hpp"
@@ -77,22 +78,16 @@ namespace Phezu {
         if (iAsset != nullptr) {
             asset = dynamic_cast<T*>(iAsset);
 
-            if (asset == nullptr) {
-                Log("Should assert here, asset guid does not match its type.\n");
-                return nullptr;
-            }
-            if (asset != nullptr)
-                return asset;
+            PZ_ASSERT(asset != nullptr, "Asset guid does not match its type.\n");
+
+            return asset;
         }
 
         AssetRef& ref = m_AssetMap[assetHandle];
 
         asset = new T();
 
-        if (ref.Type != asset->GetAssetType()) {
-            Log("Should assert here, asset guid does not match its type.\n");
-            return nullptr;
-        }
+        PZ_ASSERT(ref.Type == asset->GetAssetType(), "Asset guid does not match its type.\n");
 
         std::string assetPath = ref.Paths[0].string();
         asset->Deserialize(GetFileFromDisk(assetPath));

@@ -81,11 +81,8 @@ namespace Phezu {
         mono_config_parse(nullptr);
 
         m_RootDomain = mono_jit_init("PhezuEngineDomain");
-        if (m_RootDomain == nullptr)
-        {
-            Log("Assert Here, Error initializing mono jit\n");
-            return;
-        }
+
+        PZ_ASSERT(m_RootDomain != nullptr, "Error initializing mono jit.\n");
 
         std::filesystem::path scriptCoreDllPath = m_Engine->GetScriptCoreDllPath() / "Phezu-ScriptCore.dll";
 
@@ -347,16 +344,15 @@ namespace Phezu {
     
     void ScriptEngine::RemoveBehaviourScriptInstance(uint64_t entityID, const std::string& classFullname) {
         if (m_Entities.find(entityID) == m_Entities.end()) {
-            Log("Entity not found for behaviour script: %s", classFullname.c_str());
+            //Should log an exception
+            Log("Entity of id %i not found for behaviour script: %s", entityID, classFullname.c_str());
             return;
         }
 
         auto entity = m_Engine->GetSceneManager().FindEntity(entityID);
         auto& entityData = m_Entities.at(entityID);
         
-        if (entity == nullptr) {
-            //TODO: assert not null
-        }
+        PZ_ASSERT(entity != nullptr, "Script engine has an expired entity ref.\n");
         
         entity->RemoveScriptComponent(classFullname);
 

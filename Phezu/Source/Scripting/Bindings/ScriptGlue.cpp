@@ -1,6 +1,7 @@
 #include "glm/glm.hpp"
 #include <mono/jit/jit.h>
 
+#include "Core/Defs/Assert.hpp"
 #include "Core/Platform.hpp"
 #include "Core/Engine.hpp"
 #include "Scripting/Systems/ScriptEngine.hpp"

@@ -1,3 +1,4 @@
+#include "Core/Defs/Assert.hpp"
 #include "Core/Platform.hpp"
 #include "Serialization/CustomSerialization.hpp"
 #include "Maths/Objects/Vector2.hpp"
@@ -164,7 +165,7 @@ namespace Phezu {
                 j["Value"] = std::get<bool>(p.Value);
                 break;
             default: {
-                Log("Should assert here\n");
+                PZ_ASSERT(false, "No implementation of MaterialPropertyType of value %i", static_cast<int>(p.Type));
             }
         }
     }

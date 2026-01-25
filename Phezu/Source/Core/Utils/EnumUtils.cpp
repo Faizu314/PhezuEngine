@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 
+#include "Core/Defs/Assert.hpp"
 #include "Core/Utils/EnumUtils.hpp"
 #include "Core/Types/Types.hpp"
 #include "Core/Platform.hpp"
@@ -30,8 +31,8 @@ namespace Phezu {
 				if (kvp.second == value)												\
 					return kvp.first;													\
 			}																			\
-			const char* enumTypeStr = #EnumType;										\
-			Log("Unknown value of enum %s::%i", enumTypeStr, static_cast<int>(value));	\
+			const char* str = #EnumType;												\
+			PZ_ASSERT(false, "Unknown %s, value: %i", str, static_cast<int>(value))		\
 			return "";																	\
 		}																				
 
@@ -118,7 +119,7 @@ namespace Phezu {
 				return 1;
 
 			default: {
-				Log("Should assert here\n");
+				PZ_ASSERT(false, "Unknown VertexAttributeType.\n");
 				return 0;
 			}
 		}
@@ -136,7 +137,7 @@ namespace Phezu {
 				return 4;
 
 			default: {
-				Log("Should assert here\n");
+				PZ_ASSERT(false, "Unknown VertexAttributeCount.\n");
 				return 0;
 			}
 		}
