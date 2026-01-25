@@ -33,6 +33,11 @@ endif()
 add_library(Phezu STATIC ${PHEZU_ALL_SOURCES} ${PHEZU_ALL_HEADERS})
 set_target_properties(Phezu PROPERTIES OUTPUT_NAME Phezu PREFIX "")
 
+target_compile_definitions(Phezu PUBLIC
+    $<$<CONFIG:Debug>:PZ_DEBUG>
+    $<$<CONFIG:Release>:PZ_RELEASE>
+)
+
 if (WIN32)
     target_compile_definitions(Phezu PRIVATE NOMINMAX)
 endif()

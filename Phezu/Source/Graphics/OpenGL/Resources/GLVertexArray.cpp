@@ -1,3 +1,4 @@
+#include "Core/Defs/Assert.hpp"
 #include "Core/Platform.hpp"
 #include "Graphics/Core/GraphicsTypes.hpp"
 #include "Graphics/OpenGL/Resources/GLVertexArray.hpp"
@@ -59,7 +60,7 @@ namespace Phezu {
 					case VertexSemantic::Normal:
 						glVertexAttrib3f(location, 0.0f, 0.0f, 0.0f); break;
 					default: {
-						Log("Should assert here\n");
+						PZ_ASSERT(false, "Unknown VertexSemantic.\n")
 					}
 				}
 				
@@ -81,7 +82,7 @@ namespace Phezu {
 				case VertexAttributeType::UByte:
 					glVertexAttribPointer(location, count, GL_UNSIGNED_BYTE, attrib.Normalized, stride, (void*)(attrib.Offset)); break;
 				default: {
-					Log("Should Assert Here\n");
+					PZ_ASSERT(false, "Unknown VertexAttributeType.\n")
 				}
 			}
 

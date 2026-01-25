@@ -1,14 +1,13 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-
 #include "glad/glad.h"
 #include "glad/glad_wgl.h"
 
+#include "Core/Defs/Assert.hpp"
 #include "Platform/Win32/PlatformWin32.hpp"
 #include "Platform/Win32/WindowWin32.hpp"
 #include "Platform/Win32/InputWin32.hpp"
 #include "Platform/Win32/LoggerWin32.hpp"
-
 #include "Graphics/Core/GraphicsAPI.hpp"
 #include "Graphics/OpenGL/OpenGLAPI.hpp"
 
@@ -105,8 +104,8 @@ namespace Phezu {
 		ATOM atom = RegisterClass(&wc);
 
 		if (!atom) {
-			Phezu::Log("Assert Here\n");
 			PrintLastWinError("Unable to register class");
+			PZ_ASSERT(false, "");
 		}
 
 		s_Window->Init(args, CLASS_NAME, m_hInstance);
@@ -132,26 +131,31 @@ namespace Phezu {
 
 		if (pixelFormatIndex == 0) {
 			PrintLastWinError("Unable to choose pixel format");
+			PZ_ASSERT(false, "");
 		}
 
 		PIXELFORMATDESCRIPTOR pixelFormat;
 
 		if (DescribePixelFormat(m_WindowHandle, pixelFormatIndex, sizeof(PIXELFORMATDESCRIPTOR), &pixelFormat) == 0) {
 			PrintLastWinError("Failed to describe pixel format");
+			PZ_ASSERT(false, "");
 		}
 
 		if (SetPixelFormat(m_WindowHandle, pixelFormatIndex, &pixelFormat) != TRUE) {
 			PrintLastWinError("Unable to set pixel format");
+			PZ_ASSERT(false, "");
 		}
 
 		HGLRC tempContext = wglCreateContext(m_WindowHandle);
 
 		if (!tempContext) {
 			PrintLastWinError("Unable to create wgl context");
+			PZ_ASSERT(false, "");
 		}
 
 		if (wglMakeCurrent(m_WindowHandle, tempContext) != TRUE) {
 			PrintLastWinError("Unable to make context current");
+			PZ_ASSERT(false, "");
 		}
 
 		gladLoadWGL(m_WindowHandle);
@@ -168,6 +172,7 @@ namespace Phezu {
 
 		if (!glContext) {
 			PrintLastWinError("Unable to create wgl context");
+			PZ_ASSERT(false, "");
 		}
 
 		wglMakeCurrent(nullptr, nullptr);
@@ -175,10 +180,11 @@ namespace Phezu {
 
 		if (!wglMakeCurrent(m_WindowHandle, glContext)) {
 			PrintLastWinError("Unable to make context current");
+			PZ_ASSERT(false, "");
 		}
 
 		if (!gladLoadGL()) {
-			Phezu::Log("Unable to load glad\n");
+			PZ_ASSERT(false, "Unable to load glad.\n");
 		}
 
 		s_GraphicsApi = new OpenGLAPI();

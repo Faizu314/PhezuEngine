@@ -1,4 +1,4 @@
-#include "Core/Platform.hpp"
+#include "Core/Defs/Assert.hpp"
 #include "Graphics/Core/GraphicsAPI.hpp"
 #include "Graphics/Core/Resources/VertexBuffer.hpp"
 #include "Graphics/Core/Resources/IndexBuffer.hpp"
@@ -32,10 +32,7 @@ namespace Phezu {
 	}
 
 	void Mesh::AttachVertexBuffer(const void* vertices, size_t bufferSize, BufferType bufferType, const VertexLayout& layout) {
-		if (m_Api == nullptr || m_VertexBuffer != nullptr) {
-			Log("Should assert here\n");
-			return;
-		}
+		PZ_ASSERT(m_Api != nullptr && m_VertexBuffer == nullptr, "Trying to attach vertex buffer twice or to an invalid Mesh.\n");
 
 		m_Data.AttachedVertices = vertices;
 		m_Data.VertexBufferSize = bufferSize;
@@ -44,10 +41,7 @@ namespace Phezu {
 	}
 
 	void Mesh::AttachIndexBuffer(const unsigned int* indices, size_t bufferSize, BufferType bufferType) {
-		if (m_Api == nullptr || m_IndexBuffer != nullptr) {
-			Log("Should assert here\n");
-			return;
-		}
+		PZ_ASSERT(m_Api != nullptr && m_IndexBuffer == nullptr, "Trying to attach index buffer twice or to an invalid Mesh.\n");
 
 		m_Data.AttachedIndices = indices;
 		m_Data.IndexBufferSize = bufferSize;
@@ -55,10 +49,7 @@ namespace Phezu {
 	}
 
 	void Mesh::UploadMeshData() {
-		if (m_Api == nullptr) {
-			Log("Should assert here\n");
-			return;
-		}
+		PZ_ASSERT(m_Api != nullptr, "Trying to upload invalid mesh data.\n");
 
 		m_VertexBuffer = m_Api->CreateVertexBuffer(m_Data.AttachedVertices, m_Data.VertexBufferSize, m_Data.VertexBufferType);
 		m_IndexBuffer = m_Api->CreateIndexBuffer(m_Data.AttachedIndices, m_Data.IndexBufferSize, m_Data.IndexBufferType);
@@ -69,20 +60,14 @@ namespace Phezu {
 	}
 
 	void Mesh::Bind(const IShader* shader) const {
-		if (m_Api == nullptr || m_VertexBuffer == nullptr || m_IndexBuffer == nullptr || m_VertexArray == nullptr) {
-			Log("Should assert here\n");
-			return;
-		}
+		PZ_ASSERT(m_Api != nullptr && m_VertexBuffer != nullptr && m_IndexBuffer != nullptr && m_VertexArray != nullptr, "Trying to bind invalid mesh.\n");
 
 		m_VertexArray->Bind();
 		m_VertexArray->ApplyLayout(&m_Layout, shader);
 	}
 
 	unsigned int Mesh::GetIndicesCount() const {
-		if (m_IndexBuffer == nullptr) {
-			Log("Should assert here\n");
-			return 0;
-		}
+		PZ_ASSERT(m_IndexBuffer != nullptr, "Mesh does not have a valid index buffer.\n");
 
 		return m_IndexBuffer->GetIndicesCount();
 	}
