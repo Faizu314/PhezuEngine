@@ -9,8 +9,8 @@ Created as a personal learning project to understand engine architecture. There 
 - **C# scripting** through Mono integration  
 - **Prefab system** with nesting and overrides
 - **Physics system** (axis-aligned boxes only)
-- **Asset Management** of scene and prefab files
-- **Custom Rendering** of sprites  
+- **Asset Management** of 7 type of assets
+- **OpenGL Rendering** of sprites
 - **Minimal dependencies** and clean, readable architecture
 
 ## Goals
