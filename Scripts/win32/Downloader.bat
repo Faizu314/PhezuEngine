@@ -1,14 +1,14 @@
 @echo off
 
 set PACKAGE=%~1
-set LINK=%~2
+set DOWNLOAD_LINK=%~2
 set OUTPUT_DIR=%~3
 
 :loop_start
 
-echo Downloading %PACKAGE% from the following link: %LINK%
+echo Downloading %PACKAGE% from the following link: %DOWNLOAD_LINK%
 
-curl -C - "%LINK%" -o "%OUTPUT_DIR%"
+curl -L -C - "%DOWNLOAD_LINK%" -o "%OUTPUT_DIR%"
 
 if %ERRORLEVEL% neq 0 (
     echo Error: Something went wrong while downloading mono.
@@ -17,3 +17,5 @@ if %ERRORLEVEL% neq 0 (
 )
 
 echo Successfully downloaded mono.
+
+exit /b 0

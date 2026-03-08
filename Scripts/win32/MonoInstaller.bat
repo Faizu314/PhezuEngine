@@ -56,3 +56,5 @@ if %errorlevel% neq 0 (
 )
 
 type nul > "%ROOT_DIR%\Vendor\win32\mono\.installed"
+
+exit /b 0
