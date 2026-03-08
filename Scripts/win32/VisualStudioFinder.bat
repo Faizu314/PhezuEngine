@@ -36,3 +36,5 @@ if "%VS_MAJOR%"=="15" set "VS_YEAR=2017"
 set "RETURN_VALUE_1=Visual Studio %VS_MAJOR% %VS_YEAR%"
 
 echo Compatible Visual Studio installation found: %RETURN_VALUE_1%
+
+exit /b 0
