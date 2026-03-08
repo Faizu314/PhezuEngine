@@ -1,4 +1,15 @@
 @echo off
+title Phezu Engine Installer
+
+net session >nul 2>&1
+if %errorlevel% neq 0 (
+    echo Requesting administrative privileges...
+    powershell -Command "Start-Process '%~f0' -WorkingDirectory '%CD%' -Verb runAs"
+    exit /b
+)
+
+echo Running as admin
+cd /d "%~dp0"
 
 if /i "%~1"=="--auto" (
     set AUTO_MODE=1
@@ -24,46 +35,35 @@ if %ERRORLEVEL% neq 0 (
     exit 1
 )
 
-:: Find Visual Studio installation path
+CALL Scripts/win32/VisualStudioFinder.bat
 
-set "VSWHERE=%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
-
-if not exist "%VSWHERE%" (
-    echo vswhere not found at default path.
-
-    where vswhere.exe >nul 2>nul
-    if errorlevel 1 (
-        echo vswhere not found in PATH.
-	pause
-        exit 1
-    ) else (
-	echo vswhere found in PATH variable.
-        set "VSWHERE=vswhere.exe"
-    )
-)
-
-for /f "usebackq delims=" %%i in (`"%VSWHERE%" -latest -products * -requires Microsoft.VisualStudio.Workload.NativeDesktop -property installationPath`) do (
-    set "VSINSTALL=%%i"
-)
-
-if "%VSINSTALL%"=="" (
-    echo Compatible Visual Studio installation not found. Component: "Desktop development with C++" required.
+if %ERRORLEVEL% neq 0 (
+    echo Error: Did not find any compatible Visual Studio IDE installation.
     pause
     exit 1
+) else (
+    set "GENERATOR=%RETURN_VALUE_1%"
 )
 
-for /f "delims=. tokens=1" %%v in ('"%VSWHERE%" -latest -property installationVersion') do (
-    set "VS_MAJOR=%%v"
+:: Install Mono
+
+set PACKAGE=mono
+set MONO_LINK=https://download.mono-project.com/archive/6.12.0/windows-installer/mono-6.12.0-x64-0.msi
+set OUTPUT_DIR=%CD%\Vendor\win32\temp
+
+if not exist "Vendor/win32/mono/.installed" (
+    mkdir %OUTPUT_DIR%
+    CALL Scripts/win32/Downloader.bat %PACKAGE% %MONO_LINK% %OUTPUT_DIR%\mono-6.12.0-x64-0.msi
+    CALL Scripts/win32/MonoInstaller.bat %CD% %OUTPUT_DIR%\mono-6.12.0-x64-0.msi "%CD%\Vendor\win32\temp\extract"
+    if %ERRORLEVEL% neq 0 (
+        echo Error installing Mono.
+        pause
+        exit 1
+    )
+    echo Successfully installed Mono
+) else (
+    echo Mono already installed
 )
-
-if "%VS_MAJOR%"=="18" set "VS_YEAR=2026"
-if "%VS_MAJOR%"=="17" set "VS_YEAR=2022"
-if "%VS_MAJOR%"=="16" set "VS_YEAR=2019"
-if "%VS_MAJOR%"=="15" set "VS_YEAR=2017"
-
-set "GENERATOR=Visual Studio %VS_MAJOR% %VS_YEAR%"
-
-echo Compatible Visual Studio installation found: %GENERATOR%
 
 if %AUTO_MODE%==1 (
     set USER_INPUT=Y
