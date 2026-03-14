@@ -12,27 +12,25 @@ if %errorlevel% neq 0 (
 echo Running as admin
 cd /d "%~dp0"
 
-if /i "%~1"=="--auto" (
-    set AUTO_MODE=1
-) else (
-    set AUTO_MODE=0
-)
-if "%~2"=="--Release" (
+if "%~1"=="--Release" (
     set BUILD_CONFIG=Release
-) else if "%~2"=="--Debug" (
+) else if "%~1"=="--Debug" (
     set BUILD_CONFIG=Debug
-) else if "%~2"=="" (
+) else if "%~1"=="" (
     set BUILD_CONFIG=Release
 )
+
+
+:: Install CMake
 
 set PACKAGE=cmake
 set CMAKE_LINK=https://github.com/Kitware/CMake/releases/download/v4.3.0-rc2/cmake-4.3.0-rc2-windows-x86_64.msi
 set OUTPUT_DIR=%CD%\Vendor\win32\temp\cmake
 
-cmake_ --version
+cmake --version
 if %ERRORLEVEL% neq 0 (
     if not exist "Vendor\win32\cmake\.installed" (
-        echo Did not find cmake installation. Downloading cmake...
+        echo Did not find cmake installation.
         
         mkdir %OUTPUT_DIR%
         CALL Scripts/win32/Downloader.bat %PACKAGE% %CMAKE_LINK% %OUTPUT_DIR%\cmake-4.3.0-rc2-windows-x86_64.msi
@@ -50,17 +48,40 @@ if %ERRORLEVEL% neq 0 (
 ) else (
     echo Cmake installation found.
 
-    set "CMAKE_COMMAND="cmake"
+    set "CMAKE_COMMAND=cmake"
 )
 
 echo Using CMake command: %CMAKE_COMMAND%
 
+
+:: Install Build System
+
+set PACKAGE=vs-build-system
+set VS_LINK=https://aka.ms/vs/stable/vs_BuildTools.exe
+set OUTPUT_DIR=%CD%\Vendor\win32\temp\vs
+
 CALL Scripts/win32/VisualStudioFinder.bat
 
-if %ERRORLEVEL% neq 0 (
-    echo Error: Did not find any compatible Visual Studio IDE installation.
-    pause
-    exit 1
+if %ERRORLEVEL%==1 (
+    echo Did not find any compatible Visual Studio IDE or Build Tools installation.
+
+    mkdir %OUTPUT_DIR%
+    CALL Scripts/win32/Downloader.bat %PACKAGE% %VS_LINK% %OUTPUT_DIR%\vs_BuildTools.exe
+    CALL Scripts/win32/VisualStudioBuildToolsInstaller.bat %OUTPUT_DIR%\vs_BuildTools.exe
+
+    if !ERRORLEVEL! NEQ 0 (
+        echo Unable to install build system.
+        pause
+        exit 1
+    )
+
+    CALL "%RETURN_VALUE_1%" -arch=x64
+
+    set "GENERATOR=NMake Makefiles"
+) else if %ERRORLEVEL%==2 (
+    CALL "%RETURN_VALUE_1%" -arch=x64
+
+    set "GENERATOR=NMake Makefiles"
 ) else (
     set "GENERATOR=%RETURN_VALUE_1%"
 )
@@ -85,17 +106,8 @@ if not exist "Vendor\win32\mono\.installed" (
     echo Mono already installed
 )
 
-if %AUTO_MODE%==1 (
-    set USER_INPUT=Y
-) else (
-    set /p USER_INPUT="Build Visual Studio solution files? (Y/N) "
-)
 
-if /i "%USER_INPUT%"=="N" (
-    echo Exiting.
-    pause
-    exit 1
-)
+:: Build Engine
 
 if not exist "Build" (
     mkdir "Build"
@@ -106,7 +118,7 @@ echo Using generator: %GENERATOR%
 %CMAKE_COMMAND% .. -G "%GENERATOR%"
 
 if %ERRORLEVEL% neq 0 (
-    echo Failed to generate visual studio files.
+    echo Failed to generate build system files.
 
     pause
     exit 1
