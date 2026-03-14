@@ -11,11 +11,11 @@ echo Downloading %PACKAGE% from the following link: %DOWNLOAD_LINK%
 curl -L -C - "%DOWNLOAD_LINK%" -o "%OUTPUT_DIR%"
 
 if %ERRORLEVEL% neq 0 (
-    echo Error: Something went wrong while downloading mono.
+    echo Error: Something went wrong while downloading %PACKAGE%.
     pause
     goto :loop_start
 )
 
-echo Successfully downloaded mono.
+echo Successfully downloaded %PACKAGE%.
 
 exit /b 0

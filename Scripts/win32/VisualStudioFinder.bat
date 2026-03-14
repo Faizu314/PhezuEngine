@@ -20,8 +20,20 @@ for /f "usebackq delims=" %%i in (`"%VSWHERE%" -latest -products * -requires Mic
 )
 
 if "%VSINSTALL%"=="" (
-    echo Compatible Visual Studio installation not found. Component: "Desktop development with C++" required.
-    exit 2
+    echo Compatible Visual Studio IDE installation not found. Component: "Desktop development with C++" required.
+
+    for /f "delims=" %%i in ('"%VSWHERE%" -latest -products * -requires Microsoft.VisualStudio.Product.BuildTools -requires Microsoft.VisualStudio.Workload.VCTools -property installationPath') do (
+        set "BUILD_TOOLS_PATH=%%i"
+    )
+
+    if defined BUILD_TOOLS_PATH (
+        echo Visual Studio Build Tools found at !BUILD_TOOLS_PATH!
+        set "RETURN_VALUE_1=!BUILD_TOOLS_PATH!\Common7\Tools\VsDevCmd.bat"
+        exit /b 2
+    ) else (
+        echo Visual Studio Build Tools with required components not installed
+        exit /b 1
+    )
 )
 
 for /f "delims=. tokens=1" %%v in ('"%VSWHERE%" -latest -property installationVersion') do (
