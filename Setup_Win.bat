@@ -12,14 +12,18 @@ if %errorlevel% neq 0 (
 echo Running as admin
 cd /d "%~dp0"
 
-if "%~1"=="--Release" (
+if /i "%~1"=="--auto" (
+    set AUTO_MODE=1
+) else (
+    set AUTO_MODE=0
+)
+if "%~2"=="--Release" (
     set BUILD_CONFIG=Release
-) else if "%~1"=="--Debug" (
+) else if "%~2"=="--Debug" (
     set BUILD_CONFIG=Debug
-) else if "%~1"=="" (
+) else if "%~2"=="" (
     set BUILD_CONFIG=Release
 )
-
 
 :: Install CMake
 
@@ -27,11 +31,13 @@ set PACKAGE=cmake
 set CMAKE_LINK=https://github.com/Kitware/CMake/releases/download/v4.3.0-rc2/cmake-4.3.0-rc2-windows-x86_64.msi
 set OUTPUT_DIR=%CD%\Vendor\win32\temp\cmake
 
-cmake --version
+cmake_ --version
 if %ERRORLEVEL% neq 0 (
     if not exist "Vendor\win32\cmake\.installed" (
         echo Did not find cmake installation.
         
+        call :ValidateContinuation "Enter Y to continue with Cmake installation: "
+
         mkdir %OUTPUT_DIR%
         call Scripts/win32/Downloader.bat %PACKAGE% %CMAKE_LINK% %OUTPUT_DIR%\cmake-4.3.0-rc2-windows-x86_64.msi
         call Scripts/win32/CmakeInstaller.bat %CD% %OUTPUT_DIR%\cmake-4.3.0-rc2-windows-x86_64.msi %OUTPUT_DIR%\extract
@@ -41,7 +47,7 @@ if %ERRORLEVEL% neq 0 (
             pause
             exit 1
         )
-        echo Successfully installed Cmake
+        echo Successfully installed Cmake at "%CD%\Vendor\win32\cmake"
     )
 
     set "CMAKE_COMMAND="%CD%\Vendor\win32\cmake\bin\cmake.exe""
@@ -64,6 +70,8 @@ call Scripts/win32/VisualStudioFinder.bat
 
 if %ERRORLEVEL%==1 (
     echo Did not find any compatible Visual Studio IDE or Build Tools installation.
+
+    call :ValidateContinuation "Enter Y to continue with Visual Studio Installer Download: "
 
     mkdir %OUTPUT_DIR%
     call Scripts/win32/Downloader.bat %PACKAGE% %VS_LINK% %OUTPUT_DIR%\vs_BuildTools.exe
@@ -93,9 +101,12 @@ set MONO_LINK=https://download.mono-project.com/archive/6.12.0/windows-installer
 set OUTPUT_DIR=%CD%\Vendor\win32\temp\mono
 
 if not exist "Vendor\win32\mono\.installed" (
+    call :ValidateContinuation "Enter Y to continue with Mono installation: "
+
     mkdir %OUTPUT_DIR%
     call Scripts/win32/Downloader.bat %PACKAGE% %MONO_LINK% %OUTPUT_DIR%\mono-6.12.0-x64-0.msi
     call Scripts/win32/MonoInstaller.bat %CD% %OUTPUT_DIR%\mono-6.12.0-x64-0.msi "%OUTPUT_DIR%\extract"
+
     if %ERRORLEVEL% neq 0 (
         echo Error installing Mono.
         pause
@@ -106,6 +117,9 @@ if not exist "Vendor\win32\mono\.installed" (
     echo Mono already installed
 )
 
+rmdir /s /q "%CD%\Vendor\win32\temp"
+
+echo Successfully setup the environment for PhezuEngine, proceeding to build and compile...
 
 :: Build Engine
 
@@ -132,5 +146,22 @@ if %ERRORLEVEL% neq 0 (
     exit 1
 )
 
+pause
+exit 0
+
+
+:ValidateContinuation
+
+if %AUTO_MODE%==1 (
+    goto :eof
+)
+
+set /p USER_INPUT=%~1
+
+if /i "%USER_INPUT%"=="Y" (
+    goto :eof
+)
+
+echo Exiting.
 pause
 exit 0

@@ -19,4 +19,4 @@ jobs:
 
       - name: Run setup script
         shell: cmd
-        run: call Setup_Win.bat --${{ matrix.config }}
+        run: call Setup_Win.bat --auto --${{ matrix.config }}
