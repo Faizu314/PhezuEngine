@@ -1,15 +1,15 @@
 @echo off
 
 set ROOT_DIR=%~1
-set MONO_MSI_DIR=%~2
+set MONO_MSI_PATH=%~2
 set MONO_EXTRACT_DIR=%~3
 
 :: Extract Mono .msi
 
 echo Extracting Mono msi
-msiexec /a "%MONO_MSI_DIR%" TARGETDIR="%MONO_EXTRACT_DIR%" /qn
+msiexec /a "%MONO_MSI_PATH%" TARGETDIR="%MONO_EXTRACT_DIR%" /qn
 
-if %errorlevel% neq 0 (
+if %ERRORLEVEL% neq 0 (
     echo Error extracting mono
     exit /b 1
 )
@@ -20,7 +20,7 @@ echo copying mono folder
 mkdir "%ROOT_DIR%\Vendor\win32\mono"
 robocopy "%MONO_EXTRACT_DIR%\Mono" "%ROOT_DIR%\Vendor\win32\mono" /E /COPYALL /NJH /NJS /NC /NS
 
-if %errorlevel% geq 8 (
+if %ERRORLEVEL% geq 8 (
     echo Error copying mono files
     exit /b 1
 )
@@ -30,7 +30,7 @@ if %errorlevel% geq 8 (
 echo copying mono headers
 robocopy "%MONO_EXTRACT_DIR%\Mono\include\mono-2.0\mono" "%ROOT_DIR%\Phezu\Vendor\include\win32\mono" /E /COPYALL /NJH /NJS /NC /NS
 
-if %errorlevel% geq 8 (
+if %ERRORLEVEL% geq 8 (
     echo Error copying mono headers
     exit /b 1
 )
@@ -41,7 +41,7 @@ echo copying dll: copy /Y "%MONO_EXTRACT_DIR%\Mono\bin\mono-2.0-sgen.dll" "%ROOT
 
 copy /Y "%MONO_EXTRACT_DIR%\Mono\bin\mono-2.0-sgen.dll" "%ROOT_DIR%\Phezu\Vendor\lib\win32\mono-2.0-sgen.dll"
 
-if %errorlevel% neq 0 (
+if %ERRORLEVEL% neq 0 (
     echo Error copying mono sgen dll
     exit /b 1
 )
@@ -50,7 +50,7 @@ echo copying lib: copy /Y "%MONO_EXTRACT_DIR%\Mono\lib\mono-2.0-sgen.lib" "%ROOT
 
 copy /Y "%MONO_EXTRACT_DIR%\Mono\lib\mono-2.0-sgen.lib" "%ROOT_DIR%\Phezu\Vendor\lib\win32\mono-2.0-sgen.lib"
 
-if %errorlevel% neq 0 (
+if %ERRORLEVEL% neq 0 (
     echo Error copying mono sgen lib
     exit /b 1
 )
