@@ -6,7 +6,7 @@ if not exist "%VSWHERE%" (
     echo vswhere not found at default path.
 
     where vswhere.exe >nul 2>nul
-    if errorlevel 1 (
+    if ERRORLEVEL 1 (
         echo vswhere not found in PATH.
         exit /b 1
     ) else (

@@ -33,8 +33,8 @@ if %ERRORLEVEL% neq 0 (
         echo Did not find cmake installation.
         
         mkdir %OUTPUT_DIR%
-        CALL Scripts/win32/Downloader.bat %PACKAGE% %CMAKE_LINK% %OUTPUT_DIR%\cmake-4.3.0-rc2-windows-x86_64.msi
-        CALL Scripts/win32/CmakeInstaller.bat %CD% %OUTPUT_DIR%\cmake-4.3.0-rc2-windows-x86_64.msi %OUTPUT_DIR%\extract
+        call Scripts/win32/Downloader.bat %PACKAGE% %CMAKE_LINK% %OUTPUT_DIR%\cmake-4.3.0-rc2-windows-x86_64.msi
+        call Scripts/win32/CmakeInstaller.bat %CD% %OUTPUT_DIR%\cmake-4.3.0-rc2-windows-x86_64.msi %OUTPUT_DIR%\extract
 
         if !ERRORLEVEL! neq 0 (
             echo Error installing Cmake. %ERRORLEVEL%
@@ -60,26 +60,26 @@ set PACKAGE=vs-build-system
 set VS_LINK=https://aka.ms/vs/stable/vs_BuildTools.exe
 set OUTPUT_DIR=%CD%\Vendor\win32\temp\vs
 
-CALL Scripts/win32/VisualStudioFinder.bat
+call Scripts/win32/VisualStudioFinder.bat
 
 if %ERRORLEVEL%==1 (
     echo Did not find any compatible Visual Studio IDE or Build Tools installation.
 
     mkdir %OUTPUT_DIR%
-    CALL Scripts/win32/Downloader.bat %PACKAGE% %VS_LINK% %OUTPUT_DIR%\vs_BuildTools.exe
-    CALL Scripts/win32/VisualStudioBuildToolsInstaller.bat %OUTPUT_DIR%\vs_BuildTools.exe
+    call Scripts/win32/Downloader.bat %PACKAGE% %VS_LINK% %OUTPUT_DIR%\vs_BuildTools.exe
+    call Scripts/win32/VisualStudioBuildToolsInstaller.bat %OUTPUT_DIR%\vs_BuildTools.exe
 
-    if !ERRORLEVEL! NEQ 0 (
+    if !ERRORLEVEL! neq 0 (
         echo Unable to install build system.
         pause
         exit 1
     )
 
-    CALL "%RETURN_VALUE_1%" -arch=x64
+    call "%RETURN_VALUE_1%" -arch=x64
 
     set "GENERATOR=NMake Makefiles"
 ) else if %ERRORLEVEL%==2 (
-    CALL "%RETURN_VALUE_1%" -arch=x64
+    call "%RETURN_VALUE_1%" -arch=x64
 
     set "GENERATOR=NMake Makefiles"
 ) else (
@@ -94,8 +94,8 @@ set OUTPUT_DIR=%CD%\Vendor\win32\temp\mono
 
 if not exist "Vendor\win32\mono\.installed" (
     mkdir %OUTPUT_DIR%
-    CALL Scripts/win32/Downloader.bat %PACKAGE% %MONO_LINK% %OUTPUT_DIR%\mono-6.12.0-x64-0.msi
-    CALL Scripts/win32/MonoInstaller.bat %CD% %OUTPUT_DIR%\mono-6.12.0-x64-0.msi "%OUTPUT_DIR%\extract"
+    call Scripts/win32/Downloader.bat %PACKAGE% %MONO_LINK% %OUTPUT_DIR%\mono-6.12.0-x64-0.msi
+    call Scripts/win32/MonoInstaller.bat %CD% %OUTPUT_DIR%\mono-6.12.0-x64-0.msi "%OUTPUT_DIR%\extract"
     if %ERRORLEVEL% neq 0 (
         echo Error installing Mono.
         pause
