@@ -21,7 +21,7 @@ namespace Phezu {
 	static LoggerWin32* s_Logger = nullptr;
 	static IGraphicsAPI* s_GraphicsApi = nullptr;
 
-	LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		switch (msg) {
 			case WM_CREATE:
 			{
