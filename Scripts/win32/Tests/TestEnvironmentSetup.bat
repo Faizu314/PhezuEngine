@@ -6,4 +6,4 @@ set MONO_ENV=%3
 
 pushd "%~dp0"
 
-CALL VisualStudioEnvironmentSetup.bat %VS_ENV%
+call VisualStudioEnvironmentSetup.bat %VS_ENV%
