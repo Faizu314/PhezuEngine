@@ -31,7 +31,7 @@ set PACKAGE=cmake
 set CMAKE_LINK=https://github.com/Kitware/CMake/releases/download/v4.3.0-rc2/cmake-4.3.0-rc2-windows-x86_64.msi
 set OUTPUT_DIR=%CD%\Vendor\win32\temp\cmake
 
-cmake_ --version
+cmake --version
 if %ERRORLEVEL% neq 0 (
     if not exist "Vendor\win32\cmake\.installed" (
         echo Did not find cmake installation.
@@ -162,6 +162,7 @@ if /i "%USER_INPUT%"=="Y" (
     goto :eof
 )
 
+endlocal
 echo Exiting.
 pause
 exit 0
