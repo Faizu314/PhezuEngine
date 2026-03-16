@@ -11,12 +11,26 @@ jobs:
 
     strategy:
       matrix:
-        config: [Debug, Release]
+        vs_env:
+          - no_vs
+          - ide_full
+          - ide_partial
+          - ide_missing_workload
+          - bt_full
+          - bt_partial
+          - bt_missing_workload
+        cmake_env: [system, internal, none]
+        mono_env: [mono, no_mono]
+        build_config: [Debug, Release]
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Prepare Environment
+        shell: cmd
+        run: call Scripts/win32/Tests/TestEnvironmentSetup.bat --${{ matrix.vs_env }} --${{ matrix.cmake_env }} --${{ matrix.mono_env }}
+
       - name: Run setup script
         shell: cmd
-        run: call Setup_Win.bat --auto --${{ matrix.config }}
+        run: call Scripts/win32/Setup_Win.bat --auto --${{ matrix.build_config }}
