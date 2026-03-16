@@ -9,9 +9,12 @@ if %ERRORLEVEL% neq 0 (
         
         call :ValidateContinuation "Enter Y to continue with Cmake installation: "
 
-        mkdir %OUTPUT_DIR%
-        call Scripts\win32\Downloader.bat %PACKAGE% %CMAKE_LINK% %OUTPUT_DIR%\cmake-4.3.0-rc2-windows-x86_64.msi
-        call Scripts\win32\CmakeInstaller.bat %CD% %OUTPUT_DIR%\cmake-4.3.0-rc2-windows-x86_64.msi %OUTPUT_DIR%\extract
+        if not exist %OUTPUT_DIR% (
+            mkdir %OUTPUT_DIR%
+        )
+        
+        call Scripts\win32\Helpers\Downloader.bat %PACKAGE% %CMAKE_LINK% %OUTPUT_DIR%\cmake-4.3.0-rc2-windows-x86_64.msi
+        call Scripts\win32\Helpers\CmakeInstaller.bat %CD% %OUTPUT_DIR%\cmake-4.3.0-rc2-windows-x86_64.msi %OUTPUT_DIR%\extract
 
         if !ERRORLEVEL! neq 0 (
             echo Error installing Cmake. %ERRORLEVEL%

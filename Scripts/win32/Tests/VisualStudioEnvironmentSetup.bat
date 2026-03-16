@@ -46,5 +46,5 @@ if "%VS_ENV%"=="ide_full" (
 
 )
 
-echo Visual Studio Environment SetupComplete
+echo Visual Studio Environment Setup Complete
 exit /b 0

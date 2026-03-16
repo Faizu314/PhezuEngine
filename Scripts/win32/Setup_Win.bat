@@ -10,7 +10,7 @@ if %errorlevel% neq 0 (
 )
 
 echo Running as admin
-cd /d "%~dp0"
+cd /d "%~dp0\..\.."
 
 if /i "%~1"=="--auto" (
     set AUTO_MODE=1
@@ -25,14 +25,16 @@ if "%~2"=="--Release" (
     set BUILD_CONFIG=Release
 )
 
-call Scripts\win32\SetupCmake.bat
-call Scripts\win32\SetupBuildSystem.bat
-call Scripts\win32\SetupMono.bat
+call Scripts\win32\Helpers\SetupCmake.bat
+call Scripts\win32\Helpers\SetupBuildSystem.bat
+call Scripts\win32\Helpers\SetupMono.bat
 
-rmdir /s /q "%CD%\Vendor\win32\temp"
+if exist "%CD%\Vendor\win32\temp" (
+    rmdir /s /q "%CD%\Vendor\win32\temp"
+)
 echo Successfully setup the environment for PhezuEngine, proceeding to build and compile...
 
-call Scripts\win32\BuildEngine.bat
+call Scripts\win32\Helpers\BuildEngine.bat
 
 pause
 exit 0
