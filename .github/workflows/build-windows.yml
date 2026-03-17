@@ -21,10 +21,10 @@ jobs:
 #          - bt_missing_workload
         cmake_env:
           - system
-#          - internal
+          - internal
           - none
         mono_env:
-#          - mono
+          - mono
           - no_mono
         build_config:
 #          - Debug

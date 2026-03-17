@@ -17,7 +17,9 @@ if %ERRORLEVEL% neq 0 (
 :: Entire Mono Installation
 
 echo copying mono folder
-mkdir "%ROOT_DIR%\Vendor\win32\mono"
+if not exist "%ROOT_DIR%\Vendor\win32\mono" (
+    mkdir "%ROOT_DIR%\Vendor\win32\mono"
+)
 robocopy "%MONO_EXTRACT_DIR%\Mono" "%ROOT_DIR%\Vendor\win32\mono" /E /COPYALL /NJH /NJS /NC /NS
 
 if %ERRORLEVEL% geq 8 (
@@ -28,6 +30,9 @@ if %ERRORLEVEL% geq 8 (
 :: Mono Include Headers for Phezu
 
 echo copying mono headers
+if not exist "%ROOT_DIR%\Phezu\Vendor\include\win32\mono" (
+    mkdir "%ROOT_DIR%\Phezu\Vendor\include\win32\mono"
+)
 robocopy "%MONO_EXTRACT_DIR%\Mono\include\mono-2.0\mono" "%ROOT_DIR%\Phezu\Vendor\include\win32\mono" /E /COPYALL /NJH /NJS /NC /NS
 
 if %ERRORLEVEL% geq 8 (
@@ -37,8 +42,11 @@ if %ERRORLEVEL% geq 8 (
 
 :: Mono .dll and .lib for Phezu
 
-echo copying dll: copy /Y "%MONO_EXTRACT_DIR%\Mono\bin\mono-2.0-sgen.dll" "%ROOT_DIR%\Phezu\Vendor\lib\win32\mono-2.0-sgen.dll"
+if not exist "%ROOT_DIR%\Phezu\Vendor\lib\win32" (
+    mkdir "%ROOT_DIR%\Phezu\Vendor\lib\win32"
+)
 
+echo copying dll: copy /Y "%MONO_EXTRACT_DIR%\Mono\bin\mono-2.0-sgen.dll" "%ROOT_DIR%\Phezu\Vendor\lib\win32\mono-2.0-sgen.dll"
 copy /Y "%MONO_EXTRACT_DIR%\Mono\bin\mono-2.0-sgen.dll" "%ROOT_DIR%\Phezu\Vendor\lib\win32\mono-2.0-sgen.dll"
 
 if %ERRORLEVEL% neq 0 (
