@@ -10,8 +10,8 @@ if "%PRODUCT_ID%"=="" (
     exit /b 1
 )
 
-set VSWHERE=C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe
-set INSTALLER=C:\Program Files (x86)\Microsoft Visual Studio\Installer\setup.exe
+set "VSWHERE=C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe"
+set "INSTALLER=C:\Program Files (x86)\Microsoft Visual Studio\Installer\setup.exe"
 
 if not exist %"VSWHERE"% (
     echo vswhere not found
