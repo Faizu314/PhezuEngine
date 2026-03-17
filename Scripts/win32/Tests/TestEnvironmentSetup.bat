@@ -8,5 +8,5 @@ call VisualStudioEnvironmentSetup.bat %VS_ENV%
 
 popd
 
-call Scripts\win32\Helpers\CmakeEnvironmentSetup.bat %CMAKE_ENV%
-call Scripts\win32\Helpers\MonoEnvironmentSetup.bat %MONO_ENV%
+call "%~dp0\CmakeEnvironmentSetup.bat" %CMAKE_ENV%
+call "%~dp0\MonoEnvironmentSetup.bat" %MONO_ENV%
