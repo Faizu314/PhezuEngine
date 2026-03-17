@@ -38,21 +38,3 @@ call Scripts\win32\Helpers\BuildEngine.bat
 
 pause
 exit 0
-
-
-:ValidateContinuation
-
-if %AUTO_MODE%==1 (
-    goto :eof
-)
-
-set /p USER_INPUT=%~1
-
-if /i "%USER_INPUT%"=="Y" (
-    goto :eof
-)
-
-endlocal
-echo Exiting.
-pause
-exit 0

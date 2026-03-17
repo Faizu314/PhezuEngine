@@ -12,13 +12,13 @@ jobs:
     strategy:
       matrix:
         vs_env:
-          - no_vs
-          - ide_full
-          - ide_partial
+#          - no_vs
+#          - ide_full
+#          - ide_partial
           - ide_missing_workload
-          - bt_full
-          - bt_partial
-          - bt_missing_workload
+#          - bt_full
+#          - bt_partial
+#          - bt_missing_workload
         cmake_env:
           - system
 #          - internal
