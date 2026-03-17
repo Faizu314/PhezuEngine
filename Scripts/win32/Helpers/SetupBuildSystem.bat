@@ -22,7 +22,7 @@ if %ERRORLEVEL%==1 (
         exit 1
     )
 
-    call "%RETURN_VALUE_1%" -arch=x64
+    call "!RETURN_VALUE_1!" -arch=x64
 
     set "GENERATOR=NMake Makefiles"
 ) else if %ERRORLEVEL%==2 (

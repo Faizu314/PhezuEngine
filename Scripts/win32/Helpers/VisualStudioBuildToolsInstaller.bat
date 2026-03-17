@@ -1,6 +1,6 @@
 @echo off
 
-set INSTALLER_PATH=%~1
+set "INSTALLER_PATH=%~1"
 
 echo Script will continue setup after visual studio installation finishes.
 
@@ -13,11 +13,14 @@ if %ERRORLEVEL% NEQ 0 (
 	exit /b 1
 )
 
+set "BUILD_TOOLS_PATH=C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools"
+
 for /f "delims=" %%i in ('"%VSWHERE%" -latest -products * -requires Microsoft.VisualStudio.Product.BuildTools -property installationPath') do (
     set "BUILD_TOOLS_PATH=%%i"
+    set "WAS_FOUND=true"
 )
 
-if defined BUILD_TOOLS_PATH (
+if defined WAS_FOUND (
     echo Updating already existing Visual Studio Build Tools...
     "%INSTALLER_PATH%" update --wait --passive --norestart --installPath "%BUILD_TOOLS_PATH%"
 
@@ -37,7 +40,8 @@ if defined BUILD_TOOLS_PATH (
 	)
 ) else (
     echo Installing Visual Studio Build Tools Product...
-    "%INSTALLER_PATH%" --add Microsoft.VisualStudio.Product.BuildTools ^
+    "%INSTALLER_PATH%" --installPath "%BUILD_TOOLS_PATH%" ^
+    				   --add Microsoft.VisualStudio.Product.BuildTools ^
     				   --add Microsoft.VisualStudio.Workload.VCTools ^
     				   --wait --passive --norestart --includeRecommended
     
