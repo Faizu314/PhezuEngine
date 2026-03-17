@@ -1,4 +1,3 @@
-@echo off
 setlocal enabledelayedexpansion
 
 set PRODUCT_ID=%1
