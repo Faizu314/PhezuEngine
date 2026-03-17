@@ -34,8 +34,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Run setup script
+      - name: Prepare Environment and Run setup script
         shell: cmd
         run: |
-        call Scripts/win32/Tests/TestEnvironmentSetup.bat --${{ matrix.vs_env }} --${{ matrix.cmake_env }} --${{ matrix.mono_env }}
-        call Scripts/win32/Setup_Win.bat --auto --${{ matrix.build_config }}
+          call Scripts/win32/Tests/TestEnvironmentSetup.bat --${{ matrix.vs_env }} --${{ matrix.cmake_env }} --${{ matrix.mono_env }}
+          call Scripts/win32/Setup_Win.bat --auto --${{ matrix.build_config }}
