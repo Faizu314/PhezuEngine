@@ -6,7 +6,15 @@ echo Removing Enterprise and Professional Visual Studio Installations...
 call VsRemove.bat "Microsoft.VisualStudio.Product.Enterprise"
 call VsRemove.bat "Microsoft.VisualStudio.Product.Professional"
 
-if "%VS_ENV%"=="--ide_full" (
+if "%VS_ENV%"=="--no_vs" (
+	
+	echo Uninstalling Visual Studio Build Tools...
+	call VsRemove.bat "Microsoft.VisualStudio.Product.BuildTools"
+
+	echo Uninstalling Visual Studio Community IDE...
+	call VsRemove.bat "Microsoft.VisualStudio.Product.Community"
+
+) else if "%VS_ENV%"=="--ide_full" (
 
 	echo Uninstalling Visual Studio Build Tools...
 	call VsRemove.bat "Microsoft.VisualStudio.Product.BuildTools"
