@@ -13,9 +13,9 @@ echo Hiding CMake installation path...
 where cmake
 
 set "PATH=%PATH:C:\Program Files\CMake\bin;=%"
-set "PATH=%PATH:C:\Program Files (x86)\CMake\bin;=%"
-set "PATH=%PATH:C:\Program Files\CMake\bin=%"
-set "PATH=%PATH:C:\Program Files (x86)\CMake\bin=%"
+set "PATH=%PATH:C:\Strawberry\c\bin;=%"
+
+where cmake
 
 where cmake >nul 2>&1
 if ERRORLEVEL 1 (
