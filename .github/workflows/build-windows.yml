@@ -22,7 +22,7 @@ jobs:
         cmake_env:
           - system
 #          - internal
-#          - none
+          - none
         mono_env:
 #          - mono
           - no_mono
