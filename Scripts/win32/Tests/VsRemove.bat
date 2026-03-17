@@ -19,7 +19,7 @@ if not exist "%VSWHERE%" (
 echo Searching for product: %PRODUCT_ID%
 
 if "%COMPONENT_ID%"=="" (
-    for /f "usebackq tokens=*" %%i in (`"%VSWHERE%" -products "%PRODUCT_ID%" -property installationPath`) do (
+    for /f "usebackq tokens=*" %%i in (`"%VSWHERE%" -products %PRODUCT_ID% -property installationPath`) do (
 
         set "INSTALL_PATH=%%i"
         echo Found installation: !INSTALL_PATH!
@@ -39,7 +39,7 @@ if "%COMPONENT_ID%"=="" (
     exit /b 0
 )
 
-for /f "usebackq tokens=*" %%i in (`"%VSWHERE%" -products "%PRODUCT_ID%" -requires "%COMPONENT_ID%" -property installationPath`) do (
+for /f "usebackq tokens=*" %%i in (`"%VSWHERE%" -products %PRODUCT_ID% -requires %COMPONENT_ID% -property installationPath`) do (
 
     set "INSTALL_PATH=%%i"
     echo Found installation: !INSTALL_PATH!
@@ -47,7 +47,7 @@ for /f "usebackq tokens=*" %%i in (`"%VSWHERE%" -products "%PRODUCT_ID%" -requir
     echo Removing component %COMPONENT_ID%
     "%INSTALLER%" modify ^
         --installPath "!INSTALL_PATH!" ^
-        --remove "%COMPONENT_ID%" ^
+        --remove %COMPONENT_ID% ^
         --passive --norestart
 )
 
