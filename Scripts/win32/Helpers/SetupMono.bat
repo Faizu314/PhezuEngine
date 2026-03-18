@@ -6,7 +6,7 @@ if not exist "Vendor\win32\mono\.installed" (
     call Scripts\win32\Helpers\ValidateContinuation.bat "Enter Y to continue with Mono installation: "
 
     if not exist "%OUTPUT_DIR%" (
-        mkdir %OUTPUT_DIR%
+        mkdir "%OUTPUT_DIR%"
     )
     
     call Scripts\win32\Helpers\Downloader.bat %PACKAGE% %MONO_LINK% %OUTPUT_DIR%\mono-6.12.0-x64-0.msi
