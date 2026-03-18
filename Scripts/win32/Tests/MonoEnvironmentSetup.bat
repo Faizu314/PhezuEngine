@@ -1,6 +1,6 @@
 set MONO_ENV=%1
 
-echo "Setting up CMake Environment: %MONO_ENV%"
+echo "Setting up Mono Environment: %MONO_ENV%"
 
 if "%MONO_ENV%"=="--mono" (
 

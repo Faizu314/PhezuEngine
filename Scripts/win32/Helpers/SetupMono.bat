@@ -5,7 +5,7 @@ set OUTPUT_DIR=%CD%\Vendor\win32\temp\mono
 if not exist "Vendor\win32\mono\.installed" (
     call Scripts\win32\Helpers\ValidateContinuation.bat "Enter Y to continue with Mono installation: "
 
-    if not exist %OUTPUT_DIR% (
+    if not exist "%OUTPUT_DIR%" (
         mkdir %OUTPUT_DIR%
     )
     
