@@ -23,13 +23,6 @@ if "%VS_ENV%"=="--no_vs" (
 
 	echo Uninstalling Visual Studio Build Tools...
 	call VsRemove.bat "Microsoft.VisualStudio.Product.BuildTools"
-	echo Uninstalling component: Microsoft.VisualStudio.Component.VC.Tools.x86.x64 of Visual Studio IDE...
-	call VsRemove.bat "Microsoft.VisualStudio.Product.Enterprise" "Microsoft.VisualStudio.Component.VC.Tools.x86.x64"
-
-) else if "%VS_ENV%"=="--ide_missing_workload" (
-
-	echo Uninstalling Visual Studio Build Tools...
-	call VsRemove.bat "Microsoft.VisualStudio.Product.BuildTools"
 	echo Uninstalling workload: Microsoft.VisualStudio.Workload.NativeDesktop of Visual Studio IDE...
 	call VsRemove.bat "Microsoft.VisualStudio.Product.Enterprise" "Microsoft.VisualStudio.Workload.NativeDesktop"
 
@@ -39,13 +32,6 @@ if "%VS_ENV%"=="--no_vs" (
 	call VsRemove.bat "Microsoft.VisualStudio.Product.Enterprise"
 
 ) else if "%VS_ENV%"=="--bt_partial" (
-
-	echo Uninstalling Visual Studio Enterprise IDE...
-	call VsRemove.bat "Microsoft.VisualStudio.Product.Enterprise"
-	echo Uninstalling component: Microsoft.VisualStudio.Component.VC.Tools.x86.x64 of Visual Studio Build Tools...
-	call VsRemove.bat "Microsoft.VisualStudio.Product.BuildTools" "Microsoft.VisualStudio.Component.VC.Tools.x86.x64"
-
-) else if "%VS_ENV%"=="--bt_missing_workload" (
 
 	echo Uninstalling Visual Studio Enterprise IDE...
 	call VsRemove.bat "Microsoft.VisualStudio.Product.Enterprise"
