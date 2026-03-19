@@ -11,7 +11,7 @@ Created as a personal learning project to understand engine architecture. There 
 - **Physics system** (axis-aligned boxes only)
 - **Asset Management** of 7 types of assets
 - **OpenGL Rendering** of sprites
-- **Minimal dependencies** and clean, readable architecture
+- **Minimal dependencies** and simple
 
 ## Goals
 - Make engine programming **easy and accessible** for learners  
@@ -49,26 +49,27 @@ List of all third party code used (Mostly single headers):
   - nlohmann
   - stb_image
   - glad
+  - mono
 
-## CI / Tested Configurations
+## CI/CD Tested Configurations
 
-- Windows x64 — MSVC Debug
-- Windows x64 — MSVC Release
-
+- Windows x64 — Debug
+- Windows x64 — Release
+- Windows x64 — Visual Studio IDE (2017-2026)
+- Windows x64 — Visual Studio Build Tools
+  
 ---
 
 ## Windows Setup
 **Requirements**
 ```bash
-  Visual Studio installation
-  Supported versions: 2017, 2019, 2022, 2026
-  Desktop development with C++ Module is required
+  None
 ```
 
 **Instructions**
 ```bash
 1. Clone or download the repository
-2. Run Setup_Win.bat
+2. Run Scripts/win32/Setup_Win.bat
 ```
 
 ## Linux and Mac not currently supported
@@ -76,6 +77,7 @@ List of all third party code used (Mostly single headers):
 ## Current Roadmap 
 - Add a documentation site.
 - Add custom physics module.
+- Remove Mono as a dependency (Much Later).
 - Android support (Much Later).
 - Editor application (Much Later).
 
@@ -83,5 +85,5 @@ List of all third party code used (Mostly single headers):
 
 ## Demo
 ![BreakoutPreview](./BreakoutPreview.png)
-> *This is a preview of the sample breakout game.*
+> *This is a preview of the sample breakout game. [Link](https://github.com/Faizu314/Phezu-Breakout)*
 
