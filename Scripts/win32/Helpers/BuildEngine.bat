@@ -7,7 +7,7 @@ echo Using generator: %GENERATOR%
 %CMAKE_COMMAND% .. -G "%GENERATOR%"
 
 if %ERRORLEVEL% neq 0 (
-    echo Failed to generate build system files.
+    echo Failed to generate build system files, ensure that cmake's version supports the generator being used.
 
     pause
     exit 1

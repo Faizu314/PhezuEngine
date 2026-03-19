@@ -17,6 +17,7 @@ namespace Phezu::Editor {
         void TryOpenProject(const std::filesystem::path& projectPath);
         void TryBuild(const std::filesystem::path& projectPath);
         void CloseProject();
+        void AddFilePath(const std::filesystem::path& extension, const std::filesystem::path& path);
         void GetFilesPathInDirectory(const std::filesystem::path& directory);
         void GetFilesPathRecursively(const std::filesystem::path& directory);
     private:
