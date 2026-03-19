@@ -12,7 +12,7 @@
 
 namespace Phezu {
 
-	enum class MaterialPropertyType : uint8_t {
+	enum class MaterialPropertyType {
 		None = 0,
 		Float,
 		Float2,

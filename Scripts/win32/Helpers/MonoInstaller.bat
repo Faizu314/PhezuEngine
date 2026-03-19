@@ -38,29 +38,6 @@ if %ERRORLEVEL% geq 8 (
     exit /b 1
 )
 
-:: Mono .dll and .lib for Phezu
-
-if not exist "%ROOT_DIR%\Phezu\Vendor\lib\win32" (
-    mkdir "%ROOT_DIR%\Phezu\Vendor\lib\win32"
-)
-
-echo copying dll: copy /Y "%MONO_EXTRACT_DIR%\Mono\bin\mono-2.0-sgen.dll" "%ROOT_DIR%\Phezu\Vendor\lib\win32\mono-2.0-sgen.dll"
-copy /Y "%MONO_EXTRACT_DIR%\Mono\bin\mono-2.0-sgen.dll" "%ROOT_DIR%\Phezu\Vendor\lib\win32\mono-2.0-sgen.dll"
-
-if %ERRORLEVEL% neq 0 (
-    echo Error copying mono sgen dll
-    exit /b 1
-)
-
-echo copying lib: copy /Y "%MONO_EXTRACT_DIR%\Mono\lib\mono-2.0-sgen.lib" "%ROOT_DIR%\Phezu\Vendor\lib\win32\mono-2.0-sgen.lib"
-
-copy /Y "%MONO_EXTRACT_DIR%\Mono\lib\mono-2.0-sgen.lib" "%ROOT_DIR%\Phezu\Vendor\lib\win32\mono-2.0-sgen.lib"
-
-if %ERRORLEVEL% neq 0 (
-    echo Error copying mono sgen lib
-    exit /b 1
-)
-
 type nul > "%ROOT_DIR%\Vendor\win32\mono\.installed"
 
 exit /b 0

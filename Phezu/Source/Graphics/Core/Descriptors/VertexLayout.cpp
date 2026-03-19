@@ -1,5 +1,5 @@
+#include "Core/Defs/Assert.hpp"
 #include "Core/Platform.hpp"
-
 #include "Graphics/Core/Descriptors/VertexLayout.hpp"
 
 namespace Phezu {
@@ -35,10 +35,7 @@ namespace Phezu {
 	}
 
 	VertexAttribute VertexLayout::GetAttributeAt(VertexSemantic semantic) const {
-		if (m_Attributes.find(semantic) == m_Attributes.end()) {
-			Log("Assert semantic not found in vertex layout\n");
-			return VertexAttribute();
-		}
+		PZ_ASSERT(m_Attributes.find(semantic) != m_Attributes.end(), "Semantic not found in vertex layout.\n");
 
 		return m_Attributes.at(semantic);
 	}

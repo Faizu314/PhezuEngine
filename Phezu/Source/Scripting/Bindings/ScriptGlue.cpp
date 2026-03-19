@@ -1,6 +1,7 @@
 #include "glm/glm.hpp"
 #include <mono/jit/jit.h>
 
+#include "Core/Defs/Assert.hpp"
 #include "Core/Platform.hpp"
 #include "Core/Engine.hpp"
 #include "Scripting/Systems/ScriptEngine.hpp"
@@ -25,7 +26,7 @@ namespace Phezu {
 
 	Entity* GetEntity(uint64_t entityID) {
 		SceneManager* sceneManager = s_Data->SceneManager;
-		Entity* entity;
+		Entity* entity = nullptr;
 
 		if (auto scene = sceneManager->GetActiveScene()) {
 			entity = scene->GetEntity(entityID);

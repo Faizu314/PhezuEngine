@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Defs/Assert.hpp"
 #include "Core/Types/Buffer.hpp"
 #include "Core/Platform.hpp"
 
@@ -11,10 +12,7 @@ namespace Phezu {
 	}
 
 	void Buffer::Write(const void* data, size_t writeSize, size_t startByteIndex) {
-		if (startByteIndex + writeSize > m_Size) {
-			Log("Should assert here\n");
-			return;
-		}
+		PZ_ASSERT(startByteIndex + writeSize <= m_Size, "Invalid write operation in Buffer.\n");
 
 		const std::byte* byteData = static_cast<const std::byte*>(data);
 

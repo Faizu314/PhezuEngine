@@ -26,10 +26,7 @@ namespace Phezu {
     }
     
     void SceneManager::LoadScene(size_t buildIndex) {
-        if (buildIndex < 0 || buildIndex >= m_BuildScenesConfig.BuildScenes.size()) {
-            Log("Assert here\n");
-            return;
-        }
+        PZ_ASSERT(buildIndex >= 0 && buildIndex < m_BuildScenesConfig.BuildScenes.size(), "Invalid build index.\n");
         
         m_SceneToLoad = buildIndex;
         m_LoadSceneAfterFrame = true;

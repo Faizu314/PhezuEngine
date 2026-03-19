@@ -2,6 +2,7 @@
 
 #include "nlohmann/json.hpp"
 
+#include "Core/Defs/Assert.hpp"
 #include "Core/Platform.hpp"
 #include "Assets/Types/ShaderAsset.hpp"
 
@@ -48,25 +49,18 @@ namespace Phezu {
     {
         line = Trim(line);
 
-        if (line.empty()) {
-            Log("Should assert here: Shader compiler error\n");
-            return {};
-        }
+        PZ_ASSERT(!line.empty(), "Shader compiler error.\n");
 
         size_t colon = line.find(':');
-        if (colon == std::string_view::npos) {
-            Log("Should assert here: Shader compiler error\n");
-            return {};
-        }
+
+        PZ_ASSERT(colon != std::string_view::npos, "Shader compiler error.\n");
 
         std::string left = Trim(line.substr(0, colon));
         std::string right = Trim(line.substr(colon + 1));
 
         size_t space = left.find(' ');
-        if (space == std::string::npos) {
-            Log("Should assert here: Shader compiler error\n");
-            return {};
-        }
+
+        PZ_ASSERT(space != std::string::npos, "Shader compiler error.\n");
 
         ParsedVertexInput result;
         result.DataType = Trim(left.substr(0, space));
@@ -84,10 +78,7 @@ namespace Phezu {
         size_t vertexPos = data.find(vertexTag);
         size_t fragmentPos = data.find(fragmentTag);
 
-        if (vertexPos == std::string::npos || fragmentPos == std::string::npos) {
-            Log("Should assert here: Invalid shader source\n");
-            return;
-        }
+        PZ_ASSERT(vertexPos != std::string::npos && fragmentPos != std::string::npos, "Shader compiler error.\n");
 
         vertexPos += vertexTag.length();
 
@@ -111,18 +102,14 @@ namespace Phezu {
         const std::string keyword = "VertexInput";
 
         size_t keywordPos = src.find(keyword);
-        if (keywordPos == std::string::npos) {
-            Log("Should assert here: VertexInput block missing from shader source\n");
-            return "";
-        }
+
+        PZ_ASSERT(keywordPos != std::string::npos, "Shader compiler error: VertexInput block missing.\n");
 
         *start = keywordPos;
 
         size_t braceOpen = src.find('{', keywordPos);
-        if (braceOpen == std::string::npos) {
-            Log("Should assert here: Shader compile error\n");
-            return "";
-        }
+
+        PZ_ASSERT(braceOpen != std::string::npos, "Shader compiler error.\n")
 
         size_t i = braceOpen + 1;
 
@@ -132,10 +119,7 @@ namespace Phezu {
                 break;
         }
 
-        if (i >= src.size()) {
-            Log("Should assert here: Shader compile error\n");
-            return "";
-        }
+        PZ_ASSERT(i < src.size(), "Shader compiler error.\n")
 
         *end = i;
 

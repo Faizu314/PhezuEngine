@@ -2,7 +2,7 @@
 
 #include "nlohmann/json.hpp"
 
-#include "Core/Platform.hpp"
+#include "Core/Defs/Assert.hpp"
 #include "Core/Types/Types.hpp"
 #include "Assets/Types/MeshAsset.hpp"
 
@@ -29,8 +29,7 @@ namespace Phezu {
             size_t elementSize = GetVertexAttributeSize(buffer.Type);
             size_t attribCount = GetVertexAttributeCount(buffer.Count);
 
-            if ((buffer.Data.size() / attribCount) != VertexCount)
-                Log("Should assert here\n");
+            PZ_ASSERT((buffer.Data.size() / attribCount) == VertexCount, "Invalid mesh asset data.\n");
 
             Stride += elementSize * attribCount;
         }

@@ -1,3 +1,4 @@
+#include "Core/Defs/Assert.hpp"
 #include "Core/Platform.hpp"
 #include "Graphics/OpenGL/Resources/GLShader.hpp"
 #include "Maths/Objects/Mat3x3.hpp"
@@ -78,10 +79,7 @@ namespace Phezu {
 	}
 
 	unsigned int GLShader::GetSemanticLocation(VertexSemantic semantic) const {
-		if (m_Semantics.find(semantic) == m_Semantics.end()) {
-			Log("Should assert, semantic not found in required semantics of shader\n");
-			return 0;
-		}
+		PZ_ASSERT(m_Semantics.find(semantic) != m_Semantics.end(), "Semantic does not exist in shader.\n");
 
 		return m_Semantics.at(semantic);
 	}

@@ -11,7 +11,7 @@
 
 namespace Phezu {
     
-    enum class EntryType : uint8_t {
+    enum class EntryType {
         Invalid = 0,
         
         Entity = 1,

@@ -1,6 +1,6 @@
 #include "nlohmann/json.hpp"
 
-#include "Core/Platform.hpp"
+#include "Core/Defs/Assert.hpp"
 #include "Assets/Blueprint/Blueprint.hpp"
 
 namespace Phezu {
@@ -37,8 +37,8 @@ namespace Phezu {
                 case EntryType::PrefabRef:
                     PrefabEntries.push_back(entry);
                     break;
-                case EntryType::Invalid:
-                    Log("Assert here\n");
+                default:
+                    PZ_ASSERT(false, "Unknown entry type.\n")
                     break;
             }
         }
