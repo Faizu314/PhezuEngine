@@ -8,7 +8,7 @@
 #include <unordered_set>
 #include <utility>
 
-#include "Core/Platform.hpp"
+#include "Core/Defs/Assert.hpp"
 #include "Assets/Systems/AssetManager.hpp"
 
 namespace Phezu {
@@ -47,19 +47,13 @@ namespace Phezu {
 		}
 
 		T* GetResource(uint64_t resourceID) {
-			if (m_IdToResource.find(resourceID) == m_IdToResource.end()) {
-				Log("Assert here\n");
-				return nullptr;
-			}
+			PZ_ASSERT(m_IdToResource.find(resourceID) != m_IdToResource.end(), "Resource does not exist.\n");
 
 			return m_IdToResource.at(resourceID);
 		}
 
 		uint64_t GetResourceID(T* resourcePtr) {
-			if (m_ResourceToId.find(resourcePtr) == m_ResourceToId.end()) {
-				Log("Assert here\n");
-				return 0;
-			}
+			PZ_ASSERT(m_ResourceToId.find(resourcePtr) != m_ResourceToId.end(), "Resource does not exist.\n");
 
 			return m_ResourceToId.at(resourcePtr);
 		}

@@ -2,6 +2,7 @@
 #include "Project.hpp"
 #include "EditorDefines.hpp"
 
+#include <fstream>
 #include <sstream>
 #include <windows.h>
 
@@ -53,49 +54,54 @@ namespace Phezu::Editor {
         std::filesystem::create_directory(buildDir / "Assets");
 
         {
-            std::ostringstream stringBuilder;
+            std::ofstream compilerBat("CS_COMPILER.bat");
 
-            stringBuilder << CSHARP_BUILD_COMMAND << " -target:library -out:\"" << buildDir.string() << "/Game.dll\" ";
+            compilerBat << CSHARP_BUILD_COMMAND << " -target:library -out:\"" << buildDir.generic_string() << "/Game.dll\" ";
 
             for (int i = 0; i < m_OpenedProject->ScriptFiles.size(); i++) {
-                stringBuilder << "\"" << m_OpenedProject->ScriptFiles[i].string() << "\" ";
+                compilerBat << "\"" << m_OpenedProject->ScriptFiles[i].generic_string() << "\" ";
             }
 
-            stringBuilder << "-reference:\"" << SCRIPT_CORE_DLL_SRC_DIR << "/Phezu-ScriptCore.dll\"";
+            compilerBat << "-reference:\"" << SCRIPT_CORE_DLL_SRC_DIR << "/Phezu-ScriptCore.dll\"";
 
-            printf("Executing Command: %s\n", stringBuilder.str().c_str());
+            compilerBat.close();
 
-            std::system(stringBuilder.str().c_str());
+            printf("Running generated bat file\n");
+
+            std::system("CS_COMPILER.bat");
         }
+
+        printf("Copy pasting asset files\n");
 
         std::filesystem::path dest = buildDir / "Assets";
 
-        for (int i = 0; i < m_OpenedProject->PrefabFiles.size(); i++) {
-            std::filesystem::copy(m_OpenedProject->PrefabFiles[i], dest, std::filesystem::copy_options::overwrite_existing);
+        for (int i = 0; i < m_OpenedProject->GetFilesCount(); i++) {
+            std::filesystem::copy(m_OpenedProject->GetFilePathByIndex(i), dest, std::filesystem::copy_options::overwrite_existing);
         }
-        for (int i = 0; i < m_OpenedProject->SceneFiles.size(); i++) {
-            std::filesystem::copy(m_OpenedProject->SceneFiles[i], dest, std::filesystem::copy_options::overwrite_existing);
-        }
-        for (int i = 0; i < m_OpenedProject->ConfigFiles.size(); i++) {
-            std::filesystem::copy(m_OpenedProject->ConfigFiles[i], dest, std::filesystem::copy_options::overwrite_existing);
-        }
+
+        printf("Copy pasting mono core libs\n");
 
         std::filesystem::path exeDir = RUNTIME_EXE_DIR;
 
         std::filesystem::create_directory(buildDir / "mono");
         std::filesystem::copy(exeDir / "mono", buildDir / "mono", std::filesystem::copy_options::recursive | std::filesystem::copy_options::skip_existing);
 
-        const size_t toCopySize = 4;
-
-        const char* toCopy[toCopySize] = {
+        const char* toCopy[] = {
             "Phezu-ScriptCore.dll",
             "mono-2.0-sgen.dll",
-            "mono-2.0-sgen.lib",
+#if defined PZ_DEBUG
+            "mono-2.0-sgen.pdb",
+#endif
             "Runtime.exe",
         };
 
+        size_t toCopySize = sizeof(toCopy) / sizeof(toCopy[0]);
+
+        printf("Copy pasting exe, dlls and libs\n");
+
         for (int i = 0; i < toCopySize; i++) {
-            std::filesystem::copy(exeDir / toCopy[i], buildDir, std::filesystem::copy_options::skip_existing);
+            std::filesystem::path filepath = exeDir / toCopy[i];
+            std::filesystem::copy(filepath, buildDir, std::filesystem::copy_options::skip_existing);
         }
     }
 
@@ -107,33 +113,42 @@ namespace Phezu::Editor {
         m_OpenedProject = nullptr;
     }
 
+    void EditorShell::AddFilePath(const std::filesystem::path& extension, const std::filesystem::path& path) {
+        if (extension == ".cs") {
+            m_OpenedProject->ScriptFiles.push_back(path);
+        }
+        else if (extension == ".scene") {
+            m_OpenedProject->SceneFiles.push_back(path);
+        }
+        else if (extension == ".prefab") {
+            m_OpenedProject->PrefabFiles.push_back(path);
+        }
+        else if (extension == ".shader") {
+            m_OpenedProject->ShaderFiles.push_back(path);
+        }
+        else if (extension == ".mat") {
+            m_OpenedProject->MaterialFiles.push_back(path);
+        }
+        else if (extension == ".png") {
+            m_OpenedProject->ImageFiles.push_back(path);
+        }
+        else if (extension == ".texture") {
+            m_OpenedProject->PrefabFiles.push_back(path);
+        }
+        else if (extension == ".config") {
+            m_OpenedProject->ConfigFiles.push_back(path);
+        }
+    }
+
     void EditorShell::GetFilesPathInDirectory(const std::filesystem::path & directory) {
         for (const auto& entry : std::filesystem::directory_iterator(directory)) {
             if (entry.is_regular_file()) {
-                if (entry.path().extension() == ".cs") {
-                    m_OpenedProject->ScriptFiles.push_back(entry);
-                }
-                else if (entry.path().extension() == ".scene") {
-                    m_OpenedProject->SceneFiles.push_back(entry);
-                }
-                else if (entry.path().extension() == ".prefab") {
-                    m_OpenedProject->PrefabFiles.push_back(entry);
-                }
-                else if (entry.path().extension() == ".config") {
-                    m_OpenedProject->ConfigFiles.push_back(entry);
-                }
-                else if (entry.path().extension() == ".meta") {
+                if (entry.path().extension() == ".meta") {
                     std::filesystem::path stem = entry.path().stem();
-
-                    if (stem.extension() == ".scene") {
-                        m_OpenedProject->SceneFiles.push_back(entry);
-                    }
-                    else if (stem.extension() == ".prefab") {
-                        m_OpenedProject->PrefabFiles.push_back(entry);
-                    }
-                    else if (stem.extension() == ".config") {
-                        m_OpenedProject->ConfigFiles.push_back(entry);
-                    }
+                    AddFilePath(stem.extension(), entry);
+                }
+                else {
+                    AddFilePath(entry.path().extension(), entry);
                 }
             }
         }

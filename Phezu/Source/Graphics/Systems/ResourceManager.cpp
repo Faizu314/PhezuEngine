@@ -102,10 +102,7 @@ namespace Phezu {
     void ResourceManager::DestroyUserMaterial(uint64_t materialID) {
         Material* mat = m_MaterialRegistry.GetResource(materialID);
 
-        if (m_UserMaterials.find(mat) == m_UserMaterials.end()) {
-            Log("Assert here, trying to delete a user material that does not exist\n");
-            return;
-        }
+        PZ_ASSERT(m_UserMaterials.find(mat) != m_UserMaterials.end(), "Trying to delete a user material that does not exist.\n");
 
         m_UserMaterials.erase(mat);
         m_MaterialRegistry.RemoveRecord(mat);

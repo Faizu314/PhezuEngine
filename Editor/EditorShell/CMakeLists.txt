@@ -1,5 +1,11 @@
 project(EditorShell)
 
+if (WIN32)
+    set(MONO_EXE "${MONO_DIR}/bin/mono.exe")
+    set(CS_COMPILER "${MONO_DIR}/lib/mono/4.5/csc.exe")
+    set(CS_BUILD_COMMAND ${MONO_EXE} ${CS_COMPILER})
+endif()
+
 file(GLOB_RECURSE SHELL_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/Source/*.cpp")
 file(GLOB_RECURSE SHELL_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/Include/*.hpp")
 
@@ -9,28 +15,29 @@ endif()
 
 target_include_directories(EditorShell PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 target_include_directories(EditorShell PUBLIC ${CMAKE_BINARY_DIR}/Editor/Generated)
+target_link_libraries(EditorShell PRIVATE Phezu)
 
 set(EDITOR_DEFINES_HEADER "${CMAKE_BINARY_DIR}/Editor/Generated/EditorDefines.hpp")
 
 if (WIN32)
-    set(ESCAPED_CSHARP_BUILD_COMMAND "\"${MONO_EXECUTABLE} ${CSHARP_COMPILER}\"")
+    set(ESCAPED_CSHARP_BUILD_COMMAND "\"\\\"${MONO_EXE}\\\" \\\"${CS_COMPILER}\\\"\"")
     set(ESCAPED_DLL_SRC "\"${SCRIPT_CORE_DLL_SRC_DIR}\"")
     set(ESCAPED_RUNTIME_EXE_DIR "\"$<TARGET_FILE_DIR:Runtime>\"")
 endif()
 
 add_custom_command(
-        COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/Editor/Generated"
-        OUTPUT "${EDITOR_DEFINES_HEADER}"
-        COMMAND ${CMAKE_COMMAND} -DOUT_FILE=${EDITOR_DEFINES_HEADER}
-        -DCSHARP_BUILD_COMMAND=${ESCAPED_CSHARP_BUILD_COMMAND}
-        -DSCRIPT_CORE_DLL_SRC_DIR=${ESCAPED_DLL_SRC}
-        -DRUNTIME_EXE_DIR=${ESCAPED_RUNTIME_EXE_DIR}
-        -P "${CMAKE_SOURCE_DIR}/Editor/EditorShell/GenerateEditorDefinesHeader.cmake"
-        VERBATIM
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/Editor/Generated"
+    OUTPUT "${EDITOR_DEFINES_HEADER}"
+    COMMAND ${CMAKE_COMMAND} -DOUT_FILE=${EDITOR_DEFINES_HEADER}
+    -DCSHARP_BUILD_COMMAND=${ESCAPED_CSHARP_BUILD_COMMAND}
+    -DSCRIPT_CORE_DLL_SRC_DIR=${ESCAPED_DLL_SRC}
+    -DRUNTIME_EXE_DIR=${ESCAPED_RUNTIME_EXE_DIR}
+    -P "${CMAKE_SOURCE_DIR}/Editor/EditorShell/GenerateEditorDefinesHeader.cmake"
+    VERBATIM
 )
 
 add_custom_target(EditorDefinesHeader
-        DEPENDS "${EDITOR_DEFINES_HEADER}"
+    DEPENDS "${EDITOR_DEFINES_HEADER}"
 )
 
 add_dependencies(EditorShell EditorDefinesHeader)

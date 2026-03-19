@@ -1,3 +1,4 @@
+#include "Core/Defs/Assert.hpp"
 #include "Core/Platform.hpp"
 #include "Graphics/Core/Resources/Shader.hpp"
 #include "Graphics/Core/Resources/Texture.hpp"
@@ -69,8 +70,7 @@ namespace Phezu {
 				m_Shader->SetInt(propertyName, std::get<int>(property.Value));
 				break;
 			default: {
-				Log("Should assert here: material property apply case not implemented\n");
-				return;
+				PZ_ASSERT(false, "Material property apply case not implemented.\n");
 			}
 		}
 	}

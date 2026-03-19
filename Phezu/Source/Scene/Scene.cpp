@@ -22,10 +22,7 @@ namespace Phezu {
     Entity* Scene::CreateEntity(AssetHandle prefabHandle) {
         auto prefab = m_Ctx.assetManager->GetAsset<PrefabAsset>(prefabHandle);
         
-        if (!prefab) {
-            //TODO: add asserts
-            return nullptr;
-        }
+        PZ_ASSERT(prefab != nullptr, "Invalid prefab handle.\n");
         
         BlueprintRuntimeContext ctx = { m_Ctx.assetManager, m_Ctx.resourceManager, m_Ctx.scriptEngine, this};
 
@@ -55,8 +52,6 @@ namespace Phezu {
             return;
         
         DestroyEntityInternal(it->second);
-        
-        m_RuntimeEntities.erase(it);
     }
 
     void Scene::DestroyEntityInternal(Entity* entity) {
@@ -69,6 +64,9 @@ namespace Phezu {
 
         m_Ctx.scriptEngine->OnEntityDestroyed(entity);
         entity->OnDestroyed();
+
+        m_RuntimeEntities.erase(entity->GetEntityID());
+        delete entity;
     }
     
     void Scene::LogicUpdate(float deltaTime) {
@@ -138,10 +136,14 @@ namespace Phezu {
     }
     
     void Scene::Unload() {
+        std::vector<Entity*> entities(m_RuntimeEntities.size());
+
         for (auto kvp : m_RuntimeEntities) {
-            DestroyEntityInternal(kvp.second);
+            entities.push_back(kvp.second);
         }
 
-        m_RuntimeEntities.clear();
+        for (auto entity : entities) {
+            DestroyEntityInternal(entity);
+        }
     }
 }
