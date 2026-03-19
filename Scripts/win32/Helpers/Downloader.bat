@@ -1,5 +1,3 @@
-@echo off
-
 set PACKAGE=%~1
 set DOWNLOAD_LINK=%~2
 set OUTPUT_PATH=%~3

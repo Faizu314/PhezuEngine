@@ -1,5 +1,3 @@
-@echo off
-
 set "VSWHERE=%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
 
 if not exist "%VSWHERE%" (

@@ -1,5 +1,3 @@
-@echo off
-
 set ROOT_DIR=%~1
 set CMAKE_MSI_PATH=%~2
 set CMAKE_EXTRACT_DIR=%~3

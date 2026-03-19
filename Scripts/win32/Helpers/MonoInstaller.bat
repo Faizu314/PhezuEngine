@@ -1,5 +1,3 @@
-@echo off
-
 set ROOT_DIR=%~1
 set MONO_MSI_PATH=%~2
 set MONO_EXTRACT_DIR=%~3

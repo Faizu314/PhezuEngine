@@ -1,5 +1,3 @@
-@echo off
-
 set "INSTALLER_PATH=%~1"
 
 echo Script will continue setup after visual studio installation finishes.

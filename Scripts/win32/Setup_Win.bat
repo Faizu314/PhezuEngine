@@ -36,5 +36,6 @@ echo Successfully setup the environment for PhezuEngine, proceeding to build and
 
 call Scripts\win32\Helpers\BuildEngine.bat
 
+endlocal
 pause
 exit 0

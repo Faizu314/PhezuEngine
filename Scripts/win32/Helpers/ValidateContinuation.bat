@@ -1,3 +1,5 @@
+@echo off
+
 if %AUTO_MODE%==1 (
     exit /b 0
 )
@@ -8,7 +10,6 @@ if /i "%USER_INPUT%"=="Y" (
     exit /b 0
 )
 
-endlocal
 echo Exiting.
 pause
 exit 0

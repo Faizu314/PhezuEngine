@@ -7,7 +7,7 @@ call Scripts\win32\Helpers\VisualStudioFinder.bat
 if %ERRORLEVEL%==1 (
     echo Did not find any compatible Visual Studio IDE or Build Tools installation.
 
-    call Scripts\win32\Helpers\ValidateContinuation.bat "Enter Y to continue with Visual Studio Installer Download: "
+    cmd /c call Scripts\win32\Helpers\ValidateContinuation.bat "Enter Y to continue with Visual Studio Installer Download: "
 
     if not exist %OUTPUT_DIR% (
         mkdir %OUTPUT_DIR%

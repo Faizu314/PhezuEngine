@@ -7,7 +7,7 @@ if %ERRORLEVEL% neq 0 (
     if not exist "Vendor\win32\cmake\.installed" (
         echo Did not find cmake installation.
         
-        call Scripts\win32\Helpers\ValidateContinuation.bat "Enter Y to continue with Cmake installation: "
+        cmd /c call Scripts\win32\Helpers\ValidateContinuation.bat "Enter Y to continue with Cmake installation: "
 
         if not exist %OUTPUT_DIR% (
             mkdir %OUTPUT_DIR%
