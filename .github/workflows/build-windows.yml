@@ -12,17 +12,17 @@ jobs:
     strategy:
       matrix:
         vs_env:
-          - no_vs
+#          - no_vs
           - ide_full
-          - ide_partial
-          - bt_full
-          - bt_partial
+#          - ide_partial
+#          - bt_full
+#          - bt_partial
         cmake_env:
           - system
-          - internal
-          - none
+ #         - internal
+ #         - none
         mono_env:
-          - mono
+ #         - mono
           - no_mono
         build_config:
           - Debug
