@@ -33,7 +33,7 @@ elseif (WIN32)
     set(CSHARP_COMPILER "${CMAKE_SOURCE_DIR}/Vendor/win32/mono/lib/mono/4.5/csc.exe")
     set(SCRIPT_CORE_DLL_RELATIVE_PATH "" CACHE INTERNAL "")
 
-    set(LIB_SRC_DIR "${CMAKE_SOURCE_DIR}/Phezu/Vendor/lib/win32" CACHE INTERNAL "")
+    set(LIB_SRC_DIR "${CMAKE_SOURCE_DIR}/Vendor/win32/mono/lib" CACHE INTERNAL "")
     set(LIB_DEST_DIR "$<TARGET_FILE_DIR:Runtime>" CACHE INTERNAL "")
     set(MONO_CORE_LIBS_SRC_DIR "${CMAKE_SOURCE_DIR}/Vendor/win32/mono" CACHE INTERNAL "")
     set(MONO_CORE_LIBS_DEST_DIR "${LIB_DEST_DIR}" CACHE INTERNAL "")

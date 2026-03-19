@@ -52,6 +52,7 @@ if (APPLE)
     )
 elseif (WIN32)
     target_include_directories(Phezu PRIVATE ${CMAKE_SOURCE_DIR}/Phezu/Vendor/include/win32)
+    target_include_directories(Phezu PRIVATE ${CMAKE_SOURCE_DIR}/Vendor/win32/mono/include/mono-2.0)
     target_link_libraries(Phezu PRIVATE
         "${LIB_SRC_DIR}/mono-2.0-sgen.lib"
         opengl32
