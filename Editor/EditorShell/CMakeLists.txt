@@ -15,6 +15,7 @@ endif()
 
 target_include_directories(EditorShell PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 target_include_directories(EditorShell PUBLIC ${CMAKE_BINARY_DIR}/Editor/Generated)
+target_link_libraries(EditorShell PRIVATE Phezu)
 
 set(EDITOR_DEFINES_HEADER "${CMAKE_BINARY_DIR}/Editor/Generated/EditorDefines.hpp")
 
