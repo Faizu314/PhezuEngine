@@ -1,5 +1,15 @@
 project(Runtime)
 
+if (APPLE)
+    set(LIBS_DEST_DIR "$<TARGET_FILE_DIR:Runtime>/../Frameworks")
+    set(MONO_CORE_LIBS_DEST_DIR "$<TARGET_FILE_DIR:Runtime>/../MonoCoreLibs")
+    set(SCRIPT_CORE_DLL_DEST_DIR "$<TARGET_FILE_DIR:Runtime>/${SCRIPT_CORE_DLL_RELATIVE_PATH}")
+elseif (WIN32)
+    set(LIBS_DEST_DIR "$<TARGET_FILE_DIR:Runtime>")
+    set(MONO_CORE_LIBS_DEST_DIR "${LIBS_DEST_DIR}")
+    set(SCRIPT_CORE_DLL_DEST_DIR "${LIBS_DEST_DIR}")
+endif()
+
 file(GLOB_RECURSE RUNTIME_SOURCES "${CMAKE_SOURCE_DIR}/Runtime/Source/*.cpp")
 file(GLOB_RECURSE RUNTIME_HEADERS "${CMAKE_SOURCE_DIR}/Runtime/Include/*.hpp")
 
@@ -27,24 +37,25 @@ target_link_libraries(Runtime PRIVATE Phezu)
 
 add_custom_command(TARGET Runtime POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory "${SCRIPT_CORE_DLL_DEST_DIR}"
-    COMMAND ${CMAKE_COMMAND} -E make_directory "${LIB_DEST_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${LIBS_DEST_DIR}"
 
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${SCRIPT_CORE_DLL_SRC_DIR}/Phezu-ScriptCore.dll" "${SCRIPT_CORE_DLL_DEST_DIR}/Phezu-ScriptCore.dll"
 
     COMMAND ${CMAKE_COMMAND} 
-        -DSRC_DIR="${MONO_CORE_LIBS_SRC_DIR}" 
+        -DSRC_DIR="${MONO_DIR}/lib/mono/4.5" 
         -DCHECK_DIR="${MONO_CORE_LIBS_DEST_DIR}/mono"
-        -DDEST_DIR="${MONO_CORE_LIBS_DEST_DIR}" 
+        -DDEST_DIR="${MONO_CORE_LIBS_DEST_DIR}/mono/lib/mono" 
         -P "${CMAKE_CURRENT_SOURCE_DIR}/CopyIfMissing.cmake"
 )
 
 if(APPLE)
     add_custom_command(TARGET Runtime POST_BUILD
-        COMMAND rsync -a --links "${LIB_SRC_DIR}/" "${LIB_DEST_DIR}"
+        #copy libs from source to build directory
     )
 elseif(WIN32)
     add_custom_command(TARGET Runtime POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory "${LIB_SRC_DIR}" "${LIB_DEST_DIR}"
+        COMMAND ${CMAKE_COMMAND} -E copy "${MONO_DIR}/bin/mono-2.0-sgen.dll" "${LIBS_DEST_DIR}/mono-2.0-sgen.dll"
+        COMMAND ${CMAKE_COMMAND} -E copy "${MONO_DIR}/lib/mono-2.0-sgen.pdb" "${LIBS_DEST_DIR}/mono-2.0-sgen.pdb"
     )
 endif()
 

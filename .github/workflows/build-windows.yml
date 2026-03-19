@@ -8,15 +8,32 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-
+    timeout-minutes: 60
     strategy:
       matrix:
-        config: [Debug, Release]
+        vs_env:
+          - no_vs
+          - ide_full
+          - ide_partial
+          - bt_full
+          - bt_partial
+        cmake_env:
+          - system
+          - internal
+          - none
+        mono_env:
+          - mono
+          - no_mono
+        build_config:
+          - Debug
+          - Release
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Run setup script
+      - name: Prepare Environment and Run setup script
         shell: cmd
-        run: call Setup_Win.bat --auto --${{ matrix.config }}
+        run: |
+          call Scripts/win32/Tests/TestEnvironmentSetup.bat --${{ matrix.vs_env }} --${{ matrix.cmake_env }} --${{ matrix.mono_env }}
+          call Scripts/win32/Setup_Win.bat --auto --${{ matrix.build_config }}
