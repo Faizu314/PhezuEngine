@@ -19,18 +19,18 @@ if (WIN32)
 endif()
 
 add_custom_command(
-        COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/Editor/Generated"
-        OUTPUT "${EDITOR_DEFINES_HEADER}"
-        COMMAND ${CMAKE_COMMAND} -DOUT_FILE=${EDITOR_DEFINES_HEADER}
-        -DCSHARP_BUILD_COMMAND=${ESCAPED_CSHARP_BUILD_COMMAND}
-        -DSCRIPT_CORE_DLL_SRC_DIR=${ESCAPED_DLL_SRC}
-        -DRUNTIME_EXE_DIR=${ESCAPED_RUNTIME_EXE_DIR}
-        -P "${CMAKE_SOURCE_DIR}/Editor/EditorShell/GenerateEditorDefinesHeader.cmake"
-        VERBATIM
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/Editor/Generated"
+    OUTPUT "${EDITOR_DEFINES_HEADER}"
+    COMMAND ${CMAKE_COMMAND} -DOUT_FILE=${EDITOR_DEFINES_HEADER}
+    -DCSHARP_BUILD_COMMAND=${ESCAPED_CSHARP_BUILD_COMMAND}
+    -DSCRIPT_CORE_DLL_SRC_DIR=${ESCAPED_DLL_SRC}
+    -DRUNTIME_EXE_DIR=${ESCAPED_RUNTIME_EXE_DIR}
+    -P "${CMAKE_SOURCE_DIR}/Editor/EditorShell/GenerateEditorDefinesHeader.cmake"
+    VERBATIM
 )
 
 add_custom_target(EditorDefinesHeader
-        DEPENDS "${EDITOR_DEFINES_HEADER}"
+    DEPENDS "${EDITOR_DEFINES_HEADER}"
 )
 
 add_dependencies(EditorShell EditorDefinesHeader)
