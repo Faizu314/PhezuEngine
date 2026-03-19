@@ -13,7 +13,7 @@ namespace Phezu {
 
 	#define DEFINE_ENUM_STRING_MAP(EnumType, ENUM_LIST, DEFAULT_VALUE)                  \
 		static std::unordered_map<std::string, EnumType> s_StrTo##EnumType = {          \
-			ENUM_LIST(EnumType, ENUM_TO_MAP_ENTRY)                                      \
+			ENUM_LIST																	\
 		};                                                                              \
 																						\
 		EnumType To##EnumType(const std::string& str) {                                 \
@@ -36,64 +36,64 @@ namespace Phezu {
 			return "";																	\
 		}																				
 
-	#define VERTEX_SEMANTICS_LIST(E, X)       \
-		X(E, Position)                        \
-		X(E, Normal)                          \
-		X(E, Color)                           \
-		X(E, TexCoord0)                       \
-		X(E, TexCoord1)                       \
-		X(E, TexCoord2)                       \
-		X(E, TexCoord3)                       \
-		X(E, Custom0)                         \
-		X(E, Custom1)                         \
-		X(E, Custom2)                         \
-		X(E, Custom3)					 
+	#define VERTEX_SEMANTICS_LIST														\
+		ENUM_TO_MAP_ENTRY(VertexSemantic, Position)										\
+		ENUM_TO_MAP_ENTRY(VertexSemantic, Normal)										\
+		ENUM_TO_MAP_ENTRY(VertexSemantic, Color)										\
+		ENUM_TO_MAP_ENTRY(VertexSemantic, TexCoord0)									\
+		ENUM_TO_MAP_ENTRY(VertexSemantic, TexCoord1)									\
+		ENUM_TO_MAP_ENTRY(VertexSemantic, TexCoord2)									\
+		ENUM_TO_MAP_ENTRY(VertexSemantic, TexCoord3)									\
+		ENUM_TO_MAP_ENTRY(VertexSemantic, Custom0)										\
+		ENUM_TO_MAP_ENTRY(VertexSemantic, Custom1)										\
+		ENUM_TO_MAP_ENTRY(VertexSemantic, Custom2)										\
+		ENUM_TO_MAP_ENTRY(VertexSemantic, Custom3)					 
 
-	#define VERTEX_ATTRIBUTE_TYPE_LIST(E, X)  \
-		X(E, Float)                           \
-		X(E, Int)                             \
-		X(E, UInt)                            \
-		X(E, Byte)                            \
-		X(E, UByte)
+	#define VERTEX_ATTRIBUTE_TYPE_LIST													\
+		ENUM_TO_MAP_ENTRY(VertexAttributeType, Float)									\
+		ENUM_TO_MAP_ENTRY(VertexAttributeType, Int)										\
+		ENUM_TO_MAP_ENTRY(VertexAttributeType, UInt)									\
+		ENUM_TO_MAP_ENTRY(VertexAttributeType, Byte)									\
+		ENUM_TO_MAP_ENTRY(VertexAttributeType, UByte)
 
-	#define VERTEX_ATTRIBUTE_COUNT_LIST(E, X) \
-		X(E, One)                             \
-		X(E, Two)                             \
-		X(E, Three)                           \
-		X(E, Four)
+	#define VERTEX_ATTRIBUTE_COUNT_LIST													\
+		ENUM_TO_MAP_ENTRY(VertexAttributeCount, One)									\
+		ENUM_TO_MAP_ENTRY(VertexAttributeCount, Two)									\
+		ENUM_TO_MAP_ENTRY(VertexAttributeCount, Three)	   								\
+		ENUM_TO_MAP_ENTRY(VertexAttributeCount, Four)
 
-	#define TEXTURE_FILTERING_MODE_LIST(E, X) \
-		X(E, Point)                           \
-		X(E, Bilinear)
+	#define TEXTURE_FILTERING_MODE_LIST													\
+		ENUM_TO_MAP_ENTRY(TextureFilteringMode, Point)									\
+		ENUM_TO_MAP_ENTRY(TextureFilteringMode, Bilinear)
 
-	#define TEXTURE_WRAP_MODE_LIST(E, X)      \
-		X(E, Repeat)                          \
-		X(E, MirroredRepeat)                  \
-		X(E, ClampToEdge)                     \
-		X(E, ClampToBorder)
+	#define TEXTURE_WRAP_MODE_LIST														\
+		ENUM_TO_MAP_ENTRY(TextureWrapMode, Repeat)										\
+		ENUM_TO_MAP_ENTRY(TextureWrapMode, MirroredRepeat)								\
+		ENUM_TO_MAP_ENTRY(TextureWrapMode, ClampToEdge)									\
+		ENUM_TO_MAP_ENTRY(TextureWrapMode, ClampToBorder)
 
-	#define ASSET_SOURCE_LIST(E, X)			  \
-		X(E, Engine)                          \
-		X(E, Project)
+	#define ASSET_SOURCE_LIST															\
+		ENUM_TO_MAP_ENTRY(AssetSource, Engine)											\
+		ENUM_TO_MAP_ENTRY(AssetSource, Project)
 
-	#define ASSET_TYPE_LIST(E, X)		      \
-		X(E, None)                            \
-		X(E, Scene)                           \
-		X(E, Prefab)                          \
-		X(E, Mesh)                            \
-		X(E, Shader)                          \
-		X(E, Image)                           \
-		X(E, Texture)                         \
-		X(E, Material)                        \
-		X(E, Config)
+	#define ASSET_TYPE_LIST																\
+		ENUM_TO_MAP_ENTRY(AssetType, None)												\
+		ENUM_TO_MAP_ENTRY(AssetType, Scene)												\
+		ENUM_TO_MAP_ENTRY(AssetType, Prefab)											\
+		ENUM_TO_MAP_ENTRY(AssetType, Mesh)												\
+		ENUM_TO_MAP_ENTRY(AssetType, Shader)											\
+		ENUM_TO_MAP_ENTRY(AssetType, Image)												\
+		ENUM_TO_MAP_ENTRY(AssetType, Texture)											\
+		ENUM_TO_MAP_ENTRY(AssetType, Material)											\
+		ENUM_TO_MAP_ENTRY(AssetType, Config)
 
-	#define MANAGED_TYPE_LIST(E, X)           \
-		X(E, None)                            \
-		X(E, Transform)                       \
-		X(E, Shape)                           \
-		X(E, Renderer)                        \
-		X(E, Physics)                         \
-		X(E, ScriptComponent)                 \
+	#define MANAGED_TYPE_LIST															\
+		ENUM_TO_MAP_ENTRY(ManagedType, None)											\
+		ENUM_TO_MAP_ENTRY(ManagedType, Transform)										\
+		ENUM_TO_MAP_ENTRY(ManagedType, Shape)											\
+		ENUM_TO_MAP_ENTRY(ManagedType, Renderer)										\
+		ENUM_TO_MAP_ENTRY(ManagedType, Physics)											\
+		ENUM_TO_MAP_ENTRY(ManagedType, ScriptComponent)									\
 
 	DEFINE_ENUM_STRING_MAP(VertexSemantic, VERTEX_SEMANTICS_LIST, Position);
 	DEFINE_ENUM_STRING_MAP(VertexAttributeType, VERTEX_ATTRIBUTE_TYPE_LIST, Float);
