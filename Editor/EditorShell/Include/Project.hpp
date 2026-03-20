@@ -15,12 +15,21 @@ namespace Phezu::Editor {
         std::vector<std::filesystem::path> PrefabFiles;
         std::vector<std::filesystem::path> ShaderFiles;
         std::vector<std::filesystem::path> MaterialFiles;
+        std::vector<std::filesystem::path> MeshFiles;
         std::vector<std::filesystem::path> ImageFiles;
         std::vector<std::filesystem::path> TextureFiles;
         std::vector<std::filesystem::path> ConfigFiles;
 
         size_t GetFilesCount() {
-            return ScriptFiles.size() + SceneFiles.size() + PrefabFiles.size() + ShaderFiles.size() + MaterialFiles.size() + ImageFiles.size() + TextureFiles.size() + ConfigFiles.size();
+            return ScriptFiles.size() + 
+                SceneFiles.size() + 
+                PrefabFiles.size() + 
+                ShaderFiles.size() + 
+                MaterialFiles.size() + 
+                MeshFiles.size() + 
+                ImageFiles.size() + 
+                TextureFiles.size() + 
+                ConfigFiles.size();
         }
 
         std::filesystem::path GetFilePathByIndex(size_t fileIndex) {
@@ -43,6 +52,10 @@ namespace Phezu::Editor {
             if (fileIndex < MaterialFiles.size())
                 return MaterialFiles[fileIndex];
             fileIndex -= MaterialFiles.size();
+
+            if (fileIndex < MeshFiles.size())
+                return MeshFiles[fileIndex];
+            fileIndex -= MeshFiles.size();
 
             if (fileIndex < ImageFiles.size())
                 return ImageFiles[fileIndex];

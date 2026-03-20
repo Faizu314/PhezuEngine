@@ -129,6 +129,9 @@ namespace Phezu::Editor {
         else if (extension == ".mat") {
             m_OpenedProject->MaterialFiles.push_back(path);
         }
+        else if (extension == ".mesh") {
+            m_OpenedProject->MeshFiles.push_back(path);
+        }
         else if (extension == ".png") {
             m_OpenedProject->ImageFiles.push_back(path);
         }
