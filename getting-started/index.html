@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Getting Started - PhezuEngine Docs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Getting Started";
+        var mkdocs_page_input_path = "getting-started.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> PhezuEngine Docs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../about/">About</a>
+    <ul>
+    </ul>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Getting Started</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#clone-phezuengine">Clone PhezuEngine</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#build-phezuengine">Build PhezuEngine</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#clone-sample-game">Clone Sample Game</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#build-sample-game">Build Sample Game</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../editor/">Editor</a>
+    <ul>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../learner-docs/">Learner Docs</a>
+    <ul>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../code-docs/">Code Docs</a>
+    <ul>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../list-of-features/">List of Features</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../list-of-features/#rendering">Rendering</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../list-of-features/#2d-graphics">2D Graphics</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../list-of-features/#scripting">Scripting</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../list-of-features/#workflow">Workflow</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../roadmap/">Roadmap</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../roadmap/#2d-physics-engine">2D Physics Engine</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../roadmap/#editor-features">Editor Features</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../roadmap/#2d-graphics">2D Graphics</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../roadmap/#scripting">Scripting</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../roadmap/#platform">Platform</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../roadmap/#rendering">Rendering</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">PhezuEngine Docs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Getting Started</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="introduction">Introduction</h1>
+<p>In this section I will talk about how you can download and compile PhezuEngine on your local machine and then play a sample game.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>PhezuEngine is only supported on Windows for now.
+Linux and Android support is planned for the future.</p>
+</div>
+<h2 id="clone-phezuengine">Clone PhezuEngine</h2>
+<p>In order to download the engine you will need to have git installed on your system. Here is the official link: <a href="https://git-scm.com/install/windows">https://git-scm.com/install/windows</a></p>
+<p>To ensure git has installed properly run this command in the command prompt or powershell:</p>
+<pre><code>git --version
+</code></pre>
+<p>You should see something like <code>git version 2.38.1.windows.1</code>, if instead you see something like <code>'git' is not recognized as an internal or external command</code> then git was not properly installed.</p>
+<p>Now in order to download the repository on your local machine, open the terminal at your desired directory and run this command:</p>
+<pre><code>git clone "https://github.com/Faizu314/PhezuEngine.git"
+</code></pre>
+<h2 id="build-phezuengine">Build PhezuEngine</h2>
+<p>Once you have successfully downloaded the repository, you will see that a child folder called PhezuEngine has been created. This is the root folder of our project. Inside the root folder there will be a batch script at <code>Scripts/win32/Setup_Win.bat</code> Double click this script to build and compile the entire project. Note that this script automatically fetches the following dependencies:</p>
+<ul>
+<li><strong>Visual Studio Build Tools</strong> - If a compatible Visual Studio IDE is not present</li>
+<li><strong>Cmake</strong> - If cmake is not already installed on your system this will be downloaded inside the root folder</li>
+<li><strong>Mono</strong> - Will be downloaded in any case inside the root folder</li>
+</ul>
+<p>Note that Visual Studio Build Tools installation will be the only system installation. Cmake and Mono will be downloaded internally (meaning deleting the PhezuEngine folder will completely remove them from your machine).</p>
+<p>After the script has successfully run you will have a Build folder containing the Editor executable, engine library, Runtime executable and the core scripting dll. Don't worry you don't need to understand what these are in order to run the sample game but The Learner Docs sections contains a high level explanations for these modules.</p>
+<h2 id="clone-sample-game">Clone Sample Game</h2>
+<p>Now that you have built project, you can now create games using it. In this tutorial we will be downloading and building a sample breakout game that was built using the PhezuEngine. Here is the link to the repository of the game <a href="https://github.com/Faizu314/Phezu-Breakout">Phezu-Breakout</a>. Create another folder for projects preferably outside the root folder of the engine and run this command to clone the game:</p>
+<pre><code> git clone "https://github.com/Faizu314/Phezu-Breakout.git"
+</code></pre>
+<p>This folder contains all of the assets and scripts of the Breakout game.</p>
+<h2 id="build-sample-game">Build Sample Game</h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The graphical editor application is not available yet.</p>
+<p>For now, building and running the sample game requires using terminal commands.
+This process will be replaced by a proper editor workflow in the future.</p>
+</div>
+<p>For now, the editor is an interactive CLI application on the terminal. It is only capable of running two commands <code>open</code> and <code>build</code> and we will be using them to build our games.</p>
+<p>In order to build the game we will need two paths, one is the path to the editor application and the other one is the path to your game. The path to the editor application is inside the PhezuEngine repository that you cloned: <code>PhezuEngine/Build/Editor/EditorShell/Release</code> and the path to the game is where you cloned the sample game (namely the path to the Phezu-Breakout folder). Once you have these paths run the following commands:</p>
+<pre><code>cd "&lt;path to editor&gt;"
+./EditorShell.exe
+open "&lt;path to game&gt;"
+build "&lt;path to game&gt;/Build"
+</code></pre>
+<p>You should now be able to see a "Runtime.exe" inside the <code>&lt;path to game&gt;/Build</code> directory, double click it to run the game.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../about/" class="btn btn-neutral float-left" title="About"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../editor/" class="btn btn-neutral float-right" title="Editor">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../about/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../editor/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(false);
+        });
+    </script>
+
+</body>
+</html>
