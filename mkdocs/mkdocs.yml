@@ -1,0 +1,28 @@
+site_name: PhezuEngine Docs
+nav:
+  - Home: index.md
+  - About: about.md
+  - Getting Started: getting-started.md
+  - Editor: editor.md
+  - Learner Docs: learner-docs.md
+  - Code Docs: code-docs.md
+  - List of Features: list-of-features.md
+  - Roadmap: roadmap.md
+theme:
+  name: readthedocs
+  color_mode: auto
+  user_color_mode_toggle: true
+  nav_style: dark
+  highlightjs: true
+  hljs_style: github
+
+  include_homepage_in_sidebar: false
+  prev_next_buttons_location: bottom
+  navigation_depth: 4
+  collapse_navigation: false
+  titles_only: false
+  sticky_navigation: false
+  logo: null
+
+markdown_extensions:
+  - admonition

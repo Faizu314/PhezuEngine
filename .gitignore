@@ -32,6 +32,9 @@
 # Ignore the Vendor folder
 /Vendor
 
+# Ignore the mkdocs build
+/mkdocs/site
+
 #mac finder
 *.DS_Store
 
