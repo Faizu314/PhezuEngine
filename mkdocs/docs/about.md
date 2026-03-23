@@ -11,7 +11,6 @@
 
 ## Meet the Creator
 
-Created by Phezu, a simple minded programmer in Pakistan who has had it with over engineering and modern bloat in software.<br>
-Phezu is also not a fan of the unnecessary graphics arms race in the game industry. (And now AI lol)
+Created by Phezu, a simple minded programmer in Pakistan who has had it with over engineering and modern bloat in software.
 
 #### [Visit My Linkedin](https://www.linkedin.com/in/faizan-qaiser-617a23230/)

@@ -6,7 +6,7 @@ Here is a list of planned features. The major features and their breakdowns are 
 
 A custom 2D physics engine with collision detection and resolution for primitive 2D shapes and polygons.
 
-## Editor Features
+## Editor Application
 
 - Backend Features
     - Prefab/Scene file editing
