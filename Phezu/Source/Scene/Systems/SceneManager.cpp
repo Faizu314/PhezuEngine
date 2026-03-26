@@ -45,10 +45,10 @@ namespace Phezu {
     }
     
     void SceneManager::Update(float deltaTime) {
-        m_MasterScene->LogicUpdate(deltaTime);
+        m_MasterScene->Update(deltaTime);
 
         if (m_ActiveScene != nullptr) {
-            m_ActiveScene->LogicUpdate(deltaTime);
+            m_ActiveScene->Update(deltaTime);
         }
     }
 
@@ -61,6 +61,7 @@ namespace Phezu {
     }
 
     void SceneManager::GetRenderableEntities(std::vector<Entity*>& entities, size_t& index) {
+        index = 0;
         m_MasterScene->GetRenderableEntities(entities, index);
 
         if (m_ActiveScene != nullptr) {

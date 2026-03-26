@@ -69,7 +69,7 @@ namespace Phezu {
         delete entity;
     }
     
-    void Scene::LogicUpdate(float deltaTime) {
+    void Scene::Update(float deltaTime) {
         for (auto entityID : m_EntitiesToDestroy)
             DestroyEntityInternal(entityID);
         m_EntitiesToDestroy.clear();

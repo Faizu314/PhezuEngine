@@ -12,7 +12,7 @@ namespace Phezu {
     Engine* Engine::s_Instance = nullptr;
     
     Engine::Engine() : m_HasInited(false), m_IsRunning(false),
-        m_FrameCount(0), m_Physics(this), m_Platform(nullptr) { }
+        m_FrameCount(0), m_Platform(nullptr) { }
     
     int Engine::Init(EngineArgs& args) {
         if (m_HasInited) {
@@ -48,12 +48,8 @@ namespace Phezu {
         double frameStartTime;
         double prevFrameTime = m_Platform->GetTime();
 
-        std::vector<Entity*> staticEntitiesBuffer(ENTITIES_BUFFER_SIZE);
-        std::vector<Entity*> dynamicEntitiesBuffer(ENTITIES_BUFFER_SIZE);
         std::vector<Entity*> renderEntitiesBuffer(ENTITIES_BUFFER_SIZE);
         size_t renderablesCount;
-        size_t staticsCount;
-        size_t dynamicsCount;
 
         m_SceneManager.OnStartGame();
         m_IsRunning = true;
@@ -62,15 +58,13 @@ namespace Phezu {
         {
             frameStartTime = m_Platform->GetTime();
             deltaTime = frameStartTime - prevFrameTime;
-            renderablesCount = staticsCount = dynamicsCount = 0;
             float deltaTimeF = static_cast<float>(deltaTime);
 
             m_Platform->PollEvents();
             m_ScriptEngine.OnUpdate(deltaTimeF);
             m_SceneManager.Update(deltaTimeF);
-            m_SceneManager.GetPhysicsEntities(staticEntitiesBuffer, dynamicEntitiesBuffer, staticsCount, dynamicsCount);
+            //physics update
             m_SceneManager.GetRenderableEntities(renderEntitiesBuffer, renderablesCount);
-            m_Physics.PhysicsUpdate(staticEntitiesBuffer, dynamicEntitiesBuffer, staticsCount, dynamicsCount, deltaTimeF);
             m_Renderer.DrawScene(renderEntitiesBuffer, renderablesCount, m_SceneManager.GetActiveCamera());
             m_Platform->Update();
             

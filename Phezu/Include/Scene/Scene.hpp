@@ -25,7 +25,7 @@ namespace Phezu {
         Entity* CreateEntity(AssetHandle prefabHandle);
         Entity* GetEntity(uint64_t entityID) const;
         void DestroyEntity(uint64_t entityID);
-        void LogicUpdate(float deltaTime);
+        void Update(float deltaTime);
         void UpdateHierarchy();
         void GetPhysicsEntities(std::vector<Entity*>& staticEntities, std::vector<Entity*>& dynamicEntities, size_t& staticIndex, size_t& dynamicIndex) const;
         void GetRenderableEntities(std::vector<Entity*>& entities, size_t& count) const;

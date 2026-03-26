@@ -6,7 +6,6 @@
 #include <filesystem>
 
 #include "Core/Platform.hpp"
-#include "Physics.hpp"
 #include "Scene/Systems/SceneManager.hpp"
 #include "Assets/Systems/AssetManager.hpp"
 #include "Graphics/Systems/ResourceManager.hpp"
@@ -56,8 +55,6 @@ namespace Phezu {
         void Destroy();
     private:
         IPlatform* m_Platform;
-    private:
-        Physics m_Physics;
     private:
         Renderer m_Renderer;
         SceneManager m_SceneManager;
