@@ -61,5 +61,6 @@ elseif (WIN32)
     target_link_libraries(Phezu PRIVATE
         "${MONO_DIR}/lib/mono-2.0-sgen.lib"
         opengl32
+        winmm
     )
 endif()

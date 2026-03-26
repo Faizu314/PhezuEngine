@@ -1,10 +1,10 @@
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#include "Platform/Win32/PlatformWin32.hpp"
+#include <timeapi.h>
+
 #include "glad/glad.h"
 #include "glad/glad_wgl.h"
 
 #include "Core/Defs/Assert.hpp"
-#include "Platform/Win32/PlatformWin32.hpp"
 #include "Platform/Win32/WindowWin32.hpp"
 #include "Platform/Win32/InputWin32.hpp"
 #include "Platform/Win32/LoggerWin32.hpp"
@@ -86,6 +86,7 @@ namespace Phezu {
 	}
 
 	void PlatformWin32::Init(const WindowArgs& args) {
+		::timeBeginPeriod(1);
 		m_StartTime = clock::now();
 
 		s_Logger->Init();
