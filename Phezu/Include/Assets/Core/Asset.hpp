@@ -55,7 +55,6 @@ namespace Phezu {
 
 	class IAsset {
 	public:
-		virtual AssetType GetAssetType() = 0;
 		virtual void Deserialize(const std::string& data) = 0;
 	};
 

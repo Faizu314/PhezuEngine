@@ -12,7 +12,6 @@ namespace Phezu {
 
 	class TextureAsset : public IAsset {
 	public:
-		AssetType GetAssetType() override { return AssetType::Texture; }
 		void Deserialize(const std::string& data) override;
 	public:
 		AssetHandle ImageRef;

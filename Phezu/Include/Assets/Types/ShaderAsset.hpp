@@ -13,7 +13,6 @@ namespace Phezu {
 
 	class ShaderAsset : public IAsset {
     public:
-        AssetType GetAssetType() override { return AssetType::Shader; }
         void Deserialize(const std::string& data) override;
     private:
         std::string FindVertexInputBlock(const std::string& src, size_t* start, size_t* end);

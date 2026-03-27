@@ -12,7 +12,6 @@ namespace Phezu {
 
 	class SceneAsset : public IAsset {
     public:
-        AssetType GetAssetType() override { return AssetType::Scene; }
         void Deserialize(const std::string& data) override;
     public:
         const Blueprint& GetBlueprint() const { return m_Blueprint; }
