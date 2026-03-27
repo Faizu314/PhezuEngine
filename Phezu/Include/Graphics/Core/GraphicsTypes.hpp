@@ -9,7 +9,7 @@
 
 namespace Phezu {
 
-	struct ResourceHandle {
+	struct ResourcePtr {
 		uint64_t Ptr = 0;
 	};
 
