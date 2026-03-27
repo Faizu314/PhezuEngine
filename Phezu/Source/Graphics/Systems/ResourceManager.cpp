@@ -10,11 +10,23 @@
 namespace Phezu {
 
     void ResourceRegistry::DestroyAndRemoveRecords() {
+        for (auto kvp : m_PtrToHandle)
+            delete kvp.first;
 
+        m_PtrToHandle.clear();
+        m_HandleToPtr.clear();
+        m_AssetToResource.clear();
+        m_ResourceToAsset.clear();
     }
 
     uint64_t ResourceRegistry::AddRecord(AssetHandle assetHandle, ResourceType type, void* resourcePtr) {
-        return 0; 
+        uint64_t resourceId = AddRecord(type, resourcePtr);
+        ResourceHandle resourceHandle(resourceId, type);
+
+        m_ResourceToAsset.insert(std::make_pair(resourceHandle, assetHandle));
+        m_AssetToResource.insert(std::make_pair(assetHandle, resourceHandle));
+
+        return resourceId;
     }
 
     uint64_t ResourceRegistry::AddRecord(ResourceType type, void* resourcePtr) {
@@ -29,8 +41,11 @@ namespace Phezu {
     }
 
     void ResourceRegistry::RemoveRecord(void* resourcePtr) {
-        if (m_PtrToHandle.find(resourcePtr) == m_PtrToHandle.end())
+        if (m_PtrToHandle.find(resourcePtr) == m_PtrToHandle.end()) {
+            //TODO: Log Warning
+            Log("Trying to remove a record that does not exist\n");
             return;
+        }
 
         ResourceHandle resourceHandle = m_PtrToHandle.at(resourcePtr);
         m_PtrToHandle.erase(resourcePtr);
@@ -45,7 +60,7 @@ namespace Phezu {
     }
 
     bool ResourceRegistry::Exists(AssetHandle assetHandle) {
-        return false;
+        return m_AssetToResource.find(assetHandle) != m_AssetToResource.end();
     }
 
     void* ResourceRegistry::GetResource(uint64_t resourceID) {
@@ -55,7 +70,9 @@ namespace Phezu {
     }
 
     void* ResourceRegistry::GetResource(AssetHandle assetHandle) {
-        return nullptr;
+        PZ_ASSERT(m_AssetToResource.find(ResourceHandle(assetHandle)) != m_AssetToResource.end(), "Resource does not exist.\n");
+
+        return m_HandleToPtr.at(m_AssetToResource.at(assetHandle));
     }
 
     uint64_t ResourceRegistry::GetResourceID(void* resourcePtr) {
@@ -65,8 +82,12 @@ namespace Phezu {
     }
 
     uint64_t ResourceRegistry::GetResourceID(AssetHandle assetHandle) {
-        return 0;
+        PZ_ASSERT(m_AssetToResource.find(ResourceHandle(assetHandle)) != m_AssetToResource.end(), "Resource does not exist.\n");
+
+        return m_AssetToResource.at(assetHandle).GetID();
     }
+
+
 
 
     void ResourceManager::Init(AssetManager* assetManager, IGraphicsAPI* api) {
@@ -83,7 +104,7 @@ namespace Phezu {
             return static_cast<Mesh*>(m_Resources.GetResource(meshHandle));
 
         auto meshAsset = m_AssetManager->GetAsset<MeshAsset>(meshHandle);
-        Mesh* mesh = CreateMesh(meshAsset);
+        Mesh* mesh = CreateMeshFromAsset(meshAsset);
         m_Resources.AddRecord(meshHandle, ResourceType::Mesh, mesh);
 
         return mesh;
@@ -94,7 +115,7 @@ namespace Phezu {
             return static_cast<Material*>(m_Resources.GetResource(materialHandle));
 
         auto materialAsset = m_AssetManager->GetAsset<MaterialAsset>(materialHandle);
-        Material* material = CreateMaterial(materialAsset);
+        Material* material = CreateMaterialFromAsset(materialAsset);
         m_Resources.AddRecord(materialHandle, ResourceType::Material, material);
 
         return material;
@@ -105,7 +126,7 @@ namespace Phezu {
             return static_cast<ITexture*>(m_Resources.GetResource(textureHandle));
 
         auto textureAsset = m_AssetManager->GetAsset<TextureAsset>(textureHandle);
-        ITexture* texture = CreateTexture(textureAsset);
+        ITexture* texture = CreateTextureFromAsset(textureAsset);
         m_Resources.AddRecord(textureHandle, ResourceType::Texture, texture);
 
         return texture;
@@ -116,7 +137,7 @@ namespace Phezu {
             return static_cast<IShader*>(m_Resources.GetResource(shaderHandle));
 
         auto shaderAsset = m_AssetManager->GetAsset<ShaderAsset>(shaderHandle);
-        IShader* shader = CreateShader(shaderAsset);
+        IShader* shader = CreateShaderFromAsset(shaderAsset);
         m_Resources.AddRecord(shaderHandle, ResourceType::Shader, shader);
 
         return shader;
@@ -138,7 +159,7 @@ namespace Phezu {
         delete mat;
     }
 
-	Mesh* ResourceManager::CreateMesh(const MeshAsset* meshAsset)
+	Mesh* ResourceManager::CreateMeshFromAsset(const MeshAsset* meshAsset)
 	{
         Buffer vertexBuffer;
         VertexLayout layout;
@@ -225,7 +246,7 @@ namespace Phezu {
 		return mesh;
 	}
 
-    Material* ResourceManager::CreateMaterial(const MaterialAsset* materialAsset) {
+    Material* ResourceManager::CreateMaterialFromAsset(const MaterialAsset* materialAsset) {
         AssetHandle shaderHandle = materialAsset->ShaderRef;
 
         IShader* shader = GetShader(shaderHandle);
@@ -253,13 +274,13 @@ namespace Phezu {
         return mat;
     }
 
-    IShader* ResourceManager::CreateShader(const ShaderAsset* shaderAsset) {
+    IShader* ResourceManager::CreateShaderFromAsset(const ShaderAsset* shaderAsset) {
         IShader* shader = m_Api->CreateShader(shaderAsset->VertexSource, shaderAsset->FragmentSource, shaderAsset->Semantics);
 
         return shader;
     }
 
-    ITexture* ResourceManager::CreateTexture(const TextureAsset* textureAsset) {
+    ITexture* ResourceManager::CreateTextureFromAsset(const TextureAsset* textureAsset) {
         AssetHandle imageHandle = textureAsset->ImageRef;
         auto imageAsset = m_AssetManager->GetAsset<ImageAsset>(imageHandle);
 

@@ -60,6 +60,7 @@ namespace Phezu {
 	class ResourceRegistry {
 	public:
 		ResourceRegistry() : m_ResourceID(1) {}
+	public:
 		void DestroyAndRemoveRecords();
 		uint64_t AddRecord(AssetHandle assetHandle, ResourceType type, void* resourcePtr);
 		uint64_t AddRecord(ResourceType type, void* resourcePtr);
@@ -100,10 +101,10 @@ namespace Phezu {
 		uint64_t GetMaterialID(Material* mat) { return m_Resources.GetResourceID(mat); }
 		Material* GetMaterial(uint64_t materialID) { return static_cast<Material*>(m_Resources.GetResource(materialID)); }
 	private:
-		Mesh* CreateMesh(const MeshAsset* meshAsset);
-		Material* CreateMaterial(const MaterialAsset* materialAsset);
-		IShader* CreateShader(const ShaderAsset* shaderAsset);
-		ITexture* CreateTexture(const TextureAsset* textureAsset);
+		Mesh* CreateMeshFromAsset(const MeshAsset* meshAsset);
+		Material* CreateMaterialFromAsset(const MaterialAsset* materialAsset);
+		IShader* CreateShaderFromAsset(const ShaderAsset* shaderAsset);
+		ITexture* CreateTextureFromAsset(const TextureAsset* textureAsset);
 	private:
 		AssetManager* m_AssetManager;
 		IGraphicsAPI* m_Api;
