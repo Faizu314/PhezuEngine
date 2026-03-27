@@ -9,103 +9,132 @@
 
 namespace Phezu {
 
+    void ResourceRegistry::DestroyAndRemoveRecords() {
+
+    }
+
+    uint64_t ResourceRegistry::AddRecord(AssetHandle assetHandle, ResourceType type, void* resourcePtr) {
+        return 0; 
+    }
+
+    uint64_t ResourceRegistry::AddRecord(ResourceType type, void* resourcePtr) {
+        while (m_HandleToPtr.find(ResourceHandle(m_ResourceID)) != m_HandleToPtr.end() || m_ResourceID == 0)
+            m_ResourceID++;
+
+        ResourceHandle handle(m_ResourceID, type);
+        m_HandleToPtr.insert(std::pair(handle, resourcePtr));
+        m_PtrToHandle.insert(std::pair(resourcePtr, handle));
+
+        return m_ResourceID;
+    }
+
+    void ResourceRegistry::RemoveRecord(void* resourcePtr) {
+        if (m_PtrToHandle.find(resourcePtr) == m_PtrToHandle.end())
+            return;
+
+        ResourceHandle resourceHandle = m_PtrToHandle.at(resourcePtr);
+        m_PtrToHandle.erase(resourcePtr);
+        m_HandleToPtr.erase(resourceHandle);
+
+        if (m_ResourceToAsset.find(resourceHandle) == m_ResourceToAsset.end())
+            return;
+
+        AssetHandle assetHandle = m_ResourceToAsset.at(resourceHandle);
+        m_ResourceToAsset.erase(resourceHandle);
+        m_AssetToResource.erase(assetHandle);
+    }
+
+    bool ResourceRegistry::Exists(AssetHandle assetHandle) {
+        return false;
+    }
+
+    void* ResourceRegistry::GetResource(uint64_t resourceID) {
+        PZ_ASSERT(m_HandleToPtr.find(ResourceHandle(resourceID)) != m_HandleToPtr.end(), "Resource does not exist.\n");
+
+        return m_HandleToPtr.at(resourceID);
+    }
+
+    void* ResourceRegistry::GetResource(AssetHandle assetHandle) {
+        return nullptr;
+    }
+
+    uint64_t ResourceRegistry::GetResourceID(void* resourcePtr) {
+        PZ_ASSERT(m_PtrToHandle.find(resourcePtr) != m_PtrToHandle.end(), "Resource does not exist.\n");
+
+        return m_PtrToHandle.at(resourcePtr).GetID();
+    }
+
+    uint64_t ResourceRegistry::GetResourceID(AssetHandle assetHandle) {
+        return 0;
+    }
+
+
     void ResourceManager::Init(AssetManager* assetManager, IGraphicsAPI* api) {
         m_AssetManager = assetManager;
         m_Api = api;
     }
 
     void ResourceManager::Destroy() {
-        for (auto& mesh : m_Meshes) {
-            mesh.second->Destroy();
-            delete mesh.second;
-        }
-        m_Meshes.clear();
-
-        for (auto& mat : m_Materials) {
-            delete mat.second;
-        }
-        m_Materials.clear();
-
-        for (auto& shader : m_Shaders) {
-            shader.second->Destroy();
-            delete shader.second;
-        }
-        m_Shaders.clear();
-
-        for (auto& texture : m_Textures) {
-            texture.second->Destroy();
-            delete texture.second;
-        }
-        m_Textures.clear();
+        m_Resources.DestroyAndRemoveRecords();
     }
 
-    const Mesh* ResourceManager::GetMesh(AssetHandle meshHandle) {
-        if (m_Meshes.find(meshHandle) != m_Meshes.end())
-            return m_Meshes.at(meshHandle);
+    Mesh* ResourceManager::GetMesh(AssetHandle meshHandle) {
+        if (m_Resources.Exists(meshHandle))
+            return static_cast<Mesh*>(m_Resources.GetResource(meshHandle));
 
         auto meshAsset = m_AssetManager->GetAsset<MeshAsset>(meshHandle);
         Mesh* mesh = CreateMesh(meshAsset);
-        m_Meshes.insert(std::make_pair(meshHandle, mesh));
+        m_Resources.AddRecord(meshHandle, ResourceType::Mesh, mesh);
 
         return mesh;
     }
 
     Material* ResourceManager::GetMaterial(AssetHandle materialHandle) {
-        if (m_Materials.find(materialHandle) != m_Materials.end())
-            return m_Materials.at(materialHandle);
+        if (m_Resources.Exists(materialHandle))
+            return static_cast<Material*>(m_Resources.GetResource(materialHandle));
 
         auto materialAsset = m_AssetManager->GetAsset<MaterialAsset>(materialHandle);
         Material* material = CreateMaterial(materialAsset);
-        m_Materials.insert(std::make_pair(materialHandle, material));
+        m_Resources.AddRecord(materialHandle, ResourceType::Material, material);
 
         return material;
     }
 
     ITexture* ResourceManager::GetTexture(AssetHandle textureHandle) {
-        if (m_Materials.find(textureHandle) != m_Materials.end())
-            return m_Textures.at(textureHandle);
+        if (m_Resources.Exists(textureHandle))
+            return static_cast<ITexture*>(m_Resources.GetResource(textureHandle));
 
         auto textureAsset = m_AssetManager->GetAsset<TextureAsset>(textureHandle);
         ITexture* texture = CreateTexture(textureAsset);
-        m_Textures.insert(std::make_pair(textureHandle, texture));
+        m_Resources.AddRecord(textureHandle, ResourceType::Texture, texture);
 
         return texture;
     }
 
     IShader* ResourceManager::GetShader(AssetHandle shaderHandle) {
-        if (m_Shaders.find(shaderHandle) != m_Shaders.end())
-            return m_Shaders.at(shaderHandle);
+        if (m_Resources.Exists(shaderHandle))
+            return static_cast<IShader*>(m_Resources.GetResource(shaderHandle));
 
         auto shaderAsset = m_AssetManager->GetAsset<ShaderAsset>(shaderHandle);
         IShader* shader = CreateShader(shaderAsset);
-        m_Shaders.insert(std::make_pair(shaderHandle, shader));
+        m_Resources.AddRecord(shaderHandle, ResourceType::Shader, shader);
 
         return shader;
     }
 
 
-    bool ResourceManager::IsUserMaterial(uint64_t materialID) {
-        Material* mat = m_MaterialRegistry.GetResource(materialID);
-        
-        return m_UserMaterials.find(mat) != m_UserMaterials.end();
-    }
-
     uint64_t ResourceManager::CreateUserMaterial(uint64_t sourceMaterialID) {
-        Material* sourceMat = m_MaterialRegistry.GetResource(sourceMaterialID);
+        Material* sourceMat = static_cast<Material*>(m_Resources.GetResource(sourceMaterialID));
         Material* sourceCopy = sourceMat->Copy();
 
-        m_UserMaterials.insert(sourceCopy);
+        m_Resources.AddRecord(ResourceType::Material, sourceCopy);
 
-        return m_MaterialRegistry.AddRecord(sourceCopy);
+        return m_Resources.GetResourceID(sourceCopy);
     }
 
     void ResourceManager::DestroyUserMaterial(uint64_t materialID) {
-        Material* mat = m_MaterialRegistry.GetResource(materialID);
-
-        PZ_ASSERT(m_UserMaterials.find(mat) != m_UserMaterials.end(), "Trying to delete a user material that does not exist.\n");
-
-        m_UserMaterials.erase(mat);
-        m_MaterialRegistry.RemoveRecord(mat);
+        Material* mat = static_cast<Material*>(m_Resources.GetResource(materialID));
+        m_Resources.RemoveRecord(mat);
         delete mat;
     }
 
@@ -220,8 +249,6 @@ namespace Phezu {
             const MaterialProperty& property = kvp.second;
             mat->SetProperty(propName, property);
         }
-
-        m_MaterialRegistry.AddRecord(mat);
 
         return mat;
     }

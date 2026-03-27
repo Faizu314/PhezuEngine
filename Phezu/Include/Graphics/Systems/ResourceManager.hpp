@@ -13,50 +13,69 @@
 
 namespace Phezu {
 
+	inline constexpr uint64_t INVALID_RESOURCE_ID = 0;
+
+	enum class ResourceType {
+		None = 0,
+		Material,
+		Mesh,
+		Shader,
+		Texture
+	};
+
+	struct ResourceHandle {
+	public:
+		ResourceHandle() = default;
+		ResourceHandle(uint64_t id, ResourceType type = ResourceType::None) : m_ID(id), m_Type(type) {}
+	public:
+		uint64_t GetID() const { return m_ID; }
+		ResourceType GetType() const { return m_Type; }
+	public:
+		bool operator==(const ResourceHandle& other) const { return m_ID == other.m_ID; }
+		bool operator==(const uint64_t other) const { return m_ID == other; }
+	private:
+		uint64_t m_ID = INVALID_RESOURCE_ID;
+		ResourceType m_Type = ResourceType::None;
+	};
+}
+
+namespace std {
+	template<>
+	class hash<Phezu::ResourceHandle> {
+	public:
+		size_t operator()(const Phezu::ResourceHandle& h) const noexcept {
+			return h.GetID();
+		}
+	};
+}
+
+namespace Phezu {
+
 	class IGraphicsAPI;
 	class IShader;
 	class ITexture;
 	class Mesh;
 	class Material;
 
-	template<typename T>
-	struct ResourceRegistry {
-		std::unordered_map<uint64_t, T*> m_IdToResource;
-		std::unordered_map<T*, uint64_t> m_ResourceToId;
+	class ResourceRegistry {
+	public:
+		ResourceRegistry() : m_ResourceID(1) {}
+		void DestroyAndRemoveRecords();
+		uint64_t AddRecord(AssetHandle assetHandle, ResourceType type, void* resourcePtr);
+		uint64_t AddRecord(ResourceType type, void* resourcePtr);
+		void RemoveRecord(void* resourcePtr);
+		bool Exists(AssetHandle assetHandle);
+		void* GetResource(uint64_t resourceID);
+		void* GetResource(AssetHandle assetHandle);
+		uint64_t GetResourceID(void* resourcePtr);
+		uint64_t GetResourceID(AssetHandle assetHandle);
+	private:
+		std::unordered_map<void*, ResourceHandle> m_PtrToHandle;
+		std::unordered_map<ResourceHandle, void*> m_HandleToPtr;
+		std::unordered_map<AssetHandle, ResourceHandle> m_AssetToResource;
+		std::unordered_map<ResourceHandle, AssetHandle> m_ResourceToAsset;
+	private:
 		uint64_t m_ResourceID;
-
-		ResourceRegistry() : m_ResourceID(1) { }
-
-		uint64_t AddRecord(T* resourcePtr) {
-			while (m_IdToResource.find(m_ResourceID) != m_IdToResource.end() || m_ResourceID == 0)
-				m_ResourceID++;
-
-			m_IdToResource.insert(std::pair(m_ResourceID, resourcePtr));
-			m_ResourceToId.insert(std::pair(resourcePtr, m_ResourceID));
-
-			return m_ResourceID;
-		}
-
-		void RemoveRecord(T* resourcePtr) {
-			if (m_ResourceToId.find(resourcePtr) == m_ResourceToId.end())
-				return;
-
-			uint64_t materialID = m_ResourceToId.at(resourcePtr);
-			m_ResourceToId.erase(resourcePtr);
-			m_IdToResource.erase(materialID);
-		}
-
-		T* GetResource(uint64_t resourceID) {
-			PZ_ASSERT(m_IdToResource.find(resourceID) != m_IdToResource.end(), "Resource does not exist.\n");
-
-			return m_IdToResource.at(resourceID);
-		}
-
-		uint64_t GetResourceID(T* resourcePtr) {
-			PZ_ASSERT(m_ResourceToId.find(resourcePtr) != m_ResourceToId.end(), "Resource does not exist.\n");
-
-			return m_ResourceToId.at(resourcePtr);
-		}
 	};
 
 	class ResourceManager {
@@ -71,16 +90,15 @@ namespace Phezu {
 		void Init(AssetManager* assetManager, IGraphicsAPI* api);
 		void Destroy();
 	public:
-		const Mesh* GetMesh(AssetHandle meshHandle);
+		Mesh* GetMesh(AssetHandle meshHandle);
 		Material* GetMaterial(AssetHandle materialHandle);
 		ITexture* GetTexture(AssetHandle textureHandle);
 		IShader* GetShader(AssetHandle shaderHandle);
 	public:
-		bool IsUserMaterial(uint64_t materialID);
 		uint64_t CreateUserMaterial(uint64_t sourceMaterialID);
 		void DestroyUserMaterial(uint64_t materialID);
-		uint64_t GetMaterialID(Material* mat) { return m_MaterialRegistry.GetResourceID(mat); }
-		Material* GetMaterial(uint64_t materialID) { return m_MaterialRegistry.GetResource(materialID); }
+		uint64_t GetMaterialID(Material* mat) { return m_Resources.GetResourceID(mat); }
+		Material* GetMaterial(uint64_t materialID) { return static_cast<Material*>(m_Resources.GetResource(materialID)); }
 	private:
 		Mesh* CreateMesh(const MeshAsset* meshAsset);
 		Material* CreateMaterial(const MaterialAsset* materialAsset);
@@ -90,13 +108,7 @@ namespace Phezu {
 		AssetManager* m_AssetManager;
 		IGraphicsAPI* m_Api;
 	private:
-		std::unordered_map<AssetHandle, Mesh*> m_Meshes;
-		std::unordered_map<AssetHandle, Material*> m_Materials;
-		std::unordered_map<AssetHandle, IShader*> m_Shaders;
-		std::unordered_map<AssetHandle, ITexture*> m_Textures;
-	private:
-		std::unordered_set<Material*> m_UserMaterials;
-		ResourceRegistry<Material> m_MaterialRegistry;
+		ResourceRegistry m_Resources;
 	};
 
 }

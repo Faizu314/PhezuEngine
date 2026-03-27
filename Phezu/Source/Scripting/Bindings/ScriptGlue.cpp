@@ -292,11 +292,6 @@ namespace Phezu {
     }
     
     void Material_SetColor(uint64_t materialID, MonoString* propertyName, Color* tint) {
-		if (!s_Data->ResourceManager->IsUserMaterial(materialID)) {
-			Log("Throw C# error here: writing to a readonly material\n");
-			return;
-		}
-
 		Material* mat = s_Data->ResourceManager->GetMaterial(materialID);
 
 		if (mat == nullptr) {
