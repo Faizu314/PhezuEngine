@@ -61,7 +61,7 @@ namespace Phezu {
 	public:
 		ResourceRegistry() : m_ResourceID(1) {}
 	public:
-		void DestroyAndRemoveRecords();
+		void DestroyAndClearRecords();
 		uint64_t AddRecord(AssetHandle assetHandle, ResourceType type, void* resourcePtr);
 		uint64_t AddRecord(ResourceType type, void* resourcePtr);
 		void RemoveRecord(void* resourcePtr);
@@ -96,10 +96,15 @@ namespace Phezu {
 		ITexture* GetTexture(AssetHandle textureHandle);
 		IShader* GetShader(AssetHandle shaderHandle);
 	public:
-		uint64_t CreateUserMaterial(uint64_t sourceMaterialID);
-		void DestroyUserMaterial(uint64_t materialID);
-		uint64_t GetMaterialID(Material* mat) { return m_Resources.GetResourceID(mat); }
-		Material* GetMaterial(uint64_t materialID) { return static_cast<Material*>(m_Resources.GetResource(materialID)); }
+		Mesh* GetMesh(uint64_t resourceID) { return static_cast<Mesh*>(m_Resources.GetResource(resourceID)); }
+		Material* GetMaterial(uint64_t resourceID) { return static_cast<Material*>(m_Resources.GetResource(resourceID)); }
+		ITexture* GetTexture(uint64_t resourceID) { return static_cast<ITexture*>(m_Resources.GetResource(resourceID)); }
+		IShader* GetShader(uint64_t resourceID) { return static_cast<IShader*>(m_Resources.GetResource(resourceID)); }
+	public:
+		uint64_t CreateMaterial(uint64_t sourceMaterialID);
+		void DestroyMaterial(uint64_t materialID);
+	public:
+		uint64_t GetResourceID(Material* mat) { return m_Resources.GetResourceID(mat); }
 	private:
 		Mesh* CreateMeshFromAsset(const MeshAsset* meshAsset);
 		Material* CreateMaterialFromAsset(const MaterialAsset* materialAsset);

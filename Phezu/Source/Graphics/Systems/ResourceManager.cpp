@@ -9,7 +9,7 @@
 
 namespace Phezu {
 
-    void ResourceRegistry::DestroyAndRemoveRecords() {
+    void ResourceRegistry::DestroyAndClearRecords() {
         for (auto kvp : m_PtrToHandle)
             delete kvp.first;
 
@@ -96,7 +96,7 @@ namespace Phezu {
     }
 
     void ResourceManager::Destroy() {
-        m_Resources.DestroyAndRemoveRecords();
+        m_Resources.DestroyAndClearRecords();
     }
 
     Mesh* ResourceManager::GetMesh(AssetHandle meshHandle) {
@@ -144,7 +144,7 @@ namespace Phezu {
     }
 
 
-    uint64_t ResourceManager::CreateUserMaterial(uint64_t sourceMaterialID) {
+    uint64_t ResourceManager::CreateMaterial(uint64_t sourceMaterialID) {
         Material* sourceMat = static_cast<Material*>(m_Resources.GetResource(sourceMaterialID));
         Material* sourceCopy = sourceMat->Copy();
 
@@ -153,7 +153,7 @@ namespace Phezu {
         return m_Resources.GetResourceID(sourceCopy);
     }
 
-    void ResourceManager::DestroyUserMaterial(uint64_t materialID) {
+    void ResourceManager::DestroyMaterial(uint64_t materialID) {
         Material* mat = static_cast<Material*>(m_Resources.GetResource(materialID));
         m_Resources.RemoveRecord(mat);
         delete mat;

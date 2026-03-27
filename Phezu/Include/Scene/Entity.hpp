@@ -63,6 +63,5 @@ namespace Phezu {
         static uint64_t s_EntitiesCount;
         
         friend class Scene;
-        friend class Physics;
     };
 }
