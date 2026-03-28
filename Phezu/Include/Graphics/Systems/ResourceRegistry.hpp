@@ -1,6 +1,9 @@
 // Copyright (c) 2026 Phezu
 // Licensed under the MIT License
 
+#pragma once
+
+#include "Assets/Core/Asset.hpp"
 #include "Graphics/Core/Graphics.hpp"
 
 namespace Phezu {
