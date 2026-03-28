@@ -30,8 +30,8 @@ namespace Phezu {
             [this](int width, int height) { OnWindowResized(width, height); }
         );
 
-        m_QuadMesh = m_Ctx.Asset->GetMesh({ static_cast<int>(BuiltInAssetType::QuadMesh), AssetSource::Engine });
-        m_BlitShader = m_Ctx.Asset->GetShader({ static_cast<int>(BuiltInAssetType::BlitShader), AssetSource::Engine});
+        m_QuadMesh = m_Ctx.Resource->GetMesh({ static_cast<int>(BuiltInAssetType::QuadMesh), AssetSource::Engine });
+        m_BlitShader = m_Ctx.Resource->GetShader({ static_cast<int>(BuiltInAssetType::BlitShader), AssetSource::Engine});
         m_BlitShader->SetInt("mainTex", 0);
 
         SamplerDesc samplerDesc = { TextureWrapMode::ClampToEdge, TextureFilteringMode::Point };
@@ -109,8 +109,8 @@ namespace Phezu {
         if (shapeData == nullptr || renderData == nullptr)
             return;
 
-        Material* material = renderData->GetMaterial();
-        const Mesh* mesh = shapeData->GetMesh();
+        Material* material = m_Ctx.Resource->GetMaterial(renderData->GetMaterialHandle());
+        const Mesh* mesh = m_Ctx.Resource->GetMesh(shapeData->GetMeshHandle());
 
         mesh->Bind(material->GetShader());
         material->Bind();

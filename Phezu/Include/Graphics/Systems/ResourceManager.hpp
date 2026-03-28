@@ -45,6 +45,7 @@ namespace Phezu {
 		void DestroyResource(ResourceHandle resourceHandle);
 	public:
 		ResourceHandle GetResourceHandle(void* ptr) { return m_Resources.GetResourceHandle(ptr); }
+		bool IsResourceHandleValid(ResourceHandle handle, ResourceType type) { return m_Resources.IsResourceHandleValid(handle, type); }
 	private:
 		Mesh* CreateMeshFromAsset(const MeshAsset* meshAsset);
 		Material* CreateMaterialFromAsset(const MaterialAsset* materialAsset);

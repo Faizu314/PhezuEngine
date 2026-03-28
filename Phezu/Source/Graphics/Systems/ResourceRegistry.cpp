@@ -110,4 +110,11 @@ namespace Phezu {
         return m_AssetToMeta.at(assetHandle).GetHandle();
     }
 
+    bool ResourceRegistry::IsResourceHandleValid(ResourceHandle handle, ResourceType type) {
+        if (m_HandleToPtr.find(handle) == m_HandleToPtr.end())
+            return false;
+
+        return m_PtrToMeta.at(m_HandleToPtr.at(handle)).GetType() == type;
+    }
+
 }

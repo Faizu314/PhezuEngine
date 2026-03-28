@@ -23,7 +23,7 @@ namespace Phezu {
     struct RendererContext {
         IWindow* Window = nullptr;
         IGraphicsAPI* Api = nullptr;
-        ResourceManager* Asset = nullptr;
+        ResourceManager* Resource = nullptr;
     };
   
     class Renderer {

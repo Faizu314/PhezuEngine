@@ -153,7 +153,8 @@ namespace Phezu {
                     AssetHandle meshHandle = GetProperty<AssetHandle>("Mesh", entry, overrides);
 
                     auto shapeData = dynamic_cast<ShapeData*>(parentEntity->AddDataComponent(ComponentType::Shape));
-                    shapeData->SetMesh(context.resourceManager->GetMesh(meshHandle));
+                    Mesh* mesh = context.resourceManager->GetMesh(meshHandle);
+                    shapeData->SetMeshHandle(context.resourceManager->GetResourceHandle(mesh));
                     components[entry.FileID] = shapeData;
 
                     break;
@@ -163,7 +164,8 @@ namespace Phezu {
                     AssetHandle materialHandle = GetProperty<AssetHandle>("Material", entry, overrides);
 
                     auto renderData = dynamic_cast<RenderData*>(parentEntity->AddDataComponent(ComponentType::Render));
-                    renderData->SetMaterial(context.resourceManager->GetMaterial(materialHandle));
+                    Material* mat = context.resourceManager->GetMaterial(materialHandle);
+                    renderData->SetMaterialHandle(context.resourceManager->GetResourceHandle(mat));
                     components[entry.FileID] = renderData;
 
                     break;

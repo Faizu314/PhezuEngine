@@ -10,11 +10,11 @@ namespace Phezu {
     
     class ShapeData : public DataComponent {
     public:
-        ShapeData(Entity* entity) : DataComponent(entity), m_Mesh(nullptr) { }
+        ShapeData(Entity* entity) : DataComponent(entity) { }
     public:
-        void SetMesh(const Mesh* mesh) { m_Mesh = mesh; }
-        const Mesh* GetMesh() { return m_Mesh; }
+        void SetMeshHandle(ResourceHandle meshHandle) { m_MeshHandle = meshHandle; }
+        ResourceHandle GetMeshHandle() { return m_MeshHandle; }
     private:
-        const Mesh* m_Mesh;
+        ResourceHandle m_MeshHandle;
     };
 }

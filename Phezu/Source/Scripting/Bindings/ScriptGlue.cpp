@@ -211,14 +211,14 @@ namespace Phezu {
 		if (entity) {
 			RenderData* render = dynamic_cast<RenderData*>(entity->GetDataComponent(ComponentType::Render));
 
-			return s_Data->ResourceManager->GetResourceHandle(render->GetMaterial());
+			return render->GetMaterialHandle();
 		}
 
 		Log("Throw C# error here: entity does not exist\n");
-		return 0;
+		return INVALID_GUID;
 	}
 
-	void Renderer_SetMaterial(uint64_t entityID, uint64_t materialID) {
+	void Renderer_SetMaterial(uint64_t entityID, uint64_t materialHandle) {
 		Entity* entity = GetEntity(entityID);
 
 		if (entity == nullptr) {
@@ -226,32 +226,28 @@ namespace Phezu {
 			return;
 		}
 		
-		Material* mat = s_Data->ResourceManager->GetMaterial(materialID);
-
-		if (mat == nullptr) {
-			Log("Throw C# error here: invalid material\n");
+		if (!s_Data->ResourceManager->IsResourceHandleValid(materialHandle, ResourceType::Material)) {
+			Log("Throw C# error here: material handle not valid\n");
 			return;
 		}
 
-		if (entity) {
-			RenderData* render = dynamic_cast<RenderData*>(entity->GetDataComponent(ComponentType::Render));
+		RenderData* render = dynamic_cast<RenderData*>(entity->GetDataComponent(ComponentType::Render));
 
-			render->SetMaterial(mat);
-		}
+		render->SetMaterialHandle(materialHandle);
 	}
 
 	/*----Material-Internal-Calls----*/
 
 
-	uint64_t Material_Create(uint64_t sourceMaterialID) {
-		Material* mat = s_Data->ResourceManager->GetMaterial(sourceMaterialID);
+	uint64_t Material_Create(uint64_t sourceMaterialHandle) {
+		Material* mat = s_Data->ResourceManager->GetMaterial(sourceMaterialHandle);
 
 		if (mat == nullptr) {
 			Log("Throw C# error here: invalid material\n");
 			return 0;
 		}
 
-		return s_Data->ResourceManager->CreateMaterial(sourceMaterialID);
+		return s_Data->ResourceManager->CreateMaterial(sourceMaterialHandle);
 	}
 
 	uint64_t Material_Get(GUID guid, uint64_t source) {
