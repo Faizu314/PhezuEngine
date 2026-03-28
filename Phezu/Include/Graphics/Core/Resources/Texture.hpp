@@ -16,7 +16,7 @@ namespace Phezu {
 		virtual void Init(unsigned char *data, unsigned int width, unsigned int height, SamplerDesc settings) = 0;
 		virtual void Bind(uint8_t unitIndex) = 0;
 		virtual void Destroy() = 0;
-		virtual ResourcePtr GetHandle() = 0;
+		virtual ResourceNativePtr GetNativePtr() = 0;
 	public:
 		virtual void Resize(unsigned char* data, unsigned int width, unsigned int height) = 0;
 	public:

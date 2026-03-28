@@ -64,16 +64,16 @@ namespace Phezu {
     }
 
 
-    uint64_t ResourceManager::CreateMaterial(uint64_t sourceMaterialID) {
+    ResourceHandle ResourceManager::CreateMaterial(ResourceHandle sourceMaterialID) {
         Material* sourceMat = static_cast<Material*>(m_Resources.GetResource(sourceMaterialID));
         Material* sourceCopy = sourceMat->Copy();
 
         m_Resources.AddRecord(ResourceType::Material, sourceCopy);
 
-        return m_Resources.GetResourceID(sourceCopy);
+        return m_Resources.GetResourceHandle(sourceCopy);
     }
 
-    void ResourceManager::DestroyMaterial(uint64_t materialID) {
+    void ResourceManager::DestroyResource(ResourceHandle materialID) {
         Material* mat = static_cast<Material*>(m_Resources.GetResource(materialID));
         m_Resources.RemoveRecord(mat);
         delete mat;

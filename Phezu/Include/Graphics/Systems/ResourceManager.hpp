@@ -36,15 +36,15 @@ namespace Phezu {
 		ITexture* GetTexture(AssetHandle textureHandle);
 		IShader* GetShader(AssetHandle shaderHandle);
 	public:
-		Mesh* GetMesh(uint64_t resourceID) { return static_cast<Mesh*>(m_Resources.GetResource(resourceID)); }
-		Material* GetMaterial(uint64_t resourceID) { return static_cast<Material*>(m_Resources.GetResource(resourceID)); }
-		ITexture* GetTexture(uint64_t resourceID) { return static_cast<ITexture*>(m_Resources.GetResource(resourceID)); }
-		IShader* GetShader(uint64_t resourceID) { return static_cast<IShader*>(m_Resources.GetResource(resourceID)); }
+		Mesh* GetMesh(ResourceHandle resourceHandle) { return static_cast<Mesh*>(m_Resources.GetResource(resourceHandle)); }
+		Material* GetMaterial(ResourceHandle resourceHandle) { return static_cast<Material*>(m_Resources.GetResource(resourceHandle)); }
+		ITexture* GetTexture(ResourceHandle resourceHandle) { return static_cast<ITexture*>(m_Resources.GetResource(resourceHandle)); }
+		IShader* GetShader(ResourceHandle resourceHandle) { return static_cast<IShader*>(m_Resources.GetResource(resourceHandle)); }
 	public:
-		uint64_t CreateMaterial(uint64_t sourceMaterialID);
-		void DestroyMaterial(uint64_t materialID);
+		ResourceHandle CreateMaterial(ResourceHandle sourceMaterialHandle);
+		void DestroyResource(ResourceHandle resourceHandle);
 	public:
-		uint64_t GetResourceID(Material* mat) { return m_Resources.GetResourceID(mat); }
+		ResourceHandle GetResourceHandle(void* ptr) { return m_Resources.GetResourceHandle(ptr); }
 	private:
 		Mesh* CreateMeshFromAsset(const MeshAsset* meshAsset);
 		Material* CreateMaterialFromAsset(const MaterialAsset* materialAsset);

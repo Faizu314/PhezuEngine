@@ -76,7 +76,7 @@ namespace Phezu {
 		glDeleteTextures(1, &m_Texture);
 	}
 
-	ResourcePtr GLTexture::GetHandle() {
+	ResourceNativePtr GLTexture::GetNativePtr() {
 		return { static_cast<uint64_t>(m_Texture) };
 	}
 

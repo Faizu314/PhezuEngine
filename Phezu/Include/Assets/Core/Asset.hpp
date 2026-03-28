@@ -9,8 +9,6 @@
 #include "Core/Types/GUID.hpp"
 
 namespace Phezu {
-	
-	inline constexpr uint64_t INVALID_GUID = 0;
 
 	enum class BuiltInAssetType {
 		QuadMesh,

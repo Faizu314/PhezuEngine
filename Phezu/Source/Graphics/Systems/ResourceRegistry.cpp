@@ -8,7 +8,7 @@
 namespace Phezu {
 
     void ResourceRegistry::DestroyAndClearRecords() {
-        for (auto kvp : m_PtrToHandle) {
+        for (auto kvp : m_PtrToMeta) {
             switch (kvp.second.GetType()) {
                 case ResourceType::Shader:
                 {
@@ -34,78 +34,80 @@ namespace Phezu {
             delete kvp.first;
         }
 
-        m_PtrToHandle.clear();
+        m_PtrToMeta.clear();
         m_HandleToPtr.clear();
-        m_AssetToResource.clear();
-        m_ResourceToAsset.clear();
+        m_AssetToMeta.clear();
+        m_HandleToAsset.clear();
     }
 
-    uint64_t ResourceRegistry::AddRecord(AssetHandle assetHandle, ResourceType type, void* resourcePtr) {
-        uint64_t resourceId = AddRecord(type, resourcePtr);
-        ResourceHandle resourceHandle(resourceId, type);
+    ResourceHandle ResourceRegistry::AddRecord(AssetHandle assetHandle, ResourceType type, void* resourcePtr) {
+        ResourceHandle resourceHandle = AddRecord(type, resourcePtr);
+        ResourceMeta resourceMeta(resourceHandle, type);
 
-        m_ResourceToAsset.insert(std::make_pair(resourceHandle, assetHandle));
-        m_AssetToResource.insert(std::make_pair(assetHandle, resourceHandle));
+        m_HandleToAsset.insert(std::make_pair(resourceHandle, assetHandle));
+        m_AssetToMeta.insert(std::make_pair(assetHandle, resourceMeta));
 
-        return resourceId;
+        return resourceHandle;
     }
 
-    uint64_t ResourceRegistry::AddRecord(ResourceType type, void* resourcePtr) {
-        while (m_HandleToPtr.find(ResourceHandle(m_ResourceID)) != m_HandleToPtr.end() || m_ResourceID == 0)
+    ResourceHandle ResourceRegistry::AddRecord(ResourceType type, void* resourcePtr) {
+        while (m_HandleToPtr.find(m_ResourceID) != m_HandleToPtr.end() || m_ResourceID == INVALID_GUID)
             m_ResourceID++;
 
-        ResourceHandle handle(m_ResourceID, type);
-        m_HandleToPtr.insert(std::pair(handle, resourcePtr));
-        m_PtrToHandle.insert(std::pair(resourcePtr, handle));
+        ResourceMeta meta(m_ResourceID, type);
+        m_HandleToPtr.insert(std::pair(m_ResourceID, resourcePtr));
+        m_PtrToMeta.insert(std::pair(resourcePtr, meta));
 
         return m_ResourceID;
     }
 
     void ResourceRegistry::RemoveRecord(void* resourcePtr) {
-        if (m_PtrToHandle.find(resourcePtr) == m_PtrToHandle.end()) {
+        if (m_PtrToMeta.find(resourcePtr) == m_PtrToMeta.end()) {
             //TODO: Log Warning
             Log("Trying to remove a record that does not exist\n");
             return;
         }
 
-        ResourceHandle resourceHandle = m_PtrToHandle.at(resourcePtr);
-        m_PtrToHandle.erase(resourcePtr);
+        ResourceMeta resourceMeta = m_PtrToMeta.at(resourcePtr);
+        ResourceHandle resourceHandle = resourceMeta.GetHandle();
+
+        m_PtrToMeta.erase(resourcePtr);
         m_HandleToPtr.erase(resourceHandle);
 
-        if (m_ResourceToAsset.find(resourceHandle) == m_ResourceToAsset.end())
+        if (m_HandleToAsset.find(resourceHandle) == m_HandleToAsset.end())
             return;
 
-        AssetHandle assetHandle = m_ResourceToAsset.at(resourceHandle);
-        m_ResourceToAsset.erase(resourceHandle);
-        m_AssetToResource.erase(assetHandle);
+        AssetHandle assetHandle = m_HandleToAsset.at(resourceHandle);
+        m_HandleToAsset.erase(resourceHandle);
+        m_AssetToMeta.erase(assetHandle);
     }
 
     bool ResourceRegistry::Exists(AssetHandle assetHandle) {
-        return m_AssetToResource.find(assetHandle) != m_AssetToResource.end();
+        return m_AssetToMeta.find(assetHandle) != m_AssetToMeta.end();
     }
 
-    void* ResourceRegistry::GetResource(uint64_t resourceID) {
-        PZ_ASSERT(m_HandleToPtr.find(ResourceHandle(resourceID)) != m_HandleToPtr.end(), "Resource does not exist.\n");
+    void* ResourceRegistry::GetResource(ResourceHandle resourceHandle) {
+        PZ_ASSERT(m_HandleToPtr.find(ResourceMeta(resourceHandle)) != m_HandleToPtr.end(), "Resource does not exist.\n");
 
-        return m_HandleToPtr.at(resourceID);
+        return m_HandleToPtr.at(resourceHandle);
     }
 
     void* ResourceRegistry::GetResource(AssetHandle assetHandle) {
-        PZ_ASSERT(m_AssetToResource.find(ResourceHandle(assetHandle)) != m_AssetToResource.end(), "Resource does not exist.\n");
+        PZ_ASSERT(m_AssetToMeta.find(ResourceMeta(assetHandle)) != m_AssetToMeta.end(), "Resource does not exist.\n");
 
-        return m_HandleToPtr.at(m_AssetToResource.at(assetHandle));
+        return m_HandleToPtr.at(m_AssetToMeta.at(assetHandle).GetHandle());
     }
 
-    uint64_t ResourceRegistry::GetResourceID(void* resourcePtr) {
-        PZ_ASSERT(m_PtrToHandle.find(resourcePtr) != m_PtrToHandle.end(), "Resource does not exist.\n");
+    ResourceHandle ResourceRegistry::GetResourceHandle(void* resourcePtr) {
+        PZ_ASSERT(m_PtrToMeta.find(resourcePtr) != m_PtrToMeta.end(), "Resource does not exist.\n");
 
-        return m_PtrToHandle.at(resourcePtr).GetID();
+        return m_PtrToMeta.at(resourcePtr).GetHandle();
     }
 
-    uint64_t ResourceRegistry::GetResourceID(AssetHandle assetHandle) {
-        PZ_ASSERT(m_AssetToResource.find(ResourceHandle(assetHandle)) != m_AssetToResource.end(), "Resource does not exist.\n");
+    ResourceHandle ResourceRegistry::GetResourceHandle(AssetHandle assetHandle) {
+        PZ_ASSERT(m_AssetToMeta.find(ResourceMeta(assetHandle)) != m_AssetToMeta.end(), "Resource does not exist.\n");
 
-        return m_AssetToResource.at(assetHandle).GetID();
+        return m_AssetToMeta.at(assetHandle).GetHandle();
     }
 
 }

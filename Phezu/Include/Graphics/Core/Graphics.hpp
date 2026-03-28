@@ -12,7 +12,7 @@
 
 namespace Phezu {
 
-	inline constexpr uint64_t INVALID_RESOURCE_ID = 0;
+	typedef GUID ResourceHandle;
 
 	enum class ResourceType {
 		None = 0,
@@ -22,22 +22,22 @@ namespace Phezu {
 		Texture
 	};
 
-	struct ResourceHandle {
+	struct ResourceMeta {
 	public:
-		ResourceHandle() = default;
-		ResourceHandle(uint64_t id, ResourceType type = ResourceType::None) : m_ID(id), m_Type(type) {}
+		ResourceMeta() = default;
+		ResourceMeta(ResourceHandle handle, ResourceType type = ResourceType::None) : m_Handle(handle), m_Type(type) {}
 	public:
-		uint64_t GetID() const { return m_ID; }
+		ResourceHandle GetHandle() const { return m_Handle; }
 		ResourceType GetType() const { return m_Type; }
 	public:
-		bool operator==(const ResourceHandle& other) const { return m_ID == other.m_ID; }
-		bool operator==(const uint64_t other) const { return m_ID == other; }
+		bool operator==(const ResourceMeta& other) const { return m_Handle == other.m_Handle; }
+		bool operator==(const ResourceHandle other) const { return m_Handle == other; }
 	private:
-		uint64_t m_ID = INVALID_RESOURCE_ID;
+		ResourceHandle m_Handle = INVALID_GUID;
 		ResourceType m_Type = ResourceType::None;
 	};
 
-	struct ResourcePtr {
+	struct ResourceNativePtr {
 		uint64_t Ptr = 0;
 	};
 
@@ -140,10 +140,10 @@ namespace Phezu {
 
 namespace std {
 	template<>
-	class hash<Phezu::ResourceHandle> {
+	class hash<Phezu::ResourceMeta> {
 	public:
-		size_t operator()(const Phezu::ResourceHandle& h) const noexcept {
-			return h.GetID();
+		size_t operator()(const Phezu::ResourceMeta& h) const noexcept {
+			return h.GetHandle();
 		}
 	};
 }

@@ -211,7 +211,7 @@ namespace Phezu {
 		if (entity) {
 			RenderData* render = dynamic_cast<RenderData*>(entity->GetDataComponent(ComponentType::Render));
 
-			return s_Data->ResourceManager->GetResourceID(render->GetMaterial());
+			return s_Data->ResourceManager->GetResourceHandle(render->GetMaterial());
 		}
 
 		Log("Throw C# error here: entity does not exist\n");
@@ -264,11 +264,11 @@ namespace Phezu {
 			return 0;
 		}
 
-		return s_Data->ResourceManager->GetResourceID(mat);
+		return s_Data->ResourceManager->GetResourceHandle(mat);
 	}
 
 	void Material_Destroy(uint64_t materialID) {
-		s_Data->ResourceManager->DestroyMaterial(materialID);
+		s_Data->ResourceManager->DestroyResource(materialID);
 	}
 
     void Material_GetColor(uint64_t materialID, MonoString* propertyName, Color* tint) {

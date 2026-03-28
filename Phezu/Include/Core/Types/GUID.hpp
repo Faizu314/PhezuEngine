@@ -8,6 +8,8 @@
 
 namespace Phezu {
     
+    inline constexpr uint64_t INVALID_GUID = 0;
+
     struct GUID {
         GUID() = default;
         GUID(uint64_t v) : Value(v) {}

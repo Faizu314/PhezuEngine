@@ -13,19 +13,19 @@ namespace Phezu {
 		ResourceRegistry() : m_ResourceID(1) {}
 	public:
 		void DestroyAndClearRecords();
-		uint64_t AddRecord(AssetHandle assetHandle, ResourceType type, void* resourcePtr);
-		uint64_t AddRecord(ResourceType type, void* resourcePtr);
+		ResourceHandle AddRecord(AssetHandle assetHandle, ResourceType type, void* resourcePtr);
+		ResourceHandle AddRecord(ResourceType type, void* resourcePtr);
 		void RemoveRecord(void* resourcePtr);
 		bool Exists(AssetHandle assetHandle);
-		void* GetResource(uint64_t resourceID);
+		void* GetResource(ResourceHandle resourceHandle);
 		void* GetResource(AssetHandle assetHandle);
-		uint64_t GetResourceID(void* resourcePtr);
-		uint64_t GetResourceID(AssetHandle assetHandle);
+		ResourceHandle GetResourceHandle(void* resourcePtr);
+		ResourceHandle GetResourceHandle(AssetHandle assetHandle);
 	private:
-		std::unordered_map<void*, ResourceHandle> m_PtrToHandle;
+		std::unordered_map<void*, ResourceMeta> m_PtrToMeta;
 		std::unordered_map<ResourceHandle, void*> m_HandleToPtr;
-		std::unordered_map<AssetHandle, ResourceHandle> m_AssetToResource;
-		std::unordered_map<ResourceHandle, AssetHandle> m_ResourceToAsset;
+		std::unordered_map<AssetHandle, ResourceMeta> m_AssetToMeta;
+		std::unordered_map<ResourceHandle, AssetHandle> m_HandleToAsset;
 	private:
 		uint64_t m_ResourceID;
 	};

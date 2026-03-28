@@ -18,7 +18,7 @@ namespace Phezu {
 	}
 
 	void GLFrameBuffer::AttachTexture(ITexture* texture) {
-		GLuint texturePtr = static_cast<GLuint>(texture->GetHandle().Ptr);
+		GLuint texturePtr = static_cast<GLuint>(texture->GetNativePtr().Ptr);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texturePtr, 0);
 
 		PZ_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is not complete.\n")
