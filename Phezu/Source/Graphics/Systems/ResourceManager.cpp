@@ -6,6 +6,7 @@
 #include "Graphics/Data/Mesh.hpp"
 #include "Graphics/Data/Material.hpp"
 #include "Graphics/Core/Descriptors/VertexLayout.hpp"
+#include "Core/Utils/EnumUtils.hpp"
 
 namespace Phezu {
 

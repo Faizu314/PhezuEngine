@@ -7,8 +7,8 @@
 #include <vector>
 #include <unordered_map>
 
-#include "Core/Types/Color.hpp"
 #include "Core/Types/Types.hpp"
+#include "Graphics/Core/Graphics.hpp"
 
 namespace Phezu {
 

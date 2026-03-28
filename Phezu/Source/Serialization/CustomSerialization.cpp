@@ -5,6 +5,7 @@
 #include "Maths/Objects/Vector3.hpp"
 #include "Core/Types/Color.hpp"
 #include "Core/Types/Types.hpp"
+#include "Core/Utils/EnumUtils.hpp"
 
 namespace Phezu {
 

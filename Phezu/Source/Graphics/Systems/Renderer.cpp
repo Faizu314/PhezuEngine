@@ -72,9 +72,6 @@ namespace Phezu {
 
         m_ViewTransform.SetTranslation(cameraTransform->GetWorldPosition());
 
-        //m_ScreenWidth = m_Ctx.Window->GetWidth();
-        //m_ScreenHeight = m_Ctx.Window->GetHeight();
-
         float renderScale = static_cast<float>(m_Ctx.Window->GetRenderScale());
         float aspectRatio = static_cast<float>(m_ScreenWidth) / m_ScreenHeight;
 

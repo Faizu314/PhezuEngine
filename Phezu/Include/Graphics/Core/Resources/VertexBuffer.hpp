@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "Graphics/Core/GraphicsTypes.hpp"
+#include "Graphics/Core/Graphics.hpp"
 
 namespace Phezu {
 

@@ -2,6 +2,7 @@
 
 #include "Core/Types/Types.hpp"
 #include "Assets/Core/MetaData.hpp"
+#include "Core/Utils/EnumUtils.hpp"
 
 namespace Phezu {
 

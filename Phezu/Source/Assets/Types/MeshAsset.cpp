@@ -5,6 +5,7 @@
 #include "Core/Defs/Assert.hpp"
 #include "Core/Types/Types.hpp"
 #include "Assets/Types/MeshAsset.hpp"
+#include "Core/Utils/EnumUtils.hpp"
 
 namespace Phezu {
 

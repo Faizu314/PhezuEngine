@@ -5,6 +5,7 @@
 #include "Core/Defs/Assert.hpp"
 #include "Core/Platform.hpp"
 #include "Assets/Types/ShaderAsset.hpp"
+#include "Core/Utils/EnumUtils.hpp"
 
 namespace Phezu {
 

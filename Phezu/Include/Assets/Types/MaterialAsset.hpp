@@ -7,7 +7,7 @@
 #include <string>
 
 #include "Assets/Core/Asset.hpp"
-#include "Core/Types/MaterialTypes.hpp"
+#include "Graphics/Core/Graphics.hpp"
 
 namespace Phezu {
 

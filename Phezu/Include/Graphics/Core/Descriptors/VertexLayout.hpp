@@ -5,7 +5,7 @@
 
 #include <unordered_map>
 
-#include "Graphics/Core/GraphicsTypes.hpp"
+#include "Graphics/Core/Graphics.hpp"
 
 namespace Phezu {
 

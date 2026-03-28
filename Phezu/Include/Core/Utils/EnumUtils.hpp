@@ -7,8 +7,7 @@
 
 #include "Scripting/Core/ScriptDefs.hpp"
 #include "Assets/Core/Asset.hpp"
-#include "Core/Types/VertexTypes.hpp"
-#include "Core/Types/TextureTypes.hpp"
+#include "Graphics/Core/Graphics.hpp"
 
 namespace Phezu {
 

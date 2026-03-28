@@ -1,5 +1,6 @@
 #include "Serialization/CustomSerialization.hpp"
 #include "Assets/Types/TextureAsset.hpp"
+#include "Core/Utils/EnumUtils.hpp"
 
 namespace Phezu {
 

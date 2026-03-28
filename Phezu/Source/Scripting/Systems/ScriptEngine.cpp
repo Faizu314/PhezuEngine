@@ -9,6 +9,7 @@
 #include "Core/Types/Types.hpp"
 #include "Core/Engine.hpp"
 #include "Core/Platform.hpp"
+#include "Core/Utils/EnumUtils.hpp"
 #include "Scripting/Systems/ScriptEngine.hpp"
 #include "Scripting/Bindings/ScriptGlue.hpp"
 #include "Scene/Entity.hpp"

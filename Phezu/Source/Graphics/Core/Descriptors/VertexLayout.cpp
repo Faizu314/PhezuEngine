@@ -1,6 +1,7 @@
 #include "Core/Defs/Assert.hpp"
 #include "Core/Platform.hpp"
 #include "Graphics/Core/Descriptors/VertexLayout.hpp"
+#include "Core/Utils/EnumUtils.hpp"
 
 namespace Phezu {
 

@@ -6,7 +6,7 @@
 #include <vector>
 #include <cstdint>
 
-#include "Graphics/Core/GraphicsTypes.hpp"
+#include "Graphics/Core/Graphics.hpp"
 #include "Core/Types/Types.hpp"
 
 namespace Phezu {

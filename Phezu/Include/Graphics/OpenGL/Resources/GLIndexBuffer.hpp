@@ -5,7 +5,7 @@
 
 #include "glad/glad.h"
 
-#include "Graphics/Core/GraphicsTypes.hpp"
+#include "Graphics/Core/Graphics.hpp"
 #include "Graphics/Core/Resources/IndexBuffer.hpp"
 
 namespace Phezu {

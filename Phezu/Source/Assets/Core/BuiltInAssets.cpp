@@ -4,6 +4,8 @@
 #include "Assets/Types/ShaderAsset.hpp"
 #include "Assets/Types/MeshAsset.hpp"
 #include "Assets/Types/MaterialAsset.hpp"
+#include "Graphics/Core/Graphics.hpp"
+#include "Core/Utils/EnumUtils.hpp"
 
 namespace Phezu {
 
