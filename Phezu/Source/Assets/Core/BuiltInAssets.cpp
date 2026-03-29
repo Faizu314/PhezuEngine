@@ -168,8 +168,16 @@ namespace Phezu {
 
 			layout (location = 0) in vec2 pos;
 
+			uniform mat3 objectToWorld;
+			uniform mat3 worldToView;
+			uniform mat3 viewToScreen;
+
 			void main() {
-				gl_Position = vec4(pos.xy, 0.0, 1.0);
+				vec3 worldPos = objectToWorld * vec3(pos.xy, 1.0);
+				vec3 viewPos = worldToView* vec3(worldPos.xy, 1.0);
+				vec3 screenPos = viewToScreen * vec3(viewPos.xy, 1.0);
+
+				gl_Position = vec4(screenPos.xy, 0.0, 1.0);
 			}
 		)";
 

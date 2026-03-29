@@ -66,6 +66,7 @@ namespace Phezu {
         AssetHandle defaultTexture(static_cast<int>(BuiltInAssetType::DefaultTexture), AssetSource::Engine);
         AssetHandle spriteShader(static_cast<int>(BuiltInAssetType::SpriteShader), AssetSource::Engine);
         AssetHandle blitShader(static_cast<int>(BuiltInAssetType::BlitShader), AssetSource::Engine);
+        AssetHandle solidShader(static_cast<int>(BuiltInAssetType::SolidShader), AssetSource::Engine);
         AssetHandle spriteMaterial(static_cast<int>(BuiltInAssetType::SpriteMaterial), AssetSource::Engine);
         
         m_LoadedAssets[quadMesh] = BuiltInAssets::CreateQuadMesh();
@@ -73,6 +74,7 @@ namespace Phezu {
         m_LoadedAssets[defaultTexture] = BuiltInAssets::CreateDefaultTexture();
         m_LoadedAssets[spriteShader] = BuiltInAssets::CreateSpriteShader();
         m_LoadedAssets[blitShader] = BuiltInAssets::CreateBlitShader();
+        m_LoadedAssets[solidShader] = BuiltInAssets::CreateSolidShader();
         m_LoadedAssets[spriteMaterial] = BuiltInAssets::CreateSpriteMaterial();
     }
     
