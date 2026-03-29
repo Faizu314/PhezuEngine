@@ -10,7 +10,7 @@ namespace Phezu {
     enum class ComponentType {
         None = 0,
         Transform,
-        Shape,
+        Mesh,
         Renderer,
         Rigidbody,
         Camera,

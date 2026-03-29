@@ -10,7 +10,7 @@
 #include "Graphics/Systems/ResourceManager.hpp"
 #include "Scene/Entity.hpp"
 #include "Scene/Components/TransformData.hpp"
-#include "Scene/Components/ShapeData.hpp"
+#include "Scene/Components/MeshData.hpp"
 #include "Scene/Components/RenderData.hpp"
 #include "Scene/Components/CameraData.hpp"
 #include "Maths/Math.hpp"
@@ -103,14 +103,14 @@ namespace Phezu {
     
     void Renderer::DrawEntity(Entity* entity, CameraData* camera) {
         TransformData* transformData = dynamic_cast<TransformData*>(entity->GetDataComponent(ComponentType::Transform));
-        ShapeData* shapeData = dynamic_cast<ShapeData*>(entity->GetDataComponent(ComponentType::Shape));
+        MeshData* meshData = dynamic_cast<MeshData*>(entity->GetDataComponent(ComponentType::Mesh));
         RendererData* renderData = dynamic_cast<RendererData*>(entity->GetDataComponent(ComponentType::Renderer));
         
-        if (shapeData == nullptr || renderData == nullptr)
+        if (meshData == nullptr || renderData == nullptr)
             return;
 
         Material* material = m_Ctx.Resource->GetMaterial(renderData->GetMaterialHandle());
-        const Mesh* mesh = m_Ctx.Resource->GetMesh(shapeData->GetMeshHandle());
+        const Mesh* mesh = m_Ctx.Resource->GetMesh(meshData->GetMeshHandle());
 
         mesh->Bind(material->GetShader());
         material->Bind();

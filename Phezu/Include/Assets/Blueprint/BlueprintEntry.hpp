@@ -18,7 +18,7 @@ namespace Phezu {
         
         // Engine Components
         TransformData = 2,
-        ShapeData = 3,
+        MeshData = 3,
         RendererData = 4,
         RigidbodyData = 5,
         CameraData = 6,

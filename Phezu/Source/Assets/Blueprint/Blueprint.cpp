@@ -22,7 +22,7 @@ namespace Phezu {
                 case EntryType::TransformData:
                     ComponentEntries.push_back(entry);
                     break;
-                case EntryType::ShapeData:
+                case EntryType::MeshData:
                     ComponentEntries.push_back(entry);
                     break;
                 case EntryType::RendererData:

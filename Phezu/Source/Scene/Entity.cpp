@@ -1,6 +1,6 @@
 #include "Scene/Entity.hpp"
 #include "Scene/Scene.hpp"
-#include "Scene/Components/ShapeData.hpp"
+#include "Scene/Components/MeshData.hpp"
 #include "Scene/Components/RenderData.hpp"
 #include "Scene/Components/RigidbodyData.hpp"
 #include "Scene/Components/CameraData.hpp"
@@ -41,8 +41,8 @@ namespace Phezu {
             case ComponentType::Transform:
                 Log("Trying to add Transform component to entity");
                 return nullptr;
-            case ComponentType::Shape:
-                component = new ShapeData(this);
+            case ComponentType::Mesh:
+                component = new MeshData(this);
                 break;
             case ComponentType::Renderer:
                 component = new RendererData(this);

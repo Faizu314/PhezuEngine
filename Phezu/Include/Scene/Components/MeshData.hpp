@@ -8,9 +8,9 @@
 
 namespace Phezu {
     
-    class ShapeData : public DataComponent {
+    class MeshData : public DataComponent {
     public:
-        ShapeData(Entity* entity) : DataComponent(entity) { }
+        MeshData(Entity* entity) : DataComponent(entity) { }
     public:
         void SetMeshHandle(ResourceHandle meshHandle) { m_MeshHandle = meshHandle; }
         ResourceHandle GetMeshHandle() { return m_MeshHandle; }

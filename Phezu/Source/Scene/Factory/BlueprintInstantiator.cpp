@@ -7,7 +7,7 @@
 #include "Scene/Factory/BlueprintInstantiator.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/Entity.hpp"
-#include "Scene/Components/ShapeData.hpp"
+#include "Scene/Components/MeshData.hpp"
 #include "Scene/Components/RenderData.hpp"
 #include "Scene/Components/RigidbodyData.hpp"
 #include "Scene/Components/ScriptComponent.hpp"
@@ -25,9 +25,9 @@ struct std::hash<Phezu::RegistryKey> {
 namespace Phezu {
 	
     NLOHMANN_JSON_SERIALIZE_ENUM(RigidbodyType, {
-    {RigidbodyType::Kinematic, "Kinematic"},
-    {RigidbodyType::Dynamic, "Dynamic"}
-        })
+        {RigidbodyType::Kinematic, "Kinematic"},
+        {RigidbodyType::Dynamic, "Dynamic"}
+    })
 
 	RegistryKey::RegistryKey(uint64_t instanceID, AssetHandle prefabHandle) : InstanceID(instanceID), PrefabHandle(prefabHandle) {}
 
@@ -155,14 +155,14 @@ namespace Phezu {
 
                     break;
                 }
-                case EntryType::ShapeData:
+                case EntryType::MeshData:
                 {
                     AssetHandle meshHandle = GetProperty<AssetHandle>("Mesh", entry, overrides);
 
-                    auto shapeData = dynamic_cast<ShapeData*>(parentEntity->AddDataComponent(ComponentType::Shape));
+                    auto meshData = dynamic_cast<MeshData*>(parentEntity->AddDataComponent(ComponentType::Mesh));
                     Mesh* mesh = context.resourceManager->GetMesh(meshHandle);
-                    shapeData->SetMeshHandle(context.resourceManager->GetResourceHandle(mesh));
-                    components[entry.FileID] = shapeData;
+                    meshData->SetMeshHandle(context.resourceManager->GetResourceHandle(mesh));
+                    components[entry.FileID] = meshData;
 
                     break;
                 }

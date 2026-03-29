@@ -46,8 +46,8 @@ namespace Phezu {
 
 		if (outFullname == "PhezuEngine.Transform")
 			return ManagedType::Transform;
-		else if (outFullname == "PhezuEngine.Shape")
-			return ManagedType::Shape;
+		else if (outFullname == "PhezuEngine.Mesh")
+			return ManagedType::Mesh;
 		else if (outFullname == "PhezuEngine.Renderer")
 			return ManagedType::Renderer;
 		else if (outFullname == "PhezuEngine.Rigidbody")
@@ -78,9 +78,9 @@ namespace Phezu {
 			{
 				return true;
 			}
-			case ManagedType::Shape:
+			case ManagedType::Mesh:
 			{
-                return entity->HasDataComponent(ComponentType::Shape);
+                return entity->HasDataComponent(ComponentType::Mesh);
 			}
 			case ManagedType::Renderer:
 			{

@@ -92,7 +92,7 @@ namespace Phezu {
             if (!entity->IsActive)
                 continue;
             if (!entity->HasDataComponent(ComponentType::Rigidbody) ||
-                !entity->HasDataComponent(ComponentType::Shape))
+                !entity->HasDataComponent(ComponentType::Mesh))
                 continue;
             
             auto physicsData = dynamic_cast<RigidbodyData*>(entity->GetDataComponent(ComponentType::Rigidbody));
@@ -120,7 +120,7 @@ namespace Phezu {
             if (!entity->IsActive)
                 continue;
             if (!entity->HasDataComponent(ComponentType::Renderer) ||
-                !entity->HasDataComponent(ComponentType::Shape))
+                !entity->HasDataComponent(ComponentType::Mesh))
                 continue;
             
             if (index < entities.size())

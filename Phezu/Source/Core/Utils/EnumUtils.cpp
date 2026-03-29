@@ -90,7 +90,7 @@ namespace Phezu {
 	#define MANAGED_TYPE_LIST															\
 		ENUM_TO_MAP_ENTRY(ManagedType, None)											\
 		ENUM_TO_MAP_ENTRY(ManagedType, Transform)										\
-		ENUM_TO_MAP_ENTRY(ManagedType, Shape)											\
+		ENUM_TO_MAP_ENTRY(ManagedType, Mesh)											\
 		ENUM_TO_MAP_ENTRY(ManagedType, Renderer)										\
 		ENUM_TO_MAP_ENTRY(ManagedType, Rigidbody)										\
 		ENUM_TO_MAP_ENTRY(ManagedType, ScriptComponent)									\

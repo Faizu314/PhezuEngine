@@ -18,7 +18,7 @@ enum class PhysicsEventType {
 enum class ManagedType {
     None,
     Transform,
-    Shape,
+    Mesh,
     Renderer,
     Rigidbody,
     ScriptComponent
