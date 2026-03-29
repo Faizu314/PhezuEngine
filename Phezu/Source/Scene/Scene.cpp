@@ -119,7 +119,7 @@ namespace Phezu {
             
             if (!entity->IsActive)
                 continue;
-            if (!entity->HasDataComponent(ComponentType::Render) ||
+            if (!entity->HasDataComponent(ComponentType::Renderer) ||
                 !entity->HasDataComponent(ComponentType::Shape))
                 continue;
             

@@ -166,11 +166,11 @@ namespace Phezu {
 
                     break;
                 }
-                case EntryType::RenderData:
+                case EntryType::RendererData:
                 {
                     AssetHandle materialHandle = GetProperty<AssetHandle>("Material", entry, overrides);
 
-                    auto renderData = dynamic_cast<RenderData*>(parentEntity->AddDataComponent(ComponentType::Render));
+                    auto renderData = dynamic_cast<RendererData*>(parentEntity->AddDataComponent(ComponentType::Renderer));
                     Material* mat = context.resourceManager->GetMaterial(materialHandle);
                     renderData->SetMaterialHandle(context.resourceManager->GetResourceHandle(mat));
                     components[entry.FileID] = renderData;

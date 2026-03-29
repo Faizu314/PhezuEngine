@@ -104,7 +104,7 @@ namespace Phezu {
     void Renderer::DrawEntity(Entity* entity, CameraData* camera) {
         TransformData* transformData = dynamic_cast<TransformData*>(entity->GetDataComponent(ComponentType::Transform));
         ShapeData* shapeData = dynamic_cast<ShapeData*>(entity->GetDataComponent(ComponentType::Shape));
-        RenderData* renderData = dynamic_cast<RenderData*>(entity->GetDataComponent(ComponentType::Render));
+        RendererData* renderData = dynamic_cast<RendererData*>(entity->GetDataComponent(ComponentType::Renderer));
         
         if (shapeData == nullptr || renderData == nullptr)
             return;

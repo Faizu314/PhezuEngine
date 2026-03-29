@@ -11,7 +11,7 @@ namespace Phezu {
         None = 0,
         Transform,
         Shape,
-        Render,
+        Renderer,
         Rigidbody,
         Camera,
     };

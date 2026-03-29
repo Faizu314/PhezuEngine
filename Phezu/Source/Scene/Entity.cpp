@@ -44,8 +44,8 @@ namespace Phezu {
             case ComponentType::Shape:
                 component = new ShapeData(this);
                 break;
-            case ComponentType::Render:
-                component = new RenderData(this);
+            case ComponentType::Renderer:
+                component = new RendererData(this);
                 break;
             case ComponentType::Rigidbody:
                 component = new RigidbodyData(this);

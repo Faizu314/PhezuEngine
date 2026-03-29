@@ -84,7 +84,7 @@ namespace Phezu {
 			}
 			case ManagedType::Renderer:
 			{
-                return entity->HasDataComponent(ComponentType::Render);
+                return entity->HasDataComponent(ComponentType::Renderer);
 			}
 			case ManagedType::Rigidbody:
 			{
@@ -209,7 +209,7 @@ namespace Phezu {
 		Entity* entity = GetEntity(entityID);
 
 		if (entity) {
-			RenderData* render = dynamic_cast<RenderData*>(entity->GetDataComponent(ComponentType::Render));
+			RendererData* render = dynamic_cast<RendererData*>(entity->GetDataComponent(ComponentType::Renderer));
 
 			return render->GetMaterialHandle();
 		}
@@ -231,7 +231,7 @@ namespace Phezu {
 			return;
 		}
 
-		RenderData* render = dynamic_cast<RenderData*>(entity->GetDataComponent(ComponentType::Render));
+		RendererData* render = dynamic_cast<RendererData*>(entity->GetDataComponent(ComponentType::Renderer));
 
 		render->SetMaterialHandle(materialHandle);
 	}

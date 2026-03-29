@@ -122,7 +122,7 @@ namespace Phezu {
             entityData.EngineComponents.emplace(ManagedType::Rigidbody, std::move(physics));
         }
         
-        if (entity->HasDataComponent(ComponentType::Render)) {
+        if (entity->HasDataComponent(ComponentType::Renderer)) {
             ComponentInstance renderer(m_RootDomain, m_EngineComponentClasses[ManagedType::Renderer]);
             renderer.SetEntityProperty(m_ComponentEntitySetter, entityData.EntityScript.GetMonoGcHandle());
             entityData.EngineComponents.emplace(ManagedType::Renderer, std::move(renderer));

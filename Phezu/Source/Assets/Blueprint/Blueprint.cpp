@@ -25,7 +25,7 @@ namespace Phezu {
                 case EntryType::ShapeData:
                     ComponentEntries.push_back(entry);
                     break;
-                case EntryType::RenderData:
+                case EntryType::RendererData:
                     ComponentEntries.push_back(entry);
                     break;
                 case EntryType::RigidbodyData:

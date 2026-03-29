@@ -8,9 +8,9 @@
 
 namespace Phezu {
     
-    class RenderData : public DataComponent {
+    class RendererData : public DataComponent {
     public:
-        RenderData(Entity* entity) : DataComponent(entity) {}
+        RendererData(Entity* entity) : DataComponent(entity) {}
     public:
         void SetMaterialHandle(ResourceHandle materialHandle) { m_MaterialHandle = materialHandle; }
         ResourceHandle GetMaterialHandle() { return m_MaterialHandle; }
