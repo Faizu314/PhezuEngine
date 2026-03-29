@@ -87,13 +87,13 @@ namespace Phezu {
     }
 
     void* ResourceRegistry::GetResource(ResourceHandle resourceHandle) {
-        PZ_ASSERT(m_HandleToPtr.find(ResourceMeta(resourceHandle)) != m_HandleToPtr.end(), "Resource does not exist.\n");
+        PZ_ASSERT(m_HandleToPtr.find(resourceHandle) != m_HandleToPtr.end(), "Resource does not exist.\n");
 
         return m_HandleToPtr.at(resourceHandle);
     }
 
     void* ResourceRegistry::GetResource(AssetHandle assetHandle) {
-        PZ_ASSERT(m_AssetToMeta.find(ResourceMeta(assetHandle)) != m_AssetToMeta.end(), "Resource does not exist.\n");
+        PZ_ASSERT(m_AssetToMeta.find(assetHandle) != m_AssetToMeta.end(), "Resource does not exist.\n");
 
         return m_HandleToPtr.at(m_AssetToMeta.at(assetHandle).GetHandle());
     }
@@ -105,7 +105,7 @@ namespace Phezu {
     }
 
     ResourceHandle ResourceRegistry::GetResourceHandle(AssetHandle assetHandle) {
-        PZ_ASSERT(m_AssetToMeta.find(ResourceMeta(assetHandle)) != m_AssetToMeta.end(), "Resource does not exist.\n");
+        PZ_ASSERT(m_AssetToMeta.find(assetHandle) != m_AssetToMeta.end(), "Resource does not exist.\n");
 
         return m_AssetToMeta.at(assetHandle).GetHandle();
     }

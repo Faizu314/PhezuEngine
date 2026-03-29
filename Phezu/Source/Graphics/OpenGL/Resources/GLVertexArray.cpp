@@ -1,11 +1,12 @@
 #include "Core/Defs/Assert.hpp"
 #include "Core/Platform.hpp"
-#include "Graphics/Core/GraphicsTypes.hpp"
+#include "Graphics/Core/Graphics.hpp"
 #include "Graphics/OpenGL/Resources/GLVertexArray.hpp"
 #include "Graphics/Core/Resources/VertexBuffer.hpp"
 #include "Graphics/Core/Resources/IndexBuffer.hpp"
 #include "Graphics/Core/Resources/Shader.hpp"
 #include "Graphics/Core/Descriptors/VertexLayout.hpp"
+#include "Core/Utils/EnumUtils.hpp"
 
 namespace Phezu {
 
