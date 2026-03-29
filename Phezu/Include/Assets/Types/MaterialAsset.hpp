@@ -13,6 +13,7 @@ namespace Phezu {
 
 	class MaterialAsset : public IAsset {
 	public:
+		AssetType GetAssetType() override { return AssetType::Material; }
 		void Deserialize(const std::string& data) override;
 	public:
 		AssetHandle ShaderRef;

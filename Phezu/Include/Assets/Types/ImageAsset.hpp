@@ -13,6 +13,7 @@ namespace Phezu {
 	public:
 		~ImageAsset();
 	public:
+		AssetType GetAssetType() override { return AssetType::Image; }
 		void Deserialize(const std::string& data) override;
 	public:
 		unsigned char* Data = nullptr;
