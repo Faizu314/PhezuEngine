@@ -8,7 +8,7 @@
 #include "Scene/Scene.hpp"
 #include "Scene/Entity.hpp"
 #include "Scene/Components/MeshData.hpp"
-#include "Scene/Components/RenderData.hpp"
+#include "Scene/Components/RendererData.hpp"
 #include "Scene/Components/RigidbodyData.hpp"
 #include "Scene/Components/ScriptComponent.hpp"
 #include "Scripting/Systems/ScriptEngine.hpp"

@@ -11,7 +11,7 @@
 #include "Scene/Scene.hpp"
 #include "Scene/Entity.hpp"
 #include "Scene/Components/RigidbodyData.hpp"
-#include "Scene/Components/RenderData.hpp"
+#include "Scene/Components/RendererData.hpp"
 #include "Maths/Math.hpp"
 
 namespace Phezu {

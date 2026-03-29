@@ -11,7 +11,7 @@
 #include "Scene/Entity.hpp"
 #include "Scene/Components/TransformData.hpp"
 #include "Scene/Components/MeshData.hpp"
-#include "Scene/Components/RenderData.hpp"
+#include "Scene/Components/RendererData.hpp"
 #include "Scene/Components/CameraData.hpp"
 #include "Maths/Math.hpp"
 
