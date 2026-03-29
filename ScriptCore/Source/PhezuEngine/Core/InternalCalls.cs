@@ -32,10 +32,10 @@ namespace PhezuEngine {
         
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Physics_GetVelocity(ulong entityID, out Vector2 velocity);
+        internal static extern void Rigidbody_GetVelocity(ulong entityID, out Vector2 velocity);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Physics_SetVelocity(ulong entityID, ref Vector2 velocity);
+        internal static extern void Rigidbody_SetVelocity(ulong entityID, ref Vector2 velocity);
         
 
         [MethodImpl(MethodImplOptions.InternalCall)]

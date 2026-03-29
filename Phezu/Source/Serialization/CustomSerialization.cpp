@@ -5,18 +5,24 @@
 #include "Maths/Objects/Vector3.hpp"
 #include "Core/Types/Color.hpp"
 #include "Core/Types/Types.hpp"
-#include "Core/Utils/EnumUtils.hpp"
+#include "Scene/Components/RigidbodyData.hpp"
+
 
 namespace Phezu {
 
+    NLOHMANN_JSON_SERIALIZE_ENUM(AssetSource, {
+        {AssetSource::Engine, "Engine"},
+        {AssetSource::Project, "Project"}
+    })
+
     void from_json(const nlohmann::json& j, AssetHandle& handle) {
-        AssetHandle h(j["Guid"].get<uint64_t>(), ToAssetSource(j["Source"].get<std::string>()));
+        AssetHandle h(j["Guid"].get<uint64_t>(), j["Source"].get<AssetSource>());
 
         handle = h;
     }
 
     void to_json(nlohmann::json& j, const AssetHandle& handle) {
-        j["Source"] = ToString(handle.GetSource());
+        j["Source"] = handle.GetSource();
         j["Guid"] = handle.GetGuid().Value;
     }
 

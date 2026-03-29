@@ -9,7 +9,7 @@
 #include "Scene/Entity.hpp"
 #include "Scene/Components/ShapeData.hpp"
 #include "Scene/Components/RenderData.hpp"
-#include "Scene/Components/PhysicsData.hpp"
+#include "Scene/Components/RigidbodyData.hpp"
 #include "Scene/Components/ScriptComponent.hpp"
 #include "Scripting/Systems/ScriptEngine.hpp"
 
@@ -24,6 +24,11 @@ struct std::hash<Phezu::RegistryKey> {
 
 namespace Phezu {
 	
+    NLOHMANN_JSON_SERIALIZE_ENUM(RigidbodyType, {
+    {RigidbodyType::Kinematic, "Kinematic"},
+    {RigidbodyType::Dynamic, "Dynamic"}
+        })
+
 	RegistryKey::RegistryKey(uint64_t instanceID, AssetHandle prefabHandle) : InstanceID(instanceID), PrefabHandle(prefabHandle) {}
 
 	bool RegistryKey::operator==(const RegistryKey& other) const {
@@ -172,15 +177,15 @@ namespace Phezu {
 
                     break;
                 }
-                case EntryType::PhysicsData:
+                case EntryType::RigidbodyData:
                 {
-                    bool isStatic = GetProperty<bool>("IsStatic", entry, overrides);
-                    Vector2 velocity = GetProperty<Vector2>("Velocity", entry, overrides);
+                    RigidbodyType type = GetProperty<RigidbodyType>("Type", entry, overrides);
+                    float mass = GetProperty<float>("Mass", entry, overrides);
 
-                    auto physicsData = dynamic_cast<PhysicsData*>(parentEntity->AddDataComponent(ComponentType::Physics));
-                    physicsData->Velocity = velocity;
-                    physicsData->IsStatic = isStatic;
-                    components[entry.FileID] = physicsData;
+                    auto rigidbodyData = dynamic_cast<RigidbodyData*>(parentEntity->AddDataComponent(ComponentType::Rigidbody));
+                    rigidbodyData->Type = type;
+                    rigidbodyData->Mass = mass;
+                    components[entry.FileID] = rigidbodyData;
 
                     break;
                 }

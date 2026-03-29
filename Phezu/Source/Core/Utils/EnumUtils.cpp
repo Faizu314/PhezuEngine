@@ -92,7 +92,7 @@ namespace Phezu {
 		ENUM_TO_MAP_ENTRY(ManagedType, Transform)										\
 		ENUM_TO_MAP_ENTRY(ManagedType, Shape)											\
 		ENUM_TO_MAP_ENTRY(ManagedType, Renderer)										\
-		ENUM_TO_MAP_ENTRY(ManagedType, Physics)											\
+		ENUM_TO_MAP_ENTRY(ManagedType, Rigidbody)										\
 		ENUM_TO_MAP_ENTRY(ManagedType, ScriptComponent)									\
 
 	DEFINE_ENUM_STRING_MAP(VertexSemantic, VERTEX_SEMANTICS_LIST, Position);

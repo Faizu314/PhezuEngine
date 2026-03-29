@@ -2,7 +2,7 @@
 #include "Scene/Scene.hpp"
 #include "Scene/Components/ShapeData.hpp"
 #include "Scene/Components/RenderData.hpp"
-#include "Scene/Components/PhysicsData.hpp"
+#include "Scene/Components/RigidbodyData.hpp"
 #include "Scene/Components/CameraData.hpp"
 #include "Scene/Components/ScriptComponent.hpp"
 
@@ -47,8 +47,8 @@ namespace Phezu {
             case ComponentType::Render:
                 component = new RenderData(this);
                 break;
-            case ComponentType::Physics:
-                component = new PhysicsData(this);
+            case ComponentType::Rigidbody:
+                component = new RigidbodyData(this);
                 break;
             case ComponentType::Camera:
                 component = new CameraData(this);

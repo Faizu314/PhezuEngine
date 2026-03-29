@@ -116,10 +116,10 @@ namespace Phezu {
         transform.SetEntityProperty(m_ComponentEntitySetter, entityData.EntityScript.GetMonoGcHandle());
         entityData.EngineComponents.emplace(ManagedType::Transform, std::move(transform));
         
-        if (entity->HasDataComponent(ComponentType::Physics)) {
-            ComponentInstance physics(m_RootDomain, m_EngineComponentClasses[ManagedType::Physics]);
+        if (entity->HasDataComponent(ComponentType::Rigidbody)) {
+            ComponentInstance physics(m_RootDomain, m_EngineComponentClasses[ManagedType::Rigidbody]);
             physics.SetEntityProperty(m_ComponentEntitySetter, entityData.EntityScript.GetMonoGcHandle());
-            entityData.EngineComponents.emplace(ManagedType::Physics, std::move(physics));
+            entityData.EngineComponents.emplace(ManagedType::Rigidbody, std::move(physics));
         }
         
         if (entity->HasDataComponent(ComponentType::Render)) {
@@ -215,7 +215,7 @@ namespace Phezu {
         m_EntityClass = ScriptClass::TryCreate(m_EngineAssembly, "PhezuEngine", "Entity", ScriptClassType::Entity);
 
         m_EngineComponentClasses[ManagedType::Transform] = ScriptClass::TryCreate(m_EngineAssembly, "PhezuEngine", "Transform", ScriptClassType::EngineComponent);
-        m_EngineComponentClasses[ManagedType::Physics] = ScriptClass::TryCreate(m_EngineAssembly, "PhezuEngine", "Physics", ScriptClassType::EngineComponent);
+        m_EngineComponentClasses[ManagedType::Rigidbody] = ScriptClass::TryCreate(m_EngineAssembly, "PhezuEngine", "Rigidbody", ScriptClassType::EngineComponent);
         m_EngineComponentClasses[ManagedType::Renderer] = ScriptClass::TryCreate(m_EngineAssembly, "PhezuEngine", "Renderer", ScriptClassType::EngineComponent);
 
         m_EntityIdField = m_EntityClass->GetMonoClassField("ID");

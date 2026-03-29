@@ -10,7 +10,7 @@
 #include "Graphics/Data/Material.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/Entity.hpp"
-#include "Scene/Components/PhysicsData.hpp"
+#include "Scene/Components/RigidbodyData.hpp"
 #include "Scene/Components/RenderData.hpp"
 #include "Maths/Math.hpp"
 
@@ -50,8 +50,8 @@ namespace Phezu {
 			return ManagedType::Shape;
 		else if (outFullname == "PhezuEngine.Renderer")
 			return ManagedType::Renderer;
-		else if (outFullname == "PhezuEngine.Physics")
-			return ManagedType::Physics;
+		else if (outFullname == "PhezuEngine.Rigidbody")
+			return ManagedType::Rigidbody;
 		else if (mono_class_is_subclass_of(monoClass, s_Data->ScriptEngine->GetBehaviourComponentClass(), false))
 			return ManagedType::ScriptComponent;
 		
@@ -86,9 +86,9 @@ namespace Phezu {
 			{
                 return entity->HasDataComponent(ComponentType::Render);
 			}
-			case ManagedType::Physics:
+			case ManagedType::Rigidbody:
 			{
-                return entity->HasDataComponent(ComponentType::Physics);
+                return entity->HasDataComponent(ComponentType::Rigidbody);
 			}
 			case ManagedType::ScriptComponent:
 			{
@@ -179,27 +179,27 @@ namespace Phezu {
 		}
 	}
     
-    /*----Physics-Internal-Calls----*/
+    /*----Rigidbody-Internal-Calls----*/
     
-    void Physics_GetVelocity(uint64_t entityID, glm::vec2* velocity) {
+    void Rigidbody_GetVelocity(uint64_t entityID, glm::vec2* velocity) {
         Entity* entity = GetEntity(entityID);
 
         if (entity) {
-            PhysicsData* physics = dynamic_cast<PhysicsData*>(entity->GetDataComponent(ComponentType::Physics));
+            RigidbodyData* rigidbody = dynamic_cast<RigidbodyData*>(entity->GetDataComponent(ComponentType::Rigidbody));
             
-            Vector2 vel = physics->Velocity;
+            Vector2 vel = rigidbody->LinearVelocity;
             velocity->x = vel.X();
             velocity->y = vel.Y();
         }
     }
 
-    void Physics_SetVelocity(uint64_t entityID, glm::vec2* velocity) {
+    void Ridigbody_SetVelocity(uint64_t entityID, glm::vec2* velocity) {
         Entity* entity = GetEntity(entityID);
 
         if (entity) {
-            PhysicsData* physics = dynamic_cast<PhysicsData*>(entity->GetDataComponent(ComponentType::Physics));
+            RigidbodyData* rigidbody = dynamic_cast<RigidbodyData*>(entity->GetDataComponent(ComponentType::Rigidbody));
             
-            physics->Velocity = Vector2(velocity->x, velocity->y);
+            rigidbody->LinearVelocity = Vector2(velocity->x, velocity->y);
         }
     }
 
@@ -331,8 +331,8 @@ namespace Phezu {
 		INTERNAL_CALL(Transform_GetPosition);
 		INTERNAL_CALL(Transform_SetPosition);
 
-		INTERNAL_CALL(Physics_GetVelocity);
-		INTERNAL_CALL(Physics_SetVelocity);
+		INTERNAL_CALL(Rigidbody_GetVelocity);
+		INTERNAL_CALL(Ridigbody_SetVelocity);
 
 
 		INTERNAL_CALL(Renderer_GetMaterial);

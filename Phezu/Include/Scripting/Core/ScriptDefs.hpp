@@ -20,6 +20,6 @@ enum class ManagedType {
     Transform,
     Shape,
     Renderer,
-    Physics,
+    Rigidbody,
     ScriptComponent
 };

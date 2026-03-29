@@ -12,7 +12,7 @@ namespace Phezu {
         Transform,
         Shape,
         Render,
-        Physics,
+        Rigidbody,
         Camera,
     };
     

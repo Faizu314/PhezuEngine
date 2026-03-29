@@ -1,7 +1,7 @@
 #include "Scene/Scene.hpp"
 #include "Scene/Entity.hpp"
 #include "Scene/Components/DataComponent.hpp"
-#include "Scene/Components/PhysicsData.hpp"
+#include "Scene/Components/RigidbodyData.hpp"
 #include "Scene/Factory/BlueprintInstantiator.hpp"
 #include "Assets/Types/PrefabAsset.hpp"
 #include "Assets/Systems/AssetManager.hpp"
@@ -91,19 +91,19 @@ namespace Phezu {
             
             if (!entity->IsActive)
                 continue;
-            if (!entity->HasDataComponent(ComponentType::Physics) ||
+            if (!entity->HasDataComponent(ComponentType::Rigidbody) ||
                 !entity->HasDataComponent(ComponentType::Shape))
                 continue;
             
-            auto physicsData = dynamic_cast<PhysicsData*>(entity->GetDataComponent(ComponentType::Physics));
-            if (physicsData->IsStatic) {
+            auto physicsData = dynamic_cast<RigidbodyData*>(entity->GetDataComponent(ComponentType::Rigidbody));
+            if (physicsData->Type == RigidbodyType::Kinematic) {
                 if (staticIndex < staticEntities.size())
                     staticEntities[staticIndex] = entity;
                 else
                     staticEntities.push_back(entity);
                 staticIndex++;
             }
-            else if (!physicsData->IsStatic) {
+            else if (physicsData->Type != RigidbodyType::Kinematic) {
                 if (dynamicIndex < dynamicEntities.size())
                     dynamicEntities[dynamicIndex] = entity;
                 else
