@@ -140,10 +140,12 @@ namespace Phezu {
                 {
                     Vector2 position = GetProperty<Vector2>("Position", entry, overrides);
                     Vector2 scale = GetProperty<Vector2>("Scale", entry, overrides);
+                    float rotation = GetProperty<float>("Rotation", entry, overrides);
 
                     auto transform = dynamic_cast<TransformData*>(parentEntity->GetDataComponent(ComponentType::Transform));
                     transform->SetLocalPosition(position);
                     transform->SetLocalScale(scale);
+                    transform->SetLocalRotation(rotation);
                     components[entry.FileID] = transform;
 
                     break;
