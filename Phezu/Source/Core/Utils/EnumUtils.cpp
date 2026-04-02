@@ -95,6 +95,11 @@ namespace Phezu {
 		ENUM_TO_MAP_ENTRY(ManagedType, Rigidbody)										\
 		ENUM_TO_MAP_ENTRY(ManagedType, ScriptComponent)									\
 
+	#define COLLIDER_TYPE_LIST															\
+		ENUM_TO_MAP_ENTRY(ColliderType, Circle)											\
+		ENUM_TO_MAP_ENTRY(ColliderType, Box)											\
+		ENUM_TO_MAP_ENTRY(ColliderType, Polygon)										\
+
 	DEFINE_ENUM_STRING_MAP(VertexSemantic, VERTEX_SEMANTICS_LIST, Position);
 	DEFINE_ENUM_STRING_MAP(VertexAttributeType, VERTEX_ATTRIBUTE_TYPE_LIST, Float);
 	DEFINE_ENUM_STRING_MAP(VertexAttributeCount, VERTEX_ATTRIBUTE_COUNT_LIST, One);
@@ -103,6 +108,7 @@ namespace Phezu {
 	DEFINE_ENUM_STRING_MAP(AssetSource, ASSET_SOURCE_LIST, Project);
 	DEFINE_ENUM_STRING_MAP(AssetType, ASSET_TYPE_LIST, None);
 	DEFINE_ENUM_STRING_MAP(ManagedType, MANAGED_TYPE_LIST, None);
+	DEFINE_ENUM_STRING_MAP(ColliderType, COLLIDER_TYPE_LIST, Circle);
 
 	unsigned int GetVertexAttributeSize(VertexAttributeType attribute) {
 		switch (attribute) {

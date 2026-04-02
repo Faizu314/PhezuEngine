@@ -54,6 +54,44 @@ namespace PhezuEngine {
         }
     }
 
+    public class CircleCollider : Component
+    {
+        public float Radius {
+            get 
+            {
+                return InternalCalls.CircleCollider_GetRadius(Entity.ID);
+            }
+            set
+            {
+                InternalCalls.CircleCollider_SetRadius(Entity.ID, value);
+            }
+        }
+    }
+
+    public class BoxCollider : Component {
+        public Vector2 Size {
+            get {
+                InternalCalls.BoxCollider_GetSize(Entity.ID, out Vector2 size);
+                return size;
+            }
+            set {
+                InternalCalls.BoxCollider_SetSize(Entity.ID, ref value);
+            }
+        }
+    }
+
+    public class PolygonCollider : Component
+    {
+        public Vector2[] Positions {
+            get {
+                return null;
+            }
+            set {
+
+            }
+        }
+    }
+
     public abstract class BehaviourComponent : Component {
         
     }

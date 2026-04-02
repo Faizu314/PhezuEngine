@@ -22,6 +22,7 @@ namespace Phezu {
         RendererData = 4,
         RigidbodyData = 5,
         CameraData = 6,
+        ColliderData = 7,
         
         Script = 101,
         PrefabRef = 102,

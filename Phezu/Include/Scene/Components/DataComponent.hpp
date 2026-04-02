@@ -13,6 +13,7 @@ namespace Phezu {
         Mesh,
         Renderer,
         Rigidbody,
+        Collider,
         Camera,
     };
     

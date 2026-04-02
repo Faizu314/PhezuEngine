@@ -10,6 +10,7 @@
 #include "Scene/Components/MeshData.hpp"
 #include "Scene/Components/RendererData.hpp"
 #include "Scene/Components/RigidbodyData.hpp"
+#include "Scene/Components/ColliderData.hpp"
 #include "Scene/Components/ScriptComponent.hpp"
 #include "Scripting/Systems/ScriptEngine.hpp"
 
@@ -27,6 +28,12 @@ namespace Phezu {
     NLOHMANN_JSON_SERIALIZE_ENUM(RigidbodyType, {
         {RigidbodyType::Kinematic, "Kinematic"},
         {RigidbodyType::Dynamic, "Dynamic"}
+    })
+
+    NLOHMANN_JSON_SERIALIZE_ENUM(ColliderType, {
+        {ColliderType::Circle, "Circle"},
+        {ColliderType::Box, "Box"},
+        {ColliderType::Polygon, "Polygon"}
     })
 
 	RegistryKey::RegistryKey(uint64_t instanceID, AssetHandle prefabHandle) : InstanceID(instanceID), PrefabHandle(prefabHandle) {}
@@ -140,6 +147,8 @@ namespace Phezu {
             else
                 parentEntity = registry[RegistryKey(parentRef.InstanceID, parentHandle)].Entities[parentRef.FileID];
 
+            PZ_ASSERT(parentEntity != nullptr, "Parent property of entry may be invalid in prefab file\n");
+
             switch (entry.TypeID) {
                 case EntryType::TransformData:
                 {
@@ -189,6 +198,52 @@ namespace Phezu {
 
                     break;
                 }
+                case EntryType::ColliderData:
+                {
+                    ColliderType type = GetProperty<ColliderType>("Type", entry, overrides);
+
+                    auto colliderData = dynamic_cast<ColliderData*>(parentEntity->AddDataComponent(ComponentType::Collider));
+
+                    colliderData->Type = type;
+
+                    switch (type) {
+                        case ColliderType::Circle:
+                        {
+                            CircleCollider circle;
+
+                            circle.Radius = GetProperty<float>("Radius", entry, overrides);
+
+                            colliderData->Collider = circle;
+
+                            break;
+                        }
+                        case ColliderType::Box:
+                        {
+                            BoxCollider box;
+
+                            box.Width = GetProperty<float>("Width", entry, overrides);
+                            box.Height = GetProperty<float>("Height", entry, overrides);
+
+                            colliderData->Collider = box;
+
+                            break;
+                        }
+                        case ColliderType::Polygon:
+                        {
+                            PolygonCollider polygon;
+
+                            polygon.Vertices = GetProperty<std::vector<Vector2>>("Vertices", entry, overrides);
+
+                            colliderData->Collider = polygon;
+
+                            break;
+                        }
+                        default:
+                            PZ_ASSERT(false, "Unknown collider type\n");
+                    }
+
+                    break;
+                }
                 default:
                     break;
             }
@@ -226,11 +281,9 @@ namespace Phezu {
 
 	void BlueprintInstantiator::OnEntitiesCreated(const BlueprintRuntimeContext& context, BlueprintRegistry& registry)
 	{
-        ScriptEngine& scriptEngine = *context.scriptEngine;
-
         for (const auto& [registryKey, fileRegistry] : registry) {
             for (const auto& [fileID, entity] : fileRegistry.Entities) {
-                scriptEngine.CreateManagedScripts(entity);
+                context.scriptEngine->CreateManagedComponents(entity);
             }
         }
 	}

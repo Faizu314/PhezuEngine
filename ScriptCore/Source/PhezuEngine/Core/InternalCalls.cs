@@ -36,7 +36,21 @@ namespace PhezuEngine {
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Rigidbody_SetVelocity(ulong entityID, ref Vector2 velocity);
-        
+
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern float CircleCollider_GetRadius(ulong entityID);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void CircleCollider_SetRadius(ulong entityID, float radius);
+
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void BoxCollider_SetSize(ulong entityID, ref Vector2 size);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void BoxCollider_GetSize(ulong entityID, out Vector2 size);
+
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern ulong Renderer_GetMaterial(ulong entityID);

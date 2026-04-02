@@ -21,5 +21,8 @@ enum class ManagedType {
     Mesh,
     Renderer,
     Rigidbody,
+    CircleCollider,
+    BoxCollider,
+    PolygonCollider,
     ScriptComponent
 };

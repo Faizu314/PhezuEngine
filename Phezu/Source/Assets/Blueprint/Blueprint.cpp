@@ -31,6 +31,9 @@ namespace Phezu {
                 case EntryType::RigidbodyData:
                     ComponentEntries.push_back(entry);
                     break;
+                case EntryType::ColliderData:
+                    ComponentEntries.push_back(entry);
+                    break;
                 case EntryType::Script:
                     ScriptEntries.push_back(entry);
                     break;

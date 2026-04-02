@@ -22,9 +22,7 @@ namespace Phezu {
     Entity* Scene::CreateEntity(AssetHandle prefabHandle) {
         auto prefab = m_Ctx.assetManager->GetAsset<PrefabAsset>(prefabHandle);
         
-        PZ_ASSERT(prefab != nullptr, "Invalid prefab handle.\n");
-        
-        BlueprintRuntimeContext ctx = { m_Ctx.assetManager, m_Ctx.resourceManager, m_Ctx.scriptEngine, this};
+        BlueprintRuntimeContext ctx = { m_Ctx.assetManager, m_Ctx.resourceManager, m_Ctx.scriptEngine, this };
 
         auto entity = BlueprintInstantiator::Instantiate(ctx, prefab->GetBlueprint(), prefabHandle);
         

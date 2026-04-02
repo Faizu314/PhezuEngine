@@ -8,6 +8,7 @@
 #include "Scripting/Core/ScriptDefs.hpp"
 #include "Assets/Core/Asset.hpp"
 #include "Graphics/Core/Graphics.hpp"
+#include "Scene/Components/ColliderData.hpp"
 
 namespace Phezu {
 
@@ -21,6 +22,7 @@ namespace Phezu {
 	TO_STRING_UTIL(AssetSource);
 	TO_STRING_UTIL(AssetType);
 	TO_STRING_UTIL(ManagedType);
+	TO_STRING_UTIL(ColliderType);
 
 	unsigned int GetVertexAttributeSize(VertexAttributeType attribute);
 	unsigned int GetVertexAttributeCount(VertexAttributeCount countEnum);

@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <inttypes.h>
+
 #include "glm/glm.hpp"
 #include <mono/jit/jit.h>
 
@@ -11,6 +14,7 @@
 #include "Scene/Scene.hpp"
 #include "Scene/Entity.hpp"
 #include "Scene/Components/RigidbodyData.hpp"
+#include "Scene/Components/ColliderData.hpp"
 #include "Scene/Components/RendererData.hpp"
 #include "Maths/Math.hpp"
 
@@ -34,6 +38,8 @@ namespace Phezu {
 		else if (auto scene = sceneManager->GetMasterScene()) {
 			entity = scene->GetEntity(entityID);
 		}
+
+		PZ_ASSERT(entity != nullptr, "Invalid entityID from C# %" PRIu64 "\n", entityID);
 
 		return entity;
 	}
@@ -203,6 +209,62 @@ namespace Phezu {
         }
     }
 
+	/*----Circle-Collider-Internal-Calls----*/
+
+	float CircleCollider_GetRadius(uint64_t entityID) {
+		Entity* entity = GetEntity(entityID);
+
+		if (entity) {
+			ColliderData* colliderData = dynamic_cast<ColliderData*>(entity->GetDataComponent(ComponentType::Collider));
+
+			PZ_ASSERT(colliderData->Type == ColliderType::Circle, "Mismatch between internal and managed collider types\n");
+
+			return std::get<CircleCollider>(colliderData->Collider).Radius;
+		}
+
+		return 0.0f;
+	}
+
+	void CircleCollider_SetRadius(uint64_t entityID, float radius) {
+		Entity* entity = GetEntity(entityID);
+
+		if (entity) {
+			ColliderData* colliderData = dynamic_cast<ColliderData*>(entity->GetDataComponent(ComponentType::Collider));
+
+			PZ_ASSERT(colliderData->Type == ColliderType::Circle, "Mismatch between internal and managed collider types\n");
+
+			std::get<CircleCollider>(colliderData->Collider).Radius = radius;
+		}
+	}
+
+	/*----Box-Collider-Internal-Calls----*/
+
+	void BoxCollider_GetSize(uint64_t entityID, glm::vec2* size) {
+		Entity* entity = GetEntity(entityID);
+
+		if (entity) {
+			ColliderData* colliderData = dynamic_cast<ColliderData*>(entity->GetDataComponent(ComponentType::Collider));
+
+			PZ_ASSERT(colliderData->Type == ColliderType::Box, "Mismatch between internal and managed collider types\n");
+
+			size->x = std::get<BoxCollider>(colliderData->Collider).Width;
+			size->y = std::get<BoxCollider>(colliderData->Collider).Height;
+		}
+	}
+
+	void BoxCollider_SetSize(uint64_t entityID, glm::vec2* size) {
+		Entity* entity = GetEntity(entityID);
+
+		if (entity) {
+			ColliderData* colliderData = dynamic_cast<ColliderData*>(entity->GetDataComponent(ComponentType::Collider));
+
+			PZ_ASSERT(colliderData->Type == ColliderType::Box, "Mismatch between internal and managed collider types\n");
+
+			std::get<BoxCollider>(colliderData->Collider).Width = size->x;
+			std::get<BoxCollider>(colliderData->Collider).Height = size->y;
+		}
+	}
+
 	/*----Renderer-Internal-Calls----*/
 
 	uint64_t Renderer_GetMaterial(uint64_t entityID) {
@@ -334,6 +396,11 @@ namespace Phezu {
 		INTERNAL_CALL(Rigidbody_GetVelocity);
 		INTERNAL_CALL(Ridigbody_SetVelocity);
 
+		INTERNAL_CALL(CircleCollider_GetRadius);
+		INTERNAL_CALL(CircleCollider_SetRadius);
+
+		INTERNAL_CALL(BoxCollider_SetSize);
+		INTERNAL_CALL(BoxCollider_GetSize);
 
 		INTERNAL_CALL(Renderer_GetMaterial);
 		INTERNAL_CALL(Renderer_SetMaterial);

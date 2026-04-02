@@ -3,6 +3,7 @@
 #include "Scene/Components/MeshData.hpp"
 #include "Scene/Components/RendererData.hpp"
 #include "Scene/Components/RigidbodyData.hpp"
+#include "Scene/Components/ColliderData.hpp"
 #include "Scene/Components/CameraData.hpp"
 #include "Scene/Components/ScriptComponent.hpp"
 
@@ -49,6 +50,9 @@ namespace Phezu {
                 break;
             case ComponentType::Rigidbody:
                 component = new RigidbodyData(this);
+                break;
+            case ComponentType::Collider:
+                component = new ColliderData(this);
                 break;
             case ComponentType::Camera:
                 component = new CameraData(this);

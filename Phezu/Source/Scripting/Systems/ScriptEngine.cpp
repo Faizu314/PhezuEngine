@@ -14,6 +14,7 @@
 #include "Scripting/Bindings/ScriptGlue.hpp"
 #include "Scene/Entity.hpp"
 #include "Scene/Components/ScriptComponent.hpp"
+#include "Scene/Components/ColliderData.hpp"
 
 namespace Phezu {
 
@@ -55,6 +56,22 @@ namespace Phezu {
         if (nameSpace.size() == 0)
             return className;
         return nameSpace + "." + className;
+    }
+
+    ManagedType ColliderTypeToManagedColliderType(ColliderType type) {
+        switch (type) {
+            case ColliderType::Circle:
+                return ManagedType::CircleCollider;
+            case ColliderType::Box:
+                return ManagedType::BoxCollider;
+            case ColliderType::Polygon:
+                return ManagedType::PolygonCollider;
+            default:
+            {
+                PZ_ASSERT(false, "Unknown ColliderType: %s", ToString(type).c_str());
+                return ManagedType::None;
+            }
+        }
     }
 
     ScriptEngine::ScriptEngine() : m_Engine(nullptr), m_RootDomain(nullptr), m_EngineAssembly(nullptr), m_GameAssembly(nullptr), m_ObjectClass(nullptr), m_ComponentClass(nullptr), m_BehaviourComponentClass(nullptr), m_EntityClass(nullptr), m_InputClassVTable(nullptr), m_EntityIdField(nullptr), m_ComponentEntitySetter(nullptr) {
@@ -102,7 +119,9 @@ namespace Phezu {
         }
     }
 
-    void ScriptEngine::CreateManagedScripts(Entity* entity) {
+    void ScriptEngine::CreateManagedComponents(Entity* entity) {
+        PZ_ASSERT(m_Entities.find(entity->GetEntityID()) == m_Entities.end(), "Creating components of an entity twice\n");
+
         m_Entities.try_emplace(
             entity->GetEntityID(),
             entity->GetEntityID(), m_RootDomain, m_EntityClass
@@ -110,22 +129,33 @@ namespace Phezu {
         EntityScriptingContext& entityData = m_Entities.at(entity->GetEntityID());
         entityData.EntityScript.SetUlongField(m_EntityIdField, entity->GetEntityID());
         
+        uint32_t entityHandle = entityData.EntityScript.GetMonoGcHandle();
+
         // Create Engine Components
         
         ComponentInstance transform(m_RootDomain, m_EngineComponentClasses[ManagedType::Transform]);
-        transform.SetEntityProperty(m_ComponentEntitySetter, entityData.EntityScript.GetMonoGcHandle());
+        transform.SetEntityProperty(m_ComponentEntitySetter, entityHandle);
         entityData.EngineComponents.emplace(ManagedType::Transform, std::move(transform));
         
         if (entity->HasDataComponent(ComponentType::Rigidbody)) {
             ComponentInstance physics(m_RootDomain, m_EngineComponentClasses[ManagedType::Rigidbody]);
-            physics.SetEntityProperty(m_ComponentEntitySetter, entityData.EntityScript.GetMonoGcHandle());
+            physics.SetEntityProperty(m_ComponentEntitySetter, entityHandle);
             entityData.EngineComponents.emplace(ManagedType::Rigidbody, std::move(physics));
         }
         
         if (entity->HasDataComponent(ComponentType::Renderer)) {
             ComponentInstance renderer(m_RootDomain, m_EngineComponentClasses[ManagedType::Renderer]);
-            renderer.SetEntityProperty(m_ComponentEntitySetter, entityData.EntityScript.GetMonoGcHandle());
+            renderer.SetEntityProperty(m_ComponentEntitySetter, entityHandle);
             entityData.EngineComponents.emplace(ManagedType::Renderer, std::move(renderer));
+        }
+
+        if (entity->HasDataComponent(ComponentType::Collider)) {
+            ColliderData* colliderData = static_cast<ColliderData*>(entity->GetDataComponent(ComponentType::Collider));
+
+            ManagedType colliderType = ColliderTypeToManagedColliderType(colliderData->Type);
+            ComponentInstance collider(m_RootDomain, m_EngineComponentClasses[colliderType]);
+            collider.SetEntityProperty(m_ComponentEntitySetter, entityHandle);
+            entityData.EngineComponents.emplace(ManagedType::CircleCollider, std::move(collider));
         }
         
         // Create Script Components
@@ -135,7 +165,7 @@ namespace Phezu {
         for (size_t i = 0; i < compCount; i++) {
             ScriptComponent* comp = entity->GetScriptComponent(i);
             //TODO: Log error if script class not found
-            auto scriptClass = m_ScriptClasses[comp->GetScriptClassFullname()];
+            auto scriptClass = m_ScriptClasses.at(comp->GetScriptClassFullname());
             entityData.BehaviourComponents.emplace_back(m_RootDomain, scriptClass);
 
             entityData.BehaviourComponents[i].SetEntityProperty(
@@ -217,6 +247,9 @@ namespace Phezu {
         m_EngineComponentClasses[ManagedType::Transform] = ScriptClass::TryCreate(m_EngineAssembly, "PhezuEngine", "Transform", ScriptClassType::EngineComponent);
         m_EngineComponentClasses[ManagedType::Rigidbody] = ScriptClass::TryCreate(m_EngineAssembly, "PhezuEngine", "Rigidbody", ScriptClassType::EngineComponent);
         m_EngineComponentClasses[ManagedType::Renderer] = ScriptClass::TryCreate(m_EngineAssembly, "PhezuEngine", "Renderer", ScriptClassType::EngineComponent);
+        m_EngineComponentClasses[ManagedType::CircleCollider] = ScriptClass::TryCreate(m_EngineAssembly, "PhezuEngine", "CircleCollider", ScriptClassType::EngineComponent);
+        m_EngineComponentClasses[ManagedType::BoxCollider] = ScriptClass::TryCreate(m_EngineAssembly, "PhezuEngine", "BoxCollider", ScriptClassType::EngineComponent);
+        m_EngineComponentClasses[ManagedType::PolygonCollider] = ScriptClass::TryCreate(m_EngineAssembly, "PhezuEngine", "PolygonCollider", ScriptClassType::EngineComponent);
 
         m_EntityIdField = m_EntityClass->GetMonoClassField("ID");
         m_ComponentEntitySetter = m_ComponentClass->GetMonoMethod("SetEntity", 1);

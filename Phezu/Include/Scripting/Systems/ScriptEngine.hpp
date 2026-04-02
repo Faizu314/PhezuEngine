@@ -28,7 +28,7 @@ namespace Phezu {
 		ScriptEngine& operator=(const ScriptEngine&&) = delete;
 	public:
 		void Init(Engine* engine);
-		void CreateManagedScripts(Entity* entity);
+		void CreateManagedComponents(Entity* entity);
         void InitializeManagedScripts(Entity* entity);
 		void OnEntityDestroyed(Entity* entity);
 		void OnUpdate(float deltaTime);
