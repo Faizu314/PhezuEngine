@@ -32,8 +32,8 @@ namespace Phezu {
         m_AssetManager.Init(m_AssetsPath);
         m_ResourceManager.Init(&m_AssetManager, m_Platform->GetGraphicsApi());
         m_Renderer.Init({ m_Platform->GetWindow(), m_Platform->GetGraphicsApi(), &m_ResourceManager }, RenderTarget::Default());
-        m_SceneManager.Init({ &m_AssetManager, &m_ResourceManager, &m_ScriptEngine });
         m_ScriptEngine.Init(this);
+        m_SceneManager.Init({ &m_AssetManager, &m_ResourceManager, &m_ScriptEngine });
         
         return 0;
     }
