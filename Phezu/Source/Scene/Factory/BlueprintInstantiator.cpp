@@ -186,6 +186,8 @@ namespace Phezu {
 
         }
 
+#ifdef PZ_ENABLE_MONO
+
         /* ---- Script Entries ---- */
 
         for (size_t i = 0; i < bp.ScriptEntries.size(); i++) {
@@ -213,6 +215,7 @@ namespace Phezu {
             components[entry.FileID] = scriptComponent;
         }
 
+#endif
 	}
 
 	void BlueprintInstantiator::OnEntitiesCreated(const BlueprintRuntimeContext& context, BlueprintRegistry& registry)
@@ -285,6 +288,8 @@ namespace Phezu {
             }
         }
 
+#ifdef PZ_ENABLE_MONO
+
         auto& components = registry[registryKey].Components;
 
         /* ---- Script Entries ---- */
@@ -311,6 +316,8 @@ namespace Phezu {
                 }
             }
         }
+
+#endif
 	}
 
 }

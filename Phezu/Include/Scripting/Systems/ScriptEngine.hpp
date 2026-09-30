@@ -42,6 +42,7 @@ namespace Phezu {
         void RemoveEngineComponentInstance(uint64_t entityID, const std::string& classFullname);
         uint32_t GetEntityScriptInstanceGcHandle(uint64_t entityID);
 	private:
+#ifdef PZ_ENABLE_MONO
 		void InitMono();
 		void ShutdownMono();
 		void PreUpdate();
@@ -49,8 +50,8 @@ namespace Phezu {
         void GetEngineClasses();
 		void GetScriptClasses();
 		MonoAssembly* LoadAssembly(const std::string& assemblyPath);
-    private:
         void PrintAssemblyClasses(MonoAssembly* assembly);
+#endif
 	private:
 		Engine* m_Engine;
 		MonoDomain* m_RootDomain;
@@ -70,6 +71,8 @@ namespace Phezu {
 	private:
 		std::unordered_map<std::string, ScriptClass*> m_ScriptClasses;
         std::unordered_map<ManagedType, ScriptClass*> m_EngineComponentClasses;
+#ifdef PZ_ENABLE_MONO
 		std::unordered_map<uint64_t, EntityScriptingContext> m_Entities;
+#endif
 	};
 }

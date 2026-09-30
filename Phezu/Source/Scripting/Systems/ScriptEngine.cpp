@@ -1,10 +1,14 @@
 #include <fstream>
 
+#ifdef PZ_ENABLE_MONO
+
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
 #include "mono/metadata/mono-config.h"
 #include <mono/metadata/object.h>
 #include "mono/utils/mono-logger.h"
+
+#endif
 
 #include "Core/Types/Types.hpp"
 #include "Core/Engine.hpp"
@@ -43,12 +47,16 @@ namespace Phezu {
         return buffer;
     }
 
+#ifdef PZ_ENABLE_MONO
+
     void MonoLog(const char* log_domain, const char* log_level, const char* message, mono_bool fatal, void* userData) {
         Log("Domain : %s\n", log_domain);
         Log("Level  : %s\n", log_level);
         Log("Message: %s\n", message);
         Log("Fatal  : %s\n\n", fatal ? "true" : "false");
     }
+
+#endif
     
     std::string GetMonoClassFullname(const std::string& nameSpace, const std::string& className) {
         if (nameSpace.size() == 0)
@@ -61,6 +69,8 @@ namespace Phezu {
     }
 
     void ScriptEngine::Init(Engine* engine) {
+#ifdef PZ_ENABLE_MONO
+
         m_Engine = engine;
 
         InitMono();
@@ -70,38 +80,13 @@ namespace Phezu {
         ScriptGlue::Bind();
 
         GetScriptClasses();
-    }
 
-    void ScriptEngine::InitMono() {
-        mono_trace_set_level_string("debug");
-        mono_trace_set_log_handler(MonoLog, nullptr);
-
-        mono_set_assemblies_path(m_Engine->GetMonoCoreLibsPath().u8string().c_str());
-
-        mono_config_parse(nullptr);
-
-        m_RootDomain = mono_jit_init("PhezuEngineDomain");
-
-        PZ_ASSERT(m_RootDomain != nullptr, "Error initializing mono jit.\n");
-
-        std::filesystem::path scriptCoreDllPath = m_Engine->GetScriptCoreDllPath() / "Phezu-ScriptCore.dll";
-
-        m_EngineAssembly = LoadAssembly(scriptCoreDllPath.string());
-
-        std::filesystem::path gameDllPath = m_Engine->GetScriptCoreDllPath() / "Game.dll";
-
-        m_GameAssembly = LoadAssembly(gameDllPath.string());
-    }
-
-    void ScriptEngine::ShutdownMono() {
-        if (m_RootDomain)
-        {
-            mono_jit_cleanup(m_RootDomain);
-            m_RootDomain = nullptr;
-        }
+#endif
     }
 
     void ScriptEngine::CreateManagedScripts(Entity* entity) {
+#ifdef PZ_ENABLE_MONO
+
         m_Entities.try_emplace(
             entity->GetEntityID(),
             entity->GetEntityID(), m_RootDomain, m_EntityClass
@@ -140,18 +125,26 @@ namespace Phezu {
             entityData.BehaviourComponents[i].SetEntityProperty(
                 m_ComponentEntitySetter, entityData.EntityScript.GetMonoGcHandle());
         }
+
+#endif
     }
     
     void ScriptEngine::InitializeManagedScripts(Entity* entity) {
+#ifdef PZ_ENABLE_MONO
+
         EntityScriptingContext& entityData = m_Entities.at(entity->GetEntityID());
         
         for (size_t i = 0; i < entity->GetScriptComponentCount(); i++) {
             if (entityData.BehaviourComponents[i].HasOnCreate())
                 entityData.BehaviourComponents[i].InvokeOnCreate();
         }
+
+#endif
     }
 
     void ScriptEngine::OnEntityDestroyed(Entity* entity) {
+#ifdef PZ_ENABLE_MONO
+
         auto& entityData = m_Entities.at(entity->GetEntityID());
 
         for (size_t i = 0; i < entityData.BehaviourComponents.size(); i++) {
@@ -160,19 +153,13 @@ namespace Phezu {
         }
 
         m_Entities.erase(entity->GetEntityID());
-    }
 
-    void ScriptEngine::PreUpdate() {
-        const InputData& input = m_Engine->GetInput();
-
-        mono_field_static_set_value(m_InputClassVTable, m_InputFields.W, (void*)&(input.W));
-        mono_field_static_set_value(m_InputClassVTable, m_InputFields.A, (void*)&(input.A));
-        mono_field_static_set_value(m_InputClassVTable, m_InputFields.S, (void*)&(input.S));
-        mono_field_static_set_value(m_InputClassVTable, m_InputFields.D, (void*)&(input.D));
-        mono_field_static_set_value(m_InputClassVTable, m_InputFields.Space, (void*)&(input.Space));
+#endif
     }
 
     void ScriptEngine::OnUpdate(float deltaTime) {
+#ifdef PZ_ENABLE_MONO
+
         PreUpdate();
 
         for (auto it = m_Entities.begin(); it != m_Entities.end(); it++) {
@@ -183,6 +170,85 @@ namespace Phezu {
                     entityData.BehaviourComponents[i].InvokeOnUpdate(deltaTime);
             }
         }
+
+#endif
+    }
+
+    void ScriptEngine::FirePhysicsCollisionEvent(uint64_t entityA, uint64_t entityB, PhysicsEventType eventType) {
+#ifdef PZ_ENABLE_MONO
+
+        auto& entityDataA = m_Entities.at(entityA);
+        auto& entityDataB = m_Entities.at(entityB);
+
+        for (size_t i = 0; i < entityDataA.BehaviourComponents.size(); i++) {
+            if (eventType == PhysicsEventType::CollisionEnter)
+                entityDataA.BehaviourComponents[i].TryInvokeOnCollisionEnter(entityDataB.EntityScript.GetMonoGcHandle());
+            else if (eventType == PhysicsEventType::CollisionStay)
+                entityDataA.BehaviourComponents[i].TryInvokeOnCollisionStay(entityDataB.EntityScript.GetMonoGcHandle());
+            else if (eventType == PhysicsEventType::CollisionExit)
+                entityDataA.BehaviourComponents[i].TryInvokeOnCollisionExit(entityDataB.EntityScript.GetMonoGcHandle());
+        }
+
+        for (size_t i = 0; i < entityDataB.BehaviourComponents.size(); i++) {
+            if (eventType == PhysicsEventType::CollisionEnter)
+                entityDataB.BehaviourComponents[i].TryInvokeOnCollisionEnter(entityDataA.EntityScript.GetMonoGcHandle());
+            else if (eventType == PhysicsEventType::CollisionStay)
+                entityDataB.BehaviourComponents[i].TryInvokeOnCollisionStay(entityDataA.EntityScript.GetMonoGcHandle());
+            else if (eventType == PhysicsEventType::CollisionExit)
+                entityDataB.BehaviourComponents[i].TryInvokeOnCollisionExit(entityDataA.EntityScript.GetMonoGcHandle());
+        }
+
+#endif
+    }
+
+    void ScriptEngine::Shutdown() {
+#ifdef PZ_ENABLE_MONO
+
+        ScriptGlue::Destroy();
+        ShutdownMono();
+
+#endif
+    }
+
+#ifdef PZ_ENABLE_MONO
+
+    void ScriptEngine::InitMono() {
+        mono_trace_set_level_string("debug");
+        mono_trace_set_log_handler(MonoLog, nullptr);
+
+        mono_set_assemblies_path(m_Engine->GetMonoCoreLibsPath().u8string().c_str());
+
+        mono_config_parse(nullptr);
+
+        m_RootDomain = mono_jit_init("PhezuEngineDomain");
+
+        PZ_ASSERT(m_RootDomain != nullptr, "Error initializing mono jit.\n");
+
+        std::filesystem::path scriptCoreDllPath = m_Engine->GetScriptCoreDllPath() / "Phezu-ScriptCore.dll";
+
+        m_EngineAssembly = LoadAssembly(scriptCoreDllPath.string());
+
+        std::filesystem::path gameDllPath = m_Engine->GetScriptCoreDllPath() / "Game.dll";
+
+        m_GameAssembly = LoadAssembly(gameDllPath.string());
+    }
+
+    void ScriptEngine::ShutdownMono() {
+        if (m_RootDomain)
+        {
+            mono_jit_cleanup(m_RootDomain);
+            m_RootDomain = nullptr;
+        }
+    }
+
+    void ScriptEngine::PreUpdate() {
+        const InputData& input = m_Engine->GetInput();
+
+        mono_field_static_set_value(m_InputClassVTable, m_InputFields.W, (void*)&(input.W));
+        mono_field_static_set_value(m_InputClassVTable, m_InputFields.A, (void*)&(input.A));
+        mono_field_static_set_value(m_InputClassVTable, m_InputFields.S, (void*)&(input.S));
+        mono_field_static_set_value(m_InputClassVTable, m_InputFields.D, (void*)&(input.D));
+        mono_field_static_set_value(m_InputClassVTable, m_InputFields.Space, (void*)&(input.Space));
     }
 
     MonoAssembly* ScriptEngine::LoadAssembly(const std::string& assemblyPath) {
@@ -260,29 +326,6 @@ namespace Phezu {
         m_InputFields.D = inputClass->GetMonoClassField("_D");
         m_InputFields.Space = inputClass->GetMonoClassField("_Space");
     }
-    
-    void ScriptEngine::FirePhysicsCollisionEvent(uint64_t entityA, uint64_t entityB, PhysicsEventType eventType) {
-        auto& entityDataA = m_Entities.at(entityA);
-        auto& entityDataB = m_Entities.at(entityB);
-        
-        for (size_t i = 0; i < entityDataA.BehaviourComponents.size(); i++) {
-            if (eventType == PhysicsEventType::CollisionEnter)
-                entityDataA.BehaviourComponents[i].TryInvokeOnCollisionEnter(entityDataB.EntityScript.GetMonoGcHandle());
-            else if (eventType == PhysicsEventType::CollisionStay)
-                entityDataA.BehaviourComponents[i].TryInvokeOnCollisionStay(entityDataB.EntityScript.GetMonoGcHandle());
-            else if (eventType == PhysicsEventType::CollisionExit)
-                entityDataA.BehaviourComponents[i].TryInvokeOnCollisionExit(entityDataB.EntityScript.GetMonoGcHandle());
-        }
-        
-        for (size_t i = 0; i < entityDataB.BehaviourComponents.size(); i++) {
-            if (eventType == PhysicsEventType::CollisionEnter)
-                entityDataB.BehaviourComponents[i].TryInvokeOnCollisionEnter(entityDataA.EntityScript.GetMonoGcHandle());
-            else if (eventType == PhysicsEventType::CollisionStay)
-                entityDataB.BehaviourComponents[i].TryInvokeOnCollisionStay(entityDataA.EntityScript.GetMonoGcHandle());
-            else if (eventType == PhysicsEventType::CollisionExit)
-                entityDataB.BehaviourComponents[i].TryInvokeOnCollisionExit(entityDataA.EntityScript.GetMonoGcHandle());
-        }
-    }
 
     void ScriptEngine::PrintAssemblyClasses(MonoAssembly* assembly) {
         MonoImage* image = mono_assembly_get_image(assembly);
@@ -301,14 +344,13 @@ namespace Phezu {
         }
     }
 
-    void ScriptEngine::Shutdown() {
-        ScriptGlue::Destroy();
-        ShutdownMono();
-    }
+#endif
     
     //----Script-Glue-Functions----//
 
     ScriptInstance* ScriptEngine::GetBehaviourScriptInstance(uint64_t entityID, const std::string& classFullname) {
+#ifdef PZ_ENABLE_MONO
+
         if (m_Entities.find(entityID) == m_Entities.end()) {
             Log("Entity not found for behaviour script: %s", classFullname.c_str());
             return nullptr;
@@ -323,10 +365,14 @@ namespace Phezu {
 
         Log("Behaviour Script %s on Entity not found\n", classFullname.c_str());
         
+#endif
+
         return nullptr;
     }
     
     ScriptInstance* ScriptEngine::GetEngineComponentInstance(uint64_t entityID, ManagedType componentType) {
+#ifdef PZ_ENABLE_MONO
+
         if (m_Entities.find(entityID) == m_Entities.end()) {
             Log("Entity not found for engine component of type %i", static_cast<int>(componentType));
             return nullptr;
@@ -340,9 +386,15 @@ namespace Phezu {
         }
         
         return &entityData.EngineComponents.at(componentType);
+
+#else
+        return nullptr;
+#endif
     }
     
     void ScriptEngine::RemoveBehaviourScriptInstance(uint64_t entityID, const std::string& classFullname) {
+#ifdef PZ_ENABLE_MONO
+
         if (m_Entities.find(entityID) == m_Entities.end()) {
             //Should log an exception
             Log("Entity of id %i not found for behaviour script: %s", entityID, classFullname.c_str());
@@ -364,14 +416,24 @@ namespace Phezu {
         }
 
         Log("Behaviour Script %s on Entity not found\n", classFullname.c_str());
+
+#endif
     }
     
     MonoClass* ScriptEngine::GetBehaviourComponentClass() {
+#ifdef PZ_ENABLE_MONO
         return m_BehaviourComponentClass->GetMonoClass();
+#else
+        return nullptr;
+#endif
     }
     
     uint32_t ScriptEngine::GetEntityScriptInstanceGcHandle(uint64_t entityID) {
+#ifdef PZ_ENABLE_MONO
         return m_Entities.at(entityID).EntityScript.GetMonoGcHandle();
+#else
+        return 0;
+#endif
     }
 
 }

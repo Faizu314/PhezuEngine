@@ -3,6 +3,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 project(PhezuEngine)
 
+option(PZ_ENABLE_MONO "Enable Mono scripting support" ON)
+
 if (NOT DEFINED PROCESSOR_COUNT)
     set(PROCESSOR_COUNT 1)
     if (WIN32)
@@ -13,7 +15,6 @@ if (NOT DEFINED PROCESSOR_COUNT)
     endif()
 endif()
 
-set(PROJECT_SRC_DIR "${CMAKE_SOURCE_DIR}/Projects/Default" CACHE PATH "Root directory of the project")
 set(SCRIPT_CORE_DLL_SRC_DIR "${CMAKE_BINARY_DIR}/ScriptCore/Build/bin" CACHE INTERNAL "")
 
 if (APPLE)
