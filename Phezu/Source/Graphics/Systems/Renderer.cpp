@@ -78,7 +78,7 @@ namespace Phezu {
         Vector2 scaling(1.0f / (aspectRatio * camera->Size), 1.0f / camera->Size);
         m_ScreenTransform.SetScaling(scaling);
 
-        m_IntermediateTarget->Bind();
+        m_Ctx.Api->SetRenderTarget(m_IntermediateTarget);
         m_Ctx.Api->SetViewport(0, 0, static_cast<int>(m_ScreenWidth / renderScale), static_cast<int>(m_ScreenHeight / renderScale));
         m_Ctx.Api->ClearFrame(Color::Clear);
 
