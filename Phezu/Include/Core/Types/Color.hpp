@@ -13,11 +13,11 @@ namespace Phezu {
     public:
         bool operator==(const Color& other) const { return r == other.r && g == other.g && b == other.b && a == other.a; }
     public:
-        static const Color Color::Clear;
-        static const Color Color::White;
-        static const Color Color::Green;
-        static const Color Color::Red;
-        static const Color Color::Black;
+        static const Color Clear;
+        static const Color White;
+        static const Color Green;
+        static const Color Red;
+        static const Color Black;
     };
 
     inline const Color Color::Clear = Color(0, 0, 0, 0);

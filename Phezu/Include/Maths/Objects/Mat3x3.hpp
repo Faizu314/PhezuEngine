@@ -6,6 +6,7 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
+#include "Maths/Objects/Vector2.hpp"
 #include "Maths/Objects/Vector3.hpp"
 
 namespace Phezu {

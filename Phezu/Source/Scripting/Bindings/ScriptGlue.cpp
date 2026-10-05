@@ -199,7 +199,7 @@ namespace Phezu {
         }
     }
 
-    void Ridigbody_SetVelocity(uint64_t entityID, glm::vec2* velocity) {
+    void Rigidbody_SetVelocity(uint64_t entityID, glm::vec2* velocity) {
         Entity* entity = GetEntity(entityID);
 
         if (entity) {
@@ -394,7 +394,7 @@ namespace Phezu {
 		INTERNAL_CALL(Transform_SetPosition);
 
 		INTERNAL_CALL(Rigidbody_GetVelocity);
-		INTERNAL_CALL(Ridigbody_SetVelocity);
+		INTERNAL_CALL(Rigidbody_SetVelocity);
 
 		INTERNAL_CALL(CircleCollider_GetRadius);
 		INTERNAL_CALL(CircleCollider_SetRadius);

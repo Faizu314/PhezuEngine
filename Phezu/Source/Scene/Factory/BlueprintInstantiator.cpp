@@ -250,7 +250,7 @@ namespace Phezu {
 
         }
 
-#ifdef PZ_ENABLE_MONO
+#if !defined(PZ_PLATFORM_WEB)
 
         /* ---- Script Entries ---- */
 
@@ -350,7 +350,7 @@ namespace Phezu {
             }
         }
 
-#ifdef PZ_ENABLE_MONO
+#if !defined(PZ_PLATFORM_WEB)
 
         auto& components = registry[registryKey].Components;
 

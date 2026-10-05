@@ -9,6 +9,7 @@
 
 #include "Core/Types/Types.hpp"
 #include "Graphics/Core/Graphics.hpp"
+#include "Maths/Objects/Mat3x3.hpp"
 
 namespace Phezu {
 

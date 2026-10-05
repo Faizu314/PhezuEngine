@@ -69,8 +69,7 @@ namespace Phezu {
 	#define TEXTURE_WRAP_MODE_LIST														\
 		ENUM_TO_MAP_ENTRY(TextureWrapMode, Repeat)										\
 		ENUM_TO_MAP_ENTRY(TextureWrapMode, MirroredRepeat)								\
-		ENUM_TO_MAP_ENTRY(TextureWrapMode, ClampToEdge)									\
-		ENUM_TO_MAP_ENTRY(TextureWrapMode, ClampToBorder)
+		ENUM_TO_MAP_ENTRY(TextureWrapMode, ClampToEdge)
 
 	#define ASSET_SOURCE_LIST															\
 		ENUM_TO_MAP_ENTRY(AssetSource, Engine)											\

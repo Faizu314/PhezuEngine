@@ -6,7 +6,12 @@
 #include <cstdint>
 #include <vector>
 
-#include "glad/glad.h"
+#if defined(PZ_PLATFORM_WINDOWS)
+	#include "glad/glad.h"
+#elif defined(PZ_PLATFORM_WEB)
+	#include <GLES3/gl3.h>
+#endif
+
 #include "Graphics/Core/Resources/Texture.hpp"
 
 namespace Phezu {

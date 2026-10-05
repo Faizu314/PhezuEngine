@@ -1,6 +1,6 @@
 #include <fstream>
 
-#ifdef PZ_ENABLE_MONO
+#if !defined(PZ_PLATFORM_WEB)
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
@@ -49,7 +49,7 @@ namespace Phezu {
         return buffer;
     }
 
-#ifdef PZ_ENABLE_MONO
+#if !defined(PZ_PLATFORM_WEB)
 
     void MonoLog(const char* log_domain, const char* log_level, const char* message, mono_bool fatal, void* userData) {
         Log("Domain : %s\n", log_domain);
@@ -87,7 +87,7 @@ namespace Phezu {
     }
 
     void ScriptEngine::Init(Engine* engine) {
-#ifdef PZ_ENABLE_MONO
+#if !defined(PZ_PLATFORM_WEB)
 
         m_Engine = engine;
 
@@ -103,7 +103,7 @@ namespace Phezu {
     }
 
     void ScriptEngine::CreateManagedComponents(Entity* entity) {
-#ifdef PZ_ENABLE_MONO
+#if !defined(PZ_PLATFORM_WEB)
         PZ_ASSERT(m_Entities.find(entity->GetEntityID()) == m_Entities.end(), "Creating components of an entity twice\n");
 
         m_Entities.try_emplace(
@@ -160,7 +160,7 @@ namespace Phezu {
     }
     
     void ScriptEngine::InitializeManagedScripts(Entity* entity) {
-#ifdef PZ_ENABLE_MONO
+#if !defined(PZ_PLATFORM_WEB)
 
         EntityScriptingContext& entityData = m_Entities.at(entity->GetEntityID());
         
@@ -173,7 +173,7 @@ namespace Phezu {
     }
 
     void ScriptEngine::OnEntityDestroyed(Entity* entity) {
-#ifdef PZ_ENABLE_MONO
+#if !defined(PZ_PLATFORM_WEB)
 
         auto& entityData = m_Entities.at(entity->GetEntityID());
 
@@ -188,7 +188,7 @@ namespace Phezu {
     }
 
     void ScriptEngine::OnUpdate(float deltaTime) {
-#ifdef PZ_ENABLE_MONO
+#if !defined(PZ_PLATFORM_WEB)
 
         PreUpdate();
 
@@ -205,7 +205,7 @@ namespace Phezu {
     }
 
     void ScriptEngine::FirePhysicsCollisionEvent(uint64_t entityA, uint64_t entityB, PhysicsEventType eventType) {
-#ifdef PZ_ENABLE_MONO
+#if !defined(PZ_PLATFORM_WEB)
 
         auto& entityDataA = m_Entities.at(entityA);
         auto& entityDataB = m_Entities.at(entityB);
@@ -232,7 +232,7 @@ namespace Phezu {
     }
 
     void ScriptEngine::Shutdown() {
-#ifdef PZ_ENABLE_MONO
+#if !defined(PZ_PLATFORM_WEB)
 
         ScriptGlue::Destroy();
         ShutdownMono();
@@ -240,7 +240,7 @@ namespace Phezu {
 #endif
     }
 
-#ifdef PZ_ENABLE_MONO
+#if !defined(PZ_PLATFORM_WEB)
 
     void ScriptEngine::InitMono() {
         mono_trace_set_level_string("debug");
@@ -382,7 +382,7 @@ namespace Phezu {
     //----Script-Glue-Functions----//
 
     ScriptInstance* ScriptEngine::GetBehaviourScriptInstance(uint64_t entityID, const std::string& classFullname) {
-#ifdef PZ_ENABLE_MONO
+#if !defined(PZ_PLATFORM_WEB)
 
         if (m_Entities.find(entityID) == m_Entities.end()) {
             Log("Entity not found for behaviour script: %s", classFullname.c_str());
@@ -398,13 +398,15 @@ namespace Phezu {
 
         Log("Behaviour Script %s on Entity not found\n", classFullname.c_str());
         
+#else
+        PZ_ASSERT(false, "Mono is stripped on Web platform");
 #endif
-
+        
         return nullptr;
     }
     
     ScriptInstance* ScriptEngine::GetEngineComponentInstance(uint64_t entityID, ManagedType componentType) {
-#ifdef PZ_ENABLE_MONO
+#if !defined(PZ_PLATFORM_WEB)
 
         if (m_Entities.find(entityID) == m_Entities.end()) {
             Log("Entity not found for engine component of type %i", static_cast<int>(componentType));
@@ -421,12 +423,13 @@ namespace Phezu {
         return &entityData.EngineComponents.at(componentType);
 
 #else
+        PZ_ASSERT(false, "Mono is stripped on Web platform");
         return nullptr;
 #endif
     }
     
     void ScriptEngine::RemoveBehaviourScriptInstance(uint64_t entityID, const std::string& classFullname) {
-#ifdef PZ_ENABLE_MONO
+#if !defined(PZ_PLATFORM_WEB)
 
         if (m_Entities.find(entityID) == m_Entities.end()) {
             //Should log an exception
@@ -454,17 +457,19 @@ namespace Phezu {
     }
     
     MonoClass* ScriptEngine::GetBehaviourComponentClass() {
-#ifdef PZ_ENABLE_MONO
+#if !defined(PZ_PLATFORM_WEB)
         return m_BehaviourComponentClass->GetMonoClass();
 #else
+        PZ_ASSERT(false, "Mono is stripped on Web platform");
         return nullptr;
 #endif
     }
     
     uint32_t ScriptEngine::GetEntityScriptInstanceGcHandle(uint64_t entityID) {
-#ifdef PZ_ENABLE_MONO
+#if !defined(PZ_PLATFORM_WEB)
         return m_Entities.at(entityID).EntityScript.GetMonoGcHandle();
 #else
+        PZ_ASSERT(false, "Mono is stripped on Web platform");
         return 0;
 #endif
     }

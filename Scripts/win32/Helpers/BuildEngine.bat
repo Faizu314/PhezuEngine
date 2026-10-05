@@ -1,10 +1,10 @@
-if not exist "Build" (
-    mkdir "Build"
+if not exist "Build/Win" (
+    mkdir "Build/Win"
 )
-cd "Build"
+cd "Build/Win"
 
 echo Using generator: %GENERATOR% and config args: %CONFIG_ARGS%
-%CMAKE_COMMAND% .. -G "%GENERATOR%" "%CONFIG_ARGS%"
+%CMAKE_COMMAND% ../.. -G "%GENERATOR%" "%CONFIG_ARGS%"
 
 if %ERRORLEVEL% neq 0 (
     echo Failed to generate build system files, ensure that cmake's version supports the generator being used.

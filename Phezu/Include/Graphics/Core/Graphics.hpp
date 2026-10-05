@@ -105,7 +105,6 @@ namespace Phezu {
 		Repeat,
 		MirroredRepeat,
 		ClampToEdge,
-		ClampToBorder
 	};
 
 	enum class TextureFilteringMode {

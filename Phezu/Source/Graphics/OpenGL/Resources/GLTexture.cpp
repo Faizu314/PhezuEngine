@@ -12,8 +12,6 @@ namespace Phezu {
 				return GL_MIRRORED_REPEAT;
 			case TextureWrapMode::ClampToEdge:
 				return GL_CLAMP_TO_EDGE;
-			case TextureWrapMode::ClampToBorder:
-				return GL_CLAMP_TO_BORDER;
 			default: {
 				PZ_ASSERT(false, "Unknown TextureWrapMode.\n")
 				return 0;
@@ -65,9 +63,14 @@ namespace Phezu {
 
 	std::vector<unsigned char> GLTexture::GetPixelData() {
 		std::vector<unsigned char> pixels;
-		pixels.reserve(m_Size);
+
+#if defined(PZ_PLATFORM_WEB)
+		PZ_ASSERT(false, "Reading pixel data from texture is not supported in OpenGL ES.\n")
+#else
+		pixels.resize(m_Size);
 
 		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+#endif
 
 		return pixels;
 	}

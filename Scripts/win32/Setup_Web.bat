@@ -27,16 +27,16 @@ if "%~2"=="--Release" (
 
 call Scripts\win32\Helpers\SetupCmake.bat
 
-if not exist "Build" (
-    mkdir "Build"
+if not exist "Build/Web" (
+    mkdir "Build/Web"
 )
-cd "Build"
+cd "Build/Web"
 
 call "E:\Users\faiza\CLibraries\emsdk\emsdk_env.bat"
 
 set "CONFIG_ARGS=-DCMAKE_BUILD_TYPE=%BUILD_CONFIG%"
 
-call emcmake %CMAKE_COMMAND% .. -G Ninja "%CONFIG_ARGS%"
+call emcmake %CMAKE_COMMAND% ../.. -G Ninja "%CONFIG_ARGS%"
 
 %CMAKE_COMMAND% --build . --config %BUILD_CONFIG%
 
