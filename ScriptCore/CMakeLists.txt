@@ -1,8 +1,6 @@
 project(ScriptCore)
 
-if (APPLE)
-    set(CS_BUILD_COMMAND csc)
-elseif (WIN32)
+if (PZ_PLATFORM_WINDOWS)
     set(MONO_EXE "${MONO_DIR}/bin/mono.exe")
     set(CS_COMPILER "${MONO_DIR}/lib/mono/4.5/csc.exe")
     set(CS_BUILD_COMMAND ${MONO_EXE} ${CS_COMPILER})

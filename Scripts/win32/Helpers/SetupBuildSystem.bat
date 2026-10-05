@@ -2,6 +2,8 @@ set PACKAGE=vs-build-system
 set VS_LINK=https://aka.ms/vs/stable/vs_BuildTools.exe
 set OUTPUT_DIR=%CD%\Vendor\win32\temp\vs
 
+set "CONFIG_ARGS=-DCMAKE_BUILD_TYPE=%BUILD_CONFIG%"
+
 call Scripts\win32\Helpers\VisualStudioFinder.bat
 
 if %ERRORLEVEL%==1 (
@@ -30,6 +32,7 @@ if %ERRORLEVEL%==1 (
 
     set "GENERATOR=NMake Makefiles"
 ) else (
+    set "CONFIG_ARGS="
     set "GENERATOR=%RETURN_VALUE_1%"
 )
 

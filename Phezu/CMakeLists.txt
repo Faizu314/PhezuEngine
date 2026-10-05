@@ -22,24 +22,18 @@ set(PHEZU_ALL_HEADERS
     ${PHEZU_VENDOR_HEADERS}
 )
 
-if (WIN32)
-    list(FILTER PHEZU_ALL_SOURCES EXCLUDE REGEX ".*/[Mm]ac/.*")
-    list(FILTER PHEZU_ALL_HEADERS EXCLUDE REGEX ".*/[Mm]ac/.*")
-    if (NOT PZ_ENABLE_MONO)
-        list(FILTER PHEZU_ALL_SOURCES EXCLUDE REGEX ".*/Scripting/.*")
-        list(FILTER PHEZU_ALL_HEADERS EXCLUDE REGEX ".*/Scripting/.*")
-
-        list(APPEND PHEZU_ALL_SOURCES
-            "${CMAKE_SOURCE_DIR}/Phezu/Source/Scripting/Systems/ScriptEngine.cpp"
-        )
-
-        list(APPEND PHEZU_ALL_HEADERS
-            "${CMAKE_SOURCE_DIR}/Phezu/Include/Scripting/Systems/ScriptEngine.hpp"
-        )
-    endif()
-elseif (APPLE)
+if (PZ_PLATFORM_WINDOWS)
+    list(FILTER PHEZU_ALL_SOURCES EXCLUDE REGEX ".*/[Ww]ebgl/.*")
+    list(FILTER PHEZU_ALL_HEADERS EXCLUDE REGEX ".*/[Ww]ebgl/.*")
+elseif (PZ_PLATFORM_WEB)
     list(FILTER PHEZU_ALL_SOURCES EXCLUDE REGEX ".*/[Ww]in32/.*")
     list(FILTER PHEZU_ALL_HEADERS EXCLUDE REGEX ".*/[Ww]in32/.*")
+
+    list(FILTER PHEZU_ALL_SOURCES EXCLUDE REGEX ".*/Scripting/.*")
+    list(FILTER PHEZU_ALL_HEADERS EXCLUDE REGEX ".*/Scripting/.*")
+
+    list(APPEND PHEZU_ALL_SOURCES "${CMAKE_SOURCE_DIR}/Phezu/Source/Scripting/Systems/ScriptEngine.cpp")
+    list(APPEND PHEZU_ALL_HEADERS "${CMAKE_SOURCE_DIR}/Phezu/Include/Scripting/Systems/ScriptEngine.hpp")
 endif()
 
 add_library(Phezu STATIC ${PHEZU_ALL_SOURCES} ${PHEZU_ALL_HEADERS})
@@ -48,11 +42,12 @@ set_target_properties(Phezu PROPERTIES OUTPUT_NAME Phezu PREFIX "")
 target_compile_definitions(Phezu PUBLIC
     $<$<CONFIG:Debug>:PZ_DEBUG>
     $<$<CONFIG:Release>:PZ_RELEASE>
-    $<$<BOOL:${PZ_ENABLE_MONO}>:PZ_ENABLE_MONO>
 )
 
-if (WIN32)
-    target_compile_definitions(Phezu PRIVATE NOMINMAX)
+if (PZ_PLATFORM_WINDOWS)
+    target_compile_definitions(Phezu PUBLIC PZ_PLATFORM_WINDOWS)
+elseif (PZ_PLATFORM_WEB)
+    target_compile_definitions(Phezu PUBLIC PZ_PLATFORM_WEB)
 endif()
 
 target_include_directories(Phezu PUBLIC ${CMAKE_SOURCE_DIR}/Phezu/Include)
@@ -62,21 +57,18 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${PHEZU_ALL_SOURCES})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${PHEZU_ALL_HEADERS})
 
 
-if (APPLE)
-    target_include_directories(Phezu PRIVATE ${CMAKE_SOURCE_DIR}/Phezu/Vendor/include/mac)
-    target_link_libraries(Phezu PRIVATE
-        #"-F${LIB_SRC_DIR}"
-        "-framework Mono"
+if (PZ_PLATFORM_WINDOWS)
+    target_include_directories(Phezu PRIVATE 
+        ${CMAKE_SOURCE_DIR}/Phezu/Vendor/include/win32
+        ${MONO_DIR}/include/mono-2.0
     )
-elseif (WIN32)
-    target_include_directories(Phezu PRIVATE ${CMAKE_SOURCE_DIR}/Phezu/Vendor/include/win32)
-    target_link_libraries(Phezu PRIVATE opengl32 winmm)
+    target_link_libraries(Phezu PRIVATE 
+        opengl32 
+        winmm
+        "${MONO_DIR}/lib/mono-2.0-sgen.lib"
+    )
+elseif (PZ_PLATFORM_WEB)
+    target_link_libraries(Phezu PRIVATE 
 
-    if (PZ_ENABLE_MONO)
-        target_include_directories(Phezu PRIVATE ${MONO_DIR}/include/mono-2.0)
-        target_link_libraries(Phezu PRIVATE
-            "${MONO_DIR}/lib/mono-2.0-sgen.lib"
-        )
-    endif()
-
+    )
 endif()

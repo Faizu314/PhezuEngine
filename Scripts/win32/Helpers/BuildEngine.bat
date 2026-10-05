@@ -3,8 +3,8 @@ if not exist "Build" (
 )
 cd "Build"
 
-echo Using generator: %GENERATOR%
-%CMAKE_COMMAND% .. -G "%GENERATOR%"
+echo Using generator: %GENERATOR% and config args: %CONFIG_ARGS%
+%CMAKE_COMMAND% .. -G "%GENERATOR%" "%CONFIG_ARGS%"
 
 if %ERRORLEVEL% neq 0 (
     echo Failed to generate build system files, ensure that cmake's version supports the generator being used.
