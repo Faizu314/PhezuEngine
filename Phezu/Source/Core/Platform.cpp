@@ -1,6 +1,6 @@
 #include "Core/Platform.hpp"
 
-#ifdef _WIN32
+#if defined(PZ_PLATFORM_WINDOWS)
 #include "Platform/Win32/PlatformWin32.hpp"
 #endif
 
@@ -9,12 +9,10 @@ namespace Phezu {
 	static IPlatform* m_Platform = nullptr;
 
 	IPlatform* CreatePlatform() {
-#ifdef _WIN32
+#if defined(PZ_PLATFORM_WINDOWS)
 		if (m_Platform != nullptr)
 			return m_Platform;
 		m_Platform = new PlatformWin32();
-#elif __APPLE__
-		m_Platform nullptr;
 #endif
 
 		return m_Platform;

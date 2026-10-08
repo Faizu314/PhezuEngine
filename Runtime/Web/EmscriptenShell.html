@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<body style="margin:0; background:#000">
+  <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+  <script>
+    var Module = {
+      canvas: document.getElementById('canvas'),
+      onRuntimeInitialized: function () {
+        Module._Phezu_Init();
+        Module._Phezu_StartSim();
+
+        var last = performance.now();
+        function frame(now) {
+          Module._Phezu_UpdateSim((now - last) / 1000);
+          last = now;
+          requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+      }
+    };
+  </script>
+  <script src="Assets.js"></script>
+  {{{ SCRIPT }}}
+</body>
+</html>

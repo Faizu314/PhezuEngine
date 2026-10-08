@@ -14,6 +14,12 @@ if (PZ_PLATFORM_WINDOWS)
 elseif (PZ_PLATFORM_WEB)
     add_executable(Runtime ${RUNTIME_SOURCES} ${RUNTIME_HEADERS})
     set_target_properties(Runtime PROPERTIES SUFFIX ".html")
+    target_link_options(Runtime PRIVATE
+        $<$<CONFIG:Debug>:--emrun>
+        -sFORCE_FILESYSTEM=1
+        -sEXPORTED_FUNCTIONS=_Phezu_Init,_Phezu_StartSim,_Phezu_UpdateSim,_Phezu_StopSim
+        "--shell-file=${CMAKE_SOURCE_DIR}/Runtime/Web/EmscriptenShell.html"
+    )
 endif()
 
 target_include_directories(Runtime PUBLIC ${CMAKE_SOURCE_DIR}/Runtime/Include)

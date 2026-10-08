@@ -11,25 +11,7 @@
 
 namespace Phezu::Runtime {
     
-#if __APPLE__
-        
-    std::filesystem::path GetAssetsPath(const char* argv[]) {
-        return std::filesystem::path(argv[0]).parent_path().parent_path() / "Project";
-    }
-    
-    std::filesystem::path GetExePath(const char* argv[]) {
-        return std::filesystem::path(argv[0]).parent_path();
-    }
-    
-    std::filesystem::path GetScriptCoreDllPath(const char* argv[]) {
-        return GetExePath(argv) / "../MonoAssemblies";
-    }
-    
-    std::filesystem::path GetMonoCoreLibsPath(const char* argv[]) {
-        return GetExePath(argv) / "../MonoCoreLibs/mono";
-    }
-        
-#elif _WIN32
+#if defined(PZ_PLATFORM_WINDOWS)
 
     std::filesystem::path GetExePath() {
         wchar_t path[MAX_PATH];
@@ -48,6 +30,12 @@ namespace Phezu::Runtime {
     std::filesystem::path GetMonoCoreLibsPath() {
         return GetExePath() / "mono" / "lib" / "mono" / "4.5";
     }
-    
+
+#elif defined(PZ_PLATFORM_WEB)
+
+    std::filesystem::path GetAssetsPath() {
+        return std::filesystem::path() / "Assets";
+    }
+
 #endif
 }

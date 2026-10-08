@@ -18,7 +18,6 @@ namespace Phezu {
     class PrefabAsset;
 
     struct Paths {
-        std::filesystem::path ExePath;
         std::filesystem::path AssetsPath;
         std::filesystem::path ScriptCoreDllPath;
         std::filesystem::path MonoCoreLibsPath;
@@ -32,7 +31,10 @@ namespace Phezu {
     
     class Engine {
     public:
-        int Init(EngineArgs& args);
+        void Init(EngineArgs& args);
+        void StartSim();
+        void UpdateSim(float deltaTime);
+        void StopSim();
         void Run();
     public:
         SceneManager& GetSceneManager() { return m_SceneManager; }
@@ -41,7 +43,6 @@ namespace Phezu {
         ResourceManager& GetResourceManager() { return m_ResourceManager; }
         const InputData& GetInput() const { return m_Platform->GetInput(); }
         long long unsigned int GetFrameCount() const { return m_FrameCount; }
-        std::filesystem::path GetExePath() const { return m_ExePath; }
         std::filesystem::path GetAssetsPath() const { return m_AssetsPath; }
         std::filesystem::path GetScriptCoreDllPath() const { return m_ScriptCoreDllPath; }
         std::filesystem::path GetMonoCoreLibsPath() const { return m_MonoCoreLibsPath; }
@@ -69,6 +70,8 @@ namespace Phezu {
         std::filesystem::path m_AssetsPath;
         std::filesystem::path m_ScriptCoreDllPath;
         std::filesystem::path m_MonoCoreLibsPath;
+    private:
+        std::vector<Entity*> m_RenderEntitiesBuffer;
     private:
         static Engine* s_Instance;
         

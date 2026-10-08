@@ -14,14 +14,10 @@ namespace Phezu {
     Engine::Engine() : m_HasInited(false), m_IsRunning(false),
         m_FrameCount(0), m_Platform(nullptr) { }
     
-    int Engine::Init(EngineArgs& args) {
-        if (m_HasInited) {
-            Log("Trying to init engine twice");
-            return 1;
-        }
+    void Engine::Init(EngineArgs& args) {
+        PZ_ASSERT(!m_HasInited, "Trying to init engine twice");
 
         m_HasInited = true;
-        m_ExePath = args.AllPaths.ExePath;
         m_AssetsPath = args.AllPaths.AssetsPath;
         m_ScriptCoreDllPath = args.AllPaths.ScriptCoreDllPath;
         m_MonoCoreLibsPath = args.AllPaths.MonoCoreLibsPath;
@@ -34,15 +30,10 @@ namespace Phezu {
         m_Renderer.Init({ m_Platform->GetWindow(), m_Platform->GetGraphicsApi(), &m_ResourceManager }, RenderTarget::Default());
         m_ScriptEngine.Init(this);
         m_SceneManager.Init({ &m_AssetManager, &m_ResourceManager, &m_ScriptEngine });
-        
-        return 0;
     }
     
     void Engine::Run() {
-        if (!m_HasInited) {
-            Log("Trying to run non inited engine");
-            return;
-        }
+        PZ_ASSERT(m_HasInited, "Trying to run non inited engine");
         
         double deltaTime;
         double frameStartTime;
@@ -85,6 +76,41 @@ namespace Phezu {
         m_IsRunning = false;
         
         Destroy();
+    }
+
+    void Engine::StartSim() {
+        PZ_ASSERT(!m_IsRunning, "Trying to start simulation twice");
+
+        m_RenderEntitiesBuffer.reserve(ENTITIES_BUFFER_SIZE);
+        m_SceneManager.OnStartGame();
+        m_IsRunning = true;
+        m_FrameCount = 0;
+    }
+
+    void Engine::StopSim() {
+        PZ_ASSERT(m_IsRunning, "Trying to stop simulation without starting");
+
+        m_IsRunning = false;
+
+        Destroy();
+    }
+
+    void Engine::UpdateSim(float deltaTime) {
+        PZ_ASSERT(m_IsRunning, "Trying to update simulation without starting");
+
+        size_t renderablesCount;
+
+        m_Platform->PollEvents();
+        m_ScriptEngine.OnUpdate(deltaTime);
+        m_SceneManager.Update(deltaTime);
+        //physics update
+        m_SceneManager.GetRenderableEntities(m_RenderEntitiesBuffer, renderablesCount);
+        m_Renderer.DrawScene(m_RenderEntitiesBuffer, renderablesCount, m_SceneManager.GetActiveCamera());
+        m_Platform->Update();
+
+        m_SceneManager.OnEndOfFrame();
+
+        m_FrameCount++;
     }
     
     void Engine::Destroy() {
