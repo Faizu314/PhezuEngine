@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include <unordered_map>
+#include <vector>
 
 #include "Graphics/Core/Graphics.hpp"
 
@@ -24,6 +24,6 @@ namespace Phezu {
 		void EvaluateOffsetAndStride();
 	private:
 		unsigned int m_Stride = 0;
-		std::unordered_map<VertexSemantic, VertexAttribute> m_Attributes;
+		std::vector<VertexAttribute> m_Attributes;
 	};
 }

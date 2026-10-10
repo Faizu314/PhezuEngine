@@ -20,7 +20,7 @@ namespace Phezu {
 
 		if (!success) {
 			glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-			Log("OpenGL Vertex Shader Compilation Error: %s", infoLog);
+			Log("OpenGL Vertex Shader Compilation Error: %s\n", infoLog);
 			return;
 		}
 
@@ -32,8 +32,8 @@ namespace Phezu {
 		glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
 
 		if (!success) {
-			glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-			Log("OpenGL Fragment Shader Compilation Error: %s", infoLog);
+			glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+			Log("OpenGL Fragment Shader Compilation Error: %s\n", infoLog);
 			return;
 		}
 
@@ -46,7 +46,7 @@ namespace Phezu {
 
 		if (!success) {
 			glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-			Log("OpenGL Shader Linking Error: %s", infoLog);
+			Log("OpenGL Shader Linking Error: %s\n", infoLog);
 			return;
 		}
 

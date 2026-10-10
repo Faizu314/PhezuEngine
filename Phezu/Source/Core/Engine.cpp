@@ -4,8 +4,7 @@
 #include "Core/Engine.hpp"
 
 namespace Phezu {
-    
-    static const double MAX_DELTA_TIME = 1.0f / 20.0f;
+
     static const double TARGET_FRAME_TIME = 1.0f / 60.0f;
     static const size_t ENTITIES_BUFFER_SIZE = 128;
 
@@ -17,7 +16,6 @@ namespace Phezu {
     void Engine::Init(EngineArgs& args) {
         PZ_ASSERT(!m_HasInited, "Trying to init engine twice");
 
-        m_HasInited = true;
         m_AssetsPath = args.AllPaths.AssetsPath;
         m_ScriptCoreDllPath = args.AllPaths.ScriptCoreDllPath;
         m_MonoCoreLibsPath = args.AllPaths.MonoCoreLibsPath;
@@ -30,6 +28,8 @@ namespace Phezu {
         m_Renderer.Init({ m_Platform->GetWindow(), m_Platform->GetGraphicsApi(), &m_ResourceManager }, RenderTarget::Default());
         m_ScriptEngine.Init(this);
         m_SceneManager.Init({ &m_AssetManager, &m_ResourceManager, &m_ScriptEngine });
+
+        m_HasInited = true;
     }
     
     void Engine::Run() {
