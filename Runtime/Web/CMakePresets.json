@@ -1,0 +1,38 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": { "major": 3, "minor": 25, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "web-debug",
+      "displayName": "Web Debug",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/Build/${presetName}",
+      "toolchainFile": "$env{EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      },
+      "environment": {
+        "EMSDK": "E:/Users/faiza/CLibraries/emsdk",
+        "EM_CONFIG": "$env{EMSDK}/.emscripten",
+        "EMSDK_PYTHON": "$env{EMSDK}/python/3.13.3_64bit/python.exe",
+        "PATH": "$env{EMSDK}/upstream/emscripten;$env{EMSDK}/ninja/1.13.2_64bit;$env{EMSDK}/python/3.13.3_64bit;$env{EMSDK}/node/24.19.0_64bit;$penv{PATH}"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "intelliSenseMode": "linux-clang-x86",
+          "intelliSenseOptions": {
+            "additionalCompilerArgs": [
+              "--sysroot=E:/Users/faiza/CLibraries/emsdk/upstream/emscripten/cache/sysroot",
+              "-isystemE:/Users/faiza/CLibraries/emsdk/upstream/emscripten/cache/sysroot/include",
+              "-D__EMSCRIPTEN__"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "buildPresets": [
+    { "name": "web-debug", "configurePreset": "web-debug" }
+  ]
+}

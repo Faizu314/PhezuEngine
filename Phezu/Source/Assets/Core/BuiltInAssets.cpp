@@ -79,8 +79,7 @@ namespace Phezu {
 			{ VertexSemantic::Position, 0 },
 			{ VertexSemantic::TexCoord0, 1 }
 		};
-		shaderAsset->VertexSource = R"(
-			#version 460 core
+		shaderAsset->VertexSource = R"(#version 300 es
 
 			layout (location = 0) in vec2 pos;
 			layout (location = 1) in vec2 texCoord;
@@ -101,8 +100,8 @@ namespace Phezu {
 			}
 		)";
 
-		shaderAsset->FragmentSource = R"(
-			#version 460 core
+		shaderAsset->FragmentSource = R"(#version 300 es
+			precision highp float;
 
 			in vec2 uv;
 
@@ -126,8 +125,7 @@ namespace Phezu {
 			{ VertexSemantic::Position, 0 },
 			{ VertexSemantic::TexCoord0, 1 }
 		};
-		shaderAsset->VertexSource = R"(
-			#version 460 core
+		shaderAsset->VertexSource = R"(#version 300 es
 
 			layout (location = 0) in vec2 pos;
 			layout (location = 1) in vec2 texCoord;
@@ -140,8 +138,8 @@ namespace Phezu {
 			}
 		)";
 
-		shaderAsset->FragmentSource = R"(
-			#version 460 core
+		shaderAsset->FragmentSource = R"(#version 300 es
+			precision highp float;
 
 			in vec2 uv;
 
@@ -163,8 +161,7 @@ namespace Phezu {
 		shaderAsset->Semantics = {
 			{ VertexSemantic::Position, 0 }
 		};
-		shaderAsset->VertexSource = R"(
-			#version 460 core
+		shaderAsset->VertexSource = R"(#version 300 es
 
 			layout (location = 0) in vec2 pos;
 
@@ -181,8 +178,8 @@ namespace Phezu {
 			}
 		)";
 
-		shaderAsset->FragmentSource = R"(
-			#version 460 core
+		shaderAsset->FragmentSource = R"(#version 300 es
+			precision highp float;
 
 			out vec4 FragColor;
 
