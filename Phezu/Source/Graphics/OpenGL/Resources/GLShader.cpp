@@ -6,55 +6,50 @@
 namespace Phezu {
 	
 	void GLShader::Init(const std::string& vert, const std::string& frag, const std::unordered_map<VertexSemantic, unsigned int>& vertInput) {
-		const char* vertSource = vert.c_str();
-		const char* fragSource = frag.c_str();
-
-		unsigned int vertexShader;
-		vertexShader = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(vertexShader, 1, &vertSource, NULL);
-		glCompileShader(vertexShader);
-
 		int success;
-		char infoLog[512];
-		glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+		unsigned int vertexShader = CompileShaderProgram(vert, ShaderProgramType::Vertex, success);
+
+		PZ_ASSERT(success, "Invalid shader asset\n");
+
+		unsigned int fragmentShader = CompileShaderProgram(frag, ShaderProgramType::Fragment, success);
+
+		PZ_ASSERT(success, "Invalid shader asset\n");
+
+		m_ShaderProgram = CreateShaderProgram(vertexShader, fragmentShader, success);
+
+		PZ_ASSERT(success, "Unable to link shader programs\n");
+
+		m_Semantics = vertInput;
+	}
+
+	void GLShader::Reload(const std::string& vert, const std::string& frag, const std::unordered_map<VertexSemantic, unsigned int>& vertInput) {
+		int success;
+		unsigned int vertexShader = CompileShaderProgram(vert, ShaderProgramType::Vertex, success);
 
 		if (!success) {
-			glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-			Log("OpenGL Vertex Shader Compilation Error: %s\n", infoLog);
+			glDeleteShader(vertexShader);
 			return;
 		}
 
-		unsigned int fragmentShader;
-		fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(fragmentShader, 1, &fragSource, NULL);
-		glCompileShader(fragmentShader);
-
-		glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+		unsigned int fragmentShader = CompileShaderProgram(frag, ShaderProgramType::Fragment, success);
 
 		if (!success) {
-			glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-			Log("OpenGL Fragment Shader Compilation Error: %s\n", infoLog);
+			glDeleteShader(vertexShader);
+			glDeleteShader(fragmentShader);
 			return;
 		}
 
-		unsigned int shaderProgram = glCreateProgram();
-		glAttachShader(shaderProgram, vertexShader);
-		glAttachShader(shaderProgram, fragmentShader);
-		glLinkProgram(shaderProgram);
+		unsigned int newShaderProgram = CreateShaderProgram(vertexShader, fragmentShader, success);
 
-		glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-
-		if (!success) {
-			glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-			Log("OpenGL Shader Linking Error: %s\n", infoLog);
+		if (success == GL_FALSE) {
+			glDeleteProgram(newShaderProgram);
 			return;
 		}
 
-		m_ShaderProgram = shaderProgram;
+		glDeleteProgram(m_ShaderProgram);
+		m_ShaderProgram = newShaderProgram;
 
-		glDeleteShader(vertexShader);
-		glDeleteShader(fragmentShader);
-
+		m_UniformLocations.clear();
 		m_Semantics = vertInput;
 	}
 
@@ -63,8 +58,7 @@ namespace Phezu {
 	}
 
 	void GLShader::Destroy() {
-		if (m_ShaderProgram != 0)
-			glDeleteProgram(m_ShaderProgram);
+		glDeleteProgram(m_ShaderProgram);
 		m_ShaderProgram = 0;
 	}
 
@@ -82,6 +76,48 @@ namespace Phezu {
 		PZ_ASSERT(m_Semantics.find(semantic) != m_Semantics.end(), "Semantic does not exist in shader.\n");
 
 		return m_Semantics.at(semantic);
+	}
+
+	unsigned int GLShader::CreateShaderProgram(unsigned int vert, unsigned int frag, int& success) {
+		unsigned int shaderProgram = glCreateProgram();
+		glAttachShader(shaderProgram, vert);
+		glAttachShader(shaderProgram, frag);
+		glLinkProgram(shaderProgram);
+
+		char infoLog[512];
+		glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+
+		if (!success) {
+			glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+			Log("OpenGL Shader Linking Error: %s\n", infoLog);
+		}
+
+		glDetachShader(shaderProgram, vert);
+		glDetachShader(shaderProgram, frag);
+		glDeleteShader(vert);
+		glDeleteShader(frag);
+
+		return shaderProgram;
+	}
+
+	unsigned int GLShader::CompileShaderProgram(const std::string& src, ShaderProgramType type, int& success) {
+		const char* shaderSource = src.c_str();
+
+		unsigned int shaderProgram;
+		shaderProgram = glCreateShader(type == ShaderProgramType::Vertex ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER);
+		glShaderSource(shaderProgram, 1, &shaderSource, NULL);
+		glCompileShader(shaderProgram);
+
+		char infoLog[512];
+		glGetShaderiv(shaderProgram, GL_COMPILE_STATUS, &success);
+
+		if (!success) {
+			glGetShaderInfoLog(shaderProgram, 512, NULL, infoLog);
+			Log("OpenGL ShaderProgramType value (%i) Compilation Error: %s\n", static_cast<int>(type), infoLog);
+			return shaderProgram;
+		}
+
+		return shaderProgram;
 	}
 
 	GLint GLShader::GetUniformLocation(const std::string& uniformName) {
@@ -102,6 +138,12 @@ namespace Phezu {
 		GLint location = GetUniformLocation(uniformName);
 
 		glUniform1i(location, static_cast<GLint>(value));
+	}
+
+	void GLShader::SetFloat(const std::string& uniformName, float value) {
+		GLint location = GetUniformLocation(uniformName);
+
+		glUniform1f(location, static_cast<GLfloat>(value));
 	}
 
 	void GLShader::SetVec2(const std::string& uniformName, Vector2 value) {

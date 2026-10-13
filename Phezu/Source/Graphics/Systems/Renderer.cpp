@@ -119,6 +119,7 @@ namespace Phezu {
         material->SetMat3("objectToWorld", transformData->GetLocalToWorld());
         material->SetMat3("worldToView", m_ViewTransform);
         material->SetMat3("viewToScreen", m_ScreenTransform);
+        material->SetProperty("time", MaterialProperty{ MaterialPropertyType::Float, static_cast<float>(GetTime()) });
 
         m_Ctx.Api->RenderTriangles(mesh->GetIndicesCount());
     }

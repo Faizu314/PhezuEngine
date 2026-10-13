@@ -38,6 +38,11 @@ extern "C"
     void Phezu_StopSim() {
         engine.StopSim();
     }
+
+    
+    void Phezu_ReloadShader(size_t guid, const char* fileContent) {
+        engine.ReloadShader(guid, fileContent);
+    }
 }
 
 #elif defined(PZ_PLATFORM_WINDOWS)

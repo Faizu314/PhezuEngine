@@ -41,7 +41,9 @@ namespace Phezu {
 		ITexture* GetTexture(ResourceHandle resourceHandle) { return static_cast<ITexture*>(m_Resources.GetResource(resourceHandle)); }
 		IShader* GetShader(ResourceHandle resourceHandle) { return static_cast<IShader*>(m_Resources.GetResource(resourceHandle)); }
 	public:
-		ResourceHandle CreateMaterial(ResourceHandle sourceMaterialHandle);
+		void ReloadShader(AssetHandle shaderIdentity, const std::string& newFileContent);
+	public:
+		ResourceHandle CopyMaterial(ResourceHandle sourceMaterialHandle);
 		void DestroyResource(ResourceHandle resourceHandle);
 	public:
 		ResourceHandle GetResourceHandle(void* ptr) { return m_Resources.GetResourceHandle(ptr); }

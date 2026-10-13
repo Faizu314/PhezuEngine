@@ -37,6 +37,8 @@ namespace Phezu {
         void StopSim();
         void Run();
     public:
+        void ReloadShader(GUID guid, const std::string& fileContent);
+    public:
         SceneManager& GetSceneManager() { return m_SceneManager; }
         AssetManager& GetAssetManager() { return m_AssetManager; }
         ScriptEngine& GetScriptEngine() { return m_ScriptEngine; }

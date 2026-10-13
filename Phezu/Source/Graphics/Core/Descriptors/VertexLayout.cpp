@@ -47,5 +47,7 @@ namespace Phezu {
 		}
 
 		PZ_ASSERT(false, "Semantic not found in vertex layout.\n");
+
+		return VertexAttribute();
 	}
 }

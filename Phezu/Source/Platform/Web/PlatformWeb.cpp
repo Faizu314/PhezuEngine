@@ -21,6 +21,8 @@ namespace Phezu {
 	}
 
 	void PlatformWeb::Init(const WindowArgs& args) {
+		m_StartTime = emscripten_get_now();
+
 		s_Logger->Init();
 		s_Window->Init(args);
 
@@ -74,7 +76,7 @@ namespace Phezu {
 	}
 
 	double PlatformWeb::GetTime() {
-		return 0.0;
+		return (emscripten_get_now() - m_StartTime) / 1000.0;
 	}
 
 	void PlatformWeb::Log(const char* msg, va_list args) {

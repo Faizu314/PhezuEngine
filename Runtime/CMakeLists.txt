@@ -19,7 +19,8 @@ elseif (PZ_PLATFORM_WEB)
         -sFORCE_FILESYSTEM=1
         -sMIN_WEBGL_VERSION=2
         -sMAX_WEBGL_VERSION=2
-        -sEXPORTED_FUNCTIONS=_Phezu_Init,_Phezu_StartSim,_Phezu_UpdateSim,_Phezu_StopSim
+        -sEXPORTED_RUNTIME_METHODS=FS,ccall
+        -sEXPORTED_FUNCTIONS=_Phezu_Init,_Phezu_StartSim,_Phezu_UpdateSim,_Phezu_StopSim,_Phezu_ReloadShader
         "--shell-file=${CMAKE_SOURCE_DIR}/Runtime/Web/EmscriptenShell.html"
     )
 endif()

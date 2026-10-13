@@ -29,5 +29,7 @@ namespace Phezu {
 		const InputData& GetInput() override;
 	private:
 		void CreateGraphicsContext();
+	private:
+		double m_StartTime;
 	};
 }

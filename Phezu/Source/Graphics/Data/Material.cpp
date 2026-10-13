@@ -20,6 +20,7 @@ namespace Phezu {
 			const std::string& texName = texProperty.first;
 			m_Shader->SetInt(texName, texUnit);
 			texProperty.second->Bind(texUnit);
+			texUnit++;
 		}
 
 		for (auto& property : m_Properties) {
@@ -68,6 +69,9 @@ namespace Phezu {
 				break;
 			case MaterialPropertyType::Int:
 				m_Shader->SetInt(propertyName, std::get<int>(property.Value));
+				break;
+			case MaterialPropertyType::Float:
+				m_Shader->SetFloat(propertyName, std::get<float>(property.Value));
 				break;
 			default: {
 				PZ_ASSERT(false, "Material property apply case not implemented.\n");

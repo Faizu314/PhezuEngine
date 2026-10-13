@@ -309,7 +309,7 @@ namespace Phezu {
 			return 0;
 		}
 
-		return s_Data->ResourceManager->CreateMaterial(sourceMaterialHandle);
+		return s_Data->ResourceManager->CopyMaterial(sourceMaterialHandle);
 	}
 
 	uint64_t Material_Get(GUID guid, uint64_t source) {

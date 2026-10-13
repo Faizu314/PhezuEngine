@@ -1,4 +1,5 @@
 #include "Core/Platform.hpp"
+#include "Core/Defs/Assert.hpp"
 
 #if defined(PZ_PLATFORM_WINDOWS)
 #include "Platform/Win32/PlatformWin32.hpp"
@@ -23,6 +24,8 @@ namespace Phezu {
 	}
 
 	void Log(const char* msg, ...) {
+		PZ_ASSERT(m_Platform != nullptr, "Using platform layer before initializing it\n");
+
 		va_list args;
 
 		va_start(args, msg);
@@ -30,5 +33,11 @@ namespace Phezu {
 		m_Platform->Log(msg, args);
 
 		va_end(args);
+	}
+
+	double GetTime() {
+		PZ_ASSERT(m_Platform != nullptr, "Using platform layer before initializing it\n");
+
+		return m_Platform->GetTime();
 	}
 }

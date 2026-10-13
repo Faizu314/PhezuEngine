@@ -96,7 +96,8 @@ namespace Phezu {
 
         fragmentPos += fragmentTag.length();
 
-        FragmentSource = data.substr(fragmentPos);
+        FragmentSource = std::string("#version 300 es\nprecision highp float;\n");
+        FragmentSource.append(data.substr(fragmentPos));
     }
 
     std::string ShaderAsset::FindVertexInputBlock(const std::string& src, size_t* start, size_t* end) {
@@ -128,7 +129,7 @@ namespace Phezu {
     }
 
     std::string ShaderAsset::ReplaceVertexInputBlock(const std::string& src, size_t blockStart, size_t blockEnd, const std::string& replacement) {
-        std::string glsl;
+        std::string glsl("#version 300 es\n");
 
         glsl.reserve(src.size());
         glsl.append(src, 0, blockStart);

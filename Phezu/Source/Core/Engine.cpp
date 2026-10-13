@@ -32,6 +32,10 @@ namespace Phezu {
         m_HasInited = true;
     }
     
+    void Engine::ReloadShader(GUID guid, const std::string& fileContent) {
+        m_ResourceManager.ReloadShader(AssetHandle(guid, AssetSource::Project), fileContent);
+    }
+
     void Engine::Run() {
         PZ_ASSERT(m_HasInited, "Trying to run non inited engine");
         

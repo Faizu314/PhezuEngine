@@ -21,6 +21,7 @@ namespace Phezu {
 	class GLShader : public IShader {
 	public:
 		void Init(const std::string& vert, const std::string& frag, const std::unordered_map<VertexSemantic, unsigned int>& vertInput) override;
+		void Reload(const std::string& vert, const std::string& frag, const std::unordered_map<VertexSemantic, unsigned int>& vertInput) override;
 		void Bind() override;
 		void Destroy() override;
 	public:
@@ -28,10 +29,18 @@ namespace Phezu {
 		unsigned int GetSemanticLocation(VertexSemantic semantic) const override;
 	public:
 		void SetInt(const std::string& uniformName, int color) override;
+		void SetFloat(const std::string& uniformName, float value) override;
 		void SetVec2(const std::string& uniformName, Vector2 value) override;
 		void SetColor(const std::string& uniformName, Color color) override;
 		void SetMat3(const std::string& uniformName, Mat3x3 mat) override;
 	private:
+		enum class ShaderProgramType {
+			Vertex,
+			Fragment
+		};
+	private:
+		unsigned int CompileShaderProgram(const std::string& src, ShaderProgramType type, int& success);
+		unsigned int CreateShaderProgram(unsigned int vert, unsigned int frag, int& success);
 		GLint GetUniformLocation(const std::string& uniformName);
 	private:
 		GLuint m_ShaderProgram = 0;

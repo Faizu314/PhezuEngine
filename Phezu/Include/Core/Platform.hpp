@@ -46,5 +46,6 @@ namespace Phezu {
 	};
 
 	void Log(const char* msg, ...);
+	double GetTime();
 	IPlatform* CreatePlatform();
 }

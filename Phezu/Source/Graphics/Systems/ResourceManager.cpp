@@ -64,7 +64,16 @@ namespace Phezu {
     }
 
 
-    ResourceHandle ResourceManager::CreateMaterial(ResourceHandle sourceMaterialID) {
+    void ResourceManager::ReloadShader(AssetHandle shaderIdentity, const std::string& newFileContent) {
+        ShaderAsset shaderAsset = ShaderAsset();
+        shaderAsset.Deserialize(newFileContent);
+
+        IShader* shader = GetShader(shaderIdentity);
+        shader->Reload(shaderAsset.VertexSource, shaderAsset.FragmentSource, shaderAsset.Semantics);
+    }
+
+
+    ResourceHandle ResourceManager::CopyMaterial(ResourceHandle sourceMaterialID) {
         Material* sourceMat = static_cast<Material*>(m_Resources.GetResource(sourceMaterialID));
         Material* sourceCopy = sourceMat->Copy();
 
